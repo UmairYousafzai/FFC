@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/pres_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Presentation"
+        android:gravity="center_horizontal"
+        android:textSize="25dp"
+        android:padding="5dp"
+        android:textColor="@color/APP_Theme_Color"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/APP_Theme_Color"
+        />
+
+    <LinearLayout
+        android:id="@+id/linear_choronometer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        >
+        <TextView
+            android:text="00:00:00"
+            android:id="@+id/chronometerTimer"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:textSize="25dp"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center_horizontal"
+            />
+        <TextView
+            android:id="@+id/btn_stop"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="STOP"
+            android:backgroundTint="@color/red"
+            android:textSize="20dp"
+            android:gravity="right"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/red"
+            />
+
+
+    </LinearLayout>
+
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="70dp"
+        android:layout_weight="0.75">
+
+    </androidx.viewpager.widget.ViewPager>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/APP_Theme_Color"
+        android:orientation="horizontal">
+
+        <Button
+            android:visibility="invisible"
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:text="BACK"
+            android:background="@null"
+            android:textColor="@color/white"/>
+
+        <LinearLayout
+            android:id="@+id/dots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+        </LinearLayout>
+
+        <Button
+            android:visibility="invisible"
+            android:id="@+id/nextBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:text="NEXT"
+            android:background="@null"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+</LinearLayout>

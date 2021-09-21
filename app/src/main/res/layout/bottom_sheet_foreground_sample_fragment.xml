@@ -1,0 +1,1471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xmnls="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/design_bottom_sheet"
+    android:background="@color/white"
+    xmnls:layout_behavior="@string/bottom_sheet_behavior"
+    xmnls:behavior_hideable="false"
+    xmnls:behavior_peekHeight="78dp"
+    app:ignore="NamespaceTypo">
+    <View
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/bar"
+        android:layout_width="60dp"
+        android:layout_height="5dp"
+        android:background="@drawable/bg_menu_sheet_line"
+        android:backgroundTint="@color/APP_Theme_Color"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100">
+        <TextView
+            android:layout_weight="80"
+            android:id="@+id/visit_heading"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:gravity="center_vertical"
+            android:text="Sample Form"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/APP_Theme_Color"
+            />
+        <ImageView
+            android:id="@+id/visit_save"
+            android:layout_weight="10"
+            android:layout_below="@+id/simpleRatingBar2"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_toLeftOf="@+id/btn_history"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/ic_save"
+            android:textColor="@color/white"
+            android:layout_gravity="bottom"
+
+            />
+        <ImageView
+            android:id="@+id/btn_history"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_list"
+            android:textColor="@color/white"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="10"
+            android:layout_gravity="bottom"
+
+            />
+        <com.nex3z.notificationbadge.NotificationBadge
+            android:id="@+id/badge"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_toRightOf="@+id/btn_history"
+            android:layout_alignTop="@+id/btn_history"
+            android:layout_marginLeft="-40dp"
+            android:layout_marginRight="5dp"
+            app:nbMaxTextLength="2"
+            />
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#E1E1E1"
+        />
+    <LinearLayout
+        android:id="@+id/linear_manual_scan_series"
+        android:layout_below="@+id/relative_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/btn_manual"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Manual"
+            android:textSize="17dp"
+            android:textColor="@color/white"
+            android:background="@color/APP_Theme_Color"
+            android:padding="10dp"
+            />
+        <TextView
+            android:id="@+id/btn_scan"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Scan"
+            android:textSize="17dp"
+            android:layout_marginLeft="2dp"
+            android:textColor="@color/black"
+            android:background="#4D689EB8"
+            android:padding="10dp"
+            />
+        <TextView
+            android:id="@+id/btn_series"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Series"
+            android:textSize="17dp"
+            android:layout_marginLeft="2dp"
+            android:textColor="@color/black"
+            android:background="#4D689EB8"
+            android:padding="10dp"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:xmnls="http://schemas.android.com/tools"
+        android:background="#1F689EB8">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/sample_scrolll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/linear_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/linear_history"
+                    android:layout_below="@+id/linear_manual_scan_series"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/linear_history1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:backgroundTint="#70FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/history_class1_heading"
+                                android:text="Class: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/history_class1"
+                                android:text="Nine"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/subject_class1_heading"
+                                android:text="Subject: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/subject_class1"
+                                android:text="English"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/quantity_class1_heading"
+                                android:text="Quantity: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/quantity_class1"
+                                android:text="200"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linear_history2"
+                        android:layout_below="@+id/linear_history1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:backgroundTint="#70FFFFFF">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/history_class2_heading"
+                                android:text="Class: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/history_class2"
+                                android:text="Six"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/subject_class2_heading"
+                                android:text="Subject: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/subject_class2"
+                                android:text="Islamayat"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/quantity_class2_heading"
+                                android:text="Quantity: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/quantity_class2"
+                                android:text="600"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linear_history3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:backgroundTint="#70FFFFFF">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/history_class3_heading"
+                                android:text="Class: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/history_class3"
+                                android:text="Nursery"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/subject_class3_heading"
+                                android:text="Subject: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/subject_class3"
+                                android:text="Islamayat"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/quantity_class3_heading"
+                                android:text="Quantity: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/quantity_class3"
+                                android:text="70"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linear_history4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:visibility="gone"
+                        android:backgroundTint="#70FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/history_class4_heading"
+                                android:text="Class: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/history_class4"
+                                android:text="Ten "
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/subject_class4_heading"
+                                android:text="Subject: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/subject_class4"
+                                android:text="Urdu"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/quantity_class4_heading"
+                                android:text="Quantity: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/quantity_class4"
+                                android:text="200"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_history5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:visibility="gone"
+                        android:backgroundTint="#70FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/history_class5_heading"
+                                android:text="Class: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/history_class5"
+                                android:text="Ten "
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/subject_class5_heading"
+                                android:text="Subject: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/subject_class5"
+                                android:text="Urdu"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/quantity_class5_heading"
+                                android:text="Quantity: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/quantity_class5"
+                                android:text="200"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_history6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:visibility="gone"
+                        android:backgroundTint="#70FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/history_class6_heading"
+                                android:text="Class: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/history_class6"
+                                android:text="Ten "
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/subject_class6_heading"
+                                android:text="Subject: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/subject_class6"
+                                android:text="Urdu"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/quantity_class6_heading"
+                                android:text="Quantity: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/quantity_class6"
+                                android:text="200"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_history7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:visibility="gone"
+                        android:backgroundTint="#70FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/history_class7_heading"
+                                android:text="Class: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/history_class7"
+                                android:text="Ten "
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/subject_class7_heading"
+                                android:text="Subject: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/subject_class7"
+                                android:text="Urdu"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/quantity_class7_heading"
+                                android:text="Quantity: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/quantity_class7"
+                                android:text="200"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_history8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:visibility="gone"
+                        android:backgroundTint="#70FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/history_class8_heading"
+                                android:text="Class: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/history_class8"
+                                android:text="Ten "
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/subject_class8_heading"
+                                android:text="Subject: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/subject_class8"
+                                android:text="Urdu"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="100">
+
+                            <TextView
+                                android:id="@+id/quantity_class8_heading"
+                                android:text="Quantity: "
+                                android:textStyle="bold"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:id="@+id/quantity_class8"
+                                android:text="200"
+                                android:layout_width="0dp"
+                                android:layout_weight="75"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/black"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_below="@+id/linear_manual_scan_series"
+                    android:id="@+id/linear_scan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="60dp"
+                    android:layout_marginLeft="60dp"
+                    android:visibility="gone"
+                    android:background="@android:color/transparent">
+
+                    <!-- Top horizzontal lines -->
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="2dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:background="@android:color/darker_gray" />
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="2dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@android:color/darker_gray" />
+
+                    <!-- Top vertical lines -->
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:background="@android:color/darker_gray" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@android:color/darker_gray" />
+
+                    <ImageView
+                        android:id="@+id/scan_view"
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/qr"
+                        />
+
+                    <!-- Bottom horizzontal lines -->
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="2dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentStart="true"
+                        android:background="@android:color/darker_gray" />
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="2dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@android:color/darker_gray" />
+
+                    <!-- Bottom vertical lines -->
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentStart="true"
+                        android:background="@android:color/darker_gray" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:background="@android:color/darker_gray" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relative_series_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear_manual_scan_series"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginRight="15dp"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_series_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:hint="Enter Series Number"
+                        app:boxBackgroundColor="#1F689EB8"
+                        app:hintTextColor="@color/APP_Theme_Color">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_series_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:drawableEnd="@drawable/ic_book"
+
+                            android:inputType="numberDecimal"
+                            android:lines="1"
+                            android:maxLength="40"
+
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/APP_Theme_Color"
+                            android:textSize="16dp">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/series_text_hint1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Please enter series number"
+                        android:layout_marginLeft="27dp"
+                        android:layout_marginRight="15dp"
+                        android:textColor="@color/red"
+                        android:visibility="gone"
+                        android:layout_below="@+id/text_series_number"
+                        />
+
+                    <TextView
+                        android:layout_below="@+id/series_text_hint1"
+                        android:id="@+id/series_add_btn"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:text="Add"
+                        android:gravity="center_horizontal"
+                        android:textSize="22dp"
+                        android:padding="8dp"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_gravity="left"
+                        android:layout_marginTop="20dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/APP_Theme_Color"
+                        android:layout_marginBottom="20dp"
+                        />
+                    <TextView
+                        android:id="@+id/series_scan_btn"
+                        android:layout_below="@+id/series_text_hint1"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:text="Scan"
+                        android:layout_toRightOf="@+id/series_add_btn"
+                        android:gravity="center_horizontal"
+                        android:textSize="22dp"
+                        android:padding="8dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_gravity="left"
+                        android:layout_marginTop="20dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/APP_Theme_Color"
+                        android:layout_marginBottom="20dp"
+                        />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_add_new"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear_manual_scan_series"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_classes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:hint="Categories"
+                        app:boxBackgroundColor="#1F689EB8"
+                        app:endIconMode="dropdown_menu"
+                        app:hintTextColor="@color/APP_Theme_Color">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/auto_text_classes"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:editable="false"
+                            android:focusableInTouchMode="false"
+                            android:inputType="none"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="20dp"
+                            android:paddingRight="15dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/APP_Theme_Color"
+                            android:textSize="16dp">
+
+                        </AutoCompleteTextView>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:id="@+id/text_hint1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Please select a class"
+                        android:layout_marginLeft="27dp"
+                        android:layout_marginRight="15dp"
+                        android:textColor="@color/red"
+                        android:visibility="gone"
+                        />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_subjects"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Products"
+                        app:boxBackgroundColor="#1F689EB8"
+                        app:endIconMode="dropdown_menu"
+                        app:hintTextColor="@color/APP_Theme_Color">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/auto_text_subjects"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:editable="false"
+                            android:focusableInTouchMode="false"
+                            android:inputType="none"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="20dp"
+                            android:paddingRight="15dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/APP_Theme_Color"
+                            android:textSize="16dp">
+
+                        </AutoCompleteTextView>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/text_hint2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Please select a subject"
+                        android:layout_marginLeft="27dp"
+                        android:layout_marginRight="15dp"
+                        android:textColor="@color/red"
+                        android:visibility="gone"
+                        />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_quantity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter Quantity"
+                        app:boxBackgroundColor="#1F689EB8"
+                        app:hintTextColor="@color/APP_Theme_Color">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_quantity"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@null"
+                            android:drawableEnd="@drawable/ic_cart"
+
+                            android:inputType="numberDecimal"
+                            android:lines="1"
+                            android:maxLength="40"
+
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/APP_Theme_Color"
+                            android:textSize="16dp">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:id="@+id/text_hint3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Please enter quantity"
+                        android:layout_marginLeft="27dp"
+                        android:layout_marginRight="15dp"
+                        android:textColor="@color/red"
+                        android:visibility="gone"
+                        />
+
+                    <TextView
+                        android:id="@+id/add_btn"
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:text="Add"
+                        android:gravity="center_horizontal"
+                        android:textSize="22dp"
+                        android:padding="8dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/bg_round_corners"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/APP_Theme_Color"
+                        android:layout_marginBottom="20dp"
+                        />
+
+                    <!--<TextView
+                        android:id="@+id/visit_save"
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:text="Save"
+                        android:gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="22dp"
+                        android:padding="8dp"
+                        android:background="@drawable/border"
+                        android:textStyle="bold"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/sana_pink_color"
+                        />
+                    <LinearLayout
+                        android:id="@+id/linear_layout_btn_visit_followup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/btn_save"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp"
+                        android:weightSum="100">
+
+                        <TextView
+                            android:id="@+id/btn_followup"
+                            android:layout_weight="50"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Follow Up"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/white"
+                            android:layout_margin="5dp"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
+                            android:padding="5dp"
+                            android:background="@drawable/border"
+                            android:drawableRight="@drawable/right_arrow"
+                            android:backgroundTint="@color/sana_pink_color"
+                            />
+                        <TextView
+                            android:id="@+id/btn_visit"
+                            android:layout_weight="50"
+                            android:layout_width="0dp"
+
+                            android:text="Visit"
+                            android:layout_margin="5dp"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
+                            android:padding="5dp"
+                            android:background="@drawable/border"
+                            android:drawableRight="@drawable/right_arrow"
+
+                            android:backgroundTint="@color/sana_pink_color"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linear_layout_btn_sample_recovery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/linear_layout_btn_visit_followup"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp"
+                        android:layout_marginBottom="15dp"
+                        android:weightSum="100">
+
+                        <TextView
+                            android:layout_weight="50"
+                            android:id="@+id/btn_sample"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Sample"
+                            android:layout_margin="5dp"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/white"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
+                            android:padding="5dp"
+                            android:background="@drawable/border"
+                            android:drawableRight="@drawable/right_arrow"
+                            android:backgroundTint="@color/sana_pink_color"
+                            />
+                        <TextView
+                            android:id="@+id/btn_recovery"
+                            android:layout_weight="50"
+                            android:layout_below="@+id/btn_followup"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Recovery"
+                            android:layout_margin="5dp"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/white"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
+                            android:padding="5dp"
+                            android:background="@drawable/border"
+                            android:drawableRight="@drawable/right_arrow"
+                            android:backgroundTint="@color/sana_pink_color"
+                            />
+
+                    </LinearLayout>-->
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+</LinearLayout>
+

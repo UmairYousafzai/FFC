@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/linear_tab"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/APP_Theme_Color"
+        android:weightSum="100">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="20"
+            android:src="@drawable/ic_back_arrow"
+            android:padding="10dp"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:text="Product Details"
+            android:textSize="25dp"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:layout_weight="60"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            />
+        <ImageView
+            android:id="@+id/search_btn"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="20"
+            android:src="@drawable/ic_search"
+            android:padding="10dp"
+            app:tint="@color/white"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/relative_search"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/linear_tab"
+        android:elevation="10dp"
+        android:background="@drawable/bg_shadow"
+        >
+
+        <LinearLayout
+            android:id="@+id/linear_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:weightSum="100"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/bg_round_corners"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_text"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="80"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textStyle="italic"
+                android:hint="Search for products"
+                android:padding="9dp"
+                android:background="@null"
+                />
+            <ImageView
+                android:id="@+id/search_result_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_forward_arrow"
+                app:tint="@color/APP_Theme_Color"
+                android:layout_weight="20"
+                android:padding="9dp"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/relative_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_content"
+        android:background="#1F689EB8"
+        >
+
+        <LinearLayout
+            android:id="@+id/linear_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/btns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/linear_product_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:weightSum="2"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_shadow"
+                    android:paddingBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    >
+
+                    <LinearLayout
+
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:weightSum="100"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="20"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_product"
+                            />
+                        <TextView
+                            android:layout_weight="80"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:text="Product A"
+                            android:textSize="25dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            />
+                    </LinearLayout>
+                    <View
+                        android:background="@color/grey"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        />
+                    <LinearLayout
+                        android:id="@+id/linear_product_a_btns"
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:weightSum="4"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/presentation_btn1"
+                            app:cornerRadius="20dp"
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Presentation"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            />
+                        <com.google.android.material.button.MaterialButton
+                            app:cornerRadius="20dp"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Order"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            />
+                        <com.google.android.material.button.MaterialButton
+                            app:cornerRadius="20dp"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Price"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_product_b"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/linear_product_a"
+                    android:layout_height="120dp"
+                    android:weightSum="2"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_shadow"
+                    android:paddingBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    >
+
+                    <LinearLayout
+
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:weightSum="100"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="20"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_product"
+                            />
+                        <TextView
+                            android:layout_weight="80"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:text="Product B"
+                            android:textSize="25dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            />
+                    </LinearLayout>
+                    <View
+                        android:background="@color/grey"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        />
+                    <LinearLayout
+                        android:id="@+id/linear_product_b_btns"
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:weightSum="4"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/presentation_btn2"
+                            app:cornerRadius="20dp"
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Presentation"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            />
+                        <com.google.android.material.button.MaterialButton
+                            app:cornerRadius="20dp"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Order"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            />
+                        <com.google.android.material.button.MaterialButton
+                            app:cornerRadius="20dp"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Price"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_product_c"
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/linear_product_b"
+                    android:layout_height="120dp"
+                    android:weightSum="2"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_shadow"
+                    android:paddingBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    >
+
+                    <LinearLayout
+
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:weightSum="100"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="20"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_product"
+                            />
+                        <TextView
+                            android:layout_weight="80"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:text="Product C"
+                            android:textSize="25dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            />
+                    </LinearLayout>
+                    <View
+                        android:background="@color/grey"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        />
+                    <LinearLayout
+                        android:id="@+id/linear_product_c_btns"
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:weightSum="4"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/presentation_btn3"
+                            app:cornerRadius="20dp"
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Presentation"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            />
+                        <com.google.android.material.button.MaterialButton
+                            app:cornerRadius="20dp"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Order"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            />
+                        <com.google.android.material.button.MaterialButton
+                            app:cornerRadius="20dp"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="Price"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

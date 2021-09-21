@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="350dp"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_round_corners"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/btn_close_compelete_dialog"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_cancel_24"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="10dp"
+                android:textColor="@color/APP_Theme_Color"
+                android:background="@drawable/bg_close_button"
+                />
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/img_erp_cloud_logo"
+                android:layout_centerHorizontal="true"
+                android:padding="20dp"
+                />
+            <TextView
+                android:id="@+id/heading_reset_server"
+                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                android:layout_below="@+id/profile_image"
+                android:layout_centerHorizontal="true"
+                android:text="@string/compelete_activity"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                android:id="@+id/text_reset_server"
+                android:layout_below="@+id/heading_reset_server"
+                android:layout_centerHorizontal="true"
+                android:text="Please enter your remarks"
+                android:gravity="center_horizontal"
+                />
+
+            <EditText
+                android:id="@+id/remarks_edittext"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_reset_server"
+                android:layout_centerHorizontal="true"
+                android:textSize="15sp"
+
+
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/save_remarks_btn"
+                android:layout_below="@id/remarks_edittext"
+                android:text="@string/save"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:backgroundTint="@color/white"
+                app:strokeColor="@color/APP_Theme_Color"
+                app:strokeWidth="1dp"
+                android:textColor="@color/APP_Theme_Color"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:textSize="13sp"
+                app:rippleColor="@color/APP_Theme_Color"
+                />
+        </RelativeLayout>
+    </ScrollView>
+
+
+
+</RelativeLayout>

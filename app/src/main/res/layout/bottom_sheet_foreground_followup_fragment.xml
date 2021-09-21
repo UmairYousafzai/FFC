@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xmnls="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/design_bottom_sheet"
+    android:background="@color/white"
+    xmnls:layout_behavior="@string/bottom_sheet_behavior"
+    xmnls:behavior_hideable="false"
+    xmnls:behavior_peekHeight="78dp"
+    >
+    <View
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/bar"
+        android:layout_width="60dp"
+        android:layout_height="5dp"
+        android:background="@drawable/bg_menu_sheet_line"
+        android:backgroundTint="@color/APP_Theme_Color"
+        />
+    <TextView
+        android:id="@+id/visit_heading"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:text="Follow up Form"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/APP_Theme_Color"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#E1E1E1"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:xmnls="http://schemas.android.com/tools"
+        app:boxBackgroundColor="@color/white">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/visit_scrolll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linear_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:weightSum="100"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_weight="85"
+                        android:id="@+id/text_views_of_principal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Reviews of host"
+                        app:hintTextColor="@color/APP_Theme_Color"
+                        app:boxBackgroundColor="@color/white">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:background="@null"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="40"
+
+                            android:maxLines="1"
+                            android:lines="1"
+                            android:singleLine="true"
+
+                            android:id="@+id/edit_text_views_of_principal"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/APP_Theme_Color"
+                            android:drawableRight="@drawable/ic_man"
+                            android:nextFocusDown="@+id/edit_text_subjects_wants_to_change"
+                            android:textSize="16dp">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/voice_record_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_mic"
+                        android:layout_weight="15"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="2dp"
+                        android:background="@color/APP_Theme_Color"
+                        android:padding="10dp"
+                        />
+
+
+                </LinearLayout>
+
+
+
+                <TextView
+                    android:id="@+id/text_hint1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please enter principal reviews"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_subjects_wants_to_change"
+                    android:layout_below="@+id/text_views_of_principal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Remarks about product"
+                    app:hintTextColor="@color/APP_Theme_Color"
+                    app:boxBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+
+                        android:id="@+id/edit_text_subjects_wants_to_change"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/APP_Theme_Color"
+                        android:drawableEnd="@drawable/ic_product_info"
+                        android:nextFocusDown="@+id/edit_text_person_in_contact"
+                        android:textSize="16dp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/text_hint2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please enter subjects principal wants to change"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_person_in_contact"
+                    android:layout_below="@+id/text_subjects_wants_to_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Person in Contact"
+                    app:hintTextColor="@color/APP_Theme_Color"
+                    app:boxBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+
+                        android:id="@+id/edit_text_person_in_contact"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/APP_Theme_Color"
+                        android:drawableEnd="@drawable/ic_men_circle"
+                        android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+                        android:textSize="16dp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/text_hint3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please enter person in contact"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_person_in_contact_phone"
+                    android:layout_below="@+id/text_person_in_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Person in Contact Phone"
+                    app:hintTextColor="@color/APP_Theme_Color"
+                    app:boxBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+
+                        android:id="@+id/edit_text_person_in_contact_phone"
+                        android:inputType="number"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/APP_Theme_Color"
+                        android:drawableEnd="@drawable/ic_calll"
+                        android:drawableTint="@color/APP_Theme_Color"
+                        android:nextFocusDown="@+id/edit_text_remarks"
+                        android:textSize="16dp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/text_hint4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please enter person in contact phone"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_remarks"
+                    android:layout_below="@+id/text_person_in_contact_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Remarks"
+                    app:hintTextColor="@color/APP_Theme_Color"
+                    app:boxBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+
+                        android:id="@+id/edit_text_remarks"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/APP_Theme_Color"
+                        android:drawableEnd="@drawable/ic_star_rate"
+                        android:nextFocusDown="@+id/edit_text_purpose"
+                        android:textSize="16dp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/text_hint5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please enter remarks"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_purpose"
+                    android:layout_below="@+id/text_remarks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Visit Purpose"
+                    app:hintTextColor="@color/APP_Theme_Color"
+                    app:boxBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+
+                        android:id="@+id/edit_text_purpose"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/APP_Theme_Color"
+                        android:drawableEnd="@drawable/ic_text_snippet"
+                        android:drawableTint="@color/APP_Theme_Color"
+                        android:nextFocusDown="@+id/edit_text_purpose"
+                        android:textSize="16dp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/text_hint6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please enter purpose"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_stage"
+                    android:layout_below="@+id/text_remarks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Stage"
+                    app:endIconMode="dropdown_menu"
+                    app:hintTextColor="@color/APP_Theme_Color"
+                    app:boxBackgroundColor="@color/white">
+
+                    <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:paddingRight="15dp"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="20dp"
+                        android:layout_height="60dp"
+                        android:focusableInTouchMode="false"
+                        android:inputType="none"
+                        android:textSize="16dp"
+                        android:editable="false"
+                        android:id="@+id/auto_stage"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/APP_Theme_Color">
+
+                    </AutoCompleteTextView>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_status"
+                    android:layout_below="@+id/text_stage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Status"
+                    app:endIconMode="dropdown_menu"
+                    app:hintTextColor="@color/APP_Theme_Color"
+                    app:boxBackgroundColor="@color/white">
+
+                    <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:paddingRight="15dp"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="20dp"
+                        android:layout_height="60dp"
+                        android:focusableInTouchMode="false"
+                        android:inputType="none"
+                        android:textSize="16dp"
+                        android:editable="false"
+                        android:id="@+id/auto_status"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/APP_Theme_Color">
+
+                    </AutoCompleteTextView>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/text_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_hint3"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="Interest Level"
+                    android:textSize="17dp" />
+                <LinearLayout
+                    android:id="@+id/linear_interest_high_medium_low"
+                    android:layout_below="@+id/text_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/btn_interest_high"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="Low"
+                        android:textSize="14dp"
+                        android:textColor="@color/white"
+                        android:background="@color/APP_Theme_Color"
+                        android:padding="10dp"
+                        />
+                    <TextView
+                        android:id="@+id/btn_interest_medium"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="Medium"
+                        android:textSize="14dp"
+                        android:layout_marginLeft="2dp"
+                        android:textColor="@color/black"
+                        android:background="#4D689EB8"
+                        android:padding="10dp"
+                        />
+                    <TextView
+                        android:id="@+id/btn_interest_low"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="High"
+                        android:textSize="14dp"
+                        android:layout_marginLeft="2dp"
+                        android:textColor="@color/black"
+                        android:background="#4D689EB8"
+                        android:padding="10dp"
+                        />
+                </LinearLayout>
+                <androidx.appcompat.widget.AppCompatRatingBar
+                    android:id="@+id/simpleRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:scaleX=".8"
+                    android:scaleY=".7"
+                    android:stepSize="0.6"
+                    android:numStars="5" />
+
+                <TextView
+                    android:id="@+id/visit_save"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:text="Save"
+                    android:gravity="center_horizontal"
+                    android:textSize="22dp"
+                    android:padding="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_menu_sheet_line"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/APP_Theme_Color"
+                    android:layout_marginBottom="90dp"
+                    />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+</LinearLayout>
+

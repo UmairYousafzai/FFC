@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AttendanceActivity.AttendanceFragment">
+
+    <RelativeLayout
+        android:id="@+id/relative_tab"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@drawable/bg_header_target"
+        >
+
+        <TextView
+            android:id="@+id/attendance_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Mark Your Attendance"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            />
+        <TextView
+            android:id="@+id/attendance_text"
+            android:layout_below="@+id/attendance_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Click on the button below and simply capture your image to mark your attendance."
+            android:textColor="@color/white"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:gravity="center"
+            android:textSize="12dp"
+            android:layout_marginBottom="5dp"
+            />
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/camera_img"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/relative_tab"
+        android:src="@drawable/ic_camera"
+
+
+        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/TakePhotoButton"
+        android:layout_below="@+id/camera_img"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Take Photo"
+        app:strokeWidth="1dp"
+        android:backgroundTint="@color/white"
+        app:strokeColor="@color/APP_Theme_Color"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/APP_Theme_Color"
+        android:textStyle="bold"
+        app:rippleColor="@color/APP_Theme_Color"
+        />
+    <Button
+        android:id="@+id/CheckInButton"
+        android:layout_below="@+id/camera_img"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Check In"
+        app:strokeWidth="1dp"
+        android:backgroundTint="@color/white"
+        app:strokeColor="@color/APP_Theme_Color"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/APP_Theme_Color"
+        android:textStyle="bold"
+        app:rippleColor="@color/APP_Theme_Color"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>

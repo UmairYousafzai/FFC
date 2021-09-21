@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/Home" />
+
+        <item
+            android:id="@+id/nav_start_day"
+            android:icon="@drawable/ic_target"
+            android:title="@string/targets" />
+        <item
+            android:id="@+id/nav_expense_list"
+            android:icon="@drawable/ic_expense"
+            android:title="@string/Expense" />
+
+        <item
+            android:id="@+id/nav_add_new_doc"
+            android:icon="@drawable/ic_profile"
+            android:title="@string/doctor_profile">
+        </item>
+
+        <item
+            android:id="@+id/end_day"
+            android:icon="@drawable/ic_end_day"
+            android:title="@string/end_day" />
+        <item
+            android:id="@+id/signOut"
+            android:icon="@drawable/ic_back_arrow"
+            android:title="@string/signout" />
+        <item
+            android:id="@+id/nav_myProfile"
+            android:icon="@drawable/ic_account"
+            android:title="@string/my_profile" />
+        <item
+            android:id="@+id/nav_restPassword"
+            android:icon="@drawable/ic_password_key"
+
+            android:title="@string/reset_password" />
+        <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/ic_info"
+            android:title="@string/about_us" />
+        <item
+            android:id="@+id/nav_privacy_policy"
+            android:icon="@drawable/ic_call"
+            android:title="@string/contact_us" />
+
+        <item
+            android:id="@+id/nav_master_setting"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/master_setting" />
+    </group></menu>

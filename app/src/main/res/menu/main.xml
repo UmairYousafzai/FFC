@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_privacy_policy"
+        android:title="@string/contact_us"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nav_about_us"
+        android:title="@string/about_us"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/signOut"
+        android:title="@string/signout"
+        app:showAsAction="never"
+        />
+
+</menu>

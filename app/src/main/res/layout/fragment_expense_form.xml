@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xmnls="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/design_bottom_sheet"
+    android:background="@color/white"
+    xmnls:layout_behavior="@string/bottom_sheet_behavior"
+    xmnls:behavior_hideable="false"
+    xmnls:behavior_peekHeight="58dp"
+    app:ignore="NamespaceTypo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/visit_heading"
+            android:layout_weight="88"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="Expense Form"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/APP_Theme_Color"
+            />
+
+
+        <ImageView
+            android:id="@+id/save_expense_a"
+            android:layout_width="0dp"
+            android:layout_weight="12"
+            android:layout_height="40dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/tick_two"
+          />
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#E1E1E1"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:xmnls="http://schemas.android.com/tools">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/visit_scrolll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linear_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_views_title_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Title"
+                    app:boxBackgroundColor="@color/white"
+                 >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:id="@+id/edit_text_views_title_expense"
+                        android:textColor="@color/black"
+                        android:nextFocusDown="@+id/edit_text_subjects_wants_to_change"
+                        android:textSize="16sp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/text_hint1_title_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please enter expense title."
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_amount_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Amount"
+                    app:boxBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+
+                        android:id="@+id/edit_text_amount_expense"
+                        android:textColor="@color/black"
+                        android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+                        android:textSize="16sp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/text_hint2_title_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="4"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp">
+
+                    <TextView
+                        android:id="@+id/text_label"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:text="Labels"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/btn_add_tag"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="Add new label"
+                        android:textSize="17sp"
+                        android:textColor="@color/APP_Theme_Color"
+                        android:drawableTint="@color/APP_Theme_Color"
+                        android:layout_marginStart="15dp"
+                        app:drawableEndCompat="@drawable/ic_baseline_add_24" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey"
+                    android:layout_marginTop="18dp"
+                    />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:id="@+id/chipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </com.google.android.material.chip.ChipGroup>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_description_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description"
+                    app:boxBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+
+                        android:id="@+id/edit_text_description_expense"
+                        android:textColor="@color/black"
+                        android:drawableEnd="@drawable/ic_baseline_menu_book_24"
+                        android:nextFocusDown="@+id/edit_text_person_in_contact"
+                        android:drawableTint="@color/APP_Theme_Color"
+                        android:textSize="16sp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/text_hint3_description_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please enter description."
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_project"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Project Account"
+                    app:endIconMode="dropdown_menu"
+                    app:endIconTint="@color/APP_Theme_Color"
+                    app:boxBackgroundColor="@color/white">
+
+                    <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:paddingRight="15dp"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="20dp"
+                        android:layout_height="60dp"
+                        android:focusableInTouchMode="false"
+                        android:inputType="none"
+                        android:textSize="16sp"
+                        android:id="@+id/auto_project"
+                        android:textColor="@color/black"
+                        >
+
+                    </AutoCompleteTextView>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_payee_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Paid to"
+                    app:boxBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="40"
+
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+
+                        android:id="@+id/edit_text_payee_expense"
+                        android:textColor="@color/black"
+                        android:drawableEnd="@drawable/ic_baseline_person_add_24"
+                        android:drawableTint="@color/APP_Theme_Color"
+                        android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+                        android:textSize="16sp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_datepicker_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="@color/white"
+                    android:hint="Date"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/auto_datepicker_expense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:focusableInTouchMode="false"
+                        android:inputType="none"
+                        android:editable="false"
+
+                        android:drawableEnd="@drawable/ic_baseline_date_range_24"
+                        android:lines="1"
+                        android:maxLength="40"
+
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:drawableTint="@color/APP_Theme_Color"
+                        android:textSize="16sp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_datepicker_time_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="@color/white"
+                    android:hint="Time">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/auto_datepicker_time_expense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:focusableInTouchMode="false"
+                        android:inputType="none"
+                        android:editable="false"
+                        android:drawableEnd="@drawable/ic_baseline_access_time_24"
+                        android:lines="1"
+                        android:maxLength="40"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:drawableTint="@color/APP_Theme_Color"
+                        android:textSize="16sp">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    android:background="@color/APP_Theme_Color"
+                    >
+
+                    <TextView
+                        android:id="@+id/category_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Selected Category"
+                        android:textSize="15sp"
+                        android:layout_marginStart="5dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:padding="5dp"
+                        android:layout_centerVertical="true"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_marginEnd="5dp"
+                        android:id="@+id/btn_category"
+                        android:layout_width="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_height="40dp"
+                        android:text="Category"
+                        app:icon="@drawable/ic_baseline_add_24"
+                        app:strokeColor="@color/APP_Theme_Color"
+                        app:backgroundTint="@color/white"
+                        android:background="@color/white"
+                        app:strokeWidth="1dp"
+                        android:textColor="@color/APP_Theme_Color"
+                        app:iconTint="@color/APP_Theme_Color"
+                        app:rippleColor="@color/APP_Theme_Color"
+                        />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/exp_proj_row2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_receipt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Add Receipt"
+                        android:layout_marginStart="5dp"
+                        app:icon="@drawable/ic_baseline_receipt_24"
+                        android:backgroundTint="@color/white"
+                        app:strokeColor="@color/APP_Theme_Color"
+                        app:strokeWidth="1dp"
+                        android:textColor="@color/APP_Theme_Color"
+
+                        app:iconTint="@color/APP_Theme_Color"
+                        app:rippleColor="@color/APP_Theme_Color"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:orientation="vertical">
+
+
+
+                </LinearLayout>
+
+
+                <!--<com.joooonho.SelectableRoundedImageView
+                    android:visibility="gone"
+                    android:id="@+id/img_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:adjustViewBounds="false"
+                    android:scaleType="fitXY"
+                    android:layout_marginBottom="40dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    app:sriv_left_top_corner_radius="5dp"
+                    app:sriv_right_top_corner_radius="5dp"
+                    app:sriv_left_bottom_corner_radius="5dp"
+                    app:sriv_right_bottom_corner_radius="5dp"
+                    app:sriv_oval="false"
+                    android:padding="2dp"
+                    />-->
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+</LinearLayout>

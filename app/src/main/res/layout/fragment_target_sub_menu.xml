@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/img_sub_menu">
+
+    <LinearLayout
+        android:id="@+id/linear_system_suggested"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/bg_shadow"
+        android:layout_marginTop="150dp"
+        android:backgroundTint="@color/APP_Theme_Color"
+        android:layout_weight="100">
+
+        <TextView
+            android:id="@+id/text_system_suggested"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="System Suggested"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="9dp"
+
+            />
+        <TextView
+            android:id="@+id/inner_text_system_suggested"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Here, system would suggest you the work plan for a specified day. For current day, system automatically make work plan for you."
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:textStyle="italic"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            />
+        <ImageView
+            android:id="@+id/btn_next"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_forward_arrow"
+            android:layout_gravity="right"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_work_plan"
+        android:layout_below="@+id/linear_system_suggested"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/bg_shadow"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/APP_Theme_Color">
+
+        <TextView
+            android:id="@+id/text_work_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Work Plan"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="9dp"
+
+            />
+        <TextView
+            android:id="@+id/inner_text_work_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Here, you can find the work plan that you set for a specified date and time. This work plan would not be system suggested."
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:textStyle="italic"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            />
+        <ImageView
+            android:id="@+id/btn_next2"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_forward_arrow"
+            android:layout_gravity="right"
+            />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

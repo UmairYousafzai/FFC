@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.myapplication.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_start_day"
+            app:destination="@id/nav_start_day" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.example.myapplication.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.example.myapplication.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_start_day"
+        android:name="com.example.myapplication.TargetMenu.StartDayFragment"
+        android:label="Start Day"
+        tools:layout="@layout/fragment_start_day" >
+        <action
+            android:id="@+id/action_nav_start_day_to_nav_target_main"
+            app:destination="@id/nav_target_main"
+            app:enterAnim="@anim/enter_from_left"
+            app:exitAnim="@anim/enter_from_right"
+            app:popEnterAnim="@anim/enter_from_right"
+            app:popExitAnim="@anim/enter_from_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_target_main"
+        android:name="com.example.myapplication.TargetMenu.TargetMainFragment"
+        android:label="Target Main"
+        tools:layout="@layout/fragment_target_main" >
+        <action
+            android:id="@+id/action_nav_target_main_to_nav_target_sub_menu"
+            app:destination="@id/nav_target_sub_menu"
+            app:enterAnim="@anim/enter_from_left"
+            app:exitAnim="@anim/enter_from_right"
+            app:popEnterAnim="@anim/enter_from_right"
+            app:popExitAnim="@anim/enter_from_left" />
+        <action
+            android:id="@+id/action_nav_target_main_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_target_sub_menu"
+        android:name="com.example.myapplication.Target.TargetPreMenuFragment"
+        android:label="Target Sub Menu"
+        tools:layout="@layout/fragment_target_sub_menu" >
+        <action
+            android:id="@+id/action_nav_target_sub_menu_to_nav_target"
+            app:destination="@id/target_fragment"
+            app:enterAnim="@anim/enter_from_left"
+            app:exitAnim="@anim/enter_from_right"
+            app:popEnterAnim="@anim/enter_from_right"
+            app:popExitAnim="@anim/enter_from_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/target_fragment"
+        android:name="com.example.myapplication.Target.TargetFragment"
+        android:label="Target"
+        tools:layout="@layout/fragment_target" >
+        <action
+            android:id="@+id/action_target_to_targetPostMenuFragment"
+            app:destination="@id/targetPostMenuFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_close_exit" />
+        <action
+            android:id="@+id/action_target_fragment_to_addworkPlanFragment"
+            app:destination="@id/addworkPlanFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_product_info"
+        android:name="com.example.myapplication.Target.Visit.ProductInfoFragment"
+        android:label="Product Info"
+        tools:layout="@layout/fragment_product_info" />
+
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.example.myapplication.Target.Visit.HistoryFragment"
+        android:label="History"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/nav_local_travel"
+        android:name="com.example.myapplication.LocalTravel.LocalTravelFragment"
+        android:label="Local Travel"
+        tools:layout="@layout/fragment_target_main" />
+
+    <fragment
+        android:id="@+id/nav_private_travel"
+        android:name="com.example.myapplication.PrivateTravel.PrivateTravelFragment"
+        android:label="Private Travel"
+        tools:layout="@layout/fragment_target_main" />
+    <fragment
+        android:id="@+id/nav_product_slider"
+        android:name="com.example.myapplication.Target.Visit.ProductSliderFragment"
+        android:label="Product Slider"
+        tools:layout="@layout/fragment_product_slider" />
+
+
+    <fragment
+        android:id="@+id/nav_office"
+        android:name="com.example.myapplication.Office.OfficeFragment"
+        android:label="Office"
+        tools:layout="@layout/fragment_office" />
+
+    <fragment
+        android:id="@+id/Scan"
+        android:name="com.example.myapplication.Target.ScanFragment"
+        android:label="Scan Fragment"
+        tools:layout="@layout/fragment_scan" />
+
+    <fragment
+        android:id="@+id/nav_visit"
+        android:name="com.example.myapplication.Target.Visit.VisitFragment"
+        android:label="Visit"
+        tools:layout="@layout/fragment_visit" />
+
+    <fragment
+        android:id="@+id/nav_sample"
+        android:name="com.example.myapplication.Target.Sample.SampleFragment"
+        android:label="Sample"
+        tools:layout="@layout/fragment_sample" />
+
+    <fragment
+        android:id="@+id/nav_followup"
+        android:name="com.example.myapplication.Target.FollowUp.FollowUpFragment"
+        android:label="Follow Up"
+        tools:layout="@layout/fragment_follow_up" />
+
+    <fragment
+        android:id="@+id/nav_recovery"
+        android:name="com.example.myapplication.Target.Recovery.RecoveryFragment"
+        android:label="Recovery"
+        tools:layout="@layout/fragment_recovery" />
+
+    <fragment
+        android:id="@+id/nav_attendance"
+        android:name="com.example.myapplication.AttendanceActivity.AttendanceFragment"
+        android:label="Attendance"
+        tools:layout="@layout/fragment_attendance" />
+    <fragment
+        android:id="@+id/targetPostMenuFragment"
+        android:name="com.example.myapplication.Target.TargetPostMenuFragment"
+        android:label="Post Menu"
+        tools:layout="@layout/fragment_target_post_menu" >
+        <argument
+            android:name="DoctorModel"
+            app:argType="com.example.myapplication.DoctorModel" />
+        <action
+            android:id="@+id/action_targetPostMenuFragment_to_target_fragment"
+            app:destination="@id/target_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addworkPlanFragment"
+        android:name="com.example.myapplication.Target.AddworkPlanFragment"
+        android:label="Add Work Plan"
+        tools:layout="@layout/fragment_addwork_plan" >
+        <action
+            android:id="@+id/action_addworkPlanFragment_to_target_fragment"
+            app:destination="@id/target_fragment" />
+        <action
+            android:id="@+id/action_addworkPlanFragment_to_addWorkPlanDialogFragment"
+            app:destination="@id/addWorkPlanDialogFragment" />
+        <argument
+            android:name="areaIds"
+            app:argType="string"
+            android:defaultValue="none" />
+        <argument
+            android:name="areaTittles"
+            app:argType="string"
+            android:defaultValue="none" />
+        <argument
+            android:name="key"
+            app:argType="integer"
+            android:defaultValue="1" />
+
+
+    </fragment>
+    <dialog
+        android:id="@+id/addWorkPlanDialogFragment"
+        android:name="com.example.myapplication.Target.AddWorkPlanDialogFragment"
+        android:label="AddWorkPlanDialogFragment"
+        tools:layout="@layout/custom_add_workplan_dialog"
+        >
+        <argument
+            android:name="key"
+            app:argType="integer"
+            android:defaultValue="1"
+            />
+        <action
+            android:id="@+id/action_addWorkPlanDialogFragment_to_addworkPlanFragment"
+            app:destination="@id/addworkPlanFragment" />
+        <argument
+            android:name="dataIds"
+            app:argType="string"
+            android:defaultValue="none" />
+
+
+    </dialog>
+    <fragment
+        android:id="@+id/doctorListFragment"
+        android:name="com.example.myapplication.Target.DoctorListFragment"
+        android:label="Doctor List"
+        tools:layout="@layout/fragment_doctor_list" >
+        <action
+            android:id="@+id/action_doctorListFragment_to_filteredDocFullInfoFragment"
+            app:destination="@id/filteredDocFullInfoFragment" />
+        <action
+            android:id="@+id/action_doctorListFragment_to_doctorFormFragment"
+            app:destination="@id/doctorFormFragment" />
+    </fragment><action android:id="@+id/action_global_doctorListFragment" app:destination="@id/doctorListFragment"/>
+    <fragment
+        android:id="@+id/filteredDocFullInfoFragment"
+        android:name="com.example.myapplication.Target.FilteredDocFullInfoFragment"
+        android:label="Doctor Info"
+        tools:layout="@layout/fragment_filtered_doc_full_info" >
+        <argument
+            android:name="doctorId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_filteredDocFullInfoFragment_to_doctorFormFragment"
+            app:destination="@id/doctorFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/doctorFormFragment"
+        android:name="com.example.myapplication.Target.DoctorFormFragment"
+        android:label="Doctor Form"
+        tools:layout="@layout/fragment_doctor_form" >
+        <action
+            android:id="@+id/action_doctorFormFragment_to_addScheduleFragment"
+            app:destination="@id/addScheduleFragment" />
+        <argument
+            android:name="filter_doc"
+            app:argType="com.example.myapplication.FilteredDoctorInfomationModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/addScheduleFragment"
+        android:name="com.example.myapplication.Target.AddScheduleFragment"
+        android:label="Add Schedule"
+        tools:layout="@layout/fragment_add_schedule" >
+        <argument
+            android:name="doctorToSave"
+            app:argType="com.example.myapplication.ModelClasses.SaveDoctorModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+</navigation>

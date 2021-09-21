@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/APP_Theme_Color"
+    tools:context=".Target.AddScheduleFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/background_top_curve"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="4dp"
+        >
+
+        <Button
+            android:id="@+id/btn_save_doctor"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Save Doctor"
+            android:layout_margin="5dp"
+            android:elevation="4dp"
+            android:layout_gravity="center"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/APP_Theme_Color"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_region"
+            android:textColor="@color/APP_Theme_Color"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:background="@drawable/spinner_bg"
+            android:padding="2dp"
+            android:layout_margin="5dp"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_location_on_24"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"/>
+            <Spinner
+                android:id="@+id/region_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_areas"
+            android:textColor="@color/APP_Theme_Color"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:background="@drawable/spinner_bg"
+            android:padding="2dp"
+            android:layout_margin="5dp"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_location_on_24"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"/>
+            <Spinner
+                android:id="@+id/area_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_day"
+            android:textColor="@color/APP_Theme_Color"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            />
+        <LinearLayout
+            android:id="@+id/date_layout"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:background="@drawable/spinner_bg"
+            android:padding="2dp"
+            android:layout_margin="5dp"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_date_range_gray"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"/>
+            <Spinner
+                android:id="@+id/day_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_opening_timing"
+            android:textColor="@color/APP_Theme_Color"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            />
+        <LinearLayout
+            android:id="@+id/opening_time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:background="@drawable/spinner_bg"
+            android:padding="2dp"
+            android:layout_margin="5dp"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_access_time_24"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"/>
+      <TextView
+          android:id="@+id/opening_time_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textColor="@color/black"
+          android:textStyle="bold"
+          android:textSize="20sp"
+          android:layout_gravity="center_vertical"
+          />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_closing_timing"
+            android:textColor="@color/APP_Theme_Color"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            />
+        <LinearLayout
+            android:id="@+id/closing_time_layout"
+
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:background="@drawable/spinner_bg"
+            android:padding="2dp"
+            android:layout_margin="5dp"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_access_time_24"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"/>
+            <TextView
+                android:id="@+id/closing_time_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_gravity="center_vertical"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/location_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location   "
+                android:textColor="@color/APP_Theme_Color"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                />
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@color/APP_Theme_Color"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginVertical="4dp"
+                />
+            <CheckBox
+                android:id="@+id/primary_location_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/primary_location"
+                android:textColor="@color/APP_Theme_Color"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="10dp"
+            />
+            <Button
+                android:id="@+id/btn_add_schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_schedule"
+                android:layout_margin="5dp"
+                android:elevation="4dp"
+                android:layout_gravity="center"
+
+                />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginVertical="15dp"
+        >
+        <TextView
+            android:layout_width="15dp"
+            android:layout_height="2dp"
+            android:background="@color/APP_Theme_Color"
+            android:layout_weight=".5"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/added_schedule"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:textColor="@color/APP_Theme_Color"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            />
+
+        <TextView
+            android:layout_width="15dp"
+            android:layout_height="2dp"
+            android:background="@color/APP_Theme_Color"
+            android:layout_weight=".5"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="15dp"
+
+            />
+    </LinearLayout>
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/schedule_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/filter_doc_shecdule_card"
+            />
+        </LinearLayout>
+
+
+
+</androidx.core.widget.NestedScrollView>

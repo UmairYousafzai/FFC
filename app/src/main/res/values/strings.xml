@@ -1,0 +1,109 @@
+<resources>
+    <string name="app_name">FFC_java</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="Home">Home</string>
+    <string name="ActivityHome">ActivityHome</string>
+    <string name="LocalTravel">Local Travel</string>
+    <string name="Target">Target</string>
+    <string name="Office">Office</string>
+    <string name="PrivateTravel">Private Travel</string>
+    <string name="Expense">Expense</string>
+
+    <string-array name="menu_items_ids">
+        <item>Ac_Home</item>
+        <item>Ac_Target</item>
+        <item>Ac_Expense</item>
+        <item>Ac_SOrder</item>
+        <item>Ac_MSetting</item>
+        <item>Ac_EndDay</item>
+        <item>Ac_MyProfile</item>
+
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="speech_prompt">Say something&#8230;</string>
+    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+    <string name="tap_on_mic">Tap on mic to speak</string>
+    <string name="home">Home</string>
+    <string name="targets">Targets</string>
+    <string name="notifications">Notifications</string>
+    <string name="more">More</string>
+    <string name="doctor_profile">Doctor Profile</string>
+    <string name="end_day">End Day</string>
+    <string name="signout">SignOut</string>
+    <string name="my_profile">My Profile</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="about_us">About Us</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="master_setting">Master Setting</string>
+    <string name="visit">Visit</string>
+    <string name="xyz">xyz</string>
+    <string name="main_bulevard_model_town_lahore">Main Bulevard Model Town Lahore.</string>
+    <string name="distance_10_km">Distance: 10 Km</string>
+    <string name="reschedule">Reschedule</string>
+    <string name="cancel">Cancel</string>
+    <string name="morning">Morning</string>
+    <string name="evening">Evening</string>
+    <string name="please_enter_your_new_scheduled_date">Please enter your new scheduled date</string>
+    <string name="please_enter_your_remarks">Please enter your remarks</string>
+    <string name="yyyy_mm_dd">YYYY-MM-DD</string>
+    <string name="please_enter_your_new_scheduled_time">Please enter your new scheduled time</string>
+    <string name="hh_mm">HH:MM</string>
+    <string name="reschedule_activity">Reschedule Activity</string>
+    <string name="product_info">Product Info</string>
+    <string name="find">Find</string>
+    <string name="info">Info</string>
+    <string name="compelete">Compelete</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="compelete_activity">Compelete Activity</string>
+    <string name="add_work_plan">Add Work Plan</string>
+    <string name="date">Date</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_areas">Select Areas</string>
+    <string name="areas">Areas</string>
+    <string name="select_doctors">Select Doctors</string>
+    <string name="doctors">Doctors</string>
+    <string name="select_data">Select Data</string>
+    <string name="set">Set</string>
+    <string name="type_remarks">Type Remarks</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="classification">Classification</string>
+    <string name="select_filter">Select Filter</string>
+    <string name="select_classification">Select Classification</string>
+    <string name="qualification">Qualification</string>
+    <string name="grading">Grading</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="date_of_birth_format_day_month_year">Date of Birth (format:day/Month/year)</string>
+    <string name="clinic_timing">Clinic Timing</string>
+    <string name="gender">Gender</string>
+    <string name="scheduleModels">Schedules</string>
+    <string name="closing_timing">Closing Timing</string>
+    <string name="opening_timing">Opening Timing</string>
+    <string name="area">Area</string>
+    <string name="region">Region</string>
+    <string name="add_schedule">Add ScheduleModel</string>
+    <string name="education_designation">Education/Designation</string>
+    <string name="timings_schedule">Timings/ScheduleModel</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="select_region">Select Region</string>
+    <string name="select_opening_timing">Select Opening Timing</string>
+    <string name="select_closing_timing">Select Closing Timing</string>
+    <string name="select_day">Select Day</string>
+    <string name="added_schedule">Added Schedule</string>
+    <string name="primary_location">Primary Location</string>
+
+</resources>

@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#1F689EB8"
+    >
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/linear_area22"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:weightSum="100"
+        android:orientation="horizontal"
+        android:background="@color/APP_Theme_Color"
+        android:layout_below="@+id/relative_search"
+        >
+
+        <TextView
+            android:id="@+id/areaName22"
+            android:text="Map the location"
+            android:layout_weight="80"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="23dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_marginLeft="15dp"
+            />
+
+        <ImageView
+            android:id="@+id/close_map2"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_close"
+            android:textColor="@color/white"
+            android:layout_weight="20"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+    </LinearLayout>
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/relative_map2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_area22">
+        <fragment
+            android:id="@+id/map_view2"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="Target.MapsFragment"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_area11"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:weightSum="100"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:background="@color/APP_Theme_Color"
+        >
+
+        <TextView
+            android:id="@+id/areaName11"
+            android:text="The Pak Angels School"
+            android:layout_weight="80"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="23dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_marginLeft="15dp"
+            />
+
+        <ImageView
+            android:id="@+id/close_map"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_close"
+            android:textColor="@color/white"
+            android:layout_weight="20"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/relative_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_below="@+id/linear_area11">
+        <fragment
+            android:id="@+id/map_view"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="Target.MapsFragment"/>
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/sample_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/linear_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:background="@color/APP_Theme_Color"
+                android:layout_width="match_parent"
+                android:id="@+id/relative_header"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/back_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_back_arrow"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/profile_image1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_product"
+                    />
+
+                <TextView
+                    android:id="@+id/work_name"
+                    android:layout_below="@+id/profile_image1"
+                    android:text="Pak Angels"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="23dp"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:id="@+id/work_location"
+                    android:layout_below="@+id/work_name"
+                    android:text="Main Afzaal Road Lahore."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:id="@+id/work_distance_from_current_loc"
+                    android:layout_below="@+id/work_location"
+                    android:text="Distance: 18 Km (approx.)"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    />
+                <RatingBar
+                    android:id="@+id/simpleRatingBar2"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/work_distance_from_current_loc"
+                    style="@style/customRatingBar"
+                    android:layout_centerHorizontal="true"
+                    android:numStars="5"
+                    android:rating="4"
+                    android:progressTint="@color/goldenrod"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"/>
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/btns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/linear_call_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/linear_call"
+                        android:background="@color/white"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="match_parent"
+                        android:weightSum="2"
+                        android:padding="15dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_calll"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Call"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linear_message"
+                        android:background="@color/white"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:weightSum="2"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:padding="15dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_message"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Message"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+                    <!--<com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_call"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="Call"
+                        android:textSize="19sp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        app:cornerRadius="10dp"
+                        android:backgroundTint="@color/sana_pink_color"
+                        android:padding="10dp"
+                        android:drawableLeft="@drawable/ic_call_black_24dp"
+                        android:drawableTint="@color/white"
+                        />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_message"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="Message"
+                        android:textSize="19sp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        app:cornerRadius="10dp"
+                        android:backgroundTint="@color/sana_pink_color"
+                        android:padding="10dp"
+                        android:drawableLeft="@drawable/ic_baseline_message_24"
+                        android:drawableTint="@color/white"
+                        />-->
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_checkin_location"
+                    android:layout_below="@+id/linear_call_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginTop="1dp"
+                    >
+                    <LinearLayout
+                        android:id="@+id/linear_product_details"
+                        android:background="@color/white"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="match_parent"
+                        android:weightSum="2"
+                        android:padding="15dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_product_info"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Product Details"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linear_historyy"
+                        android:background="@color/white"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:weightSum="2"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:padding="15dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_history"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="History"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginBottom="120dp"
+                    android:id="@+id/linear_location_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginTop="1dp"
+                    android:layout_below="@+id/linear_checkin_location"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/linear_find"
+                        android:background="@color/white"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="match_parent"
+                        android:weightSum="2"
+                        android:padding="15dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_location"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Find"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linear_about"
+                        android:background="@color/white"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:weightSum="2"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:padding="15dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            app:tint="@color/APP_Theme_Color"
+                            android:src="@drawable/ic_info"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="About"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/APP_Theme_Color"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
+

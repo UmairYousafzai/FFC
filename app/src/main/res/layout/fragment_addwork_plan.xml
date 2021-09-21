@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Target.AddworkPlanFragment"
+    android:fillViewport="true"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/work_plan_date_layout"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:hint="@string/date"
+            android:textColorHint="@color/black"
+            app:helperText="Year, Month, Day "
+            app:helperTextTextColor="@color/APP_Theme_Color"
+            app:startIconDrawable="@drawable/ic_baseline_date_range_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/work_plan_date"
+                android:focusableInTouchMode="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:inputType="none"
+                android:textColor="@color/black"
+                android:text="@string/select_date">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/Areas_layout"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:hint="@string/areas"
+
+            android:textColorHint="@color/black"
+
+
+            app:helperTextTextColor="@color/APP_Theme_Color"
+
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/Areas"
+                android:focusableInTouchMode="false"
+                android:layout_width="match_parent"
+                android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/black"
+                android:text="@string/select_areas">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/Doctors_layout"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:hint="@string/doctors"
+
+            android:textColorHint="@color/black"
+
+
+            app:helperTextTextColor="@color/APP_Theme_Color"
+
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/Doctors"
+                android:focusableInTouchMode="false"
+                android:layout_width="match_parent"
+                android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/select_doctors">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/please_enter_your_remarks"
+            android:textColor="@color/APP_Theme_Color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_margin="8dp"
+            />
+        <EditText
+            android:id="@+id/remarks_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/type_remarks"
+            android:textColorHint="@color/black"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:textSize="14sp"
+            android:layout_margin="8dp"
+            android:textColor="@color/black"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            />
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="DoctorMorning"
+            type="com.example.myapplication.DoctorModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/target_card_morning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shadow"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <LinearLayout
+
+                android:id="@+id/linear_school_list_morning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="100"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+
+                <LinearLayout
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="16"
+                    android:background="@drawable/theme_colour_rectangle_background"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/APP_Theme_Color"
+                        android:gravity="center_horizontal"
+                        android:padding="10dp"
+                        android:text="@{DoctorMorning.status}"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                         />
+
+
+                    <TextView
+                        android:id="@+id/doc_morning_card_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center_vertical"
+                        android:text="@{DoctorMorning.workTime}"
+                        android:textColor="@color/APP_Theme_Color"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="30dp"
+
+                        />
+
+                    <!--                    <TextView-->
+                    <!--                        android:visibility="gone"-->
+                    <!--                        android:id="@+id/doc_card_time_am_pm"-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_marginBottom="4dp"-->
+                    <!--                        android:gravity="center_horizontal"-->
+                    <!--                        android:text="AM"-->
+                    <!--                        android:textColor="@color/APP_Theme_Color"-->
+                    <!--                        android:textSize="20sp" />-->
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="83"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
+
+                        <TextView
+                            android:id="@+id/doc_morning_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="90"
+                            android:text="@{DoctorMorning.name}"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btn_map_morning_card"
+                            android:layout_width="0dp"
+                            android:layout_height="25dp"
+                            android:layout_weight="10"
+                            android:background="@drawable/ic_location" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/location_morning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{DoctorMorning.address}"
+                        android:textColor="@color/slategray"
+                        />
+
+                    <TextView
+                        android:id="@+id/distance_from_current_location_morning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{DoctorMorning.distance}"
+                        android:textColor="@color/slategray"
+                        />
+
+                    <RatingBar
+                        android:id="@+id/simpleRatingBar"
+                        style="@style/customRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:progressTint="@color/goldenrod"
+                        android:rating="4" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="#7C808080" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_reschedule_morning_card"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/white"
+                            android:gravity="center"
+                            android:text="@string/reschedule"
+                            android:textColor="@color/APP_Theme_Color"
+                            android:textSize="10sp"
+                            app:rippleColor="@color/APP_Theme_Color"
+                            app:strokeColor="@color/APP_Theme_Color"
+                            app:strokeWidth="1dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_cancel_morning_card"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/white"
+                            android:gravity="center"
+                            android:text="@string/cancel"
+                            android:textColor="@color/red"
+                            android:textSize="10sp"
+                            app:rippleColor="@color/APP_Theme_Color"
+                            app:strokeColor="@color/red"
+                            app:strokeWidth="1dp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="LoginViewModel"
+            type="com.example.myapplication.LoginViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_screen_login">
+
+
+        <ImageView
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:src="@drawable/img_elogics_logo">
+
+        </ImageView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_marginTop="70dp"
+            app:strokeColor="@color/light_green"
+            app:strokeWidth="2dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:elevation="8dp"
+            app:cardMaxElevation="20dp"
+            app:cardBackgroundColor="@color/white"
+            android:layout_marginBottom="30dp"
+            app:cardCornerRadius="20dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <ImageView
+                    android:id="@+id/FFC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="25dp"
+                    android:src="@drawable/img_erp_cloud_logo"
+                    >
+                </ImageView>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/Text_Input_Email"
+                    android:layout_below="@+id/FFC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Your Email"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="20dp"
+                    app:startIconDrawable="@drawable/ic_mail"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:hintTextColor="@color/light_green"
+                    app:boxStrokeColor="@color/light_green"
+                    app:boxStrokeErrorColor="@color/red"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/Edit_Text_Email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/login_cursor_color"
+                        android:text="@={LoginViewModel.EmailAddress}"
+                        android:textColor="@color/black"
+                        android:inputType="textEmailAddress"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/Text_Input_Password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:hint="Enter Your Password"
+                    android:layout_below="@+id/Text_Input_Email"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:startIconDrawable="@drawable/ic_password"
+                    app:endIconMode="password_toggle"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:hintTextColor="@color/light_green"
+                    app:boxStrokeColor="@color/light_green"
+                    app:boxStrokeErrorColor="@color/red">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/Edit_Text_Password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:text="@={LoginViewModel.Password}"
+                        android:textColor="@color/black"
+                        android:theme="@style/login_cursor_color"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/forgotPassword"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Forgot password?"
+                    android:layout_below="@+id/Text_Input_Password"
+                    android:layout_marginRight="20dp"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/black"
+                    />
+                <TextView
+                    android:id="@+id/getImeiNumber"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Get IMEI number"
+                    android:layout_below="@+id/Text_Input_Password"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/black"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/forgotPassword"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="20dp">
+
+                    <Button
+                        android:id="@+id/ResetButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:rippleColor="@color/light_red"
+                        app:strokeColor="@color/black"
+                        android:padding="10dp"
+                        android:text="Reset"
+                        android:textColor="@color/black"
+
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        style="?attr/materialButtonOutlinedStyle"
+                        />
+
+                    <Button
+                        android:id="@+id/LoginButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:rippleColor="@color/light_green"
+                        android:padding="10dp"
+                        android:text="Login"
+                        android:onClick="@{(v) -> LoginViewModel.onClick(v)}"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        app:strokeColor="@color/black"
+                        android:textColor="@color/black"
+                        style="?attr/materialButtonOutlinedStyle"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+</layout>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2595C7DF"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/relative1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/relative2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_120sdp"
+            android:background="@drawable/bg_header_target">
+            <TextView
+                android:id="@+id/startDay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:ellipsize="none"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-thin"
+                android:gravity="center_vertical|center_horizontal"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:text="@string/Office"
+                android:textColor="#fff"/>
+        </RelativeLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/linear_system_suggested"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="@dimen/_80sdp"
+            android:layout_marginRight="25dp"
+            android:elevation="3dp"
+            app:cardCornerRadius="10dp">
+
+            <LinearLayout
+                android:background="@drawable/bg_cardviews_target"
+                android:id="@+id/local_target"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="0dp"
+                android:weightSum="100"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/localtravel"
+                    android:layout_width="0dp"
+                    android:layout_weight="50"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:src="@drawable/img_target_audience" />
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="40"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/_24sdp"
+                    android:layout_margin="@dimen/_8sdp"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:text="Target">
+
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/btn_next"
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_forward_arrow"
+                    app:tint="@color/APP_Theme_Color"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/linear_work_plan"
+            android:layout_below="@+id/linear_system_suggested"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="25dp"
+            android:elevation="3dp"
+            app:cardCornerRadius="10dp">
+
+
+            <LinearLayout
+                android:background="@drawable/bg_cardviews_target"
+                android:id="@+id/local_privatetravel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="0dp"
+                android:weightSum="100"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/privatetravel"
+                    android:layout_width="0dp"
+                    android:layout_weight="50"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:src="@drawable/img_local_travel" />
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="40"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/_24sdp"
+                    android:layout_margin="@dimen/_8sdp"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:text="@string/LocalTravel">
+
+
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/btn_next_2"
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_forward_arrow"
+                    app:tint="@color/APP_Theme_Color"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/linear_work_plan_office"
+            android:layout_below="@+id/linear_work_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="25dp"
+            android:elevation="3dp"
+            app:cardCornerRadius="10dp">
+
+
+            <LinearLayout
+                android:background="@drawable/bg_cardviews_target"
+                android:id="@+id/private_travel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="0dp"
+                android:weightSum="100"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/officeImage"
+                    android:layout_width="0dp"
+                    android:layout_weight="50"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:src="@drawable/img_private_travel" />
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="40"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/_24sdp"
+                    android:layout_margin="@dimen/_8sdp"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:text="@string/PrivateTravel">
+
+
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/btn_next_3"
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_forward_arrow"
+                    app:tint="@color/APP_Theme_Color"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
+</RelativeLayout>

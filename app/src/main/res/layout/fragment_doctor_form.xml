@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/APP_Theme_Color"
+    tools:context=".Target.DoctorFormFragment">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/Theme.MyApplication">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="@color/APP_Theme_Color"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+            app:title="@string/doctor_profile"
+            android:theme="@style/CustomToolbarTheme"
+            app:titleEnabled="false">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/APP_Theme_Color">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+
+                    android:id="@+id/id_docImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:foregroundGravity="right"
+                    android:src="@drawable/doctor_icon"
+                    app:civ_border_color="@color/APP_Theme_Color"
+                    android:layout_marginVertical="10dp"
+                    android:layout_alignParentTop="true"
+                    app:civ_border_width="0.1dp" />
+
+
+<!--                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+<!--                    android:id="@+id/id_addProfileImage"-->
+<!--                    android:layout_width="20dp"-->
+<!--                    android:layout_height="20dp"-->
+
+<!--                    android:layout_alignEnd="@+id/id_docImage"-->
+<!--                    android:layout_alignBottom="@+id/id_docImage"-->
+<!--                    app:backgroundTint="@color/APP_Theme_Color"-->
+<!--                    app:elevation="3dp"-->
+<!--                    app:icon="@drawable/ic_baseline_camera_alt_24"-->
+<!--                    >-->
+
+<!--                </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
+
+                <ImageButton
+                    android:id="@+id/id_addProfileImage"
+                    android:elevation="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_back"
+                    android:layout_alignEnd="@+id/id_docImage"
+                    android:layout_alignBottom="@+id/id_docImage"
+                    android:src="@drawable/ic_baseline_camera_alt_24"
+                    />
+            </RelativeLayout>
+
+
+
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/id_doctorForm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/doc_full_info_background"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/personal_information"
+                android:textColor="@color/APP_Theme_Color"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:elevation="5dp"
+                >
+
+            </TextView>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Name"
+
+                android:textColorHint="@color/black"
+                android:elevation="5dp"
+
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_docName"
+
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Phone(format: 92xxxxxxxxx)"
+                android:textColorHint="@color/black"
+
+                android:elevation="5dp"
+                app:startIconDrawable="@drawable/ic_baseline_call_black_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_docPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="phone"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Email"
+                android:textColorHint="@color/black"
+
+                android:elevation="5dp"
+                app:startIconDrawable="@drawable/ic_baseline_email_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_docEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="textEmailAddress"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Address"
+                android:textColorHint="@color/black"
+                android:elevation="5dp"
+                app:startIconDrawable="@drawable/ic_home">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_docAdress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Date of Birth"
+                android:elevation="5dp"
+                android:textColorHint="@color/black"
+                app:helperText="Year, Month, Day "
+
+                app:helperTextTextColor="@color/APP_Theme_Color"
+
+                app:startIconDrawable="@drawable/ic_baseline_date_range_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/datofBirthmaterialDesign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Date Of Birth">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Gender"
+                android:elevation="5dp"
+                android:inputType="none"
+
+                android:textColorHint="@color/black"
+
+                app:helperTextTextColor="@color/APP_Theme_Color"
+                app:hintTextColor="@color/APP_Theme_Color">
+
+                <AutoCompleteTextView
+                    android:id="@+id/gender_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:fontFamily="sans-serif-light"
+
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/education_designation"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/APP_Theme_Color"
+                android:elevation="5dp"
+
+                android:textSize="18sp">
+
+            </TextView>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Classification"
+                android:elevation="5dp"
+                android:textColorHint="@color/black"
+                app:helperTextTextColor="@color/APP_Theme_Color"
+                app:hintTextColor="@color/APP_Theme_Color">
+
+                <AutoCompleteTextView
+                    android:id="@+id/classfication_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:editable="false"
+
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="@dimen/_5sdp"
+                android:elevation="5dp"
+                android:hint="Qualification"
+
+                android:textColorHint="@color/black"
+
+                app:helperTextTextColor="@color/APP_Theme_Color"
+                app:hintTextColor="@color/APP_Theme_Color">
+
+                <AutoCompleteTextView
+                    android:id="@+id/qualification_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Grade"
+
+                android:inputType="none"
+
+                android:textColorHint="@color/black"
+
+                app:helperTextTextColor="@color/APP_Theme_Color"
+                app:hintTextColor="@color/APP_Theme_Color">
+
+                <AutoCompleteTextView
+                    android:id="@+id/grade_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:fontFamily="sans-serif-light"
+
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/timings_schedule"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:elevation="5dp"
+                android:textColor="@color/APP_Theme_Color"
+                android:textSize="18sp">
+
+            </TextView>
+
+            <RadioGroup
+                android:id="@+id/docTiming_radio_group"
+                style="Widget.MaterialComponents.CompoundButton.RadioButton"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:checkedButton="@+id/radio_button_1"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radio_button_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/morning"
+                    android:elevation="5dp"
+
+                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:fontFamily="sans-serif-light"
+                    android:elevation="5dp"
+                    android:text="@string/evening" />
+
+
+            </RadioGroup>
+
+
+
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/id_addDocSchedulefloat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="20dp"
+                    android:backgroundTint="@color/APP_Theme_Color"
+                    app:icon="@drawable/ic_forward_arrow"
+                    android:text="Next"
+                    android:elevation="5dp"
+                    app:iconTint="@color/white">
+
+                </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingLeft="3dp"
+    android:paddingTop="28dp"
+    android:paddingRight="3dp"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <!--android:background="@drawable/side_nav_bar"-->
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@color/APP_Theme_Color">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/adnan" />
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Adnan Khalid"
+                android:textColor="@color/white"
+                android:layout_marginTop="35dp"
+                android:layout_marginLeft="8dp"
+                android:textSize="18dp"
+                android:layout_toRightOf="@id/profile_image"
+                />
+
+            <TextView
+                android:id="@+id/profile_designation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Head of Accounts Dept."
+                android:textColor="@color/white"
+                android:layout_marginLeft="8dp"
+                android:layout_below="@id/profile_name"
+                android:textStyle="bold"
+                android:textSize="12dp"
+                android:layout_toRightOf="@id/profile_image"
+                />
+            <TextView
+                android:id="@+id/profile_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="adnankhalid125@gmail.com"
+                android:textColor="#E8EAF5"
+                android:layout_marginLeft="8dp"
+                android:layout_below="@id/profile_designation"
+                android:textSize="12dp"
+                android:layout_toRightOf="@id/profile_image"
+                />
+            <!--
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/profile_image"
+                            android:text="Sign Out"
+                            android:textSize="10dp"
+                            android:backgroundTint="#8BFF382A"
+                            android:layout_marginLeft="15dp"
+                            />
+            -->
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+</LinearLayout>
