@@ -100,9 +100,14 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
     }
     public void clearData()
     {
-        int size = doctorModelList.size();
-        doctorModelList.clear();
-        notifyItemRangeRemoved(0,size);
+
+        if (doctorModelList!=null&&doctorModelList.size()>0)
+        {
+            int size = doctorModelList.size();
+            doctorModelList.clear();
+            notifyItemRangeRemoved(0,size);
+        }
+
     }
     public void setFlag(int value)
     {
@@ -155,6 +160,7 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
     public void setDoctorModelList(List<DoctorModel> list)
     {
 
+        doctorModelList.clear();
         doctorModelList.addAll(list);
 
         notifyDataSetChanged();

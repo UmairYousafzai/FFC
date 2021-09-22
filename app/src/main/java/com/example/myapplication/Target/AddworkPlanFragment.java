@@ -108,14 +108,18 @@ public class AddworkPlanFragment extends Fragment {
     public void setuptextFields() {
         if (key == 2 && areasModelList != null) {
             dataTittles = "";
+            dataIDs= "";
+
             for (AreasByEmpIdModel model : areasModelList) {
                 dataTittles = dataTittles + model.getAreaTittle() + ",";
                 dataIDs = dataIDs + model.getAreaId() + ",";
             }
             mbinding.Areas.setText(dataTittles);
+            mbinding.Doctors.setText("");
 
         } else if (doctorModelList != null && key == 3) {
             dataTittles = "";
+            dataIDs= "";
             for (DoctorsByAreaIdsModel model : doctorModelList) {
                 dataTittles = dataTittles + model.getName() + ",";
                 dataIDs = dataIDs + model.getId() + ",";

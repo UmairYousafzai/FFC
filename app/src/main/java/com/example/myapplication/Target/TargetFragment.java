@@ -134,10 +134,10 @@ public class TargetFragment extends Fragment {
 
             BtnListener();
 
+            setUpRecyclerView();
 
             SettingUpDatePicker();
             getDataFromViewModel();
-            setUpRecyclerView();
 
         }
         else
@@ -285,7 +285,28 @@ public class TargetFragment extends Fragment {
          selectedMonth= cldr.get(Calendar.MONTH);
          selectedYear= cldr.get(Calendar.YEAR);
 
+        int checkmonth= (selectedMonth%10);
+        int checkday = (selectedDay%10);
+        String mDay = null,mMonth = null,mYear= String.valueOf(selectedYear);
+        if (checkmonth>0 && selectedMonth<10 ) {
+            mMonth = "0"+(selectedMonth+1);
+            //          date = day + "-" + "0" + (month + 1) + "-" + (year);
+        }
+        else
+        {
+            mMonth=String.valueOf(selectedMonth+1);
 
+        }
+
+        if (checkday>0 && selectedDay<10){
+            mDay = "0" + (selectedDay);
+
+        }
+        else
+        {
+            mDay= String.valueOf(selectedDay);
+
+        }
 
         mbinding.datePickerTimeline.setInitialDate(selectedYear, selectedMonth-1 , selectedDay-1);
 
@@ -294,7 +315,7 @@ public class TargetFragment extends Fragment {
 
         mbinding.datePickerTimeline.setSelected(true);
         mbinding.datePickerTimeline.requestFocus();
-        String date = String.valueOf(selectedDay) + "-" + String.valueOf(selectedMonth+1) + "-" + String.valueOf(selectedYear);
+        String date = mDay + "-" + mMonth+ "-" +mYear;
 
         Log.e("DateTag","Date is:"+date);
         if (selectedDate.equals(""))
@@ -373,26 +394,15 @@ public class TargetFragment extends Fragment {
 
     public void getTargetViewModelData( String date)
     {
-        targetViewModel.getAllEveningDoctorLiveData().observe(requireActivity(), new Observer<List<DoctorModel>>() {
+
+        targetViewModel.getAllEveningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                List<DoctorModel> filterListevening= new ArrayList<>();
-
-                String Date;
-
-                for (DoctorModel model:list)
+                if (list!=null)
                 {
-                    Date = model.getWorkDate();
-
-                    if (Date.equals(date) && model.getShift().equals("Evening"))
-                    {
-                        filterListevening.add(model);
-                    }
-                }
-                if (filterListevening.size()>0) {
                     mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
 
-                    eveningListAdapter.setDoctorModelList(filterListevening);
+                    eveningListAdapter.setDoctorModelList(list);
                     eveningListAdapter.notifyDataSetChanged();
                 }
                 else
@@ -400,41 +410,90 @@ public class TargetFragment extends Fragment {
                     eveningListAdapter.clearData();
 
                 }
-
             }
         });
-        targetViewModel.getAllMorningDoctorLiveData().observe(requireActivity(), new Observer<List<DoctorModel>>() {
+
+
+        targetViewModel.getAllMorningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                List<DoctorModel> filterList= new ArrayList<>();
-
-
-                String Date;
-
-                for (DoctorModel model:list)
+                if (list!=null)
                 {
-                    Date= model.getWorkDate();
-                    if (Date.equals(date)&& model.getShift().equals("Morning"))
-                    {
-                        filterList.add(model);
-                    }
-                }
-                if (filterList.size()>0) {
                     mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
-                    morningListAdapter.setDoctorModelList(filterList);
+                    morningListAdapter.setDoctorModelList(list);
                     morningListAdapter.notifyDataSetChanged();
                 }
                 else
                 {
                     morningListAdapter.clearData();
-
                 }
-
-
-
 
             }
         });
+
+
+//        targetViewModel.getAllEveningDoctorLiveData().observe(requireActivity(), new Observer<List<DoctorModel>>() {
+//            @Override
+//            public void onChanged(List<DoctorModel> list) {
+//                List<DoctorModel> filterListevening= new ArrayList<>();
+//
+//                String Date;
+//
+//                for (DoctorModel model:list)
+//                {
+//                    Date = model.getWorkDate();
+//
+//                    if (Date.equals(date) && model.getShift().equals("Evening"))
+//                    {
+//                        filterListevening.add(model);
+//                    }
+//                }
+//                if (filterListevening.size()>0) {
+//                    mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
+//
+//                    eveningListAdapter.setDoctorModelList(filterListevening);
+//                    eveningListAdapter.notifyDataSetChanged();
+//                }
+//                else
+//                {
+//                    eveningListAdapter.clearData();
+//
+//                }
+//
+//            }
+//        });
+//        targetViewModel.getAllMorningDoctorLiveData().observe(requireActivity(), new Observer<List<DoctorModel>>() {
+//            @Override
+//            public void onChanged(List<DoctorModel> list) {
+//                List<DoctorModel> filterList= new ArrayList<>();
+//
+//
+//                String Date;
+//
+//                for (DoctorModel model:list)
+//                {
+//                    Date= model.getWorkDate();
+//                    if (Date.equals(date)&& model.getShift().equals("Morning"))
+//                    {
+//                        filterList.add(model);
+//                    }
+//                }
+//                if (filterList.size()>0) {
+//                    mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
+//                    morningListAdapter.setDoctorModelList(filterList);
+//                    morningListAdapter.notifyDataSetChanged();
+//                }
+//                else
+//                {
+//                    morningListAdapter.clearData();
+//
+//                }
+//
+//
+//
+//
+//            }
+//        });
     }
     public void BtnListener()
     {

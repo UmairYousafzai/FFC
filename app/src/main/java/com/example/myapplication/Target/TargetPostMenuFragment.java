@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -56,16 +57,16 @@ public class TargetPostMenuFragment extends Fragment {
     private View view;
     private FragmentTargetPostMenuBinding mBinding;
     private DoctorModel doctorModel;
-    private  AlertDialog alertDialog;
+    private AlertDialog alertDialog;
     private Location location;
     private TargetViewModel targetViewModel;
-    private boolean check= false;
+    private boolean check = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mBinding= FragmentTargetPostMenuBinding.inflate(inflater,container,false);
+        mBinding = FragmentTargetPostMenuBinding.inflate(inflater, container, false);
         view = mBinding.getRoot();
 
         return view;
@@ -83,53 +84,45 @@ public class TargetPostMenuFragment extends Fragment {
         btnListener();
     }
 
-    public void setInfoWorkPlan()
-    {
-        Bundle bundle= getArguments();
+    public void setInfoWorkPlan() {
+        Bundle bundle = getArguments();
         doctorModel = TargetPostMenuFragmentArgs.fromBundle(bundle).getDoctorModel();
         mBinding.workName.setText(doctorModel.getName());
         mBinding.workLocation.setText(doctorModel.getAddress());
         mBinding.workDistanceFromCurrentLoc.setText(doctorModel.getDistance());
     }
 
-    public void btnListener()
-    {
+    public void btnListener() {
         mBinding.btnCompelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completeAndDeleteWorkPlan(3);
+                completeAndDeleteWorkPlan(3,1);
             }
         });
         mBinding.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completeAndDeleteWorkPlan(4);
+                completeAndDeleteWorkPlan(4,1);
             }
         });
 
         mBinding.callCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (doctorModel.getPhone()!=null&&!doctorModel.getPhone().isEmpty())
-                {
-                    String PhoneString= "tel:"+doctorModel.getPhone();
+                if (doctorModel.getPhone() != null && !doctorModel.getPhone().isEmpty()) {
+                    String PhoneString = "tel:" + doctorModel.getPhone();
 
-                    Uri callUri= Uri.parse(PhoneString);
-                    Intent callIntent= new Intent(Intent.ACTION_DIAL);
+                    Uri callUri = Uri.parse(PhoneString);
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
                     callIntent.setData(callUri);
-                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
-                    {
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         requestPermission();
-                    }
-                    else
-                    {
+                    } else {
                         startActivity(callIntent);
 
                     }
-                }
-                else
-                {
-                    Toast.makeText(requireContext(),"Phone Number Is Empty",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(requireContext(), "Phone Number Is Empty", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -137,25 +130,19 @@ public class TargetPostMenuFragment extends Fragment {
         mBinding.messageCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (doctorModel.getPhone()!=null&&!doctorModel.getPhone().isEmpty())
-                {
-                    String smsPhoneString= "smsto:"+doctorModel.getPhone();
-                    Uri smsUri= Uri.parse(smsPhoneString);
-                    Intent smsIntent= new Intent(Intent.ACTION_SENDTO);
+                if (doctorModel.getPhone() != null && !doctorModel.getPhone().isEmpty()) {
+                    String smsPhoneString = "smsto:" + doctorModel.getPhone();
+                    Uri smsUri = Uri.parse(smsPhoneString);
+                    Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
                     smsIntent.setData(smsUri);
-                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED)
-                    {
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                         requestPermission();
-                    }
-                    else
-                    {
+                    } else {
                         startActivity(smsIntent);
 
                     }
-                }
-                else
-                {
-                    Toast.makeText(requireContext(),"Phone Number Is Empty",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(requireContext(), "Phone Number Is Empty", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -164,21 +151,17 @@ public class TargetPostMenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (doctorModel.getCoordinates() != null &&! doctorModel.getCoordinates().isEmpty())
-                {
-                    String locationString= "geo:"+doctorModel.getCoordinates();
-                    Uri mapIntentUri= Uri.parse(locationString);
-                    Intent mapIntent= new Intent(Intent.ACTION_VIEW,mapIntentUri);
+                if (doctorModel.getCoordinates() != null && !doctorModel.getCoordinates().isEmpty()) {
+                    String locationString = "geo:" + doctorModel.getCoordinates();
+                    Uri mapIntentUri = Uri.parse(locationString);
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
 
-                    if (mapIntent.resolveActivity(requireActivity().getPackageManager())!=null)
-                    {
+                    if (mapIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
                         startActivity(mapIntent);
                     }
-                }
-                else
-                {
-                    Toast.makeText(requireContext(),"Location Coordinates Are Empty",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(requireContext(), "Location Coordinates Are Empty", Toast.LENGTH_LONG).show();
 
                 }
 
@@ -186,41 +169,110 @@ public class TargetPostMenuFragment extends Fragment {
         });
     }
 
-    private void completeAndDeleteWorkPlan(int key) {
+    private void completeAndDeleteWorkPlan(int key,int distanceKey) {
 
-        ProgressDialog progressDialog= new ProgressDialog(getContext());
-        progressDialog.setTitle("Loading");
-        CustomCompeleteDialogBinding dialogBinding= CustomCompeleteDialogBinding.inflate(getLayoutInflater());
-        alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
-        alertDialog.show();
 
-        CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+        String[] locationString = doctorModel.getCoordinates().split(",");
+
+
+        Location workPlanLocation= new Location("");
+        workPlanLocation.setLatitude(Double.parseDouble(locationString[0]));
+        workPlanLocation.setLongitude(Double.parseDouble(locationString[1]));
+        CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
             @Override
             public void gotLocation(Location location1) {
-                location=location1;
+                location = location1;
+
+
+                double distance= location.distanceTo(workPlanLocation);
+
+                if (distanceKey==1)
+                {
+
+                    if (distance<=10)
+                    {
+                        saveWorkPlane(key);
+                    }
+                    else
+                    {
+                        new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
+                                .setContentText("You Are Out Of WorkPlan Radius")
+                                .show();
+                    }
+
+                }
+                else if (distanceKey==2)
+                {
+                    if (distance<=10)
+                    {
+                        saveWorkPlane(key);
+                    }
+                    else
+                    {
+                        new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("You Are Out Of WorkPlan Radius")
+                                .setContentText("Do you want to Proceed.")
+                                .setConfirmText("Yes")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        saveWorkPlane(key);
+
+                                    }
+                                })
+                                .setCancelText("Cancel")
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismiss();
+
+                                    }
+                                }).show();
+                    }
+                }
+                else if (distance==3)
+                {
+                    saveWorkPlane(key);
+                }
             }
         };
 
-        CustomLocation customLocation= new CustomLocation();
-        customLocation.getLastLocation(getContext(),getActivity(),locationResults);
+        CustomLocation customLocation = new CustomLocation();
+        customLocation.getLastLocation(getContext(), getActivity(), locationResults);
+
+
+
+
+
+
+
+    }
+
+    public void saveWorkPlane(int key)
+    {
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("Loading");
+        CustomCompeleteDialogBinding dialogBinding = CustomCompeleteDialogBinding.inflate(getLayoutInflater());
+
+        alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        alertDialog.show();
         dialogBinding.saveRemarksBtn.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 progressDialog.show();
-                String check=dialogBinding.remarksEdittext.getText().toString();
+                String check = dialogBinding.remarksEdittext.getText().toString();
 
 
-                if (!check.equals("") ) {
+                if (!check.equals("")) {
                     if (location != null) {
                         List<UpdateWorkPlanStatus> list = new ArrayList<>();
                         String remarks = dialogBinding.remarksEdittext.getText().toString();
                         int userId = SharedPreferenceHelper.getInstance(getActivity()).getUserId();
                         String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-        Date date =  Calendar.getInstance().getTime();
-        SimpleDateFormat dateFormat=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
-        String dateString = dateFormat.format(date);
+                        Date date = Calendar.getInstance().getTime();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
+                        String dateString = dateFormat.format(date);
                         UpdateWorkPlanStatus updateWorkPlanStatus = new UpdateWorkPlanStatus();
 
                         updateWorkPlanStatus.setDoctor_Id(doctorModel.getDoctorId());
@@ -249,7 +301,6 @@ public class TargetPostMenuFragment extends Fragment {
                                     Navigation.findNavController(view).navigate(R.id.action_targetPostMenuFragment_to_target_fragment);
 
 
-
                                 }
 
 
@@ -263,18 +314,14 @@ public class TargetPostMenuFragment extends Fragment {
 
                             }
                         });
+                    } else {
+                        Toast.makeText(getActivity(), "Please turn on location", Toast.LENGTH_LONG).show();
                     }
-                    else {
-                        Toast.makeText(getActivity(),"Please turn on location",Toast.LENGTH_LONG).show();
-                    }
-                }
-                else
-                {
+                } else {
                     dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
                 }
             }
         });
-
         dialogBinding.btnCloseCompeleteDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -282,17 +329,18 @@ public class TargetPostMenuFragment extends Fragment {
             }
         });
 
+
     }
 
-    public void requestPermission(){
+    public void requestPermission() {
 
 
-        String[] permissionArray= new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+        String[] permissionArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.CALL_PHONE,
                 Manifest.permission.SEND_SMS};
-        SweetAlertDialog alertDialog=  new SweetAlertDialog(requireContext(),SweetAlertDialog.ERROR_TYPE);
+        SweetAlertDialog alertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE);
 
-        alertDialog .setConfirmText("Yes")
+        alertDialog.setConfirmText("Yes")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -311,24 +359,19 @@ public class TargetPostMenuFragment extends Fragment {
                 });
 
 
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),Manifest.permission.ACCESS_FINE_LOCATION)&&
-                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),Manifest.permission.CALL_PHONE)&&
-                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),Manifest.permission.SEND_SMS))
-        {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) &&
+                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CALL_PHONE) &&
+                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.SEND_SMS)) {
 
             alertDialog.setTitle("Permission Needed");
             alertDialog.setContentText("These Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
 
 
-        }
-        else
-        {
+        } else {
             ActivityCompat.requestPermissions(requireActivity(), permissionArray, MainActivity.PERMISSION_REQUEST_CODE);
 
         }
-
 
 
     }
@@ -337,23 +380,16 @@ public class TargetPostMenuFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode==MainActivity.PERMISSION_REQUEST_CODE)
-        {
-            if (permissions.length>0 && grantResults.length==permissions.length)
-            {
-                for (int i=0;i<permissions.length;i++)
-                {
-                    if (grantResults[i]==PackageManager.PERMISSION_GRANTED)
-                    {
-                        check= true;
-                    }
-                    else
-                    {
-                        check=false;
+        if (requestCode == MainActivity.PERMISSION_REQUEST_CODE) {
+            if (permissions.length > 0 && grantResults.length == permissions.length) {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        check = true;
+                    } else {
+                        check = false;
                         return;
                     }
                 }
-
 
 
             }

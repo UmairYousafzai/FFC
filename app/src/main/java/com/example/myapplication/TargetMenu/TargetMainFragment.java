@@ -60,28 +60,30 @@ public class TargetMainFragment extends Fragment {
             }
         });
         nav_to_localTravel.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View v) {
 
-                Route route = new Route();
+//                Route route = new Route();
+//
+//                String end_cood = route.EndActivity();
+//                ffcDatabase.dao().setEnd(String.valueOf(LocalTime.now()),end_cood);
+//
+//
+//                RouteActivityModel routeActivityModel = route.StartActivity(getContext(),"Local Travel","local travel",0,
+//                        String.valueOf(LocalTime.now()),false);
+//
+//                ffcDatabase.dao().insertRoute(routeActivityModel);
+//                List<RouteActivityModel> u = ffcDatabase.dao().getAll();
+//                for(int i = 0 ; i<u.size();i++){
+//                    Toast.makeText(getActivity(), u.get(i).getMain_Activity() + "|"
+//                            + u.get(i).getSub_Activity() + "|" + String.valueOf(u.get(i).getTask_Id()) + "|" +
+//                            u.get(i).getStart_date_time() + "|" + u.get(i).getStart_coordinates() + "|" +
+//                            u.get(i).getEnd_date_time() + "|" + u.get(i).getEnd_coordinates() + "|" , Toast.LENGTH_LONG).show();
+//                }
+//                navController.navigate(R.id.nav_local_travel);
 
-                String end_cood = route.EndActivity();
-                ffcDatabase.dao().setEnd(String.valueOf(LocalTime.now()),end_cood);
+                Toast.makeText(requireContext(),"Local Travel",Toast.LENGTH_SHORT).show();
 
-
-                RouteActivityModel routeActivityModel = route.StartActivity(getContext(),"Local Travel","local travel",0,
-                        String.valueOf(LocalTime.now()),false);
-
-                ffcDatabase.dao().insertRoute(routeActivityModel);
-                List<RouteActivityModel> u = ffcDatabase.dao().getAll();
-                for(int i = 0 ; i<u.size();i++){
-                    Toast.makeText(getActivity(), u.get(i).getMain_Activity() + "|"
-                            + u.get(i).getSub_Activity() + "|" + String.valueOf(u.get(i).getTask_Id()) + "|" +
-                            u.get(i).getStart_date_time() + "|" + u.get(i).getStart_coordinates() + "|" +
-                            u.get(i).getEnd_date_time() + "|" + u.get(i).getEnd_coordinates() + "|" , Toast.LENGTH_LONG).show();
-                }
-                navController.navigate(R.id.nav_local_travel);
             }
         });
         nav_to_privateTravel.setOnClickListener(new View.OnClickListener() {
@@ -89,48 +91,51 @@ public class TargetMainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Route route = new Route();
+//
+//                String end_cood = route.EndActivity();
+//                ffcDatabase.dao().setEnd(String.valueOf(LocalTime.now()),end_cood);
+//
+//
+//                RouteActivityModel routeActivityModel = route.StartActivity(getContext(),"Private Travel","private travel",0,
+//                        String.valueOf(LocalTime.now()),false);
+//
+//                ffcDatabase.dao().insertRoute(routeActivityModel);
+//                List<RouteActivityModel> u = ffcDatabase.dao().getAll();
+//                for(int i = 0 ; i<u.size();i++){
+//                    Toast.makeText(getActivity(), u.get(i).getMain_Activity() + "|"
+//                            + u.get(i).getSub_Activity() + "|" + String.valueOf(u.get(i).getTask_Id()) + "|" +
+//                            u.get(i).getStart_date_time() + "|" + u.get(i).getStart_coordinates() + "|" +
+//                            u.get(i).getEnd_date_time() + "|" + u.get(i).getEnd_coordinates() + "|" , Toast.LENGTH_LONG).show();
+//                }
+//                navController.navigate(R.id.nav_private_travel);
 
-                String end_cood = route.EndActivity();
-                ffcDatabase.dao().setEnd(String.valueOf(LocalTime.now()),end_cood);
-
-
-                RouteActivityModel routeActivityModel = route.StartActivity(getContext(),"Private Travel","private travel",0,
-                        String.valueOf(LocalTime.now()),false);
-
-                ffcDatabase.dao().insertRoute(routeActivityModel);
-                List<RouteActivityModel> u = ffcDatabase.dao().getAll();
-                for(int i = 0 ; i<u.size();i++){
-                    Toast.makeText(getActivity(), u.get(i).getMain_Activity() + "|"
-                            + u.get(i).getSub_Activity() + "|" + String.valueOf(u.get(i).getTask_Id()) + "|" +
-                            u.get(i).getStart_date_time() + "|" + u.get(i).getStart_coordinates() + "|" +
-                            u.get(i).getEnd_date_time() + "|" + u.get(i).getEnd_coordinates() + "|" , Toast.LENGTH_LONG).show();
-                }
-                navController.navigate(R.id.nav_private_travel);
+                Toast.makeText(requireContext(), "Private Travel", Toast.LENGTH_SHORT).show();
             }
         });
         nav_to_office.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View v) {
-                Route route = new Route();
-
-                String end_cood = route.EndActivity();
-                ffcDatabase.dao().setEnd(String.valueOf(LocalTime.now()),end_cood);
-
-
-                RouteActivityModel routeActivityModel = route.StartActivity(getContext(),"Office","office",0,
-                        String.valueOf(LocalTime.now()),false);
-
-                ffcDatabase.dao().insertRoute(routeActivityModel);
-                List<RouteActivityModel> u = ffcDatabase.dao().getAll();
-                for(int i = 0 ; i<u.size();i++){
-                    Toast.makeText(getActivity(), u.get(i).getMain_Activity() + "|"
-                            + u.get(i).getSub_Activity() + "|" + String.valueOf(u.get(i).getTask_Id()) + "|" +
-                            u.get(i).getStart_date_time() + "|" + u.get(i).getStart_coordinates() + "|" +
-                            u.get(i).getEnd_date_time() + "|" + u.get(i).getEnd_coordinates() + "|" , Toast.LENGTH_LONG).show();
-                }
-
-                navController.navigate(R.id.nav_office);
+//                Route route = new Route();
+//
+//                String end_cood = route.EndActivity();
+//                ffcDatabase.dao().setEnd(String.valueOf(LocalTime.now()),end_cood);
+//
+//
+//                RouteActivityModel routeActivityModel = route.StartActivity(getContext(),"Office","office",0,
+//                        String.valueOf(LocalTime.now()),false);
+//
+//                ffcDatabase.dao().insertRoute(routeActivityModel);
+//                List<RouteActivityModel> u = ffcDatabase.dao().getAll();
+//                for(int i = 0 ; i<u.size();i++){
+//                    Toast.makeText(getActivity(), u.get(i).getMain_Activity() + "|"
+//                            + u.get(i).getSub_Activity() + "|" + String.valueOf(u.get(i).getTask_Id()) + "|" +
+//                            u.get(i).getStart_date_time() + "|" + u.get(i).getStart_coordinates() + "|" +
+//                            u.get(i).getEnd_date_time() + "|" + u.get(i).getEnd_coordinates() + "|" , Toast.LENGTH_LONG).show();
+//                }
+//
+//                navController.navigate(R.id.nav_office);
+                Toast.makeText(requireContext(), "Office", Toast.LENGTH_SHORT).show();
 
             }
         });
