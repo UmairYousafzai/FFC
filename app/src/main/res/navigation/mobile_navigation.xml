@@ -100,17 +100,6 @@
         tools:layout="@layout/fragment_history" />
 
     <fragment
-        android:id="@+id/nav_local_travel"
-        android:name="com.example.myapplication.LocalTravel.LocalTravelFragment"
-        android:label="Local Travel"
-        tools:layout="@layout/fragment_target_main" />
-
-    <fragment
-        android:id="@+id/nav_private_travel"
-        android:name="com.example.myapplication.PrivateTravel.PrivateTravelFragment"
-        android:label="Private Travel"
-        tools:layout="@layout/fragment_target_main" />
-    <fragment
         android:id="@+id/nav_product_slider"
         android:name="com.example.myapplication.Target.Visit.ProductSliderFragment"
         android:label="Product Slider"

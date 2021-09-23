@@ -1,18 +1,30 @@
 package com.example.myapplication.Target;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +42,21 @@ import com.example.myapplication.ModelClasses.GradingModel;
 import com.example.myapplication.ModelClasses.QualificationModel;
 import com.example.myapplication.ModelClasses.SaveDoctorModel;
 import com.example.myapplication.Target.utils.DoctorViewModel;
+import com.example.myapplication.databinding.CustomSelectProfileImageDialogBinding;
 import com.example.myapplication.databinding.FragmentDoctorFormBinding;
+import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.UserViewModel;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class DoctorFormFragment extends Fragment {
 
@@ -68,6 +88,8 @@ public class DoctorFormFragment extends Fragment {
     int timing;
 
     private ProgressDialog progressDialog;
+
+    private Bitmap selectedImage;
 
 
     @Override
@@ -442,12 +464,21 @@ public class DoctorFormFragment extends Fragment {
                     mBinding.genderDropdown.setError("Select Gender");
                 }
                 else {
+                    SaveDoctorModel saveDoctorModel = new SaveDoctorModel();
 
+                    if (selectedImage!=null)
+                    {
+                        String path= getBytesFromBitmap(selectedImage);
+                        saveDoctorModel.setImagePath(path);
+                    }
+                    else
+                    {
+                        saveDoctorModel.setImagePath("");
+                    }
                     gradeId = gradingHashMapForId.get(grade);
                     qualificationId =  qualificationHashMapForId.get(qualification);
                     classificationId = classificatoinHashMapForId.get(classification);
 
-                    SaveDoctorModel saveDoctorModel = new SaveDoctorModel();
                     saveDoctorModel.setName(name);
                     saveDoctorModel.setPhone(phone);
                     saveDoctorModel.setAddress(address);
@@ -465,6 +496,223 @@ public class DoctorFormFragment extends Fragment {
                 }
             }
         });
+
+        mBinding.idAddProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CustomSelectProfileImageDialogBinding dialogBinding = CustomSelectProfileImageDialogBinding.inflate(getLayoutInflater());
+                AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
+                        .setView(dialogBinding.getRoot())
+                        .setCancelable(false).create();
+                alertDialog.show();
+
+                dialogBinding.takePhotoBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            requestPermissionCamera();
+                        } else {
+                            Intent cameraIntent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            if (cameraIntent.resolveActivity(requireContext().getPackageManager())!=null)
+                            {
+                                startActivityForResult(cameraIntent,0);
+                            }
+
+                        }
+                        alertDialog.dismiss();
+
+                    }
+                });
+
+                dialogBinding.selectFromGalleryBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            requestPermissionGallery();
+
+                        } else {
+                            Intent galleryIntent= new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                            startActivityForResult(galleryIntent,1);
+                        }
+                        alertDialog.dismiss();
+
+
+                    }
+                });
+                dialogBinding.cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+
+            }
+        });
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode!=RESULT_CANCELED)
+        {
+            switch (requestCode)
+            {
+                case 0:
+                    if (resultCode==RESULT_OK&&data!=null)
+                    {
+                        selectedImage= (Bitmap) data.getExtras().get("data");
+                        mBinding.idDocImage.setImageBitmap(selectedImage);
+                    }
+                    break;
+
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        Uri selectedImageUri =  data.getData();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        if (selectedImage != null) {
+                            Cursor cursor = requireActivity().getContentResolver().query(selectedImageUri,
+                                    filePathColumn, null, null, null);
+                            if (cursor != null) {
+                                cursor.moveToFirst();
+
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String picturePath = cursor.getString(columnIndex);
+                                selectedImage= BitmapFactory.decodeFile(picturePath);
+                                mBinding.idDocImage.setImageBitmap(selectedImage);
+                                cursor.close();
+                            }
+                        }
+
+                    }
+                    break;
+            }
+
+        }
+    }
+    public String getBytesFromBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        String imgString = Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP);
+        return imgString;
+    }
+
+    public void requestPermissionCamera() {
+
+
+        String[] permissionArray = new String[]{Manifest.permission.CAMERA};
+        SweetAlertDialog alertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE);
+
+        alertDialog.setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        ActivityCompat.requestPermissions(requireActivity(),
+                                permissionArray,
+                                CONSTANTS.PERMISSION_REQUEST_CODE_FOR_CAMERA);
+                    }
+                })
+                .setCancelText("Cancel")
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                });
+
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA) ) {
+
+            alertDialog.setTitle("Permission Needed");
+            alertDialog.setContentText("Camera Permission Needed For Taking Profile Picture. ");
+            alertDialog.show();
+
+
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(), permissionArray, CONSTANTS.PERMISSION_REQUEST_CODE_FOR_CAMERA);
+
+        }
+
+
+    }
+    public void requestPermissionGallery() {
+
+
+        String[] permissionArray = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+        SweetAlertDialog alertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE);
+
+        alertDialog.setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        ActivityCompat.requestPermissions(requireActivity(),
+                                permissionArray,
+                                CONSTANTS.PERMISSION_REQUEST_CODE_FOR_GALLERY);
+                    }
+                })
+                .setCancelText("Cancel")
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                });
+
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA) ) {
+
+            alertDialog.setTitle("Permission Needed");
+            alertDialog.setContentText("Camera Permission Needed For Taking Profile Picture. ");
+            alertDialog.show();
+
+
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(), permissionArray, CONSTANTS.PERMISSION_REQUEST_CODE_FOR_GALLERY);
+
+        }
+
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CONSTANTS.PERMISSION_REQUEST_CODE_FOR_GALLERY) {
+            if (permissions.length > 0 && grantResults.length == permissions.length) {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    } else {
+
+
+                    }
+                }
+
+
+            }
+
+        }
+        else if (requestCode == CONSTANTS.PERMISSION_REQUEST_CODE_FOR_CAMERA)
+        {
+            if (permissions.length > 0 && grantResults.length == permissions.length) {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    } else {
+
+
+                    }
+                }
+
+
+            }
+        }
+
+    }
 }

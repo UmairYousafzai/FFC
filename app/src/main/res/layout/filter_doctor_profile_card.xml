@@ -62,17 +62,7 @@
                         android:background="@color/white"
                         android:orientation="horizontal">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/Filterd_getDocbyEmpId_docprofileImage"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="@dimen/_2sdp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/doctor_icon">
 
-                            <!--   app:civ_border_color="@color/white"-->
-
-                        </de.hdodenhof.circleimageview.CircleImageView>
 
 
                         <TextView
@@ -86,7 +76,7 @@
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"
-                            android:layout_marginStart="5dp"
+                           android:layout_margin="12dp"
                             >
 
                         </TextView>

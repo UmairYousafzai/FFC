@@ -1,9 +1,12 @@
 package com.example.myapplication.Target;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -23,12 +26,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.Settings;
+import android.speech.RecognizerIntent;
 import android.telephony.TelephonyScanManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.myapplication.DoctorModel;
@@ -40,6 +48,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.Target.Adapters.DoctorMorningRecyclerAdapter;
 import com.example.myapplication.Target.Adapters.DoctorEveningRecyclerAdapter;
 import com.example.myapplication.Target.utils.DoctorViewModel;
+import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.SyncDataToDB;
 import com.example.myapplication.Target.utils.TargetViewModel;
 import com.example.myapplication.databinding.CustomCancelDialogBinding;
@@ -60,11 +69,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_OK;
 
 public class TargetFragment extends Fragment {
     private TargetViewModel targetViewModel;
@@ -72,44 +84,41 @@ public class TargetFragment extends Fragment {
     private DoctorMorningRecyclerAdapter morningListAdapter;
     private DoctorEveningRecyclerAdapter eveningListAdapter;
     private int morningFlag = 0, eveningFlag = 0;
-    private  Location location ;
+    private Location location;
     private AlertDialog alertDialog;
-    private CustomLocation customLocation;
     private View viewRoot;
-    private int selectedDay,selectedMonth,selectedYear;
-    private String selectedDate="";
-    private Calendar calendar ;
-    private DoctorViewModel doctorViewModel;
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-
-
-
+    private int selectedDay, selectedMonth, selectedYear;
+    private String selectedDate = "",remarksForCancel="",remarksForReschedule="";
+    private Calendar calendar;
+    private boolean mic_check = false;
+    private CustomCancelDialogBinding dialogBinding;
+    private CustomRescheduleDialogBinding rescheduleDialogBinding;
+    private SweetAlertDialog sweetAlertDialog;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mbinding= FragmentTargetBinding.inflate(inflater,container,false);
-        Log.e("onCreateView","on create View Me ha ");
+        mbinding = FragmentTargetBinding.inflate(inflater, container, false);
+        Log.e("onCreateView", "on create View Me ha ");
 
-         viewRoot = mbinding.getRoot();
+        viewRoot = mbinding.getRoot();
 
-         doctorViewModel= new ViewModelProvider(this).get(DoctorViewModel.class);
-         doctorViewModel.deleteAllSchedule();
+        DoctorViewModel doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
+        doctorViewModel.deleteAllSchedule();
 
-         calendar = Calendar.getInstance();
+        calendar = Calendar.getInstance();
 
         return viewRoot;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(view);
         targetViewModel = new ViewModelProvider(requireActivity()).get(TargetViewModel.class);
-        Log.e("onviewCreated","on view created me ha me ha ");
+        Log.e("onviewCreated", "on view created me ha me ha ");
 
 //        try {
 //            SettingUpDatePicker();
@@ -123,14 +132,14 @@ public class TargetFragment extends Fragment {
 
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
 
-        Log.e("onResume","on resume me ha ");
+        Log.e("onResume", "on resume me ha ");
 
-        if (isLocationEnabled())
-        {
+        if (isLocationEnabled()) {
 
             BtnListener();
 
@@ -139,12 +148,10 @@ public class TargetFragment extends Fragment {
             SettingUpDatePicker();
             getDataFromViewModel();
 
-        }
-        else
-        {
+        } else {
 
 
-            new SweetAlertDialog(requireContext(),SweetAlertDialog.ERROR_TYPE)
+            new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Please turn on  location for this action.")
                     .setContentText("Do you want to open location setting.")
                     .setConfirmText("Yes")
@@ -165,29 +172,27 @@ public class TargetFragment extends Fragment {
                     }).show();
 
 
-
         }
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        Log.e("onViewStateRestored","on view restored me ha");
+        Log.e("onViewStateRestored", "on view restored me ha");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.e("onStart","on start me ha");
+        Log.e("onStart", "on start me ha");
 
     }
-
 
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.e("onPause","on pause me ha");
+        Log.e("onPause", "on pause me ha");
 
     }
 
@@ -195,7 +200,7 @@ public class TargetFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.e("onStop","on stop me ha");
+        Log.e("onStop", "on stop me ha");
 
 
     }
@@ -203,15 +208,14 @@ public class TargetFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.e("onSaveInstanceState"," on save instance me ha");
+        Log.e("onSaveInstanceState", " on save instance me ha");
 
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.e("onDestroyView"," on destroy view me ha");
-
+        Log.e("onDestroyView", " on destroy view me ha");
 
 
     }
@@ -219,48 +223,40 @@ public class TargetFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e("onDestroy","on destroy me ha");
+        Log.e("onDestroy", "on destroy me ha");
 
     }
 
 
-    public void setUpRecyclerView()
-    {
+    public void setUpRecyclerView() {
 
         morningListAdapter = new DoctorMorningRecyclerAdapter(getContext(), new RecyclerOnItemClickListener() {
             @Override
             public void GetDoctorOnClick(DoctorModel doctorModel, int position, int check) {
 
-                if (check==1) {
+                if (check == 1) {
                     setUpCancelWorkPlanAlertDialog(doctorModel, 3);
 
-                }
-                else if (check==2)
-                {
+
+                } else if (check == 2) {
                     setUpRescheduleWorkPlanAlertDialog(doctorModel, 3);
-                }
-                else if (check==10)
-                {
+                } else if (check == 10) {
 
                     TargetFragmentDirections.ActionTargetToTargetPostMenuFragment action = TargetFragmentDirections.
                             actionTargetToTargetPostMenuFragment(doctorModel);
                     Navigation.findNavController(viewRoot).navigate(action);
                 }
             }
-        },getActivity());
+        }, getActivity());
         eveningListAdapter = new DoctorEveningRecyclerAdapter(getContext(), new RecyclerOnItemClickListener() {
             @Override
             public void GetDoctorOnClick(DoctorModel doctorModel, int position, int check) {
-                if (check==1) {
+                if (check == 1) {
                     setUpCancelWorkPlanAlertDialog(doctorModel, 3);
 
-                }
-                else if (check==2)
-                {
+                } else if (check == 2) {
                     setUpRescheduleWorkPlanAlertDialog(doctorModel, 3);
-                }
-                else if (check==10)
-                {
+                } else if (check == 10) {
 
                     TargetFragmentDirections.ActionTargetToTargetPostMenuFragment action = TargetFragmentDirections.
                             actionTargetToTargetPostMenuFragment(doctorModel);
@@ -268,68 +264,60 @@ public class TargetFragment extends Fragment {
 
                 }
             }
-        },getActivity());
+        }, getActivity());
 
         mbinding.targetRecycler.docListmorningRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mbinding.targetRecycler.docListRecyclerEvening.setLayoutManager(new LinearLayoutManager(getActivity()));
         eveningListAdapter.notifyDataSetChanged();
         morningListAdapter.notifyDataSetChanged();
     }
+
     private void SettingUpDatePicker() {
 
 
         Calendar cldr = Calendar.getInstance();
 
 
-         selectedDay = (cldr.get(Calendar.DAY_OF_MONTH));
-         selectedMonth= cldr.get(Calendar.MONTH);
-         selectedYear= cldr.get(Calendar.YEAR);
+        selectedDay = (cldr.get(Calendar.DAY_OF_MONTH));
+        selectedMonth = cldr.get(Calendar.MONTH);
+        selectedYear = cldr.get(Calendar.YEAR);
 
-        int checkmonth= (selectedMonth%10);
-        int checkday = (selectedDay%10);
-        String mDay = null,mMonth = null,mYear= String.valueOf(selectedYear);
-        if (checkmonth>0 && selectedMonth<10 ) {
-            mMonth = "0"+(selectedMonth+1);
+        int checkmonth = (selectedMonth % 10);
+        int checkday = (selectedDay % 10);
+        String mDay = null, mMonth = null, mYear = String.valueOf(selectedYear);
+        if (checkmonth > 0 && selectedMonth < 10) {
+            mMonth = "0" + (selectedMonth + 1);
             //          date = day + "-" + "0" + (month + 1) + "-" + (year);
-        }
-        else
-        {
-            mMonth=String.valueOf(selectedMonth+1);
+        } else {
+            mMonth = String.valueOf(selectedMonth + 1);
 
         }
 
-        if (checkday>0 && selectedDay<10){
+        if (checkday > 0 && selectedDay < 10) {
             mDay = "0" + (selectedDay);
 
-        }
-        else
-        {
-            mDay= String.valueOf(selectedDay);
+        } else {
+            mDay = String.valueOf(selectedDay);
 
         }
 
-        mbinding.datePickerTimeline.setInitialDate(selectedYear, selectedMonth-1 , selectedDay-1);
-
-
+        mbinding.datePickerTimeline.setInitialDate(selectedYear, selectedMonth - 1, selectedDay - 1);
 
 
         mbinding.datePickerTimeline.setSelected(true);
         mbinding.datePickerTimeline.requestFocus();
-        String date = mDay + "-" + mMonth+ "-" +mYear;
+        String date = mDay + "-" + mMonth + "-" + mYear;
 
-        Log.e("DateTag","Date is:"+date);
-        if (selectedDate.equals(""))
-        {
-            cldr.set(selectedYear,selectedMonth,selectedDay);
+        Log.e("DateTag", "Date is:" + date);
+        if (selectedDate.equals("")) {
+            cldr.set(selectedYear, selectedMonth, selectedDay);
 
             mbinding.datePickerTimeline.setActiveDate(cldr);
             getTargetViewModelData(date);
 
-        }
-        else
-        {
+        } else {
             getTargetViewModelData(selectedDate);
-            calendar.set(selectedYear,selectedMonth,selectedDay);
+            calendar.set(selectedYear, selectedMonth, selectedDay);
             mbinding.datePickerTimeline.setActiveDate(calendar);
 
 
@@ -338,46 +326,40 @@ public class TargetFragment extends Fragment {
     }
 
 
-    public void getDataFromViewModel( )
-    {
-
+    public void getDataFromViewModel() {
 
 
         mbinding.datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(int year, int month, int day, int dayOfWeek) {
                 String date;
-                selectedDay=day;
-                selectedMonth= month;
+                selectedDay = day;
+                selectedMonth = month;
                 selectedYear = year;
-                int checkmonth= (month%10);
-                int checkday = (day%10);
-                String mDay = null,mMonth = null,mYear= String.valueOf(year);
-                if (checkmonth>0 && month<10 ) {
-                    mMonth = "0"+(month+1);
-           //          date = day + "-" + "0" + (month + 1) + "-" + (year);
-                }
-                else
-                {
-                    mMonth=String.valueOf(month+1);
+                int checkmonth = (month % 10);
+                int checkday = (day % 10);
+                String mDay = null, mMonth = null, mYear = String.valueOf(year);
+                if (checkmonth > 0 && month < 10) {
+                    mMonth = "0" + (month + 1);
+                    //          date = day + "-" + "0" + (month + 1) + "-" + (year);
+                } else {
+                    mMonth = String.valueOf(month + 1);
 
                 }
 
-                    if (checkday>0 && day<10){
+                if (checkday > 0 && day < 10) {
                     mDay = "0" + (day);
 
-                }
-                else
-                {
-                    mDay= String.valueOf(day);
+                } else {
+                    mDay = String.valueOf(day);
 
                 }
                 date = mDay + "-" + (mMonth) + "-" + (mYear);
 
-                selectedDate= date;
+                selectedDate = date;
                 Log.d("date", "date select ho rai hai");
 
-                calendar.set(year,month,day);
+                calendar.set(year, month, day);
                 mbinding.datePickerTimeline.setActiveDate(calendar);
                 getTargetViewModelData(date);
 
@@ -392,21 +374,17 @@ public class TargetFragment extends Fragment {
 
     }
 
-    public void getTargetViewModelData( String date)
-    {
+    public void getTargetViewModelData(String date) {
 
         targetViewModel.getAllEveningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                if (list!=null)
-                {
+                if (list != null) {
                     mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
 
                     eveningListAdapter.setDoctorModelList(list);
                     eveningListAdapter.notifyDataSetChanged();
-                }
-                else
-                {
+                } else {
                     eveningListAdapter.clearData();
 
                 }
@@ -417,14 +395,11 @@ public class TargetFragment extends Fragment {
         targetViewModel.getAllMorningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                if (list!=null)
-                {
+                if (list != null) {
                     mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
                     morningListAdapter.setDoctorModelList(list);
                     morningListAdapter.notifyDataSetChanged();
-                }
-                else
-                {
+                } else {
                     morningListAdapter.clearData();
                 }
 
@@ -495,24 +470,22 @@ public class TargetFragment extends Fragment {
 //            }
 //        });
     }
-    public void BtnListener()
-    {
+
+    public void BtnListener() {
 
         mbinding.targetRecycler.morningDoctorShowlistBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (morningFlag ==0) {
+                if (morningFlag == 0) {
 
                     morningListAdapter.setFlag(1);
-                    morningFlag =1;
+                    morningFlag = 1;
                     float deg = (mbinding.targetRecycler.morningDoctorShowlistBtn.getRotation() == 180F) ? 0F : 180F;
                     mbinding.targetRecycler.morningDoctorShowlistBtn.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
 
-                }
-                else
-                {
+                } else {
                     morningListAdapter.setFlag(0);
-                    morningFlag =0;
+                    morningFlag = 0;
                     float deg = (mbinding.targetRecycler.morningDoctorShowlistBtn.getRotation() == 180F) ? 0F : 180F;
                     mbinding.targetRecycler.morningDoctorShowlistBtn.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
 
@@ -524,18 +497,15 @@ public class TargetFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (eveningFlag==0)
-                {
+                if (eveningFlag == 0) {
                     eveningListAdapter.setFlag(1);
-                    eveningFlag=1;
+                    eveningFlag = 1;
                     float deg = (mbinding.targetRecycler.eveningDoctorShowlistBtn.getRotation() == 180F) ? 0F : 180F;
                     mbinding.targetRecycler.eveningDoctorShowlistBtn.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
 
-                }
-                else
-                {
+                } else {
                     eveningListAdapter.setFlag(0);
-                    eveningFlag=0;
+                    eveningFlag = 0;
                     float deg = (mbinding.targetRecycler.eveningDoctorShowlistBtn.getRotation() == 180F) ? 0F : 180F;
                     mbinding.targetRecycler.eveningDoctorShowlistBtn.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
 
@@ -556,93 +526,126 @@ public class TargetFragment extends Fragment {
     }
 
 
-    public void setPullToFresh()
-    {
+    public void setPullToFresh() {
 
-            mbinding.targetRecycler.swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    if (isLocationEnabled()) {
-                        mbinding.targetRecycler.swipeLayout.setRefreshing(false);
+        mbinding.targetRecycler.swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isLocationEnabled()) {
+                    mbinding.targetRecycler.swipeLayout.setRefreshing(false);
 
-                        int id = SharedPreferenceHelper.getInstance(getContext()).getUserId();
+                    int id = SharedPreferenceHelper.getInstance(getContext()).getUserId();
 
-                        targetViewModel.DeleteAllDoctor();
-                        SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(),requireContext());
-                        String errorMessage= syncDataToDB.saveDoctorsList(id);
-                        if (!errorMessage.equals(""))
-                        {
+                    targetViewModel.DeleteAllDoctor();
+                    SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext());
+                    String errorMessage = syncDataToDB.saveDoctorsList(id);
+                    if (!errorMessage.equals("")) {
 
-                        }
                     }
-                    else
-                    {
+                } else {
 
-                        new SweetAlertDialog(requireContext())
-                                .setTitleText("Please turn on  location for this action.")
-                                .setContentText("Do you want to open location setting.")
-                                .setConfirmText("Yes")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        mbinding.targetRecycler.swipeLayout.setRefreshing(false);
+                    new SweetAlertDialog(requireContext())
+                            .setTitleText("Please turn on  location for this action.")
+                            .setContentText("Do you want to open location setting.")
+                            .setConfirmText("Yes")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    mbinding.targetRecycler.swipeLayout.setRefreshing(false);
 
-                                        sweetAlertDialog.dismiss();
-                                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                        requireContext().startActivity(intent);
-                                    }
-                                })
-                                .setCancelText("Cancel")
-                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        sweetAlertDialog.dismiss();
-                                        mbinding.targetRecycler.swipeLayout.setRefreshing(false);
+                                    sweetAlertDialog.dismiss();
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    requireContext().startActivity(intent);
+                                }
+                            })
+                            .setCancelText("Cancel")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                    mbinding.targetRecycler.swipeLayout.setRefreshing(false);
 
-                                    }
-                                }).show();
-                    }
-
+                                }
+                            }).show();
                 }
 
-            });
+            }
+
+        });
 
     }
 
-    public void setUpCancelWorkPlanAlertDialog(DoctorModel doctorModel, int key)
-    {
+    public void setUpCancelWorkPlanAlertDialog(DoctorModel doctorModel, int key) {
 
-        if (isLocationEnabled())
-        {
-            customLocation = new CustomLocation();
-            CustomCancelDialogBinding dialogBinding = CustomCancelDialogBinding.inflate(getLayoutInflater());
-
-            alertDialog= new AlertDialog.Builder(getContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        if (isLocationEnabled()) {
+            CustomLocation customLocation = new CustomLocation();
+            dialogBinding = CustomCancelDialogBinding.inflate(getLayoutInflater());
+            alertDialog = new AlertDialog.Builder(getContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
             alertDialog.show();
-            CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+            CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
                 @Override
                 public void gotLocation(Location location1) {
-                    location=location1;
+                    location = location1;
                 }
             };
 
-            customLocation.getLastLocation(getContext(),getActivity(),locationResults);
+
+            dialogBinding.remarksEdittext.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    remarksForCancel=s.toString();
+
+                }
+            });
+            dialogBinding.speechToTextBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent
+                            = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                    try {
+                        startActivityForResult(intent, CONSTANTS.REQUEST_CODE_SPEECH_INPUT_FOR_CANCEL_DIALOG);
+                    } catch (Exception e) {
+                        Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            customLocation.getLastLocation(getContext(), getActivity(), locationResults);
             dialogBinding.saveRemarksBtn.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View v) {
-                    String check=dialogBinding.remarksEdittext.getText().toString();
+                    dialogBinding.saveRemarksBtn.setEnabled(false);
+                    String check = dialogBinding.remarksEdittext.getText().toString();
+                    sweetAlertDialog= new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
+                    sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
+                    sweetAlertDialog.setTitleText("Loading");
+                    sweetAlertDialog.setCancelable(false);
+                    sweetAlertDialog.show();
 
-
-                    if (!check.equals("") ) {
+                    if (!check.equals("")) {
                         if (location != null) {
                             List<UpdateWorkPlanStatus> list = new ArrayList<>();
                             String remarks = dialogBinding.remarksEdittext.getText().toString();
                             int userId = SharedPreferenceHelper.getInstance(getActivity()).getUserId();
                             String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
                             String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-                            Date date =  Calendar.getInstance().getTime();
-                            SimpleDateFormat dateFormat=new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
+                            Date date = Calendar.getInstance().getTime();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
                             String dateString = dateFormat.format(date);
 
                             UpdateWorkPlanStatus updateWorkPlanStatus = new UpdateWorkPlanStatus();
@@ -667,14 +670,14 @@ public class TargetFragment extends Fragment {
                                     if (response.body() != null) {
 
 
-
                                         UpdateStatus updateStatus = response.body();
                                         Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
                                         eveningListAdapter.removeItem(doctorModel);
                                         morningListAdapter.removeItem(doctorModel);
+                                        dialogBinding.saveRemarksBtn.setEnabled(true);
 
                                         targetViewModel.DeleteDoctor(doctorModel);
-
+                                        sweetAlertDialog.dismiss();
                                         alertDialog.dismiss();
                                     }
 
@@ -687,13 +690,10 @@ public class TargetFragment extends Fragment {
                                     t.getMessage();
                                 }
                             });
+                        } else {
+                            Toast.makeText(getActivity(), "Please turn on location", Toast.LENGTH_LONG).show();
                         }
-                        else {
-                            Toast.makeText(getActivity(),"Please turn on location",Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    else
-                    {
+                    } else {
                         dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
                     }
                 }
@@ -705,9 +705,7 @@ public class TargetFragment extends Fragment {
                     alertDialog.dismiss();
                 }
             });
-        }
-        else
-        {
+        } else {
             new SweetAlertDialog(requireContext())
                     .setTitleText("Please turn on  location for this action.")
                     .setContentText("Do you want to open location setting.")
@@ -737,36 +735,126 @@ public class TargetFragment extends Fragment {
     }
 
 
-    public void setUpRescheduleWorkPlanAlertDialog(DoctorModel doctorModel, int key)
-    {
-        CustomRescheduleDialogBinding dialogBinding = CustomRescheduleDialogBinding.inflate(getLayoutInflater());
+    public void setUpRescheduleWorkPlanAlertDialog(DoctorModel doctorModel, int key) {
+        rescheduleDialogBinding = CustomRescheduleDialogBinding.inflate(getLayoutInflater());
 
-         alertDialog= new AlertDialog.Builder(getContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        alertDialog = new AlertDialog.Builder(requireContext()).setView(rescheduleDialogBinding.getRoot()).setCancelable(false).create();
         alertDialog.show();
+        rescheduleDialogBinding.speechToTextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent
+                        = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
 
-        dialogBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
+                try {
+                    startActivityForResult(intent, CONSTANTS.REQUEST_CODE_SPEECH_INPUT_FOR_RESCHEDULE_DIALOG);
+                } catch (Exception e) {
+                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        rescheduleDialogBinding.remarksEdittext.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                remarksForReschedule = remarksForReschedule+s.toString();
+
+            }
+        });
+
+        rescheduleDialogBinding.textDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int mYear = calendar.get(Calendar.YEAR);
+                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+                int mMonth = calendar.get(Calendar.MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        int checkMonth = month % 10, checkday = (dayOfMonth % 10);
+                        ;
+                        String mMonth, mDay;
+                        if (checkMonth > 0 && month < 10) {
+                            mMonth = "0" + (month + 1);
+                        } else {
+                            mMonth = String.valueOf(month + 1);
+
+                        }
+
+                        if (checkday > 0 && dayOfMonth < 10) {
+                            mDay = "0" + (dayOfMonth);
+
+                        } else {
+                            mDay = String.valueOf(dayOfMonth);
+
+                        }
+                        String mDate = mMonth + "/" + mDay + "/" + year;
+                        rescheduleDialogBinding.textDate.setText(mDate);
+
+                    }
+                }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
+        rescheduleDialogBinding.textTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int mHour = calendar.get(Calendar.HOUR_OF_DAY);
+                int mMinute = calendar.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String openingTime = String.valueOf(hourOfDay) + " : " + String.valueOf(minute);
+                        rescheduleDialogBinding.textTime.setText(openingTime);
+                    }
+                }, mHour, mMinute, false);
+                timePickerDialog.show();
+            }
+        });
+        rescheduleDialogBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                String remarkCheck= dialogBinding.remarksEdittext.getText().toString();
-                String dateCheck= dialogBinding.dateEditText.getText().toString();
-                String timeCheck= dialogBinding.timeEditText.getText().toString();
-
-                if (!remarkCheck.equals("") && !dateCheck.equals("") && !timeCheck.equals("") ) {
+                rescheduleDialogBinding.saveBtn.setEnabled(false);
+                String remarkCheck = rescheduleDialogBinding.remarksEdittext.getText().toString();
+                String dateCheck = rescheduleDialogBinding.textDate.getText().toString();
+                String timeCheck = rescheduleDialogBinding.textTime.getText().toString();
+                sweetAlertDialog= new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
+                sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
+                sweetAlertDialog.setTitleText("Loading");
+                sweetAlertDialog.setCancelable(false);
+                sweetAlertDialog.show();
+                if (!remarkCheck.equals("") && !dateCheck.equals("") && !timeCheck.equals("")) {
                     int userId = SharedPreferenceHelper.getInstance(getActivity()).getUserId();
                     String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
-                    AddNewWorkPlanModel addNewWorkPlanModel= new AddNewWorkPlanModel();
+                    AddNewWorkPlanModel addNewWorkPlanModel = new AddNewWorkPlanModel();
                     addNewWorkPlanModel.setDoctorId(doctorModel.getDoctorId());
                     addNewWorkPlanModel.setEmpId(userId);
                     addNewWorkPlanModel.setRemarks1(remarkCheck);
-                    String dateTime = dateCheck+" "+timeCheck;
+                    String dateTime = dateCheck + " " + timeCheck;
                     addNewWorkPlanModel.setWorkFromDate(dateTime);
                     addNewWorkPlanModel.setWorkToDate(dateTime);
                     addNewWorkPlanModel.setWorkPlan("Meeting");
                     addNewWorkPlanModel.setWorkId(doctorModel.getWorkId());
 
 
-                    Call<UpdateStatus> call = ApiClient.getInstance().getApi().RescheduleWorkPlan(token,addNewWorkPlanModel);
+                    Call<UpdateStatus> call = ApiClient.getInstance().getApi().RescheduleWorkPlan(token, addNewWorkPlanModel);
                     call.enqueue(new Callback<UpdateStatus>() {
                         @Override
                         public void onResponse(Call<UpdateStatus> call, Response<UpdateStatus> response) {
@@ -774,20 +862,15 @@ public class TargetFragment extends Fragment {
                             if (response.body() != null) {
 
 
+                                UpdateStatus updateStatus = response.body();
+                                Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
 
-
-                                UpdateStatus updateStatus= response.body();
-                                Toast.makeText(getContext(),updateStatus.getStrMessage(),Toast.LENGTH_LONG).show();
-//                                eveningListAdapter.removeItem(doctorModel);
-//                                morningListAdapter.removeItem(doctorModel);
 //
-//                                targetViewModel.DeleteDoctor(doctorModel);
-
+                                targetViewModel.DeleteDoctor(doctorModel);
+                                rescheduleDialogBinding.saveBtn.setEnabled(true);
+                                sweetAlertDialog.dismiss();
                                 alertDialog.dismiss();
                             }
-
-
-
 
 
                         }
@@ -798,15 +881,13 @@ public class TargetFragment extends Fragment {
                             t.getMessage();
                         }
                     });
-                }
-                else
-                {
+                } else {
                     dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
                 }
             }
         });
 
-        dialogBinding.closeBtn.setOnClickListener(new View.OnClickListener() {
+        rescheduleDialogBinding.closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
@@ -820,5 +901,22 @@ public class TargetFragment extends Fragment {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == CONSTANTS.REQUEST_CODE_SPEECH_INPUT_FOR_CANCEL_DIALOG) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                remarksForCancel= remarksForCancel+" "+result.get(0);
+                dialogBinding.remarksEdittext.setText(remarksForCancel);
+            }
+        } else if (requestCode == CONSTANTS.REQUEST_CODE_SPEECH_INPUT_FOR_RESCHEDULE_DIALOG) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                remarksForReschedule = remarksForReschedule+" "+result.get(0);
+                rescheduleDialogBinding.remarksEdittext.setText(remarksForReschedule);
+            }
+        }
+    }
 }

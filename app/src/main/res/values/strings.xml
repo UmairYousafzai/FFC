@@ -55,10 +55,7 @@
     <string name="cancel">Cancel</string>
     <string name="morning">Morning</string>
     <string name="evening">Evening</string>
-    <string name="please_enter_your_new_scheduled_date">Please enter your new scheduled date</string>
-    <string name="please_enter_your_remarks">Please enter your remarks</string>
     <string name="yyyy_mm_dd">YYYY-MM-DD</string>
-    <string name="please_enter_your_new_scheduled_time">Please enter your new scheduled time</string>
     <string name="hh_mm">HH:MM</string>
     <string name="reschedule_activity">Reschedule Activity</string>
     <string name="product_info">Product Info</string>
@@ -66,7 +63,6 @@
     <string name="info">Info</string>
     <string name="compelete">Compelete</string>
     <string name="delete">Delete</string>
-    <string name="save">Save</string>
     <string name="compelete_activity">Compelete Activity</string>
     <string name="add_work_plan">Add Work Plan</string>
     <string name="date">Date</string>
@@ -105,5 +101,13 @@
     <string name="select_day">Select Day</string>
     <string name="added_schedule">Added Schedule</string>
     <string name="primary_location">Primary Location</string>
+    <string name="type">Type..</string>
+    <string name="please_enter_your_remarks">Please enter your remarks</string>
+    <string name="cancel_activity">Cancel Activity</string>
+    <string name="save">Save</string>
+    <string name="select_time">Select Time</string>
+    <string name="remarks">Remarks</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="select_from_gallery">Select From Gallery</string>
 
 </resources>

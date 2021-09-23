@@ -411,7 +411,6 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                                 String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
                                 saveDoctorModel.setSchedules(getSchedule());
                                 saveDoctorModel.setSuggested_UserId(id);
-                                saveDoctorModel.setImagePath("");
                                 progressDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
                                 progressDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
                                 progressDialog.setTitleText("Loading");

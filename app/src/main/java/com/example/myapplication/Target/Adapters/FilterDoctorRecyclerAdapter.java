@@ -59,6 +59,7 @@ public class FilterDoctorRecyclerAdapter extends RecyclerView.Adapter<FilterDoct
             }
         });
 
+
     }
 
     @Override

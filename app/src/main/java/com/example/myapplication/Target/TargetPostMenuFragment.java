@@ -36,6 +36,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.Target.utils.TargetViewModel;
 import com.example.myapplication.databinding.CustomCompeleteDialogBinding;
 import com.example.myapplication.databinding.FragmentTargetPostMenuBinding;
+import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.CustomLocation;
 import com.example.myapplication.utils.SharedPreferenceHelper;
 
@@ -347,7 +348,7 @@ public class TargetPostMenuFragment extends Fragment {
                         sweetAlertDialog.dismiss();
                         ActivityCompat.requestPermissions(requireActivity(),
                                 permissionArray,
-                                MainActivity.PERMISSION_REQUEST_CODE);
+                                CONSTANTS.PERMISSION_REQUEST_CODE);
                     }
                 })
                 .setCancelText("Cancel")
@@ -369,7 +370,7 @@ public class TargetPostMenuFragment extends Fragment {
 
 
         } else {
-            ActivityCompat.requestPermissions(requireActivity(), permissionArray, MainActivity.PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(requireActivity(), permissionArray, CONSTANTS.PERMISSION_REQUEST_CODE);
 
         }
 
@@ -380,7 +381,7 @@ public class TargetPostMenuFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == MainActivity.PERMISSION_REQUEST_CODE) {
+        if (requestCode == CONSTANTS.PERMISSION_REQUEST_CODE) {
             if (permissions.length > 0 && grantResults.length == permissions.length) {
                 for (int i = 0; i < permissions.length; i++) {
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {

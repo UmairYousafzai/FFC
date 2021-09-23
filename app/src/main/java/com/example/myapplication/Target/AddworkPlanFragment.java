@@ -14,6 +14,9 @@ import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,15 +31,21 @@ import com.example.myapplication.NetworkCalls.ApiClient;
 import com.example.myapplication.R;
 import com.example.myapplication.SplashScreen.SplashActivity;
 import com.example.myapplication.databinding.FragmentAddworkPlanBinding;
+import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.SharedPreferenceHelper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_OK;
 
 public class AddworkPlanFragment extends Fragment {
 
@@ -50,6 +59,7 @@ public class AddworkPlanFragment extends Fragment {
     private String dataIDs = "", dataTittles = "", mDate;
     private NavController navController;
     private NavBackStackEntry navBackStackEntry;
+    private String remarks="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -217,12 +227,44 @@ public class AddworkPlanFragment extends Fragment {
 
             }
         });
+        mbinding.micBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent
+                        = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                try {
+                    startActivityForResult(intent, CONSTANTS.REQUEST_CODE_SPEECH_INPUT);
+                } catch (Exception e) {
+                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mbinding.remarks.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                remarks= s.toString();
+            }
+        });
 
         mbinding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mbinding.saveBtn.setEnabled(false);
-                String remarks = mbinding.remarksEdittext.getText().toString().trim();
+                String remarks = mbinding.remarks.getText().toString().trim();
                 int id = SharedPreferenceHelper.getInstance(requireContext()).getUserId();
                 if (!remarks.isEmpty() && !dataTittles.isEmpty() && !mDate.isEmpty()) {
 
@@ -236,7 +278,7 @@ public class AddworkPlanFragment extends Fragment {
                     mbinding.Areas.setText(R.string.select_areas);
                     mbinding.Doctors.setText(R.string.select_doctors);
                     mbinding.workPlanDate.setText("");
-                    mbinding.remarksEdittext.setText("");
+                    mbinding.remarks.setText("");
                     dataTittles = "";
                     mDate = "";
                 }
@@ -292,4 +334,17 @@ public class AddworkPlanFragment extends Fragment {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CONSTANTS.REQUEST_CODE_SPEECH_INPUT) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                remarks=remarks+" "+result.get(0);
+                mbinding.remarks.setText(remarks);
+            }
+
+        }
+    }
 }

@@ -14,6 +14,7 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Database.FfcDatabase;
 import com.example.myapplication.Login.GetUserInfoModel;
+import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.SyncDataToDB;
 import com.example.myapplication.databinding.ActivityMainBinding;
 import com.example.myapplication.databinding.NavigationDrawerHeaderBinding;
@@ -40,7 +41,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public final static int PERMISSION_REQUEST_CODE=22;
     private AppBarConfiguration mAppBarConfiguration;
     private FfcDatabase ffcDatabase;
     private NavController navController;
@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED&&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED&&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED&&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED&&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
             requestPermission();
         }
@@ -264,7 +266,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         String[] permissionArray= new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.CALL_PHONE,
-                Manifest.permission.SEND_SMS};
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
       SweetAlertDialog alertDialog=  new SweetAlertDialog(this,SweetAlertDialog.ERROR_TYPE);
 
                alertDialog .setConfirmText("Yes")
@@ -274,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         sweetAlertDialog.dismiss();
                         ActivityCompat.requestPermissions(MainActivity.this,
                                 permissionArray,
-                                PERMISSION_REQUEST_CODE);
+                                CONSTANTS.PERMISSION_REQUEST_CODE);
                     }
                 })
                 .setCancelText("Cancel")
@@ -289,7 +293,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)&&
                 ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CALL_PHONE)&&
-                ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.SEND_SMS))
+                ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.SEND_SMS)&&
+        ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)&&
+        ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA))
         {
 
             alertDialog.setTitle("Permission Needed");
@@ -300,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else
         {
-            ActivityCompat.requestPermissions(this, permissionArray, PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, permissionArray, CONSTANTS.PERMISSION_REQUEST_CODE);
 
         }
 
@@ -313,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         boolean check= false;
-        if (requestCode==PERMISSION_REQUEST_CODE)
+        if (requestCode==CONSTANTS.PERMISSION_REQUEST_CODE)
         {
             if (permissions.length>0 && grantResults.length==permissions.length)
             {

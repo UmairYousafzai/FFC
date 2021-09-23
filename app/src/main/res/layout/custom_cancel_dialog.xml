@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageButton
             android:id="@+id/btn_close_cancel_dialog"
@@ -21,7 +21,7 @@
             android:src="@drawable/ic_baseline_cancel_24"
             android:gravity="center"
             android:textStyle="bold"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
             android:textColor="@color/APP_Theme_Color"
             android:background="@drawable/bg_close_button"
@@ -42,7 +42,7 @@
             android:layout_width="200dp"
             android:layout_below="@+id/profile_image"
             android:layout_centerHorizontal="true"
-            android:text="Cancel Activity"
+            android:text="@string/cancel_activity"
             android:gravity="center_horizontal"
             android:textStyle="bold"
             />
@@ -53,7 +53,7 @@
             android:id="@+id/text_reset_server"
             android:layout_below="@+id/heading_reset_server"
             android:layout_centerHorizontal="true"
-            android:text="Please enter your remarks"
+            android:text="@string/please_enter_your_remarks"
             android:gravity="center_horizontal"
             />
 
@@ -63,14 +63,29 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_reset_server"
             android:layout_centerHorizontal="true"
-            android:textSize="15dp"
-
-
+            android:textSize="15sp"
+            android:hint="@string/type"
+            android:textColor="@color/black"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
             />
+
+        <ImageButton
+            android:id="@+id/speech_to_text_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_reset_server"
+            android:layout_alignBottom="@+id/remarks_edittext"
+            android:layout_alignParentEnd="true"
+            android:visibility="visible"
+            android:layout_toEndOf="@+id/remarks_edittext"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_baseline_mic_24" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/save_remarks_btn"
             android:layout_below="@id/remarks_edittext"
-            android:text="Save"
+            android:text="@string/save"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -81,7 +96,7 @@
             android:textColor="@color/APP_Theme_Color"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:textSize="13sp"
             app:rippleColor="@color/APP_Theme_Color"
             />

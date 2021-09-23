@@ -19,7 +19,7 @@ public class FilteredDoctorInfomationModel implements Parcelable {
     @SerializedName("Grade_Tittle")
     String grade_title;
 
-
+    private String formattedDate;
 
     @SerializedName("Schedules")
 
@@ -106,6 +106,13 @@ public class FilteredDoctorInfomationModel implements Parcelable {
 
     private int sessionId;
 
+    public String getFormattedDate() {
+        return formattedDate;
+    }
+
+    public void setFormattedDate(String formattedDate) {
+        this.formattedDate = formattedDate;
+    }
 
     protected FilteredDoctorInfomationModel(Parcel in) {
         qualification_title = in.readString();

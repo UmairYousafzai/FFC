@@ -3,6 +3,8 @@ package com.example.myapplication.Target;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -17,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -138,8 +141,16 @@ public class FilteredDocFullInfoFragment extends Fragment {
                 if(response.body()!=null)
                 {
                     doctoredFullInfoModel = response.body();
+                    doctoredFullInfoModel.setFormattedDate(dateTimeFormat(doctoredFullInfoModel.getDOB()));
                     mBinding.setDoctor(doctoredFullInfoModel);
                     mBinding.executePendingBindings();
+                    if (doctoredFullInfoModel.getImagePath()!=null&&!doctoredFullInfoModel.getImagePath().isEmpty())
+                    {
+                        byte[] data = Base64.decode(doctoredFullInfoModel.getImagePath(), Base64.DEFAULT);
+                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        mBinding.imageFitlerdoctorInfo.setImageBitmap(bmp);
+                    }
+
                     if (doctoredFullInfoModel.getGender()==1)
                     {
                         mBinding.gender.setText("Male");
@@ -175,5 +186,20 @@ public class FilteredDocFullInfoFragment extends Fragment {
         adapter = new ScheduleAdapter();
         mBinding.docInfoSchedulesRecyclerview.setAdapter(adapter);
 
+    }
+
+    private String dateTimeFormat(String t)
+    {
+        String result;
+
+        String[] dateTime = t.split("T");
+        String[] date = dateTime[0].split("-");
+        String[]  time = dateTime[1].split(":");
+        String dated = date[2]+"/"+date[1]+"/"+date[0];
+        String timed =  time[0]+":"+time[1];
+        //  result = dated+" "+timed;
+
+        result = dated;
+        return result;
     }
 }

@@ -109,18 +109,51 @@
             android:textStyle="bold"
             android:layout_margin="8dp"
             />
-        <EditText
-            android:id="@+id/remarks_edittext"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/type_remarks"
-            android:textColorHint="@color/black"
-            android:inputType="textMultiLine"
-            android:minLines="3"
-            android:textSize="14sp"
-            android:layout_margin="8dp"
-            android:textColor="@color/black"
-            />
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/remarks_layout"
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="@string/remarks"
+                android:textColorHint="@color/black"
+                app:helperTextTextColor="@color/APP_Theme_Color"
+                android:layout_weight=".8"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/remarks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:maxLines="4"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-light"
+                    >
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/mic_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_mic_24"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight=".2"
+                android:layout_marginEnd="10dp"
+                />
+        </LinearLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
