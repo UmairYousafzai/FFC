@@ -11,6 +11,7 @@ import androidx.room.Query;
 import com.example.myapplication.Login.GetUserInfoModel;
 import com.example.myapplication.Login.GetUserMenuModel;
 import com.example.myapplication.Login.GetUserSettingModel;
+import com.example.myapplication.ModelClasses.Activity;
 import com.example.myapplication.ModelClasses.ClassificationModel;
 import com.example.myapplication.FilteredDoctoredModel;
 import com.example.myapplication.ModelClasses.GradingModel;
@@ -20,6 +21,8 @@ import com.example.myapplication.DoctorModel;
 import com.example.myapplication.ScheduleModel;
 
 import java.util.List;
+
+import retrofit2.http.DELETE;
 
 @Dao
 public interface FfcDAO {
@@ -32,6 +35,7 @@ public interface FfcDAO {
 
     @Query("Select Device_Address from User_Info")
     String device_address();
+
     @Query("Select *from User_Info")
     GetUserInfoModel getuserInfo();
 
@@ -51,7 +55,6 @@ public interface FfcDAO {
     // ********User Menue Queries********
     //
      */
-
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -132,13 +135,14 @@ public interface FfcDAO {
     @Query("Select * from ROUTE_ACTIVITY")
     List<RouteActivityModel> getAll();
 
-      /*
-    //
-    // *******Target  Queries*******
-    //
-     */
+    /*
+  //
+  // *******Target  Queries*******
+  //
+   */
     @Insert
     void insertWorkPlanDoctor(List<DoctorModel> doctorModel);
+
     @Update
     void updateDoctor(DoctorModel doctorModel);
 
@@ -181,13 +185,15 @@ public interface FfcDAO {
 
     @Query("Select *from FilterDoctor")
     LiveData<List<FilteredDoctoredModel>> getAllFilterDoctor();
+
     @Query("Select *from FilterDoctor" +
-            " Where (:doc_classification = 'All' or classificationTitle = :doc_classification) "+
+            " Where (:doc_classification = 'All' or classificationTitle = :doc_classification) " +
             "and ( :doc_grade = 'All' or gradeTitle= :doc_grade)")
     LiveData<List<FilteredDoctoredModel>> getQuerydocotor(String doc_classification, String doc_grade);
 
     @Insert
     void insertSchedule(ScheduleModel model);
+
     @Insert
     void insertAllSchedule(List<ScheduleModel> list);
 
@@ -197,4 +203,26 @@ public interface FfcDAO {
     @Query("Delete from Schedule")
     void deleteAllSchedule();
 
+
+            /*
+    //
+    // *******Activity  Queries*******
+    //
+     */
+
+
+    @Insert
+    void insertActivity(Activity activity);
+
+    @Delete
+    void deleteActivity(Activity activity);
+
+    @Update
+    void updateActivity(Activity activity);
+
+    @Query("Select *From activity")
+    LiveData<List<Activity>> getAllActivities();
+
+    @Query("Delete from activity")
+    void deleteAllActivity();
 }

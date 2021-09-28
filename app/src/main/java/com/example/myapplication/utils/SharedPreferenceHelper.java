@@ -106,7 +106,7 @@ public class SharedPreferenceHelper {
         return sharedPreferences.getBoolean(String.valueOf(startDay), false);
     }
     public void setStart(Boolean start) {
-        sharedPreferences.edit().putBoolean(String.valueOf(activity), startDay).apply();
+        sharedPreferences.edit().putBoolean(String.valueOf(startDay), start).apply();
     }
 
 }

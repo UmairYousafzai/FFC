@@ -147,8 +147,8 @@ public class RecoveryFragment extends Fragment {
                 /*manual_scroll.setVisibility(View.GONE);
                 text_scan.setVisibility(GONE);
                 series_scroll.setVisibility(View.VISIBLE);*/
-                animEnterLeft = AnimationUtils.loadAnimation(getActivity(),
-                        R.anim.enter_from_left2);
+//                animEnterLeft = AnimationUtils.loadAnimation(getActivity(),
+//                        R.anim.enter_from_left2);
 
                 btn_series.startAnimation(animEnterLeft);
 
@@ -171,8 +171,8 @@ public class RecoveryFragment extends Fragment {
                 btn_series.setTextColor(Color.parseColor("#000000"));
                 btn_manual.setTextColor(Color.parseColor("#000000"));
 
-                animEnterLeft = AnimationUtils.loadAnimation(getActivity(),
-                        R.anim.enter_from_left2);
+//                animEnterLeft = AnimationUtils.loadAnimation(getActivity(),
+//                        R.anim.enter_from_left2);
 
                 btn_scan.startAnimation(animEnterLeft);
 
@@ -200,9 +200,9 @@ public class RecoveryFragment extends Fragment {
                 btn_manual.setTextColor(Color.parseColor("#FFFFFF"));
                 btn_series.setTextColor(Color.parseColor("#000000"));
                 btn_scan.setTextColor(Color.parseColor("#000000"));
-
-                animEnterLeft = AnimationUtils.loadAnimation(getActivity(),
-                        R.anim.enter_from_left2);
+//
+//                animEnterLeft = AnimationUtils.loadAnimation(getActivity(),
+//                        R.anim.enter_from_left2);
 
                 btn_manual.startAnimation(animEnterLeft);
                 linear_add_new.startAnimation(animEnterLeft);

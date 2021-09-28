@@ -81,7 +81,7 @@ public class PrivateTravelFragment extends Fragment {
                             u.get(i).getEnd_date_time() + "|" + u.get(i).getEnd_coordinates() + "|" , Toast.LENGTH_LONG).show();
                 }
 
-                navController.navigate(R.id.nav_local_travel);
+      //          navController.navigate(R.id.nav_local_travel);
             }
         });
         office.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +105,7 @@ public class PrivateTravelFragment extends Fragment {
                             u.get(i).getStart_date_time() + "|" + u.get(i).getStart_coordinates() + "|" +
                             u.get(i).getEnd_date_time() + "|" + u.get(i).getEnd_coordinates() + "|" , Toast.LENGTH_LONG).show();
                 }
-                navController.navigate(R.id.nav_office);
+     //           navController.navigate(R.id.nav_office);
 
             }
         });

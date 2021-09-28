@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Light_APP_Theme_Color"
     android:orientation="vertical"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="#2595C7DF"
+
+        >
 
 
         <RelativeLayout
@@ -30,7 +31,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:includeFontPadding="false"
                 android:singleLine="true"
-                android:text="Start Day"
+                android:text="@string/start_day"
                 android:textColor="#fff"
                 android:textSize="@dimen/_30sdp"
                 android:textStyle="bold" />
@@ -39,7 +40,7 @@
         </RelativeLayout>
 
         <GridLayout
-
+            android:layout_centerVertical="true"
             android:id="@+id/mainGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,22 +52,20 @@
 
             <androidx.cardview.widget.CardView
 
+                android:id="@+id/target_card"
+
                 android:layout_width="@dimen/_130sdp"
-                android:layout_height="@dimen/_150sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginRight="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
                 android:background="@drawable/bg_cardviews_target"
                 app:cardCornerRadius="5dp"
+
                 app:cardElevation="8dp">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="@dimen/_3sdp"
 
-                    android:background="#0075D5" />
 
 
                 <LinearLayout
@@ -78,35 +77,25 @@
 
                     <ImageView
                         android:id="@+id/target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_100sdp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="@dimen/_5sdp"
-                        android:src="@drawable/img_target_audience" />
+                        android:src="@drawable/audience" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="100">
+
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_8sdp"
-                            android:layout_weight="80"
-                            android:text="Target"
+                            android:text="@string/targets"
+                            android:textColor="@color/APP_Theme_Color"
                             android:textSize="@dimen/_15sdp" />
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="20"
-                            android:src="@drawable/ic_forward_arrow"
-                            app:tint="@color/APP_Theme_Color" />
 
-                    </LinearLayout>
+
 
 
                 </LinearLayout>
@@ -116,8 +105,9 @@
 
             <androidx.cardview.widget.CardView
 
+                android:id="@+id/local_travel_card"
                 android:layout_width="@dimen/_130sdp"
-                android:layout_height="@dimen/_150sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginRight="@dimen/_5sdp"
@@ -126,11 +116,7 @@
                 app:cardCornerRadius="5dp"
                 app:cardElevation="8dp">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="@dimen/_3sdp"
-                    android:background="#0075D5" />
+
 
 
                 <LinearLayout
@@ -142,36 +128,24 @@
 
                     <ImageView
                         android:id="@+id/localtravel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_100sdp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="@dimen/_5sdp"
                         android:layout_marginTop="@dimen/_10sdp"
-                        android:src="@drawable/img_local_travel" />
+                        android:src="@drawable/ic_bus_front_svgrepo_com" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="100">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_8sdp"
-                            android:layout_weight="80"
                             android:text="@string/LocalTravel"
+                            android:textColor="@color/APP_Theme_Color"
                             android:textSize="@dimen/_15sdp" />
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="20"
-                            android:src="@drawable/ic_forward_arrow"
-                            app:tint="@color/APP_Theme_Color"  />
 
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -179,8 +153,9 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/private_travel_card"
                 android:layout_width="@dimen/_130sdp"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginRight="@dimen/_5sdp"
@@ -189,12 +164,7 @@
                 app:cardCornerRadius="5dp"
                 app:cardElevation="8dp">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="@dimen/_3sdp"
 
-                    android:background="#0075D5" />
 
 
                 <LinearLayout
@@ -206,37 +176,26 @@
 
                     <ImageView
                         android:id="@+id/privatetravel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_100sdp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="@dimen/_5sdp"
 
-                        android:src="@drawable/img_private_travel" />
+                        android:src="@drawable/ic_iconmonstr_car_3" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="100">
+
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_8sdp"
-                            android:layout_weight="80"
-                            android:text="Private Travel"
+                            android:text="@string/PrivateTravel"
+                            android:textColor="@color/APP_Theme_Color"
 
                             android:textSize="@dimen/_15sdp" />
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="20"
-                            android:src="@drawable/ic_forward_arrow"
-                            app:tint="@color/APP_Theme_Color"  />
 
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -244,8 +203,10 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+
+                android:id="@+id/office_card"
                 android:layout_width="@dimen/_130sdp"
-                android:layout_height="@dimen/_160sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_5sdp"
 
                 android:layout_marginTop="@dimen/_8sdp"
@@ -254,12 +215,7 @@
                 app:cardCornerRadius="5dp"
                 app:cardElevation="8dp">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="@dimen/_3sdp"
 
-                    android:background="#0075D5" />
 
 
                 <LinearLayout
@@ -271,35 +227,23 @@
 
                     <ImageView
                         android:id="@+id/office"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_100sdp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="@dimen/_5sdp"
-                        android:src="@drawable/img_office" />
+                        android:src="@drawable/ic_office_block_urban_svgrepo_com" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="100">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_8sdp"
-                            android:layout_weight="80"
                             android:text="@string/Office"
+                            android:textColor="@color/APP_Theme_Color"
                             android:textSize="@dimen/_15sdp" />
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="20"
-                            android:src="@drawable/ic_forward_arrow"
-                            app:tint="@color/APP_Theme_Color"  />
 
-                    </LinearLayout>
                 </LinearLayout>
 
 

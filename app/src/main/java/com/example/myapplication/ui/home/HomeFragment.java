@@ -12,18 +12,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.myapplication.ModelClasses.Activity;
 import com.example.myapplication.R;
 import com.example.myapplication.Target.utils.DoctorViewModel;
 import com.example.myapplication.databinding.FragmentHomeBinding;
+import com.example.myapplication.utils.ActivityViewModel;
+import com.example.myapplication.utils.CONSTANTS;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
-    FragmentHomeBinding mbinding;
-    private DoctorViewModel doctorViewModel;
-
-
+    private FragmentHomeBinding mbinding;
+    private NavController navController;
+    private ActivityViewModel activityViewModel;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +41,75 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         mbinding = FragmentHomeBinding.inflate(inflater,container,false);
-        doctorViewModel= new ViewModelProvider(this).get(DoctorViewModel.class);
+        DoctorViewModel doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
+         activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
+
         if (!((AppCompatActivity)getActivity()).getSupportActionBar().isShowing()) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         }
         doctorViewModel.deleteAllSchedule();
+      navController = NavHostFragment.findNavController(this);
         return mbinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        activityViewModel.getAllActivity().observe(getViewLifecycleOwner(), new Observer<List<Activity>>() {
+            @Override
+            public void onChanged(List<Activity> activities) {
+
+
+                if (!activities.isEmpty() )
+                {
+                    String endDate=activities.get(activities.size()-1).getEndDateTime();
+
+                    if (endDate==null)
+                    {
+                        BottomNavigationView bottomNavigationView= requireActivity().findViewById(R.id.bottom_navigation);
+                        bottomNavigationView.getMenu().findItem(R.id.nav_start_day).setEnabled(false);
+
+                        NavigationView navigationView= requireActivity().findViewById(R.id.nav_view);
+                        navigationView.getMenu().findItem(R.id.nav_start_day).setEnabled(false);
+                        Activity activity= new Activity();
+
+                        activity= activities.get(activities.size()-1);
+
+                        if (activity.getMainActivity().equals(CONSTANTS.START_DAY))
+                        {
+
+                            navController.navigate(HomeFragmentDirections.actionNavHomeToNavTargetMain());
+                        }
+                        else if (activity.getMainActivity().equals(CONSTANTS.PRIVATE_TRAVEL))
+                        {
+                            HomeFragmentDirections.ActionNavHomeToFragmentMenu action = HomeFragmentDirections.actionNavHomeToFragmentMenu();
+                            action.setSelectedMenu(CONSTANTS.PRIVATE_TRAVEL);
+                            navController.navigate(action);
+                        }
+                        else if (activity.getMainActivity().equals(CONSTANTS.LOCAL_TRAVEL))
+                        {
+                            HomeFragmentDirections.ActionNavHomeToFragmentMenu action = HomeFragmentDirections.actionNavHomeToFragmentMenu();
+                            action.setSelectedMenu(CONSTANTS.LOCAL_TRAVEL);
+                            navController.navigate(action);
+                        }
+                        else if (activity.getMainActivity().equals(CONSTANTS.OFFICE))
+                        {
+                            HomeFragmentDirections.ActionNavHomeToFragmentMenu action = HomeFragmentDirections.actionNavHomeToFragmentMenu();
+                            action.setSelectedMenu(CONSTANTS.OFFICE);
+                            navController.navigate(action);
+                        }
+                        else if (activity.getMainActivity().equals(CONSTANTS.TARGET))
+                        {
+
+                            navController.navigate(HomeFragmentDirections.actionNavHomeToNavTargetSubMenu());
+                        }
+                    }
+
+
+
+                }
+            }
+        });
     }
 }

@@ -90,7 +90,7 @@ public class TargetFragment extends Fragment {
     private int selectedDay, selectedMonth, selectedYear;
     private String selectedDate = "",remarksForCancel="",remarksForReschedule="";
     private Calendar calendar;
-    private boolean mic_check = false;
+    private final boolean mic_check = false;
     private CustomCancelDialogBinding dialogBinding;
     private CustomRescheduleDialogBinding rescheduleDialogBinding;
     private SweetAlertDialog sweetAlertDialog;
@@ -624,7 +624,7 @@ public class TargetFragment extends Fragment {
                 }
             });
 
-            customLocation.getLastLocation(getContext(), getActivity(), locationResults);
+            customLocation.getLastLocation(getContext(), requireActivity(), locationResults);
             dialogBinding.saveRemarksBtn.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override

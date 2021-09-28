@@ -43,7 +43,7 @@ public class CustomLocation {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         customLocationResults=results;
         timer= new Timer();
-        timer.schedule(new GetLastLocation(),1000);
+        timer.schedule(new GetLastLocation(),500);
 
     }
 

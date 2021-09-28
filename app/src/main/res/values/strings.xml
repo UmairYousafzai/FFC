@@ -109,5 +109,11 @@
     <string name="remarks">Remarks</string>
     <string name="take_photo">Take Photo</string>
     <string name="select_from_gallery">Select From Gallery</string>
+    <string name="start_day">Start Day</string>
+    <string name="system_suggested">System Suggested</string>
+    <string name="here_system_would_suggest_you_the_work_plan_for_a_specified_day_for_current_day_system_automatically_make_work_plan_for_you">Here, system would suggest you the work plan for a specified day. For current day, system automatically make work plan for you.</string>
+    <string name="next">Next</string>
+    <string name="work_plan">Work Plan</string>
+    <string name="here_you_can_find_the_work_plan_that_you_set_for_a_specified_date_and_time_this_work_plan_would_not_be_system_suggested">Here, you can find the work plan that you set for a specified date and time. This work plan would not be system suggested.</string>
 
 </resources>

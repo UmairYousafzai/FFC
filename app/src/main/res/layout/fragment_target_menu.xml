@@ -40,7 +40,7 @@
             android:orientation="vertical"
             android:padding="20dp">
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/linear_system_suggested"
+                android:id="@+id/target_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
@@ -91,7 +91,7 @@
 
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/linear_work_plan"
+                android:id="@+id/local_travel_card"
                 android:layout_below="@+id/linear_system_suggested"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
 
                 <LinearLayout
                     android:background="@drawable/bg_cardviews_target"
-                    android:id="@+id/local_privatetravel"
+                    android:id="@+id/local_travel"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"

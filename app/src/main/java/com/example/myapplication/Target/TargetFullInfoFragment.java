@@ -35,7 +35,7 @@ import com.example.myapplication.NetworkCalls.ApiClient;
 import com.example.myapplication.R;
 import com.example.myapplication.Target.utils.TargetViewModel;
 import com.example.myapplication.databinding.CustomCompeleteDialogBinding;
-import com.example.myapplication.databinding.FragmentTargetPostMenuBinding;
+import com.example.myapplication.databinding.FragmentTargetFullInfoBinding;
 import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.CustomLocation;
 import com.example.myapplication.utils.SharedPreferenceHelper;
@@ -53,10 +53,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TargetPostMenuFragment extends Fragment {
+public class TargetFullInfoFragment extends Fragment {
 
     private View view;
-    private FragmentTargetPostMenuBinding mBinding;
+    private FragmentTargetFullInfoBinding mBinding;
     private DoctorModel doctorModel;
     private AlertDialog alertDialog;
     private Location location;
@@ -67,7 +67,7 @@ public class TargetPostMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mBinding = FragmentTargetPostMenuBinding.inflate(inflater, container, false);
+        mBinding = FragmentTargetFullInfoBinding.inflate(inflater, container, false);
         view = mBinding.getRoot();
 
         return view;
@@ -87,7 +87,7 @@ public class TargetPostMenuFragment extends Fragment {
 
     public void setInfoWorkPlan() {
         Bundle bundle = getArguments();
-        doctorModel = TargetPostMenuFragmentArgs.fromBundle(bundle).getDoctorModel();
+        doctorModel = TargetFullInfoFragmentArgs.fromBundle(bundle).getDoctorModel();
         mBinding.workName.setText(doctorModel.getName());
         mBinding.workLocation.setText(doctorModel.getAddress());
         mBinding.workDistanceFromCurrentLoc.setText(doctorModel.getDistance());

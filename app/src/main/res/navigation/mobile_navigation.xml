@@ -12,7 +12,31 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_nav_start_day"
-            app:destination="@id/nav_start_day" />
+            app:destination="@id/nav_start_day"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_target_main"
+            app:destination="@id/nav_target_main"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            />
+        <action
+            android:id="@+id/action_nav_home_to_fragment_menu"
+            app:destination="@id/fragment_menu"
+
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"/>
+        <action
+            android:id="@+id/action_nav_home_to_nav_target_sub_menu"
+            app:destination="@id/nav_target_sub_menu" />
+
     </fragment>
 
     <fragment
@@ -35,10 +59,10 @@
         <action
             android:id="@+id/action_nav_start_day_to_nav_target_main"
             app:destination="@id/nav_target_main"
-            app:enterAnim="@anim/enter_from_left"
-            app:exitAnim="@anim/enter_from_right"
-            app:popEnterAnim="@anim/enter_from_right"
-            app:popExitAnim="@anim/enter_from_left" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"  />
     </fragment>
 
     <fragment
@@ -49,13 +73,26 @@
         <action
             android:id="@+id/action_nav_target_main_to_nav_target_sub_menu"
             app:destination="@id/nav_target_sub_menu"
-            app:enterAnim="@anim/enter_from_left"
-            app:exitAnim="@anim/enter_from_right"
-            app:popEnterAnim="@anim/enter_from_right"
-            app:popExitAnim="@anim/enter_from_left" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            app:popUpTo="@+id/nav_home"
+            app:popUpToInclusive="true"
+            />
+
+
+
         <action
-            android:id="@+id/action_nav_target_main_to_nav_home"
-            app:destination="@id/nav_home" />
+            android:id="@+id/action_nav_target_main_to_fragment_menu"
+            app:destination="@id/fragment_menu"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            app:popUpTo="@+id/nav_home"
+            app:popUpToInclusive="true"
+            />
     </fragment>
 
     <fragment
@@ -66,10 +103,13 @@
         <action
             android:id="@+id/action_nav_target_sub_menu_to_nav_target"
             app:destination="@id/target_fragment"
-            app:enterAnim="@anim/enter_from_left"
-            app:exitAnim="@anim/enter_from_right"
-            app:popEnterAnim="@anim/enter_from_right"
-            app:popExitAnim="@anim/enter_from_left" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            app:popUpTo="@+id/nav_home"
+            app:popUpToInclusive="true"
+            />
     </fragment>
 
     <fragment
@@ -80,11 +120,17 @@
         <action
             android:id="@+id/action_target_to_targetPostMenuFragment"
             app:destination="@id/targetPostMenuFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_close_exit" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"  />
         <action
             android:id="@+id/action_target_fragment_to_addworkPlanFragment"
-            app:destination="@id/addworkPlanFragment" />
+            app:destination="@id/addworkPlanFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right" />
     </fragment>
 
     <fragment
@@ -107,10 +153,26 @@
 
 
     <fragment
-        android:id="@+id/nav_office"
-        android:name="com.example.myapplication.Office.OfficeFragment"
+        android:id="@+id/fragment_menu"
+        android:name="com.example.myapplication.TargetMenu.TargetMenuFragment"
         android:label="Office"
-        tools:layout="@layout/fragment_office" />
+        tools:layout="@layout/fragment_target_menu" >
+        <action
+            android:id="@+id/action_fragment_menu_to_nav_target_sub_menu"
+            app:destination="@id/nav_target_sub_menu"
+            app:popUpTo="@+id/nav_home"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            />
+        <argument
+            android:name="selectedMenu"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="" />
+    </fragment>
 
     <fragment
         android:id="@+id/Scan"
@@ -149,15 +211,20 @@
         tools:layout="@layout/fragment_attendance" />
     <fragment
         android:id="@+id/targetPostMenuFragment"
-        android:name="com.example.myapplication.Target.TargetPostMenuFragment"
+        android:name="com.example.myapplication.Target.TargetFullInfoFragment"
         android:label="Post Menu"
-        tools:layout="@layout/fragment_target_post_menu" >
+        tools:layout="@layout/fragment_target_full_info" >
         <argument
             android:name="DoctorModel"
             app:argType="com.example.myapplication.DoctorModel" />
         <action
             android:id="@+id/action_targetPostMenuFragment_to_target_fragment"
-            app:destination="@id/target_fragment" />
+            app:destination="@id/target_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            />
     </fragment>
     <fragment
         android:id="@+id/addworkPlanFragment"
@@ -166,10 +233,20 @@
         tools:layout="@layout/fragment_addwork_plan" >
         <action
             android:id="@+id/action_addworkPlanFragment_to_target_fragment"
-            app:destination="@id/target_fragment" />
+            app:destination="@id/target_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            />
         <action
             android:id="@+id/action_addworkPlanFragment_to_addWorkPlanDialogFragment"
-            app:destination="@id/addWorkPlanDialogFragment" />
+            app:destination="@id/addWorkPlanDialogFragment"
+
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right" />
         <argument
             android:name="areaIds"
             app:argType="string"
@@ -213,10 +290,21 @@
         tools:layout="@layout/fragment_doctor_list" >
         <action
             android:id="@+id/action_doctorListFragment_to_filteredDocFullInfoFragment"
-            app:destination="@id/filteredDocFullInfoFragment" />
+            app:destination="@id/filteredDocFullInfoFragment"
+
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            />
         <action
             android:id="@+id/action_doctorListFragment_to_doctorFormFragment"
-            app:destination="@id/doctorFormFragment" />
+            app:destination="@id/doctorFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            />
     </fragment><action android:id="@+id/action_global_doctorListFragment" app:destination="@id/doctorListFragment"/>
     <fragment
         android:id="@+id/filteredDocFullInfoFragment"
@@ -229,7 +317,12 @@
             android:defaultValue="0" />
         <action
             android:id="@+id/action_filteredDocFullInfoFragment_to_doctorFormFragment"
-            app:destination="@id/doctorFormFragment" />
+            app:destination="@id/doctorFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            />
     </fragment>
     <fragment
         android:id="@+id/doctorFormFragment"
@@ -238,7 +331,12 @@
         tools:layout="@layout/fragment_doctor_form" >
         <action
             android:id="@+id/action_doctorFormFragment_to_addScheduleFragment"
-            app:destination="@id/addScheduleFragment" />
+            app:destination="@id/addScheduleFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_right"
+            />
         <argument
             android:name="filter_doc"
             app:argType="com.example.myapplication.FilteredDoctorInfomationModel"
