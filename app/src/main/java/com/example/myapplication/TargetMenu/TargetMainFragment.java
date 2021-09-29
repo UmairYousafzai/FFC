@@ -111,6 +111,13 @@ public class TargetMainFragment extends Fragment {
     {
         Permission permission = new Permission(requireContext(),requireActivity());
 
+        mBinding.showRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(TargetMainFragmentDirections.actionNavTargetMainToShowRouteFragment());
+            }
+        });
+
         mBinding.targetCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,40 +161,46 @@ public class TargetMainFragment extends Fragment {
 
     public void closeActivity()
     {
-        CustomLocation customLocation= new CustomLocation();
-
-        Date c = Calendar.getInstance().getTime();
-
-        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
-        String formattedDate = df.format(c);
-        Permission permission= new Permission(requireContext(),requireActivity());
-
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (!runningActivity.getMainActivity().equals(CONSTANTS.START_DAY))
         {
-            if (permission.isLocationEnabled())
+            CustomLocation customLocation= new CustomLocation();
+
+            Date c = Calendar.getInstance().getTime();
+
+            SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+            String formattedDate = df.format(c);
+            Permission permission= new Permission(requireContext(),requireActivity());
+
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
-                CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
-                    @Override
-                    public void gotLocation(Location location) {
-                        String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-                        runningActivity.setEndCoordinates(locationString);
-                        runningActivity.setEndDateTime(formattedDate);
-                        activityViewModel.updateActivity(runningActivity);
+                if (permission.isLocationEnabled())
+                {
+                    CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+                        @Override
+                        public void gotLocation(Location location) {
+                            String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                            runningActivity.setEndCoordinates(locationString);
+                            runningActivity.setEndDateTime(formattedDate);
+                            String totalTime=calculateTotalTime(formattedDate,runningActivity.getStartDateTime());
+                            runningActivity.setTotalTime(totalTime);
+                            activityViewModel.updateActivity(runningActivity);
 
 
-                    }
-                };
+                        }
+                    };
 
-                customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                    customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                }
+                else
+                {
+                    showDialog();
+                }
+
             }
-            else
-            {
-             showDialog();
+            else {
+                permission.getLocationPermission();
             }
 
-        }
-        else {
-            permission.getLocationPermission();
         }
 
 
@@ -274,7 +287,16 @@ public class TargetMainFragment extends Fragment {
 
 
     }
+    private String calculateTotalTime(String formattedDate, String startDateTime) {
 
+        String endTime= formattedDate.substring(10,17),startTime=startDateTime.substring(10,17);
+        int endHours= Integer.parseInt(formattedDate.substring(10,11)), endMinutes= Integer.parseInt(formattedDate.substring(13,14))
+                ,endSeconds=Integer.parseInt(formattedDate.substring(16,17));
+        int startHours= Integer.parseInt(startDateTime.substring(10,11)), startMinutes= Integer.parseInt(startDateTime.substring(13,14))
+                ,startSeconds=Integer.parseInt(startDateTime.substring(16,17));
+
+        return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
+    }
     public void showDialog()
     {
         new SweetAlertDialog(requireContext())

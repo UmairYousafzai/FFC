@@ -182,7 +182,7 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
     public class DoctorMorningViewHolder extends RecyclerView.ViewHolder
     {
 
-        private CardViewDoctorMorningTargetBinding mbinding;
+        private final CardViewDoctorMorningTargetBinding mbinding;
         public DoctorMorningViewHolder(@NonNull CardViewDoctorMorningTargetBinding binding) {
             super(binding.getRoot());
 

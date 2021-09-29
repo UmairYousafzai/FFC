@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -17,8 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -29,16 +33,22 @@ import android.widget.Toast;
 
 import com.example.myapplication.DoctorModel;
 import com.example.myapplication.MainActivity;
+import com.example.myapplication.ModelClasses.Activity;
 import com.example.myapplication.ModelClasses.UpdateStatus;
 import com.example.myapplication.ModelClasses.UpdateWorkPlanStatus;
 import com.example.myapplication.NetworkCalls.ApiClient;
 import com.example.myapplication.R;
 import com.example.myapplication.Target.utils.TargetViewModel;
+import com.example.myapplication.TargetMenu.TargetMenuFragmentDirections;
 import com.example.myapplication.databinding.CustomCompeleteDialogBinding;
 import com.example.myapplication.databinding.FragmentTargetFullInfoBinding;
+import com.example.myapplication.utils.ActivityViewModel;
 import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.CustomLocation;
+import com.example.myapplication.utils.Permission;
 import com.example.myapplication.utils.SharedPreferenceHelper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -61,7 +71,9 @@ public class TargetFullInfoFragment extends Fragment {
     private AlertDialog alertDialog;
     private Location location;
     private TargetViewModel targetViewModel;
-    private boolean check = false;
+    private ActivityViewModel activityViewModel;
+    private List<Activity> taskActivities;
+    private NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +90,10 @@ public class TargetFullInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = NavHostFragment.findNavController(this);
 
         targetViewModel = new ViewModelProvider(requireActivity()).get(TargetViewModel.class);
+        activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
         setInfoWorkPlan();
         btnListener();
@@ -94,16 +108,23 @@ public class TargetFullInfoFragment extends Fragment {
     }
 
     public void btnListener() {
+        Permission permission = new Permission(requireContext(),requireActivity());
+
         mBinding.btnCompelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completeAndDeleteWorkPlan(3,1);
+
+
+             completeAndDeleteWorkPlan(3,2);
+
+
+
             }
         });
         mBinding.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completeAndDeleteWorkPlan(4,1);
+                completeAndDeleteWorkPlan(4,2);
             }
         });
 
@@ -117,7 +138,7 @@ public class TargetFullInfoFragment extends Fragment {
                     Intent callIntent = new Intent(Intent.ACTION_DIAL);
                     callIntent.setData(callUri);
                     if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermission();
+                        permission.getCallPermission();
                     } else {
                         startActivity(callIntent);
 
@@ -137,7 +158,7 @@ public class TargetFullInfoFragment extends Fragment {
                     Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
                     smsIntent.setData(smsUri);
                     if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermission();
+                       permission.getSMSPermission();
                     } else {
                         startActivity(smsIntent);
 
@@ -169,10 +190,8 @@ public class TargetFullInfoFragment extends Fragment {
             }
         });
     }
-
+// distance key for the user option , what type of distance filter he want to use
     private void completeAndDeleteWorkPlan(int key,int distanceKey) {
-
-
         String[] locationString = doctorModel.getCoordinates().split(",");
 
 
@@ -197,7 +216,7 @@ public class TargetFullInfoFragment extends Fragment {
                     else
                     {
                         new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
-                                .setContentText("You Are Out Of WorkPlan Radius")
+                                .setContentText("You Are Out Of WorkPlan Location Radius")
                                 .show();
                     }
 
@@ -206,6 +225,7 @@ public class TargetFullInfoFragment extends Fragment {
                 {
                     if (distance<=10)
                     {
+
                         saveWorkPlane(key);
                     }
                     else
@@ -217,6 +237,7 @@ public class TargetFullInfoFragment extends Fragment {
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismiss();
                                         saveWorkPlane(key);
 
                                     }
@@ -234,14 +255,13 @@ public class TargetFullInfoFragment extends Fragment {
                 else if (distance==3)
                 {
                     saveWorkPlane(key);
+
                 }
             }
         };
 
         CustomLocation customLocation = new CustomLocation();
         customLocation.getLastLocation(getContext(), getActivity(), locationResults);
-
-
 
 
 
@@ -299,7 +319,18 @@ public class TargetFullInfoFragment extends Fragment {
                                     targetViewModel.DeleteDoctor(doctorModel);
                                     alertDialog.dismiss();
                                     progressDialog.dismiss();
-                                    Navigation.findNavController(view).navigate(R.id.action_targetPostMenuFragment_to_target_fragment);
+
+                                    openActivity(CONSTANTS.TARGET,CONSTANTS.COMPLETE,3);
+                                    activityViewModel.getTaskActivity().observe(getViewLifecycleOwner(), new Observer<List<Activity>>() {
+                                        @Override
+                                        public void onChanged(List<Activity> activities) {
+
+                                            taskActivities= activities;
+                                            closeActivity();
+                                        }
+                                    });
+
+
 
 
                                 }
@@ -312,7 +343,7 @@ public class TargetFullInfoFragment extends Fragment {
 
                                 t.getMessage();
                                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-
+                                progressDialog.dismiss();
                             }
                         });
                     } else {
@@ -320,6 +351,7 @@ public class TargetFullInfoFragment extends Fragment {
                     }
                 } else {
                     dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
+                    progressDialog.dismiss();
                 }
             }
         });
@@ -333,22 +365,155 @@ public class TargetFullInfoFragment extends Fragment {
 
     }
 
-    public void requestPermission() {
 
 
-        String[] permissionArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.CALL_PHONE,
-                Manifest.permission.SEND_SMS};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE);
 
-        alertDialog.setConfirmText("Yes")
+
+    public void closeActivity()
+    {
+
+
+                CustomLocation customLocation= new CustomLocation();
+
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+                String formattedDate = df.format(c);
+                Permission permission= new Permission(requireContext(),requireActivity());
+
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                {
+                    if (permission.isLocationEnabled())
+                    {
+                        CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+                            @Override
+                            public void gotLocation(Location location) {
+
+                                String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+
+                                if(taskActivities!=null&&taskActivities.size()>0)
+                                {
+                                    for (Activity activity:taskActivities)
+                                    {
+                                        activity.setEndCoordinates(locationString);
+                                        activity.setEndDateTime(formattedDate);
+
+                                        String totalTime=calculateTotalTime(formattedDate,activity.getStartDateTime());
+                                        activity.setTotalTime(totalTime);
+                                        activityViewModel.updateActivity(activity);
+                                        navController.popBackStack(R.id.targetPostMenuFragment,true);
+
+                                    }
+                                }
+
+
+
+                            }
+                        };
+
+                        customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                    }
+                    else
+                    {
+                        showDialog();
+                    }
+
+                }
+                else {
+                    permission.getLocationPermission();
+                    permission.getCOARSELocationPermission();
+                }
+
+
+
+
+    }
+
+    private String calculateTotalTime(String formattedDate, String startDateTime) {
+
+        String endTime= formattedDate.substring(10,17),startTime=startDateTime.substring(10,17);
+        int endHours= Integer.parseInt(formattedDate.substring(10,11)), endMinutes= Integer.parseInt(formattedDate.substring(13,14))
+                ,endSeconds=Integer.parseInt(formattedDate.substring(16,17));
+        int startHours= Integer.parseInt(startDateTime.substring(10,11)), startMinutes= Integer.parseInt(startDateTime.substring(13,14))
+                ,startSeconds=Integer.parseInt(startDateTime.substring(16,17));
+
+        return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
+    }
+
+    public void openActivity(String mainActivity,String subActivity,int taskID)
+    {   SweetAlertDialog progressDialog= new SweetAlertDialog(requireContext(),SweetAlertDialog.PROGRESS_TYPE);
+        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
+        progressDialog.setTitleText("Loading");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        CustomLocation customLocation= new CustomLocation();
+
+        Activity activity = new Activity();
+
+        Date c = Calendar.getInstance().getTime();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        String formattedDate = df.format(c);
+        Permission permission= new Permission(requireContext(),requireActivity());
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED&&
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            if (permission.isLocationEnabled())
+            {
+                CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+                    @Override
+                    public void gotLocation(Location location) {
+                        activity.setMainActivity(mainActivity);
+                        activity.setSubActivity(subActivity);
+                        activity.setStartDateTime(formattedDate);
+                        activity.setTaskID(taskID);
+                        String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                        activity.setStartCoordinates(locationString);
+                        activityViewModel.insertActivity(activity);
+                        progressDialog.dismiss();
+
+                        BottomNavigationView bottomNavigationView= requireActivity().findViewById(R.id.bottom_navigation);
+                        bottomNavigationView.getMenu().findItem(R.id.nav_start_day).setEnabled(false);
+
+                        NavigationView navigationView= requireActivity().findViewById(R.id.nav_view);
+                        navigationView.getMenu().findItem(R.id.nav_start_day).setEnabled(false);
+
+                    }
+                };
+
+                customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+            }
+            else
+            {
+                progressDialog.dismiss();
+                showDialog();
+            }
+
+        }
+        else {
+            progressDialog.dismiss();
+
+            permission.getLocationPermission();
+            permission.getCOARSELocationPermission();
+        }
+
+
+    }
+
+    public void showDialog()
+    {
+        new SweetAlertDialog(requireContext())
+                .setTitleText("Please turn on  location for this action.")
+                .setContentText("Do you want to open location setting.")
+                .setConfirmText("Yes")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
+
                         sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(requireActivity(),
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        requireContext().startActivity(intent);
                     }
                 })
                 .setCancelText("Cancel")
@@ -357,45 +522,6 @@ public class TargetFullInfoFragment extends Fragment {
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         sweetAlertDialog.dismiss();
                     }
-                });
-
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) &&
-                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CALL_PHONE) &&
-                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.SEND_SMS)) {
-
-            alertDialog.setTitle("Permission Needed");
-            alertDialog.setContentText("These Permission Needed For The Better Experience Of The App. ");
-            alertDialog.show();
-
-
-        } else {
-            ActivityCompat.requestPermissions(requireActivity(), permissionArray, CONSTANTS.PERMISSION_REQUEST_CODE);
-
-        }
-
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == CONSTANTS.PERMISSION_REQUEST_CODE) {
-            if (permissions.length > 0 && grantResults.length == permissions.length) {
-                for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        check = true;
-                    } else {
-                        check = false;
-                        return;
-                    }
-                }
-
-
-            }
-
-        }
-
+                }).show();
     }
 }

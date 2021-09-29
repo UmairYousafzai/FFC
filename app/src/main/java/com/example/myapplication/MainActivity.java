@@ -18,6 +18,7 @@ import com.example.myapplication.Database.FfcDatabase;
 import com.example.myapplication.Login.GetUserInfoModel;
 import com.example.myapplication.ModelClasses.Activity;
 import com.example.myapplication.TargetMenu.TargetMainFragmentDirections;
+import com.example.myapplication.ui.home.HomeFragmentDirections;
 import com.example.myapplication.utils.ActivityViewModel;
 import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.CustomLocation;
@@ -53,7 +54,7 @@ import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private FfcDatabase ffcDatabase;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Permission permission;
     private ActivityViewModel activityViewModel;
     private Activity runningActivity;
+    private boolean menuCheck = true;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupWithNavController(mbinding.navView, navController);
         NavigationUI.setupWithNavController(mbinding.customToolbar, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(mbinding.bottomNavigation, navController);
+
         setDrawerHeader();
 
         permission = new Permission(this, this);
@@ -102,13 +105,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         activityViewModel.getAllActivity().observe(this, new Observer<List<Activity>>() {
             @Override
             public void onChanged(List<Activity> activities) {
-                if (activities!=null&&!activities.isEmpty())
-                runningActivity = activities.get(activities.size() - 1);
+                if (activities != null && !activities.isEmpty())
+                    runningActivity = activities.get(activities.size() - 1);
             }
         });
-        mbinding.navView.setNavigationItemSelectedListener(this);
+
+
+        drawerItemSelectedListener();
 
     }
+
+    private void drawerItemSelectedListener() {
+
+        mbinding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.end_day) {
+                    if (SharedPreferenceHelper.getInstance(getBaseContext()).getStart()) {
+
+                        closeActivity();
+                        mbinding.drawerLayout.closeDrawer(GravityCompat.START);
+
+                    }
+                } else {
+                    NavigationUI.onNavDestinationSelected(item,navController);
+                    mbinding.drawerLayout.closeDrawer(GravityCompat.START);
+
+                }
+
+
+                return false;
+            }
+        });
+    }
+
 
     @Override
     protected void onResume() {
@@ -118,9 +148,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                            mbinding.bottomNavigation.setVisibility(View.VISIBLE);
-                            final Menu menu = mbinding.navView.getMenu();
-                            setMenus(menu);
+
+                            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                            {
+                                mbinding.bottomNavigation.setVisibility(View.VISIBLE);
+
+                                if (menuCheck) {
+                                    final Menu menu = mbinding.navView.getMenu();
+                                    setMenus(menu);
+                                    menuCheck= false;
+                                }
+
+                            }
+                            else
+                            {
+                                permission.getCOARSELocationPermission();
+                            }
+
+
                         } else {
                             permission.getStoragePermission();
 
@@ -232,82 +277,93 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        if (item.getItemId() == R.id.end_day) {
-            if (SharedPreferenceHelper.getInstance(this).getStart()) {
+    public void closeActivity()
+    {
+        CustomLocation customLocation= new CustomLocation();
 
+        Date c = Calendar.getInstance().getTime();
 
-                CustomLocation customLocation = new CustomLocation();
+        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        String formattedDate = df.format(c);
+        Permission permission= new Permission(this,this);
 
-
-                Date c = Calendar.getInstance().getTime();
-
-                SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
-                String formattedDate = df.format(c);
-
-
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    if (permission.isLocationEnabled()) {
-                        CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
-                            @Override
-                            public void gotLocation(Location location) {
-
-
-                                String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-
-                                runningActivity.setEndCoordinates(locationString);
-                                runningActivity.setEndDateTime(formattedDate);
-                                activityViewModel.updateActivity(runningActivity);
-                                mbinding.bottomNavigation.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
-                                mbinding.navView.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
-
-                                SharedPreferenceHelper.getInstance(getParent()).setStart(false);
-
-                                navController.navigate(R.id.nav_home);
-                                mbinding.drawerLayout.closeDrawer(GravityCompat.START);
-
-                            }
-                        };
-
-                        customLocation.getLastLocation(this, this, locationResults);
-                    } else {
-                        new SweetAlertDialog(this)
-                                .setTitleText("Please turn on  location for this action.")
-                                .setContentText("Do you want to open location setting.")
-                                .setConfirmText("Yes")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                                        sweetAlertDialog.dismiss();
-                                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                        startActivity(intent);
-                                    }
-                                })
-                                .setCancelText("Cancel")
-                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        sweetAlertDialog.dismiss();
-                                    }
-                                }).show();
-                    }
-                }
-            }
-            else
+        if (runningActivity!=null)
+        {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
-                mbinding.drawerLayout.closeDrawer(GravityCompat.START);
+                if (permission.isLocationEnabled())
+                {
+                    CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+                        @Override
+                        public void gotLocation(Location location) {
+                            String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+
+                            runningActivity.setEndCoordinates(locationString);
+                            runningActivity.setEndDateTime(formattedDate);
+                            String totalTime=calculateTotalTime(formattedDate,runningActivity.getStartDateTime());
+                            runningActivity.setTotalTime(totalTime);
+                            activityViewModel.updateActivity(runningActivity);
+                            mbinding.bottomNavigation.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
+                            mbinding.navView.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
+
+                            SharedPreferenceHelper.getInstance(getParent()).setStart(false);
+
+                            navController.navigate(R.id.nav_home);
+
+
+                        }
+                    };
+
+                    customLocation.getLastLocation(this,this,locationResults);
+                }
+                else
+                {
+                    showDialog();
+                }
 
             }
-
+            else {
+                permission.getLocationPermission();
+            }
 
         }
-        return true;
+
+
+    }
+    private String calculateTotalTime(String formattedDate, String startDateTime) {
+
+        String endTime= formattedDate.substring(10,17),startTime=startDateTime.substring(10,17);
+        int endHours= Integer.parseInt(formattedDate.substring(10,11)), endMinutes= Integer.parseInt(formattedDate.substring(13,14))
+                ,endSeconds=Integer.parseInt(formattedDate.substring(16,17));
+        int startHours= Integer.parseInt(startDateTime.substring(10,11)), startMinutes= Integer.parseInt(startDateTime.substring(13,14))
+                ,startSeconds=Integer.parseInt(startDateTime.substring(16,17));
+
+        return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
 
     }
 
+    public void showDialog()
+    {
+        new SweetAlertDialog(this)
+                .setTitleText("Please turn on  location for this action.")
+                .setContentText("Do you want to open location setting.")
+                .setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-
+                        sweetAlertDialog.dismiss();
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                      startActivity(intent);
+                    }
+                })
+                .setCancelText("Cancel")
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                }).show();
+    }
 }

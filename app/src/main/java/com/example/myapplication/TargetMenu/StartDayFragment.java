@@ -99,7 +99,8 @@ public class StartDayFragment extends Fragment {
         String formattedDate = df.format(c);
         Permission permission= new Permission(requireContext(),requireActivity());
 
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED&&
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
             if (permission.isLocationEnabled())
             {
@@ -158,6 +159,7 @@ public class StartDayFragment extends Fragment {
             progressDialog.dismiss();
 
             permission.getLocationPermission();
+            permission.getCOARSELocationPermission();
         }
 
 

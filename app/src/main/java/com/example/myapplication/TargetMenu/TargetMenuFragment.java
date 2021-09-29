@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.ModelClasses.Activity;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentTargetMenuBinding;
@@ -47,7 +48,7 @@ public class TargetMenuFragment extends Fragment {
     private FragmentTargetMenuBinding mBinding;
     private long pressedTime=0;
     private ActivityViewModel activityViewModel;
-    private String activityTAG ="";
+    private String activityTAG ;
     private Activity runningActivity= new Activity();
 
 
@@ -89,12 +90,24 @@ public class TargetMenuFragment extends Fragment {
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
         navController = NavHostFragment.findNavController(this);
 
-         activityTAG = TargetMenuFragmentArgs.fromBundle(getArguments()).getSelectedMenu();
+
+            String check = TargetMenuFragmentArgs.fromBundle(getArguments()).getSelectedMenu();
+            if (!check.isEmpty())
+            {
+                activityTAG=check;
+            }
+
+
+
         activityViewModel.getAllActivity().observe(getViewLifecycleOwner(), new Observer<List<Activity>>() {
             @Override
             public void onChanged(List<Activity> activities) {
 
-                runningActivity=activities.get(activities.size()-1);
+                if (activities!=null&&activities.size()>0)
+                {
+                    runningActivity=activities.get(activities.size()-1);
+
+                }
 
             }
         });
@@ -108,29 +121,48 @@ public class TargetMenuFragment extends Fragment {
         btnListener();
     }
 
+
     public void setupLayout()
     {
-        switch (activityTAG) {
-            case CONSTANTS.OFFICE:
-                mBinding.cardOffice.setVisibility(View.GONE);
-                break;
-            case CONSTANTS.LOCAL_TRAVEL:
-                mBinding.localTravelCard.setVisibility(View.GONE);
-                break;
-            case CONSTANTS.PRIVATE_TRAVEL:
-                mBinding.cardPrivateTravel.setVisibility(View.GONE);
-                break;
+        if (activityTAG!=null)
+        {
+            switch (activityTAG) {
+                case CONSTANTS.OFFICE:
+                    mBinding.cardOffice.setVisibility(View.GONE);
+                    ((MainActivity)requireActivity()).getSupportActionBar().setTitle(activityTAG);
+                    mBinding.headerText.setText(activityTAG);
+                    break;
+                case CONSTANTS.LOCAL_TRAVEL:
+                    mBinding.localTravelCard.setVisibility(View.GONE);
+                    ((MainActivity)requireActivity()).getSupportActionBar().setTitle(activityTAG);
+                    mBinding.headerText.setText(activityTAG);
+                    break;
+                case CONSTANTS.PRIVATE_TRAVEL:
+                    mBinding.cardPrivateTravel.setVisibility(View.GONE);
+                    ((MainActivity)requireActivity()).getSupportActionBar().setTitle(activityTAG);
+                    mBinding.headerText.setText(activityTAG);
+                    break;
+            }
         }
+
     }
 
    public void btnListener()
    {
        Permission permission= new Permission(requireContext(),requireActivity());
+
+       mBinding.showRoute.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               navController.navigate(TargetMenuFragmentDirections.actionFragmentMenuToShowRouteFragment());
+           }
+       });
        mBinding.targetCard.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                closeActivity();
                openActivity(CONSTANTS.TARGET,CONSTANTS.TARGET,0);
+               activityTAG=CONSTANTS.TARGET;
            }
        });
 
@@ -139,6 +171,9 @@ public class TargetMenuFragment extends Fragment {
            public void onClick(View v) {
                closeActivity();
                openActivity(CONSTANTS.OFFICE,CONSTANTS.OFFICE,0);
+               ((MainActivity)requireActivity()).getSupportActionBar().setTitle("Office");
+               mBinding.headerText.setText("Office");
+               activityTAG=CONSTANTS.OFFICE;
 
            }
        });
@@ -150,6 +185,9 @@ public class TargetMenuFragment extends Fragment {
 
                closeActivity();
                openActivity(CONSTANTS.PRIVATE_TRAVEL,CONSTANTS.PRIVATE_TRAVEL,0);
+               ((MainActivity)requireActivity()).getSupportActionBar().setTitle("Private Travel");
+               mBinding.headerText.setText("Private Travel");
+               activityTAG=CONSTANTS.PRIVATE_TRAVEL;
 
            }
        });
@@ -160,6 +198,10 @@ public class TargetMenuFragment extends Fragment {
 
                closeActivity();
                openActivity(CONSTANTS.LOCAL_TRAVEL,CONSTANTS.LOCAL_TRAVEL,0);
+               ((MainActivity)requireActivity()).getSupportActionBar().setTitle("Local Travel");
+               mBinding.headerText.setText("Local Travel");
+               activityTAG=CONSTANTS.LOCAL_TRAVEL;
+
            }
        });
    }
@@ -185,8 +227,10 @@ public class TargetMenuFragment extends Fragment {
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
                         runningActivity.setEndCoordinates(locationString);
                         runningActivity.setEndDateTime(formattedDate);
-                        activityViewModel.updateActivity(runningActivity);
+                        String totalTime=calculateTotalTime(formattedDate,runningActivity.getStartDateTime());
+                        runningActivity.setTotalTime(totalTime);
 
+                        activityViewModel.updateActivity(runningActivity);
 
                     }
                 };
@@ -289,7 +333,16 @@ public class TargetMenuFragment extends Fragment {
 
 
     }
+    private String calculateTotalTime(String formattedDate, String startDateTime) {
 
+        String endTime= formattedDate.substring(10,17),startTime=startDateTime.substring(10,17);
+        int endHours= Integer.parseInt(formattedDate.substring(10,12)), endMinutes= Integer.parseInt(formattedDate.substring(13,15))
+                ,endSeconds=Integer.parseInt(formattedDate.substring(16,18));
+        int startHours= Integer.parseInt(startDateTime.substring(10,12)), startMinutes= Integer.parseInt(startDateTime.substring(13,15))
+                ,startSeconds=Integer.parseInt(startDateTime.substring(16,18));
+
+        return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
+    }
     public void showDialog()
     {
         new SweetAlertDialog(requireContext())

@@ -115,5 +115,6 @@
     <string name="next">Next</string>
     <string name="work_plan">Work Plan</string>
     <string name="here_you_can_find_the_work_plan_that_you_set_for_a_specified_date_and_time_this_work_plan_would_not_be_system_suggested">Here, you can find the work plan that you set for a specified date and time. This work plan would not be system suggested.</string>
+    <string name="menu">Menu</string>
 
 </resources>

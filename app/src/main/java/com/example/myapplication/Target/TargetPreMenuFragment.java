@@ -2,6 +2,7 @@ package com.example.myapplication.Target;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 
@@ -40,15 +42,22 @@ public class TargetPreMenuFragment extends Fragment {
         linear_system_suggested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.target_fragment);
+                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
             }
         });
         linear_work_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.target_fragment);
+                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
             }
         });
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToFragmentMenu());
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         return root;
     }

@@ -223,6 +223,13 @@ public interface FfcDAO {
     @Query("Select *From activity")
     LiveData<List<Activity>> getAllActivities();
 
+    @Query("Select *From activity where (Main_Activity != 'Private Travel')" +
+            "and (Sub_Activity != 'Local Travel')" +
+            "and (Sub_Activity != 'Target')" +
+            "and (Sub_Activity != 'Office')" +
+            "and (Sub_Activity != 'Start Day')")
+    LiveData<List<Activity>> getTaskActivities();
+
     @Query("Delete from activity")
     void deleteAllActivity();
 }

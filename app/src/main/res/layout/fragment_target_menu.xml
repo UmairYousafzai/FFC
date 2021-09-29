@@ -19,7 +19,7 @@
             android:layout_height="@dimen/_120sdp"
             android:background="@drawable/bg_header_target">
             <TextView
-                android:id="@+id/startDay"
+                android:id="@+id/header_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/_30sdp"
@@ -30,8 +30,10 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:includeFontPadding="false"
                 android:singleLine="true"
-                android:text="@string/Office"
+                android:text="@string/menu"
                 android:textColor="#fff"/>
+
+
         </RelativeLayout>
 
         <LinearLayout
@@ -246,6 +248,14 @@
 
 
             </androidx.cardview.widget.CardView>
+            <Button
+                android:id="@+id/show_route"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="show Activities"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                />
         </LinearLayout>
 
 
