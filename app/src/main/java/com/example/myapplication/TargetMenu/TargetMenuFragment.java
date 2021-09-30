@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -65,6 +66,7 @@ public class TargetMenuFragment extends Fragment {
 
         mBinding= FragmentTargetMenuBinding.inflate(getLayoutInflater(),container,false);
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -91,10 +93,10 @@ public class TargetMenuFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
 
-            String check = TargetMenuFragmentArgs.fromBundle(getArguments()).getSelectedMenu();
-            if (!check.isEmpty())
+
+            if (activityTAG==null)
             {
-                activityTAG=check;
+                activityTAG=TargetMenuFragmentArgs.fromBundle(getArguments()).getSelectedMenu();;
             }
 
 

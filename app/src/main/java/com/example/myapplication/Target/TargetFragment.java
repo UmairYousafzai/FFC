@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -94,6 +95,7 @@ public class TargetFragment extends Fragment {
     private CustomCancelDialogBinding dialogBinding;
     private CustomRescheduleDialogBinding rescheduleDialogBinding;
     private SweetAlertDialog sweetAlertDialog;
+    private NavController navController;
 
 
     @Override
@@ -104,9 +106,11 @@ public class TargetFragment extends Fragment {
         Log.e("onCreateView", "on create View Me ha ");
 
         viewRoot = mbinding.getRoot();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
         DoctorViewModel doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
         doctorViewModel.deleteAllSchedule();
+        navController= NavHostFragment.findNavController(this);
 
         calendar = Calendar.getInstance();
 
@@ -128,7 +132,6 @@ public class TargetFragment extends Fragment {
 //            Toast.makeText(getActivity(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
 //        }
 
-        setPullToFresh();
 
 
     }
@@ -147,6 +150,8 @@ public class TargetFragment extends Fragment {
 
             SettingUpDatePicker();
             getDataFromViewModel();
+            setPullToFresh();
+
 
         } else {
 
@@ -244,7 +249,8 @@ public class TargetFragment extends Fragment {
 
                     TargetFragmentDirections.ActionTargetToTargetPostMenuFragment action = TargetFragmentDirections.
                             actionTargetToTargetPostMenuFragment(doctorModel);
-                    Navigation.findNavController(viewRoot).navigate(action);
+                    navController.navigate(action);
+
                 }
             }
         }, getActivity());
@@ -260,7 +266,7 @@ public class TargetFragment extends Fragment {
 
                     TargetFragmentDirections.ActionTargetToTargetPostMenuFragment action = TargetFragmentDirections.
                             actionTargetToTargetPostMenuFragment(doctorModel);
-                    Navigation.findNavController(viewRoot).navigate(action);
+                    navController.navigate(action);
 
                 }
             }
@@ -379,11 +385,10 @@ public class TargetFragment extends Fragment {
         targetViewModel.getAllEveningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                if (list != null) {
+                if (list.size()>0) {
                     mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
 
                     eveningListAdapter.setDoctorModelList(list);
-                    eveningListAdapter.notifyDataSetChanged();
                 } else {
                     eveningListAdapter.clearData();
 
@@ -395,7 +400,7 @@ public class TargetFragment extends Fragment {
         targetViewModel.getAllMorningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                if (list != null) {
+                if (list.size()>0) {
                     mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
                     morningListAdapter.setDoctorModelList(list);
                     morningListAdapter.notifyDataSetChanged();
@@ -778,35 +783,48 @@ public class TargetFragment extends Fragment {
         rescheduleDialogBinding.textDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Calendar calendar = Calendar.getInstance();
-                int mYear = calendar.get(Calendar.YEAR);
-                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-                int mMonth = calendar.get(Calendar.MONTH);
+                int myear = calendar.get(Calendar.YEAR);
+                int mday = calendar.get(Calendar.DAY_OF_MONTH);
+                int mmonth = calendar.get(Calendar.MONTH);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        int checkMonth = month % 10, checkday = (dayOfMonth % 10);
-                        ;
-                        String mMonth, mDay;
-                        if (checkMonth > 0 && month < 10) {
-                            mMonth = "0" + (month + 1);
-                        } else {
-                            mMonth = String.valueOf(month + 1);
+
+                        if ((dayOfMonth-mday)>=0 && (month-mmonth)>=0)
+                        {
+
+                            int checkMonth = month % 10, checkday = (dayOfMonth % 10);
+                            ;
+                            String mMonth, mDay;
+                            if (checkMonth > 0 && month < 10) {
+                                mMonth = "0" + (month + 1);
+                            } else {
+                                mMonth = String.valueOf(month + 1);
+
+                            }
+
+                            if (checkday > 0 && dayOfMonth < 10) {
+                                mDay = "0" + (dayOfMonth);
+
+                            } else {
+                                mDay = String.valueOf(dayOfMonth);
+
+                            }
+                            String mDate = mMonth + "/" + mDay + "/" + year;
+                            rescheduleDialogBinding.textDate.setText(mDate);
 
                         }
-
-                        if (checkday > 0 && dayOfMonth < 10) {
-                            mDay = "0" + (dayOfMonth);
-
-                        } else {
-                            mDay = String.valueOf(dayOfMonth);
-
+                        else
+                        {
+                            rescheduleDialogBinding.textDate.setError("Select date forward from current date");
                         }
-                        String mDate = mMonth + "/" + mDay + "/" + year;
-                        rescheduleDialogBinding.textDate.setText(mDate);
+
+
 
                     }
-                }, mYear, mMonth, mDay);
+                }, myear, mmonth, mday);
                 datePickerDialog.show();
             }
         });
@@ -867,6 +885,8 @@ public class TargetFragment extends Fragment {
 
 //
                                 targetViewModel.DeleteDoctor(doctorModel);
+                                morningListAdapter.removeItem(doctorModel);
+                                eveningListAdapter.removeItem(doctorModel);
                                 rescheduleDialogBinding.saveBtn.setEnabled(true);
                                 sweetAlertDialog.dismiss();
                                 alertDialog.dismiss();

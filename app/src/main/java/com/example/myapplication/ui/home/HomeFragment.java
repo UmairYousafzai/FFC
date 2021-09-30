@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        activityViewModel.getAllActivity().observe(getViewLifecycleOwner(), new Observer<List<Activity>>() {
+        activityViewModel.getWithoutTaskActivity().observe(getViewLifecycleOwner(), new Observer<List<Activity>>() {
             @Override
             public void onChanged(List<Activity> activities) {
 
@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment {
 
                         if (activity.getMainActivity().equals(CONSTANTS.START_DAY))
                         {
+
 
                             navController.navigate(HomeFragmentDirections.actionNavHomeToNavTargetMain());
                         }

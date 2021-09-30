@@ -401,7 +401,7 @@ public class TargetFullInfoFragment extends Fragment {
                                         String totalTime=calculateTotalTime(formattedDate,activity.getStartDateTime());
                                         activity.setTotalTime(totalTime);
                                         activityViewModel.updateActivity(activity);
-                                        navController.popBackStack(R.id.targetPostMenuFragment,true);
+                                        navController.popBackStack(R.id.target_fragment,false);
 
                                     }
                                 }

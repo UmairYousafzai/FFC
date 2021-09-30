@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -55,6 +56,7 @@ public class StartDayFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding= FragmentStartDayBinding.inflate(inflater,container,false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
 
         return mBinding.getRoot();
@@ -83,7 +85,13 @@ public class StartDayFragment extends Fragment {
 
     }
 
-    public void openActivity(String mainActivity,String subActivity,int taskID)
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    public void openActivity(String mainActivity, String subActivity, int taskID)
     {   SweetAlertDialog progressDialog= new SweetAlertDialog(requireContext(),SweetAlertDialog.PROGRESS_TYPE);
         progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
         progressDialog.setTitleText("Loading");

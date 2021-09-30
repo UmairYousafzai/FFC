@@ -5,8 +5,10 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
+import androidx.room.RawQuery;
 import androidx.room.Update;
 import androidx.room.Query;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.example.myapplication.Login.GetUserInfoModel;
 import com.example.myapplication.Login.GetUserMenuModel;
@@ -223,13 +225,17 @@ public interface FfcDAO {
     @Query("Select *From activity")
     LiveData<List<Activity>> getAllActivities();
 
-    @Query("Select *From activity where (Main_Activity != 'Private Travel')" +
-            "and (Sub_Activity != 'Local Travel')" +
-            "and (Sub_Activity != 'Target')" +
-            "and (Sub_Activity != 'Office')" +
-            "and (Sub_Activity != 'Start Day')")
+    @Query("Select *From activity where Sub_Activity Not in ( 'Private Travel','Start Day','Local Travel','Target','Office')" +
+            "and Main_Activity Not in ('Private Travel','Start Day','Local Travel','Office')")
     LiveData<List<Activity>> getTaskActivities();
 
     @Query("Delete from activity")
     void deleteAllActivity();
+
+    @Query("Select *From activity Where End_DateTime is null and End_Cord is null ")
+    LiveData<List<Activity>> getQueryActivity(  );
+    @Query("Select *From activity Where End_DateTime is null and End_Cord is null " +
+            "and Sub_Activity != 'Complete' ")
+    LiveData<List<Activity>> getActivityWithoutTask(  );
+
 }

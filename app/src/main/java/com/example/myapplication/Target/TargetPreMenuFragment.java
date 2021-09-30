@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -38,6 +39,7 @@ public class TargetPreMenuFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_target_sub_menu, container, false);
         init(root);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
         linear_system_suggested.setOnClickListener(new View.OnClickListener() {
             @Override

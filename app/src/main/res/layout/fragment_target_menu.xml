@@ -64,10 +64,11 @@
                         android:id="@+id/localtravel"
                         android:layout_width="40dp"
                         android:layout_weight="50"
-                        android:layout_height="70dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/_5sdp"
-                        android:src="@drawable/audience" />
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginVertical="20dp"
+                        android:src="@drawable/ic_interview_svgrepo_com" />
 
 
                     <TextView
@@ -118,9 +119,10 @@
                         android:id="@+id/privatetravel"
                         android:layout_width="40dp"
                         android:layout_weight="50"
-                        android:layout_height="70dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/_5sdp"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginVertical="20dp"
                         android:src="@drawable/ic_bus_front_svgrepo_com" />
 
 
@@ -171,9 +173,10 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_weight="50"
-                        android:layout_height="70dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/_5sdp"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginVertical="20dp"
                         android:src="@drawable/ic_iconmonstr_car_3" />
 
 
@@ -223,9 +226,10 @@
                         android:id="@+id/officeImage"
                         android:layout_width="40dp"
                         android:layout_weight="50"
-                        android:layout_height="70dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/_5sdp"
+                        android:layout_marginVertical="20dp"
+                        android:layout_marginHorizontal="5dp"
                         android:src="@drawable/ic_office_block_urban_svgrepo_com" />
 
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
@@ -69,6 +70,7 @@ public class AddworkPlanFragment extends Fragment {
 //         dataIDs = AddworkPlanFragmentArgs.fromBundle(getArguments()).getAreaIds();
 //         dataTittles = AddworkPlanFragmentArgs.fromBundle(getArguments()).getAreaTittles();
 //         key = AddworkPlanFragmentArgs.fromBundle(getArguments()).getKey();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
 
         return view;

@@ -71,7 +71,9 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"  />
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -86,10 +88,8 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@+id/nav_home"
-            app:popUpToInclusive="true"
-            />
-
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true"/>
 
 
         <action
@@ -99,9 +99,8 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@+id/nav_home"
-            app:popUpToInclusive="true"
-            />
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_nav_target_main_to_showRouteFragment"
             app:destination="@id/showRouteFragment" />
@@ -119,14 +118,12 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@+id/nav_home"
-            app:popUpToInclusive="true"
+
             />
         <action
             android:id="@+id/action_nav_target_sub_menu_to_fragment_menu"
             app:destination="@id/fragment_menu"
-            app:popUpTo="@+id/nav_home"
-            app:popUpToInclusive="true"/>
+            />
     </fragment>
 
     <fragment
@@ -177,13 +174,12 @@
         <action
             android:id="@+id/action_fragment_menu_to_nav_target_sub_menu"
             app:destination="@id/nav_target_sub_menu"
-            app:popUpTo="@+id/nav_home"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true"/>
         <argument
             android:name="selectedMenu"
             app:argType="string"
@@ -237,14 +233,8 @@
         <argument
             android:name="DoctorModel"
             app:argType="com.example.myapplication.DoctorModel" />
-        <action
-            android:id="@+id/action_targetPostMenuFragment_to_target_fragment"
-            app:destination="@id/target_fragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+
+
     </fragment>
     <fragment
         android:id="@+id/addworkPlanFragment"
@@ -258,7 +248,8 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popUpTo="@id/target_fragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_addworkPlanFragment_to_addWorkPlanDialogFragment"
             app:destination="@id/addWorkPlanDialogFragment"
@@ -380,5 +371,11 @@
         android:id="@+id/showRouteFragment"
         android:name="com.example.myapplication.TargetMenu.ShowRouteFragment"
         android:label="fragment_show_route"
-        tools:layout="@layout/fragment_show_route" />
+        tools:layout="@layout/fragment_show_route" >
+        <action
+            android:id="@+id/action_showRouteFragment_to_nav_home"
+            app:destination="@id/nav_home"
+            app:popUpTo="@+id/nav_home"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

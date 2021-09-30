@@ -33,7 +33,7 @@
                 android:singleLine="true"
                 android:text="@string/start_day"
                 android:textColor="#fff"
-                android:textSize="@dimen/_30sdp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <Button
@@ -92,7 +92,7 @@
                         android:layout_height="70dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="@dimen/_5sdp"
-                        android:src="@drawable/audience" />
+                        android:src="@drawable/ic_interview_svgrepo_com" />
 
 
 
@@ -102,7 +102,7 @@
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_8sdp"
                             android:text="@string/targets"
-                            android:textColor="@color/APP_Theme_Color"
+                            android:textColor="@color/slategray"
                             android:textSize="@dimen/_15sdp" />
 
 
@@ -113,6 +113,8 @@
 
 
             </androidx.cardview.widget.CardView>
+
+
 
             <androidx.cardview.widget.CardView
 
@@ -153,7 +155,7 @@
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_8sdp"
                             android:text="@string/LocalTravel"
-                            android:textColor="@color/APP_Theme_Color"
+                            android:textColor="@color/slategray"
                             android:textSize="@dimen/_15sdp" />
 
 
@@ -202,8 +204,7 @@
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_8sdp"
                             android:text="@string/PrivateTravel"
-                            android:textColor="@color/APP_Theme_Color"
-
+                            android:textColor="@color/slategray"
                             android:textSize="@dimen/_15sdp" />
 
 
@@ -251,7 +252,7 @@
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/_8sdp"
                             android:text="@string/Office"
-                            android:textColor="@color/APP_Theme_Color"
+                            android:textColor="@color/slategray"
                             android:textSize="@dimen/_15sdp" />
 
 

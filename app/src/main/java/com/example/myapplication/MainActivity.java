@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mbinding;
     private Permission permission;
     private ActivityViewModel activityViewModel;
-    private Activity runningActivity;
+    private List<Activity> runningActivity;
     private boolean menuCheck = true;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -102,15 +102,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
-        activityViewModel.getAllActivity().observe(this, new Observer<List<Activity>>() {
+
+        activityViewModel.getQueryActivity().observe(this, new Observer<List<Activity>>() {
             @Override
             public void onChanged(List<Activity> activities) {
-                if (activities != null && !activities.isEmpty())
-                    runningActivity = activities.get(activities.size() - 1);
+                if ( activities.size()>0)
+                {
+                    runningActivity= activities;
+                }
+
             }
         });
-
-
         drawerItemSelectedListener();
 
     }
@@ -280,6 +282,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void closeActivity()
     {
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *From activity Where Main_Activity = 'Start Day' ");
+
+
         CustomLocation customLocation= new CustomLocation();
 
         Date c = Calendar.getInstance().getTime();
@@ -299,11 +304,15 @@ public class MainActivity extends AppCompatActivity {
                         public void gotLocation(Location location) {
                             String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
 
-                            runningActivity.setEndCoordinates(locationString);
-                            runningActivity.setEndDateTime(formattedDate);
-                            String totalTime=calculateTotalTime(formattedDate,runningActivity.getStartDateTime());
-                            runningActivity.setTotalTime(totalTime);
-                            activityViewModel.updateActivity(runningActivity);
+                            for (Activity activity:runningActivity)
+                            {
+                                activity.setEndCoordinates(locationString);
+                                activity.setEndDateTime(formattedDate);
+                                String totalTime=calculateTotalTime(formattedDate,activity.getStartDateTime());
+                                activity.setTotalTime(totalTime);
+                                activityViewModel.updateActivity(activity);
+                            }
+
                             mbinding.bottomNavigation.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
                             mbinding.navView.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
 

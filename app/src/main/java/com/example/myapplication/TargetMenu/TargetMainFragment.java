@@ -84,6 +84,7 @@ public class TargetMainFragment extends Fragment {
                 pressedTime = System.currentTimeMillis();            }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
         return mBinding.getRoot();
     }
@@ -106,6 +107,13 @@ public class TargetMainFragment extends Fragment {
         btnListener();
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+    }
 
     public void btnListener()
     {
