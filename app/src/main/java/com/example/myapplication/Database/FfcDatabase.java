@@ -6,6 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.myapplication.AttendanceActivity.AttendanceModel;
 import com.example.myapplication.Login.GetUserInfoModel;
 import com.example.myapplication.Login.GetUserMenuModel;
 import com.example.myapplication.Login.GetUserSettingModel;
@@ -20,7 +21,7 @@ import com.example.myapplication.ScheduleModel;
 
 @Database(entities = {GetUserInfoModel.class, GetUserMenuModel.class, GetUserSettingModel.class ,
         RouteActivityModel.class, DoctorModel.class, ClassificationModel.class, GradingModel.class, QualificationModel.class,
-        FilteredDoctoredModel.class, ScheduleModel.class, Activity.class}, version = 1, exportSchema = false)
+        FilteredDoctoredModel.class, ScheduleModel.class, Activity.class, AttendanceModel.class}, version = 1, exportSchema = false)
 public abstract class FfcDatabase extends RoomDatabase {
 
     private static  FfcDatabase database;

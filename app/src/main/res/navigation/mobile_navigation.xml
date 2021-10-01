@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_nav_home_to_doctorListFragment"
             app:destination="@id/doctorListFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_showRouteFragment"
+            app:destination="@id/showRouteFragment" />
 
 
     </fragment>
@@ -74,6 +77,13 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/nav_home"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_nav_start_day_to_nav_attendance"
+            app:destination="@id/nav_attendance"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -224,7 +234,16 @@
         android:id="@+id/nav_attendance"
         android:name="com.example.myapplication.AttendanceActivity.AttendanceFragment"
         android:label="Attendance"
-        tools:layout="@layout/fragment_attendance" />
+        tools:layout="@layout/fragment_attendance" >
+        <action
+            android:id="@+id/action_nav_attendance_to_nav_target_main"
+            app:destination="@id/nav_target_main"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
+    </fragment>
     <fragment
         android:id="@+id/targetPostMenuFragment"
         android:name="com.example.myapplication.Target.TargetFullInfoFragment"
@@ -370,7 +389,7 @@
     <fragment
         android:id="@+id/showRouteFragment"
         android:name="com.example.myapplication.TargetMenu.ShowRouteFragment"
-        android:label="fragment_show_route"
+        android:label="Routes"
         tools:layout="@layout/fragment_show_route" >
         <action
             android:id="@+id/action_showRouteFragment_to_nav_home"

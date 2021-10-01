@@ -12,9 +12,13 @@ public class SharedPreferenceHelper {
 
     private static final String SHARED_PREFERENCE_NAME = "SharedPreference";
     public static final String TOKEN = "Token";
+
+
+
+    public static final String ATTENDANCE_CONFIGURATION = "Attendance Configuration";
     public static final String BASE_URL = "http://161.97.178.106/FFCCloudapi/";
     public static final Integer ID = null;
-    public static final String  USER_ID = "User ID";
+    public static final String emp_ID = "Emp ID";
     public static final String  Permission_state = "User ID";
     public static final String Login_State = "LoginState";
     private static SharedPreferenceHelper helperInstance = null;
@@ -24,6 +28,14 @@ public class SharedPreferenceHelper {
     private String DocListState = "DocListState";
     private String FilterDocListState ="FilterDocListState";
 
+
+
+    public boolean  getAttendanceConfiguration() {
+        return sharedPreferences.getBoolean(ATTENDANCE_CONFIGURATION,true);
+    }
+    public void setAttendanceConfiguration(boolean configuration) {
+        sharedPreferences.edit().putBoolean(ATTENDANCE_CONFIGURATION, configuration).apply();    }
+
     public boolean getFlterDocListState() {
         return sharedPreferences.getBoolean(FilterDocListState,true);
     }
@@ -31,13 +43,13 @@ public class SharedPreferenceHelper {
     public void setFlterDocListState(boolean flterDocListState) {
         sharedPreferences.edit().putBoolean(FilterDocListState, flterDocListState).apply();    }
 
-    public void setUserId(int id)
+    public void setEmpID(int id)
     {
-        sharedPreferences.edit().putInt(USER_ID, id).apply();;
+        sharedPreferences.edit().putInt(emp_ID, id).apply();;
 
     }
-    public int  getUserId() {
-        return sharedPreferences.getInt(USER_ID,0);
+    public int getEmpID() {
+        return sharedPreferences.getInt(emp_ID,0);
     }
 
     public Boolean getGetDocListState() {

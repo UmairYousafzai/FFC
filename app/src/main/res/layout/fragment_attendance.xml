@@ -1,84 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AttendanceActivity.AttendanceFragment">
+    tools:context=".AttendanceActivity.AttendanceFragment"
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/relative_tab"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="@drawable/bg_header_target"
-        >
-
-        <TextView
-            android:id="@+id/attendance_heading"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="Mark Your Attendance"
-            android:textColor="@color/white"
-            android:textSize="30dp"
-            />
-        <TextView
-            android:id="@+id/attendance_text"
-            android:layout_below="@+id/attendance_heading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="Click on the button below and simply capture your image to mark your attendance."
-            android:textColor="@color/white"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
-            android:gravity="center"
-            android:textSize="12dp"
-            android:layout_marginBottom="5dp"
-            />
+            android:layout_gravity="start|center_vertical"
+            android:padding="5dp"
+            android:background="@drawable/bg_header_target"
+            android:elevation="5dp"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
 
-    </RelativeLayout>
+                android:id="@+id/attendance_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/doctor_icon"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                />
+
+            <TextView
+                android:id="@+id/attendance_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/mark_your_attendance"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_below="@+id/attendance_image"
+                android:layout_margin="6dp"
+
+                />
+
+            <TextView
+                android:id="@+id/attendance_text"
+                android:layout_below="@+id/attendance_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Click on the button below and simply capture your image to mark your attendance."
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:visibility="visible"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="6dp"
+                />
+
+        </RelativeLayout>
 
 
-    <ImageView
-        android:id="@+id/camera_img"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_below="@+id/relative_tab"
-        android:src="@drawable/ic_camera"
 
 
-        />
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/TakePhotoButton"
-        android:layout_below="@+id/camera_img"
-        android:layout_width="150dp"
+        android:id="@+id/btn_take_photo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Take Photo"
+        android:text="@string/take_photo"
         app:strokeWidth="1dp"
         android:backgroundTint="@color/white"
         app:strokeColor="@color/APP_Theme_Color"
-        android:layout_centerHorizontal="true"
         android:textColor="@color/APP_Theme_Color"
         android:textStyle="bold"
         app:rippleColor="@color/APP_Theme_Color"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginVertical="5dp"
+        app:elevation="5dp"
         />
-    <Button
-        android:id="@+id/CheckInButton"
-        android:layout_below="@+id/camera_img"
-        android:layout_width="150dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Check In"
-        app:strokeWidth="1dp"
-        android:backgroundTint="@color/white"
-        app:strokeColor="@color/APP_Theme_Color"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/APP_Theme_Color"
-        android:textStyle="bold"
-        app:rippleColor="@color/APP_Theme_Color"
-        android:visibility="gone"
-        />
+        android:orientation="vertical"
+        android:layout_marginVertical="40dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            />
+        <TextView
+            android:id="@+id/name_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/black"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="10dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/textview_line_white"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="15dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_time"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            />
+        <TextView
+            android:id="@+id/date_time_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/black"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="10dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/textview_line_white"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="15dp"
+            />
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/imei_number"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            />
+        <TextView
+            android:id="@+id/imei_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/black"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="10dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/textview_line_white"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="15dp"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/done_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/done"
+            app:strokeWidth="1dp"
+            android:backgroundTint="@color/white"
+            app:strokeColor="@color/APP_Theme_Color"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            app:rippleColor="@color/APP_Theme_Color"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="5dp"
+            app:elevation="5dp"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

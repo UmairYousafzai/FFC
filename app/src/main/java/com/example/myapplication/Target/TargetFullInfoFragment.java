@@ -7,39 +7,31 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.provider.Settings;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.myapplication.DoctorModel;
-import com.example.myapplication.MainActivity;
 import com.example.myapplication.ModelClasses.Activity;
 import com.example.myapplication.ModelClasses.UpdateStatus;
 import com.example.myapplication.ModelClasses.UpdateWorkPlanStatus;
 import com.example.myapplication.NetworkCalls.ApiClient;
 import com.example.myapplication.R;
 import com.example.myapplication.Target.utils.TargetViewModel;
-import com.example.myapplication.TargetMenu.TargetMenuFragmentDirections;
 import com.example.myapplication.databinding.CustomCompeleteDialogBinding;
 import com.example.myapplication.databinding.FragmentTargetFullInfoBinding;
 import com.example.myapplication.utils.ActivityViewModel;
@@ -51,7 +43,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -260,8 +251,8 @@ public class TargetFullInfoFragment extends Fragment {
             }
         };
 
-        CustomLocation customLocation = new CustomLocation();
-        customLocation.getLastLocation(getContext(), getActivity(), locationResults);
+        CustomLocation customLocation = new CustomLocation(requireContext());
+        customLocation.getLastLocation(locationResults);
 
 
 
@@ -288,7 +279,7 @@ public class TargetFullInfoFragment extends Fragment {
                     if (location != null) {
                         List<UpdateWorkPlanStatus> list = new ArrayList<>();
                         String remarks = dialogBinding.remarksEdittext.getText().toString();
-                        int userId = SharedPreferenceHelper.getInstance(getActivity()).getUserId();
+                        int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
                         String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
                         Date date = Calendar.getInstance().getTime();
@@ -373,7 +364,7 @@ public class TargetFullInfoFragment extends Fragment {
     {
 
 
-                CustomLocation customLocation= new CustomLocation();
+                CustomLocation customLocation= new CustomLocation(requireContext());
 
                 Date c = Calendar.getInstance().getTime();
                 SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
@@ -395,6 +386,19 @@ public class TargetFullInfoFragment extends Fragment {
                                 {
                                     for (Activity activity:taskActivities)
                                     {
+
+                                        String[] locationStringArray = activity.getStartCoordinates().split(",");
+                                        Location startLocation = new Location("");
+
+                                        startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
+                                        startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
+
+                                        String distance= String.valueOf(location.distanceTo(startLocation));
+
+
+                                        String endAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                                        activity.setEndAddress(endAddress);
+                                        activity.setDistance(distance);
                                         activity.setEndCoordinates(locationString);
                                         activity.setEndDateTime(formattedDate);
 
@@ -411,7 +415,7 @@ public class TargetFullInfoFragment extends Fragment {
                             }
                         };
 
-                        customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                        customLocation.getLastLocation(locationResults);
                     }
                     else
                     {
@@ -431,13 +435,20 @@ public class TargetFullInfoFragment extends Fragment {
 
     private String calculateTotalTime(String formattedDate, String startDateTime) {
 
-        String endTime= formattedDate.substring(10,17),startTime=startDateTime.substring(10,17);
-        int endHours= Integer.parseInt(formattedDate.substring(10,11)), endMinutes= Integer.parseInt(formattedDate.substring(13,14))
-                ,endSeconds=Integer.parseInt(formattedDate.substring(16,17));
-        int startHours= Integer.parseInt(startDateTime.substring(10,11)), startMinutes= Integer.parseInt(startDateTime.substring(13,14))
-                ,startSeconds=Integer.parseInt(startDateTime.substring(16,17));
+        int endHours=0,endMinutes=0,endSeconds=0,startHours=0,startMinutes=0,startSeconds=0;
+        if (!startDateTime.isEmpty()&&!startDateTime.isEmpty())
+        {
+            endHours= Integer.parseInt(formattedDate.substring(11,13));
+            endMinutes= Integer.parseInt(formattedDate.substring(14,16));
+            endSeconds=Integer.parseInt(formattedDate.substring(17,19));
+            startHours= Integer.parseInt(startDateTime.substring(11,13));
+            startMinutes= Integer.parseInt(startDateTime.substring(14,16));
+            startSeconds=Integer.parseInt(startDateTime.substring(17,19));
+        }
+
 
         return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
+
     }
 
     public void openActivity(String mainActivity,String subActivity,int taskID)
@@ -446,7 +457,7 @@ public class TargetFullInfoFragment extends Fragment {
         progressDialog.setTitleText("Loading");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        CustomLocation customLocation= new CustomLocation();
+        CustomLocation customLocation= new CustomLocation(requireContext());
 
         Activity activity = new Activity();
 
@@ -482,7 +493,7 @@ public class TargetFullInfoFragment extends Fragment {
                     }
                 };
 
-                customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                customLocation.getLastLocation(locationResults);
             }
             else
             {

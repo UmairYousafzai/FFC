@@ -45,6 +45,7 @@ import com.example.myapplication.Target.utils.DoctorViewModel;
 import com.example.myapplication.databinding.CustomSelectProfileImageDialogBinding;
 import com.example.myapplication.databinding.FragmentDoctorFormBinding;
 import com.example.myapplication.utils.CONSTANTS;
+import com.example.myapplication.utils.Permission;
 import com.example.myapplication.utils.UserViewModel;
 
 import java.io.ByteArrayOutputStream;
@@ -376,6 +377,7 @@ public class DoctorFormFragment extends Fragment {
 
     public void btnListener()
     {
+        Permission permission= new Permission(requireContext(),requireActivity());
         mBinding.docTimingRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -511,7 +513,7 @@ public class DoctorFormFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                            requestPermissionCamera();
+                            permission.getCameraPermission();
                         } else {
                             Intent cameraIntent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 

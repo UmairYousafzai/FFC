@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/dialogbkg"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="20dp"
+    >
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/take_photo_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/take_photo"
+        android:textColor="@color/APP_Theme_Color"
+        android:drawableStart="@drawable/ic_camera"
+        android:layout_gravity="center_horizontal"
+        app:backgroundTint="@color/white"
+        app:strokeColor="@color/APP_Theme_Color"
+        app:strokeWidth="1dp"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/select_from_gallery_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_from_gallery"
+        android:textColor="@color/APP_Theme_Color"
+        android:drawableStart="@drawable/ic_menu_gallery"
+        android:layout_gravity="center_horizontal"
+        app:backgroundTint="@color/white"
+        app:strokeColor="@color/APP_Theme_Color"
+        app:strokeWidth="1dp"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancel_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textColor="@color/APP_Theme_Color"
+        android:layout_gravity="center_horizontal"
+        app:backgroundTint="@color/white"
+        app:strokeColor="@color/APP_Theme_Color"
+        app:strokeWidth="1dp"
+        />
+
+</LinearLayout>

@@ -10,6 +10,7 @@ import androidx.room.Update;
 import androidx.room.Query;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
+import com.example.myapplication.AttendanceActivity.AttendanceModel;
 import com.example.myapplication.Login.GetUserInfoModel;
 import com.example.myapplication.Login.GetUserMenuModel;
 import com.example.myapplication.Login.GetUserSettingModel;
@@ -237,5 +238,25 @@ public interface FfcDAO {
     @Query("Select *From activity Where End_DateTime is null and End_Cord is null " +
             "and Sub_Activity != 'Complete' ")
     LiveData<List<Activity>> getActivityWithoutTask(  );
+
+
+                /*
+    //
+    // *******Attendance  Queries*******
+    //
+     */
+
+
+    @Insert
+    void insertAttendance(AttendanceModel attendanceModel);
+
+    @Delete
+    void deleteAttendance(AttendanceModel attendanceModel);
+
+    @Query("Delete from activity")
+    void deleteAllAttendance();
+
+    @Query("Select *From Attendance")
+    LiveData<List<AttendanceModel>> getAllAttendance();
 
 }

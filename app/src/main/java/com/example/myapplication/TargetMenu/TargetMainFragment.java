@@ -57,7 +57,6 @@ public class TargetMainFragment extends Fragment {
     private FragmentTargetMainBinding mBinding;
     private ActivityViewModel activityViewModel;
     private long pressedTime=0;
-    private Activity runningActivity= new Activity();
 
 
 
@@ -94,15 +93,7 @@ public class TargetMainFragment extends Fragment {
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
         navController = NavHostFragment.findNavController(this);
 
-        activityViewModel.getAllActivity().observe(getViewLifecycleOwner(), new Observer<List<Activity>>() {
-            @Override
-            public void onChanged(List<Activity> activities) {
 
-                if (activities!=null&&!activities.isEmpty())
-                runningActivity=activities.get(0);
-
-            }
-        });
 
         btnListener();
     }
@@ -111,7 +102,6 @@ public class TargetMainFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
 
@@ -119,18 +109,13 @@ public class TargetMainFragment extends Fragment {
     {
         Permission permission = new Permission(requireContext(),requireActivity());
 
-        mBinding.showRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(TargetMainFragmentDirections.actionNavTargetMainToShowRouteFragment());
-            }
-        });
+
 
         mBinding.targetCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                closeActivity();
+
                 openActivity(CONSTANTS.TARGET,CONSTANTS.TARGET,0);
 
             }
@@ -139,7 +124,7 @@ public class TargetMainFragment extends Fragment {
         mBinding.officeCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                closeActivity();
+
                 openActivity(CONSTANTS.OFFICE,CONSTANTS.OFFICE,0);
 
             }
@@ -148,7 +133,6 @@ public class TargetMainFragment extends Fragment {
         mBinding.privateTravelCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                closeActivity();
                 openActivity(CONSTANTS.PRIVATE_TRAVEL,CONSTANTS.PRIVATE_TRAVEL,0);
 
             }
@@ -158,7 +142,6 @@ public class TargetMainFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                closeActivity();
                 openActivity(CONSTANTS.LOCAL_TRAVEL,CONSTANTS.LOCAL_TRAVEL,0);
             }
         });
@@ -167,59 +150,13 @@ public class TargetMainFragment extends Fragment {
     }
 
 
-    public void closeActivity()
-    {
-        if (!runningActivity.getMainActivity().equals(CONSTANTS.START_DAY))
-        {
-            CustomLocation customLocation= new CustomLocation();
-
-            Date c = Calendar.getInstance().getTime();
-
-            SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
-            String formattedDate = df.format(c);
-            Permission permission= new Permission(requireContext(),requireActivity());
-
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            {
-                if (permission.isLocationEnabled())
-                {
-                    CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
-                        @Override
-                        public void gotLocation(Location location) {
-                            String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-                            runningActivity.setEndCoordinates(locationString);
-                            runningActivity.setEndDateTime(formattedDate);
-                            String totalTime=calculateTotalTime(formattedDate,runningActivity.getStartDateTime());
-                            runningActivity.setTotalTime(totalTime);
-                            activityViewModel.updateActivity(runningActivity);
-
-
-                        }
-                    };
-
-                    customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
-                }
-                else
-                {
-                    showDialog();
-                }
-
-            }
-            else {
-                permission.getLocationPermission();
-            }
-
-        }
-
-
-    }
     public void openActivity(String mainActivity,String subActivity,int taskID)
     {   SweetAlertDialog progressDialog= new SweetAlertDialog(requireContext(),SweetAlertDialog.PROGRESS_TYPE);
         progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
         progressDialog.setTitleText("Loading");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        CustomLocation customLocation= new CustomLocation();
+        CustomLocation customLocation= new CustomLocation(requireContext());
 
         Activity activity = new Activity();
 
@@ -240,6 +177,10 @@ public class TargetMainFragment extends Fragment {
                         activity.setSubActivity(subActivity);
                         activity.setStartDateTime(formattedDate);
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+
+                        String startAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                        activity.setStartAddress(startAddress);
+
                         activity.setStartCoordinates(locationString);
                         activityViewModel.insertActivity(activity);
                         progressDialog.dismiss();
@@ -278,7 +219,7 @@ public class TargetMainFragment extends Fragment {
                     }
                 };
 
-                customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                customLocation.getLastLocation(locationResults);
             }
             else
             {
@@ -297,13 +238,20 @@ public class TargetMainFragment extends Fragment {
     }
     private String calculateTotalTime(String formattedDate, String startDateTime) {
 
-        String endTime= formattedDate.substring(10,17),startTime=startDateTime.substring(10,17);
-        int endHours= Integer.parseInt(formattedDate.substring(10,11)), endMinutes= Integer.parseInt(formattedDate.substring(13,14))
-                ,endSeconds=Integer.parseInt(formattedDate.substring(16,17));
-        int startHours= Integer.parseInt(startDateTime.substring(10,11)), startMinutes= Integer.parseInt(startDateTime.substring(13,14))
-                ,startSeconds=Integer.parseInt(startDateTime.substring(16,17));
+        int endHours=0,endMinutes=0,endSeconds=0,startHours=0,startMinutes=0,startSeconds=0;
+        if (!startDateTime.isEmpty()&&!startDateTime.isEmpty())
+        {
+            endHours= Integer.parseInt(formattedDate.substring(11,13));
+            endMinutes= Integer.parseInt(formattedDate.substring(14,16));
+            endSeconds=Integer.parseInt(formattedDate.substring(17,19));
+            startHours= Integer.parseInt(startDateTime.substring(11,13));
+            startMinutes= Integer.parseInt(startDateTime.substring(14,16));
+            startSeconds=Integer.parseInt(startDateTime.substring(17,19));
+        }
+
 
         return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
+
     }
     public void showDialog()
     {

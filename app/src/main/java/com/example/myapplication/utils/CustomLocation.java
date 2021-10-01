@@ -7,10 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +28,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,11 +37,16 @@ public class CustomLocation {
     private Context mContext;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private final Location[] location = new Location[1];
-    double latitude, longitude;
     private Timer timer;
     private CustomLocationResults customLocationResults;
 
-    public void getLastLocation(Context mContext, Activity activity, CustomLocationResults results) {
+
+
+    public CustomLocation(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    public void getLastLocation(CustomLocationResults results) {
 
 
         this.mContext = mContext;
@@ -112,5 +122,29 @@ public class CustomLocation {
     public interface CustomLocationResults
     {
         void gotLocation(Location location);
+    }
+
+    public String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+                Log.w("MyCurrentloctionaddress", strReturnedAddress.toString());
+            } else {
+                Log.w("MyCurrentloctionaddress", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w("MyCurrentloctionaddress", "Canont get Address!");
+        }
+        return strAdd;
     }
 }

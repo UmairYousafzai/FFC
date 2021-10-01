@@ -77,9 +77,17 @@ public class StartDayFragment extends Fragment {
         mBinding.startday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (SharedPreferenceHelper.getInstance(requireContext()).getAttendanceConfiguration())
+                {
+                    navController.navigate(StartDayFragmentDirections.actionNavStartDayToNavAttendance());
+                }
+                else
+                {
 
-                openActivity(CONSTANTS.START_DAY,CONSTANTS.START_DAY,0);
-                SharedPreferenceHelper.getInstance(requireContext()).setStart(true);
+                    openActivity(CONSTANTS.START_DAY,CONSTANTS.START_DAY,0);
+                    SharedPreferenceHelper.getInstance(requireContext()).setStart(true);
+                }
+
             }
         });
 
@@ -97,7 +105,7 @@ public class StartDayFragment extends Fragment {
         progressDialog.setTitleText("Loading");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        CustomLocation customLocation= new CustomLocation();
+        CustomLocation customLocation= new CustomLocation(requireContext());
 
         Activity activity = new Activity();
 
@@ -119,6 +127,9 @@ public class StartDayFragment extends Fragment {
                         activity.setSubActivity(subActivity);
                         activity.setStartDateTime(formattedDate);
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+
+                        String startAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                        activity.setStartAddress(startAddress);
                         activity.setStartCoordinates(locationString);
                         activityViewModel.insertActivity(activity);
                         progressDialog.dismiss();
@@ -135,7 +146,7 @@ public class StartDayFragment extends Fragment {
                     }
                 };
 
-                customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                customLocation.getLastLocation(locationResults);
             }
             else
             {

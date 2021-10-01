@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -267,7 +266,7 @@ public class AddworkPlanFragment extends Fragment {
             public void onClick(View v) {
                 mbinding.saveBtn.setEnabled(false);
                 String remarks = mbinding.remarks.getText().toString().trim();
-                int id = SharedPreferenceHelper.getInstance(requireContext()).getUserId();
+                int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
                 if (!remarks.isEmpty() && !dataTittles.isEmpty() && !mDate.isEmpty()) {
 
                     SaveNewWorkPlanModel model = new SaveNewWorkPlanModel();

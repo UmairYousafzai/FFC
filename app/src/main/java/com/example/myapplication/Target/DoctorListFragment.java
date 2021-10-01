@@ -1,6 +1,5 @@
 package com.example.myapplication.Target;
 
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -41,7 +40,6 @@ import com.example.myapplication.utils.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -238,7 +236,7 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
 
     private void getDoctorList() {
 
-        int id = SharedPreferenceHelper.getInstance(requireContext()).getUserId();
+        int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
         String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
         Call<List<FilteredDoctoredModel>> call = ApiClient.getInstance().getApi().GetFilteredDoctorsByEmployeeId(token, id);
 

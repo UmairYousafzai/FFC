@@ -29,6 +29,10 @@
             android:icon="@drawable/ic_end_day"
             android:title="@string/end_day" />
         <item
+            android:id="@+id/routes"
+            android:icon="@drawable/ic_route_svgrepo_com"
+            android:title="@string/routes" />
+        <item
             android:id="@+id/signOut"
             android:icon="@drawable/ic_back_arrow"
             android:title="@string/signout" />

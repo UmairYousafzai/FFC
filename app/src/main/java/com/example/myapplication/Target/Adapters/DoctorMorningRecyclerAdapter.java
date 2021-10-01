@@ -38,7 +38,7 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
         this.mContext = mContext;
         doctorModelList= new ArrayList<>();
         this.mListener = mListener;
-        customLocation= new CustomLocation();
+        customLocation= new CustomLocation(mContext);
         this.activity = activity;
         CustomLocation.CustomLocationResults results= new CustomLocation.CustomLocationResults() {
             @Override
@@ -46,7 +46,7 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
                 currrentLocation=location;
             }
         };
-        customLocation.getLastLocation(mContext,activity,results);
+        customLocation.getLastLocation(results);
     }
 
     @NonNull

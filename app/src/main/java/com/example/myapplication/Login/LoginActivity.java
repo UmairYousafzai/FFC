@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_login);
 
-        loginViewModel = ViewModelProviders.of(LoginActivity.this).get(LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(LoginActivity.this).get(LoginViewModel.class);
 
         binding = DataBindingUtil.setContentView(LoginActivity.this, R.layout.activity_login);
 
@@ -429,7 +429,7 @@ public class LoginActivity extends AppCompatActivity {
                         ffcDatabase.dao().delete_previous_user();
                         ffcDatabase.dao().insert(getUserInfoModel);
 
-                        SharedPreferenceHelper.getInstance(getApplicationContext()).setUserId(getUserInfoModel.getEmpId());
+                        SharedPreferenceHelper.getInstance(getApplicationContext()).setEmpID(getUserInfoModel.getEmpId());
                         String a = ffcDatabase.dao().device_config().toString();
 
                         if(a.equals("true")){

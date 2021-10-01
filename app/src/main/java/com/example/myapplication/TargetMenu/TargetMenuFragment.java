@@ -153,12 +153,7 @@ public class TargetMenuFragment extends Fragment {
    {
        Permission permission= new Permission(requireContext(),requireActivity());
 
-       mBinding.showRoute.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               navController.navigate(TargetMenuFragmentDirections.actionFragmentMenuToShowRouteFragment());
-           }
-       });
+
        mBinding.targetCard.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
@@ -211,7 +206,7 @@ public class TargetMenuFragment extends Fragment {
 
     public void closeActivity()
     {
-        CustomLocation customLocation= new CustomLocation();
+        CustomLocation customLocation= new CustomLocation(requireContext());
 
         Date c = Calendar.getInstance().getTime();
 
@@ -227,6 +222,18 @@ public class TargetMenuFragment extends Fragment {
                     @Override
                     public void gotLocation(Location location) {
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                        String[] locationStringArray = runningActivity.getStartCoordinates().split(",");
+                        Location startLocation = new Location("");
+
+                        startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
+                        startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
+
+                        String distance= String.valueOf(location.distanceTo(startLocation));
+
+
+                        String endAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                        runningActivity.setEndAddress(endAddress);
+                        runningActivity.setDistance(distance);
                         runningActivity.setEndCoordinates(locationString);
                         runningActivity.setEndDateTime(formattedDate);
                         String totalTime=calculateTotalTime(formattedDate,runningActivity.getStartDateTime());
@@ -237,7 +244,7 @@ public class TargetMenuFragment extends Fragment {
                     }
                 };
 
-                customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                customLocation.getLastLocation(locationResults);
             }
             else
             {
@@ -257,7 +264,7 @@ public class TargetMenuFragment extends Fragment {
         progressDialog.setTitleText("Loading");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        CustomLocation customLocation= new CustomLocation();
+        CustomLocation customLocation= new CustomLocation(requireContext());
 
         Activity activity = new Activity();
 
@@ -278,6 +285,10 @@ public class TargetMenuFragment extends Fragment {
                         activity.setSubActivity(subActivity);
                         activity.setStartDateTime(formattedDate);
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+
+                        String startAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                        activity.setStartAddress(startAddress);
+
                         activity.setStartCoordinates(locationString);
                         activityViewModel.insertActivity(activity);
                         progressDialog.dismiss();
@@ -318,7 +329,7 @@ public class TargetMenuFragment extends Fragment {
                     }
                 };
 
-                customLocation.getLastLocation(requireContext(),requireActivity(),locationResults);
+                customLocation.getLastLocation(locationResults);
             }
             else
             {
@@ -337,13 +348,20 @@ public class TargetMenuFragment extends Fragment {
     }
     private String calculateTotalTime(String formattedDate, String startDateTime) {
 
-        String endTime= formattedDate.substring(10,17),startTime=startDateTime.substring(10,17);
-        int endHours= Integer.parseInt(formattedDate.substring(10,12)), endMinutes= Integer.parseInt(formattedDate.substring(13,15))
-                ,endSeconds=Integer.parseInt(formattedDate.substring(16,18));
-        int startHours= Integer.parseInt(startDateTime.substring(10,12)), startMinutes= Integer.parseInt(startDateTime.substring(13,15))
-                ,startSeconds=Integer.parseInt(startDateTime.substring(16,18));
+        int endHours=0,endMinutes=0,endSeconds=0,startHours=0,startMinutes=0,startSeconds=0;
+        if (!startDateTime.isEmpty()&&!startDateTime.isEmpty())
+        {
+            endHours= Integer.parseInt(formattedDate.substring(11,13));
+            endMinutes= Integer.parseInt(formattedDate.substring(14,16));
+            endSeconds=Integer.parseInt(formattedDate.substring(17,19));
+            startHours= Integer.parseInt(startDateTime.substring(11,13));
+            startMinutes= Integer.parseInt(startDateTime.substring(14,16));
+            startSeconds=Integer.parseInt(startDateTime.substring(17,19));
+        }
+
 
         return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
+
     }
     public void showDialog()
     {

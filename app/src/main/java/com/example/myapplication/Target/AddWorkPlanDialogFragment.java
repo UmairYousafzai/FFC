@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
@@ -132,7 +131,7 @@ public class AddWorkPlanDialogFragment extends DialogFragment   {
         progressDialog.show();
         if (key==2) {
             String token= SharedPreferenceHelper.getInstance(requireContext()).getToken();
-            int id = SharedPreferenceHelper.getInstance(requireContext()).getUserId();
+            int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
             Call<List<AreasByEmpIdModel>> call= ApiClient.getInstance().getApi().GetAreaByEmpId(token,id);
 
             call.enqueue(new Callback<List<AreasByEmpIdModel>>() {

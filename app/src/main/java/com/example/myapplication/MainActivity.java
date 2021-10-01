@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,16 +10,12 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Database.FfcDatabase;
 import com.example.myapplication.Login.GetUserInfoModel;
 import com.example.myapplication.ModelClasses.Activity;
-import com.example.myapplication.TargetMenu.TargetMainFragmentDirections;
-import com.example.myapplication.ui.home.HomeFragmentDirections;
 import com.example.myapplication.utils.ActivityViewModel;
-import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.CustomLocation;
 import com.example.myapplication.utils.Permission;
 import com.example.myapplication.utils.SyncDataToDB;
@@ -31,8 +26,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.lifecycle.Observer;
@@ -94,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         permission = new Permission(this, this);
 
         if (SharedPreferenceHelper.getInstance(getApplication()).getGetDocListState()) {
-            int id = SharedPreferenceHelper.getInstance(getApplication()).getUserId();
+            int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
             SyncDataToDB syncDataToDB = new SyncDataToDB(getApplication(), this);
             syncDataToDB.saveDoctorsList(id);
             syncDataToDB.SyncData(id);
@@ -129,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
                         mbinding.drawerLayout.closeDrawer(GravityCompat.START);
 
                     }
-                } else {
+                }
+                else {
                     NavigationUI.onNavDestinationSelected(item,navController);
                     mbinding.drawerLayout.closeDrawer(GravityCompat.START);
 
@@ -267,6 +261,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
+                menu.add(1, R.id.showRouteFragment, 7, "Routes").setIcon(getResources().getDrawable(R.drawable.ic_route_svgrepo_com));
+
             }
         } else {
             mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -282,10 +278,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void closeActivity()
     {
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *From activity Where Main_Activity = 'Start Day' ");
 
-
-        CustomLocation customLocation= new CustomLocation();
+        CustomLocation customLocation= new CustomLocation(this);
 
         Date c = Calendar.getInstance().getTime();
 
@@ -306,6 +300,18 @@ public class MainActivity extends AppCompatActivity {
 
                             for (Activity activity:runningActivity)
                             {
+                                String[] locationStringArray = activity.getStartCoordinates().split(",");
+                                Location startLocation = new Location("");
+
+                                startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
+                                startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
+
+                                String distance= String.valueOf(location.distanceTo(startLocation));
+
+
+                                String endAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                                activity.setEndAddress(endAddress);
+                                activity.setDistance(distance);
                                 activity.setEndCoordinates(locationString);
                                 activity.setEndDateTime(formattedDate);
                                 String totalTime=calculateTotalTime(formattedDate,activity.getStartDateTime());
@@ -324,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     };
 
-                    customLocation.getLastLocation(this,this,locationResults);
+                    customLocation.getLastLocation(locationResults);
                 }
                 else
                 {
@@ -342,11 +348,17 @@ public class MainActivity extends AppCompatActivity {
     }
     private String calculateTotalTime(String formattedDate, String startDateTime) {
 
-        String endTime= formattedDate.substring(10,17),startTime=startDateTime.substring(10,17);
-        int endHours= Integer.parseInt(formattedDate.substring(10,11)), endMinutes= Integer.parseInt(formattedDate.substring(13,14))
-                ,endSeconds=Integer.parseInt(formattedDate.substring(16,17));
-        int startHours= Integer.parseInt(startDateTime.substring(10,11)), startMinutes= Integer.parseInt(startDateTime.substring(13,14))
-                ,startSeconds=Integer.parseInt(startDateTime.substring(16,17));
+        int endHours=0,endMinutes=0,endSeconds=0,startHours=0,startMinutes=0,startSeconds=0;
+        if (!startDateTime.isEmpty()&&!startDateTime.isEmpty())
+        {
+            endHours= Integer.parseInt(formattedDate.substring(11,13));
+            endMinutes= Integer.parseInt(formattedDate.substring(14,16));
+            endSeconds=Integer.parseInt(formattedDate.substring(17,19));
+            startHours= Integer.parseInt(startDateTime.substring(11,13));
+            startMinutes= Integer.parseInt(startDateTime.substring(14,16));
+            startSeconds=Integer.parseInt(startDateTime.substring(17,19));
+        }
+
 
         return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
 

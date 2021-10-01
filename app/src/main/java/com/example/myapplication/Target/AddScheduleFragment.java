@@ -1,9 +1,7 @@
 package com.example.myapplication.Target;
 
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
@@ -14,8 +12,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.myapplication.Login.LoginActivity;
 import com.example.myapplication.ModelClasses.AreaModel;
 import com.example.myapplication.ModelClasses.DoctorScheduleModel;
 import com.example.myapplication.ModelClasses.RegionModel;
@@ -90,11 +85,6 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        if (saveDoctorModel.getDoctor_Id()==0)
-        {
-
-        }
 
         //checking user primary location is selected already or not
 
@@ -198,7 +188,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
             public void onClick(View v) {
                 if (isLocationEnabled())
                 {
-                    CustomLocation customLocation= new CustomLocation();
+                    CustomLocation customLocation= new CustomLocation(requireContext());
                     CustomLocation.CustomLocationResults results= new CustomLocation.CustomLocationResults() {
                         @Override
                         public void gotLocation(Location location) {
@@ -219,7 +209,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
                         }
                     };
-                    customLocation.getLastLocation(requireContext(),requireActivity(),results);
+                    customLocation.getLastLocation(results);
                 }
                 else
                 {
@@ -408,7 +398,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                int id = SharedPreferenceHelper.getInstance(requireContext()).getUserId();
+                                int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
                                 String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
                                 saveDoctorModel.setSchedules(getSchedule());
                                 saveDoctorModel.setSuggested_UserId(id);
@@ -473,7 +463,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
     public void getRegion() {
         String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
-        int id = SharedPreferenceHelper.getInstance(requireContext()).getUserId();
+        int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
         Call<List<RegionModel>> call = ApiClient.getInstance().getApi().getRegion(token, 1, 1, 1, id);
 
         call.enqueue(new Callback<List<RegionModel>>() {
@@ -502,7 +492,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
     public void getArea(String key) {
         String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
-        int id = SharedPreferenceHelper.getInstance(requireContext()).getUserId();
+        int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
         if (!key.isEmpty()) {
             int regionId = regionHashmap.get(mBinding.regionSpinner.getSelectedItem().toString());
             Call<List<AreaModel>> call = ApiClient.getInstance().getApi().getArea(token, 1, 1, 1, regionId, id);

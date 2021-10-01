@@ -1,10 +1,8 @@
 package com.example.myapplication.Target;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -28,7 +26,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
-import android.telephony.TelephonyScanManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -55,22 +52,17 @@ import com.example.myapplication.Target.utils.TargetViewModel;
 import com.example.myapplication.databinding.CustomCancelDialogBinding;
 import com.example.myapplication.databinding.CustomRescheduleDialogBinding;
 import com.example.myapplication.databinding.FragmentTargetBinding;
-import com.example.myapplication.databinding.TargetRecyclerViewBinding;
 import com.example.myapplication.utils.CustomLocation;
 import com.example.myapplication.utils.RecyclerOnItemClickListener;
 import com.example.myapplication.utils.SharedPreferenceHelper;
-import com.vivekkaushik.datepicker.DatePickerTimeline;
 import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -539,7 +531,7 @@ public class TargetFragment extends Fragment {
                 if (isLocationEnabled()) {
                     mbinding.targetRecycler.swipeLayout.setRefreshing(false);
 
-                    int id = SharedPreferenceHelper.getInstance(getContext()).getUserId();
+                    int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
                     targetViewModel.DeleteAllDoctor();
                     SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext());
@@ -583,7 +575,7 @@ public class TargetFragment extends Fragment {
     public void setUpCancelWorkPlanAlertDialog(DoctorModel doctorModel, int key) {
 
         if (isLocationEnabled()) {
-            CustomLocation customLocation = new CustomLocation();
+            CustomLocation customLocation = new CustomLocation(requireContext());
             dialogBinding = CustomCancelDialogBinding.inflate(getLayoutInflater());
             alertDialog = new AlertDialog.Builder(getContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
             alertDialog.show();
@@ -629,7 +621,7 @@ public class TargetFragment extends Fragment {
                 }
             });
 
-            customLocation.getLastLocation(getContext(), requireActivity(), locationResults);
+            customLocation.getLastLocation(locationResults);
             dialogBinding.saveRemarksBtn.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
@@ -646,7 +638,7 @@ public class TargetFragment extends Fragment {
                         if (location != null) {
                             List<UpdateWorkPlanStatus> list = new ArrayList<>();
                             String remarks = dialogBinding.remarksEdittext.getText().toString();
-                            int userId = SharedPreferenceHelper.getInstance(getActivity()).getUserId();
+                            int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
                             String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
                             String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
                             Date date = Calendar.getInstance().getTime();
@@ -859,7 +851,7 @@ public class TargetFragment extends Fragment {
                 sweetAlertDialog.setCancelable(false);
                 sweetAlertDialog.show();
                 if (!remarkCheck.equals("") && !dateCheck.equals("") && !timeCheck.equals("")) {
-                    int userId = SharedPreferenceHelper.getInstance(getActivity()).getUserId();
+                    int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
                     String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
                     AddNewWorkPlanModel addNewWorkPlanModel = new AddNewWorkPlanModel();
                     addNewWorkPlanModel.setDoctorId(doctorModel.getDoctorId());
