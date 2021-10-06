@@ -13,6 +13,10 @@ public class CONSTANTS {
     public final static String TARGET="Target";
     public final static String OFFICE="Office";
     public final static String COMPLETE="Complete";
+    public final static String ACTIVITY_CALL="Call";
+    public final static String ACTIVITY_MEETING="Meeting";
+    public final static String ACTIVITY_FOLLOWUP="Follow Up";
+
 
 
 

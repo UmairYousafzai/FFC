@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xmnls="http://schemas.android.com/apk/res-auto"
+    xmlns:xmnls2="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    >
+    <TextView
+        android:id="@+id/heading"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:text="@string/feedback"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_marginStart="5dp"
+        android:textColor="@color/APP_Theme_Color"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#E1E1E1"
+        android:layout_marginBottom="20dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        >
+        <com.google.android.material.textfield.TextInputLayout
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="8dp"
+            android:hint="@string/select_date"
+            android:elevation="5dp"
+            android:textColorHint="@color/black"
+            app:helperText="Year, Month, Day "
+            app:helperTextTextColor="@color/APP_Theme_Color"
+
+            app:startIconDrawable="@drawable/ic_baseline_date_range_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:inputType="none"
+                android:editable="false"
+                android:text="@string/select_date">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="8dp"
+            android:hint="@string/select_time"
+            android:elevation="5dp"
+            android:textColorHint="@color/black"
+            app:helperText="Year, Month, Day "
+
+            app:helperTextTextColor="@color/APP_Theme_Color"
+
+            app:startIconDrawable="@drawable/ic_baseline_access_time_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/time_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:inputType="none"
+                android:editable="false"
+                android:text="@string/select_time">
+
+            </com.google.android.material.textfield.TextInputEditText>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="8dp"
+            android:weightSum="100"
+            >
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_perpose"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/purpose"
+                android:layout_weight="85"
+                xmnls:hintTextColor="@color/APP_Theme_Color"
+                xmnls:boxBackgroundColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:background="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="40"
+
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:singleLine="true"
+
+                    android:id="@+id/purpose_text"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/APP_Theme_Color"
+                    android:nextFocusDown="@+id/edit_text_purpose"
+                    >
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <ImageButton
+                android:id="@+id/voice_record_btn_purpose"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_mic"
+                android:layout_weight="15"
+                android:backgroundTint="@color/APP_Theme_Color"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="8dp"
+            >
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_remarks"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/remarks"
+                android:layout_weight="85"
+                xmnls:hintTextColor="@color/APP_Theme_Color"
+                xmnls:boxBackgroundColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:background="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="40"
+
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:singleLine="true"
+
+                    android:id="@+id/emp_remarks"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/APP_Theme_Color"
+                    android:nextFocusDown="@+id/edit_text_purpose"
+                    >
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <ImageButton
+                android:id="@+id/voice_record_btn_emp_remarks"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_mic"
+                android:layout_weight="15"
+                android:backgroundTint="@color/APP_Theme_Color"
+                />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            app:strokeWidth="1dp"
+            android:backgroundTint="@color/white"
+            app:strokeColor="@color/APP_Theme_Color"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            app:rippleColor="@color/APP_Theme_Color"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            app:elevation="5dp"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+</ScrollView>
+

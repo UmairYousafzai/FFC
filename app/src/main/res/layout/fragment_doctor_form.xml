@@ -280,7 +280,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:editable="false"
 
                     android:fontFamily="sans-serif-light"
                     android:inputType="none" />
@@ -295,7 +294,7 @@
 
                 android:layout_margin="@dimen/_5sdp"
                 android:elevation="5dp"
-                android:hint="Qualification"
+                android:hint="@string/qualification"
 
                 android:textColorHint="@color/black"
 
@@ -306,7 +305,6 @@
                     android:id="@+id/qualification_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
                     android:fontFamily="sans-serif-light"
                     android:inputType="none" />
 
@@ -319,7 +317,7 @@
                 android:layout_height="wrap_content"
                 android:elevation="5dp"
                 android:layout_margin="@dimen/_5sdp"
-                android:hint="Grade"
+                android:hint="@string/grade"
 
                 android:inputType="none"
 
@@ -332,7 +330,6 @@
                     android:id="@+id/grade_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
                     android:fontFamily="sans-serif-light"
 
                     android:inputType="none" />
@@ -399,7 +396,7 @@
                     android:layout_margin="20dp"
                     android:backgroundTint="@color/APP_Theme_Color"
                     app:icon="@drawable/ic_forward_arrow"
-                    android:text="Next"
+                    android:text="@string/next"
                     android:elevation="5dp"
                     app:iconTint="@color/white">
 

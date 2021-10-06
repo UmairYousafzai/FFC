@@ -404,68 +404,7 @@ public class TargetFragment extends Fragment {
         });
 
 
-//        targetViewModel.getAllEveningDoctorLiveData().observe(requireActivity(), new Observer<List<DoctorModel>>() {
-//            @Override
-//            public void onChanged(List<DoctorModel> list) {
-//                List<DoctorModel> filterListevening= new ArrayList<>();
-//
-//                String Date;
-//
-//                for (DoctorModel model:list)
-//                {
-//                    Date = model.getWorkDate();
-//
-//                    if (Date.equals(date) && model.getShift().equals("Evening"))
-//                    {
-//                        filterListevening.add(model);
-//                    }
-//                }
-//                if (filterListevening.size()>0) {
-//                    mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
-//
-//                    eveningListAdapter.setDoctorModelList(filterListevening);
-//                    eveningListAdapter.notifyDataSetChanged();
-//                }
-//                else
-//                {
-//                    eveningListAdapter.clearData();
-//
-//                }
-//
-//            }
-//        });
-//        targetViewModel.getAllMorningDoctorLiveData().observe(requireActivity(), new Observer<List<DoctorModel>>() {
-//            @Override
-//            public void onChanged(List<DoctorModel> list) {
-//                List<DoctorModel> filterList= new ArrayList<>();
-//
-//
-//                String Date;
-//
-//                for (DoctorModel model:list)
-//                {
-//                    Date= model.getWorkDate();
-//                    if (Date.equals(date)&& model.getShift().equals("Morning"))
-//                    {
-//                        filterList.add(model);
-//                    }
-//                }
-//                if (filterList.size()>0) {
-//                    mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
-//                    morningListAdapter.setDoctorModelList(filterList);
-//                    morningListAdapter.notifyDataSetChanged();
-//                }
-//                else
-//                {
-//                    morningListAdapter.clearData();
-//
-//                }
-//
-//
-//
-//
-//            }
-//        });
+
     }
 
     public void BtnListener() {
@@ -577,7 +516,7 @@ public class TargetFragment extends Fragment {
         if (isLocationEnabled()) {
             CustomLocation customLocation = new CustomLocation(requireContext());
             dialogBinding = CustomCancelDialogBinding.inflate(getLayoutInflater());
-            alertDialog = new AlertDialog.Builder(getContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+            alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
             alertDialog.show();
             CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
                 @Override

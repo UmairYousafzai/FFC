@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:grid="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MeetingFragment"
+    android:fillViewport="true"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_meeting_type"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/APP_Theme_Color"
+            android:layout_marginVertical="10dp"
+            />
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="Widget.MaterialComponents.CompoundButton.RadioButton"
+            android:id="@+id/radioGroup">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                >
+                <RadioButton
+                    android:id="@+id/meeting_radio_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Meeting"
+                    android:textColor="@color/gray"
+                    android:textSize="15sp"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:checked="false"
+
+                    />
+
+                <RadioButton
+                    android:id="@+id/deamo_radio_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Demo"
+                    android:textColor="@color/gray"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:layout_weight="1"
+                    android:textSize="15sp"
+
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2">
+                <RadioButton
+                    android:id="@+id/wabinar_radio_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Webinar"
+                    android:textColor="@color/gray"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:textSize="15sp"
+
+                    />
+
+                <RadioButton
+                    android:id="@+id/saminar_radio_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Saminar"
+                    android:textColor="@color/gray"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:layout_weight="1"
+                    android:textSize="15sp"
+
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2">
+                <RadioButton
+                    android:id="@+id/trade_show_radio_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Trade Show"
+                    android:textColor="@color/gray"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:textSize="15sp"
+
+                    />
+
+            </LinearLayout>
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/APP_Theme_Color"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="7dp"
+            />
+
+
+        <EditText
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:textStyle="bold"
+            android:hint="@string/location"
+            android:textColor="@color/gray"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginBottom="5dp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/APP_Theme_Color"
+            android:layout_marginVertical="10dp"
+
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:weightSum="2"
+            >
+            <TextView
+                android:id="@+id/from_date_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="From Date"
+                android:textColor="@color/gray"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawablePadding="4dp"
+                android:layout_marginStart="10dp"
+                grid:drawableStartCompat="@drawable/ic_baseline_date_range_24" />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/APP_Theme_Color"
+                />
+            <TextView
+                android:id="@+id/to_date_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To Date"
+                android:textColor="@color/gray"
+                android:layout_weight="1"
+                android:gravity="end|center_vertical"
+                android:drawablePadding="4dp"
+                android:layout_marginEnd="10dp"
+                grid:drawableEndCompat="@drawable/ic_baseline_date_range_24" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:weightSum="2"
+            >
+            <TextView
+                android:id="@+id/from_time_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/from_time"
+                android:textColor="@color/gray"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawablePadding="4dp"
+                android:layout_marginStart="10dp"
+
+                grid:drawableStartCompat="@drawable/ic_baseline_access_time_blue_24" />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/APP_Theme_Color"
+
+                />
+            <TextView
+                android:id="@+id/to_time_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To Time"
+                android:textColor="@color/gray"
+                android:layout_weight="1"
+                android:gravity="end|center_vertical"
+                android:drawablePadding="4dp"
+                android:layout_marginEnd="10dp"
+                grid:drawableEndCompat="@drawable/ic_baseline_access_time_blue_24" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/APP_Theme_Color"
+            android:layout_marginVertical="10dp"
+
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/host_name"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/APP_Theme_Color"
+            android:layout_margin="5dp"
+            />
+        <TextView
+            android:id="@+id/host_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:text="@string/host_name"
+            android:textSize="15sp"
+            android:textColor="@color/gray"
+            android:layout_margin="5dp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/APP_Theme_Color"
+            android:layout_marginVertical="10dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/participants"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:layout_marginHorizontal="5dp"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/spinner_bg"
+                android:padding="5dp"
+                android:layout_margin="5dp"
+                android:layout_weight="90"
+                >
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_meeting_svgrepo_com"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:layout_marginEnd="20dp"
+                    />
+                <Spinner
+                    android:id="@+id/participants_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+            <ImageButton
+                android:id="@+id/add_participants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_add_white_24"
+                android:layout_gravity="center_vertical"
+                android:background="@color/APP_Theme_Color"
+                android:layout_weight="10"
+                android:contentDescription="@string/add_multiples"
+                />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/related_to"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:layout_marginHorizontal="5dp"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/spinner_bg"
+                android:padding="5dp"
+                android:layout_margin="5dp"
+                android:layout_weight="90"
+                >
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_meeting_svgrepo_com"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:layout_marginEnd="20dp"
+
+                    />
+                <Spinner
+                    android:id="@+id/related_to_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+
+                    />
+
+            </LinearLayout>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_add_white_24"
+                android:layout_gravity="center_vertical"
+                android:background="@color/APP_Theme_Color"
+                android:layout_weight="10"
+                android:contentDescription="@string/add_multiples"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/APP_Theme_Color"
+            android:layout_marginVertical="10dp"
+            />
+
+        <EditText
+            android:id="@+id/description_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:hint="@string/description"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/gray"
+            android:layout_margin="5dp"
+            />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            app:strokeWidth="1dp"
+            android:backgroundTint="@color/white"
+            app:strokeColor="@color/APP_Theme_Color"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            app:rippleColor="@color/APP_Theme_Color"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="10dp"
+            app:elevation="5dp"
+            />
+    </LinearLayout>
+
+</ScrollView>

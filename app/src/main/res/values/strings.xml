@@ -106,7 +106,6 @@
     <string name="cancel_activity">Cancel Activity</string>
     <string name="save">Save</string>
     <string name="select_time">Select Time</string>
-    <string name="remarks">Remarks</string>
     <string name="take_photo">Take Photo</string>
     <string name="select_from_gallery">Select From Gallery</string>
     <string name="start_day">Start Day</string>
@@ -122,5 +121,34 @@
     <string name="name">Name</string>
     <string name="done">Done</string>
     <string name="routes">Routes</string>
+    <string name="status">Status</string>
+    <string name="stage">Stage</string>
+    <string name="please_enter_purpose">Please enter purpose</string>
+    <string name="visit_purpose">Visit Purpose</string>
+    <string name="please_enter_remarks">Please enter remarks</string>
+    <string name="remarks">Remarks</string>
+    <string name="person_in_contact_phone">Person in Contact Phone</string>
+    <string name="please_enter_person_in_contact">Please enter person in contact</string>
+    <string name="person_in_contact">Person in Contact</string>
+    <string name="remarks_about_product">Remarks about product</string>
+    <string name="please_enter_principal_reviews">Please enter principal reviews</string>
+    <string name="reviews_of_host">Reviews of host</string>
+    <string name="interest_level">Interest Level</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="grade">Grade</string>
+    <string name="activity_type">Activity Type</string>
+    <string name="select_activity">Select Activity</string>
+    <string name="feedback">Feedback</string>
+    <string name="purpose">Purpose</string>
+    <string name="select_meeting_type">Select Meeting Type</string>
+    <string name="add_multiples">Add Multiples</string>
+    <string name="host_name">Host Name</string>
+    <string name="location">Location</string>
+    <string name="description">Description..</string>
+    <string name="from_time">From Time</string>
+    <string name="participants">Participants</string>
+    <string name="related_to">Related To</string>
 
 </resources>

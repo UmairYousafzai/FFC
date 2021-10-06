@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -53,11 +54,14 @@ import com.google.android.material.navigation.NavigationView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -203,15 +207,24 @@ public class AttendanceFragment extends Fragment {
                 {
                     selectedImage= (Bitmap) data.getExtras().get("data");
                     mBinding.attendanceImage.setImageBitmap(selectedImage);
-                    String IMEI;
+                    String uniqueID;
 
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    {
+                         uniqueID = UUID.randomUUID().toString();
+                    }
+                    else
+                    {
+                        uniqueID = getDeviceIMEI();
 
-                    IMEI = getDeviceIMEI();
-                    saveAttendance(IMEI);
+                    }
+
+                    saveAttendance(uniqueID);
                 }
             }
         }
     }
+
 
     public  String getDeviceIMEI( ) {
         Permission permission = new Permission(requireContext(),requireActivity());

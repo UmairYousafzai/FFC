@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         activityViewModel.getQueryActivity().observe(this, new Observer<List<Activity>>() {
             @Override
             public void onChanged(List<Activity> activities) {
-                if ( activities.size()>0)
+                if ( activities!=null)
                 {
                     runningActivity= activities;
                 }
@@ -261,7 +261,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
-                menu.add(1, R.id.showRouteFragment, 7, "Routes").setIcon(getResources().getDrawable(R.drawable.ic_route_svgrepo_com));
+                menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(getResources().getDrawable(R.drawable.ic_route_svgrepo_com));
+                menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(getResources().getDrawable(R.drawable.ic_meeting));
 
             }
         } else {

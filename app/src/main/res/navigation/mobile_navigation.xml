@@ -252,6 +252,14 @@
         <argument
             android:name="DoctorModel"
             app:argType="com.example.myapplication.DoctorModel" />
+        <action
+            android:id="@+id/action_targetPostMenuFragment_to_activityTaskFragment"
+            app:destination="@id/activityTaskFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
 
 
     </fragment>
@@ -377,7 +385,7 @@
     </fragment>
     <fragment
         android:id="@+id/addScheduleFragment"
-        android:name="com.example.myapplication.Target.AddScheduleFragment"
+        android:name="com.example.myapplication.Target.Schedule.AddScheduleFragment"
         android:label="Add Schedule"
         tools:layout="@layout/fragment_add_schedule" >
         <argument
@@ -397,4 +405,18 @@
             app:popUpTo="@+id/nav_home"
             app:popUpToInclusive="true"/>
     </fragment>
+    <fragment
+        android:id="@+id/activityTaskFragment"
+        android:name="com.example.myapplication.Target.Task.ActivityTaskFragment"
+        android:label="ActivityTaskFragment" >
+        <argument
+            android:name="activity_type"
+            app:argType="string"
+            android:defaultValue=" " />
+    </fragment>
+    <fragment
+        android:id="@+id/meetingFragment"
+        android:name="com.example.myapplication.MeetingFragment"
+        android:label="Meeting"
+        tools:layout="@layout/fragment_meeting" />
 </navigation>

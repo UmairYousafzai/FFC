@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="stage">
+        <item>Suspect</item>
+        <item>Prospect</item>
+        <item>Completed</item>
+        <item>Canceled</item>
+
+    </string-array>
+    <string-array name="status">
+        <item>Success</item>
+        <item>Cancel</item>
+        <item>Pending</item>
+    </string-array>
+</resources>

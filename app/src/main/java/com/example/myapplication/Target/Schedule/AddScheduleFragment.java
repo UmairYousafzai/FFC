@@ -1,4 +1,4 @@
-package com.example.myapplication.Target;
+package com.example.myapplication.Target.Schedule;
 
 import android.app.TimePickerDialog;
 import android.content.Context;

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,15 +15,40 @@ import android.provider.Settings;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.example.myapplication.ModelClasses.Activity;
+import com.example.myapplication.R;
+import com.example.myapplication.utils.ActivityViewModel;
+import com.example.myapplication.utils.CustomLocation;
+import com.example.myapplication.utils.Permission;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class Route {
 
     public static String loc = "NULL";
     public static String locNetwork = "NULL";
+    private Context mContext;
+    private android.app.Activity mActivity;
+    private ActivityViewModel activityViewModel;
 
-
+    public Route(Context mContext, android.app.Activity mActivity ) {
+        this.mContext = mContext;
+        this.mActivity = mActivity;
+        ViewModelStoreOwner owner= (ViewModelStoreOwner) mActivity;
+        this.activityViewModel = new ViewModelProvider(owner).get(ActivityViewModel.class);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     public static void locationfinder(final Context context) {
@@ -129,6 +155,78 @@ public class Route {
         return  loc;
 
 
+    }
+
+    public void openActivity(String mainActivity,String subActivity,int taskID)
+    {
+        CustomLocation customLocation= new CustomLocation(mContext);
+
+        Activity activity = new Activity();
+
+        Date c = Calendar.getInstance().getTime();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        String formattedDate = df.format(c);
+        Permission permission= new Permission(mContext,mActivity);
+
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED&&
+                ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            if (permission.isLocationEnabled())
+            {
+                CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+                    @Override
+                    public void gotLocation(Location location) {
+                        activity.setMainActivity(mainActivity);
+                        activity.setSubActivity(subActivity);
+                        activity.setStartDateTime(formattedDate);
+                        activity.setTaskID(taskID);
+                        String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                        activity.setStartCoordinates(locationString);
+                        activityViewModel.insertActivity(activity);
+
+
+                    }
+                };
+
+                customLocation.getLastLocation(locationResults);
+            }
+            else
+            {
+                showDialog();
+            }
+
+        }
+        else {
+
+            permission.getLocationPermission();
+            permission.getCOARSELocationPermission();
+        }
+
+
+    }
+    public void showDialog()
+    {
+        new SweetAlertDialog(mContext)
+                .setTitleText("Please turn on  location for this action.")
+                .setContentText("Do you want to open location setting.")
+                .setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                        sweetAlertDialog.dismiss();
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        mContext.startActivity(intent);
+                    }
+                })
+                .setCancelText("Cancel")
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                }).show();
     }
 }
 

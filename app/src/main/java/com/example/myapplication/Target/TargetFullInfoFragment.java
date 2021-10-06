@@ -4,9 +4,12 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,9 +23,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.provider.Settings;
+import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.myapplication.DoctorModel;
@@ -31,8 +39,12 @@ import com.example.myapplication.ModelClasses.UpdateStatus;
 import com.example.myapplication.ModelClasses.UpdateWorkPlanStatus;
 import com.example.myapplication.NetworkCalls.ApiClient;
 import com.example.myapplication.R;
+import com.example.myapplication.RoueActivity.Route;
 import com.example.myapplication.Target.utils.TargetViewModel;
+import com.example.myapplication.databinding.BottomSheetBackgroundFollowupFragmentBinding;
+import com.example.myapplication.databinding.BottomSheetForegroundFollowupFragmentBinding;
 import com.example.myapplication.databinding.CustomCompeleteDialogBinding;
+import com.example.myapplication.databinding.CustomSelectActivityDialogBinding;
 import com.example.myapplication.databinding.FragmentTargetFullInfoBinding;
 import com.example.myapplication.utils.ActivityViewModel;
 import com.example.myapplication.utils.CONSTANTS;
@@ -40,6 +52,7 @@ import com.example.myapplication.utils.CustomLocation;
 import com.example.myapplication.utils.Permission;
 import com.example.myapplication.utils.SharedPreferenceHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.SimpleDateFormat;
@@ -54,6 +67,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 public class TargetFullInfoFragment extends Fragment {
 
     private View view;
@@ -65,6 +80,10 @@ public class TargetFullInfoFragment extends Fragment {
     private ActivityViewModel activityViewModel;
     private List<Activity> taskActivities;
     private NavController navController;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private ArrayAdapter<String> stageAdapter,statusAdapter;
+    private String hostRemarks="",empRemarks="",productsRemarks="";
+    private int interestLevel=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,8 +105,219 @@ public class TargetFullInfoFragment extends Fragment {
         targetViewModel = new ViewModelProvider(requireActivity()).get(TargetViewModel.class);
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
+        bottomSheetBehavior= BottomSheetBehavior.from(mBinding.feedbackBottomSheet.getRoot());
+
+        setUpBottomSheet();
+
         setInfoWorkPlan();
         btnListener();
+        bottomSheetBtnListener();
+    }
+
+    private void setUpBottomSheet() {
+
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                        Drawable drawable = getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_up_24);
+                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                        Drawable drawable = getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_down_24);
+                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
+
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        Drawable drawable = getResources().getDrawable(R.drawable.ic_baseline_keyboard_arrow_up_24);
+                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        stageAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.stage));
+        statusAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item,getResources().getStringArray(R.array.status));
+        mBinding.feedbackBottomSheet.autoStage.setAdapter(stageAdapter);
+        mBinding.feedbackBottomSheet.autoStatus.setAdapter(statusAdapter);
+
+
+
+
+
+    }
+
+    public void bottomSheetBtnListener()
+    {
+        mBinding.feedbackBottomSheet.voiceRecordBtnHostReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                try {
+                    startActivityForResult(intent, 1);
+                } catch (Exception e) {
+                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mBinding.feedbackBottomSheet.voiceRecordBtnEmpRemarks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                try {
+                    startActivityForResult(intent, 2);
+                } catch (Exception e) {
+                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mBinding.feedbackBottomSheet.voiceRecordBtnRemarksProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                try {
+                    startActivityForResult(intent, 3);
+                } catch (Exception e) {
+                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mBinding.feedbackBottomSheet.saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SweetAlertDialog(requireContext(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Save Successfully. ")
+                        .setContentText("You want to create another activity")
+                        .setConfirmText("Yes")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                showSelectActivityDialog();
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .setCancelText("NO")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
+            }
+        });
+
+
+        mBinding.feedbackBottomSheet.interestLevelRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton radioButton= mBinding.feedbackBottomSheet.getRoot().findViewById(checkedId);
+                String check = radioButton.getText().toString();
+                switch (check)
+                {
+                    case "Low":
+                    {
+                     if (radioButton.isChecked())
+                     {
+                         interestLevel=1;
+                         mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
+                         mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+                         mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+                     }
+
+                        break;
+                    }
+                    case "Medium":
+                    {
+                        if (radioButton.isChecked())
+                        {
+                            interestLevel=2;
+                            mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
+                            mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+                            mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+                        }
+
+                        break;
+                    }
+                    case "High":
+                    {
+                        if (radioButton.isChecked())
+                        {
+                            interestLevel=3;
+                            mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+                            mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+                            mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
+                        }
+
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    public void showSelectActivityDialog()
+    {
+        CustomSelectActivityDialogBinding dialogBinding= CustomSelectActivityDialogBinding.inflate(getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        alertDialog.show();
+
+        ArrayList<String> activityArrayList= new ArrayList<>();
+        activityArrayList.add(CONSTANTS.ACTIVITY_CALL);
+        activityArrayList.add(CONSTANTS.ACTIVITY_MEETING);
+        activityArrayList.add(CONSTANTS.ACTIVITY_FOLLOWUP);
+        ArrayAdapter<String> activityArrayAdapter= new ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,activityArrayList);
+
+        dialogBinding.activtyDropDown.setAdapter(activityArrayAdapter);
+
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        dialogBinding.doneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( !dialogBinding.activtyDropDown.getText().toString().equals("Activity Type") )
+                {
+                    alertDialog.dismiss();
+
+                    TargetFullInfoFragmentDirections.ActionTargetPostMenuFragmentToActivityTaskFragment action = TargetFullInfoFragmentDirections.actionTargetPostMenuFragmentToActivityTaskFragment();
+                    action.setActivityType(dialogBinding.activtyDropDown.getText().toString());
+                    navController.navigate(action);
+                }
+
+            }
+        });
+
+
     }
 
     public void setInfoWorkPlan() {
@@ -534,5 +764,31 @@ public class TargetFullInfoFragment extends Fragment {
                         sweetAlertDialog.dismiss();
                     }
                 }).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                hostRemarks= hostRemarks+" "+result.get(0);
+                mBinding.feedbackBottomSheet.hostReviewRemarksEdittext.setText(hostRemarks);
+            }
+        } else if (requestCode == 2) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                empRemarks = empRemarks+" "+result.get(0);
+                mBinding.feedbackBottomSheet.empRemarks.setText(empRemarks);
+            }
+        }
+        else if (requestCode == 3) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                productsRemarks = productsRemarks+" "+result.get(0);
+                mBinding.feedbackBottomSheet.remarksAboutProdactEdittext.setText(productsRemarks);
+            }
+        }
     }
 }
