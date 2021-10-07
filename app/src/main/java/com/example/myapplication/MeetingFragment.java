@@ -40,7 +40,7 @@ public class MeetingFragment extends Fragment {
     private ArrayAdapter<String> relatedToAdapter;
 
     private FfcDatabase ffcDatabase;
-
+     
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

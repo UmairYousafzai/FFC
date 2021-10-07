@@ -151,4 +151,7 @@
     <string name="participants">Participants</string>
     <string name="related_to">Related To</string>
 
+    <string name="google_maps_key_latest">AIzaSyC2W-bxWwy2EQhchzOSiDmHZzVcQXo8w9k</string>
+
+
 </resources>

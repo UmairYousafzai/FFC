@@ -135,6 +135,8 @@ public class AttendanceFragment extends Fragment {
 
     public void saveAttendance(String IMEI)
     {
+        Permission permission= new Permission(requireContext(),requireActivity());
+
 
 
         if (selectedImage!=null)
@@ -145,29 +147,68 @@ public class AttendanceFragment extends Fragment {
             String formattedDate = df.format(c);
             CustomLocation customLocation= new CustomLocation(requireContext());
 
-            CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
-                @Override
-                public void gotLocation(Location location) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            {
+                if (permission.isLocationEnabled())
+                {
+                    CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+                        @Override
+                        public void gotLocation(Location location) {
 
-                    String image = getBytesFromBitmap(selectedImage);
-                    String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-                    int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
-                    AttendanceModel attendanceModel = new AttendanceModel();
-                    attendanceModel.setAttendanceCoordinates(locationString);
-                    attendanceModel.setAttendanceImage(image);
-                    attendanceModel.setDateTime(formattedDate);
-                    attendanceModel.setEmpID(id);
-                    attendanceModel.setImeiNumber(IMEI);
-                    attendance=attendanceModel;
-                    GetUserInfoModel loginUser = ffcDatabase.dao().getLoginUser();
-                    mBinding.nameTextview.setText(loginUser.getUserName());
-                    mBinding.imeiTextview.setText(IMEI);
-                    mBinding.dateTimeTextview.setText(formattedDate);
+                            String image = getBytesFromBitmap(selectedImage);
+                            String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                            int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
+                            AttendanceModel attendanceModel = new AttendanceModel();
+                            attendanceModel.setAttendanceCoordinates(locationString);
+                            attendanceModel.setAttendanceImage(image);
+                            attendanceModel.setDateTime(formattedDate);
+                            attendanceModel.setEmpID(id);
+                            attendanceModel.setImeiNumber(IMEI);
+                            attendance=attendanceModel;
+                            GetUserInfoModel loginUser = ffcDatabase.dao().getLoginUser();
+                            mBinding.nameTextview.setText(loginUser.getUserName());
+                            mBinding.imeiTextview.setText(IMEI);
+                            mBinding.dateTimeTextview.setText(formattedDate);
 
+                        }
+                    };
+
+                    customLocation.getLastLocation(locationResults);
                 }
-            };
+                else
+                {
+                    new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Please turn on  location for this action.")
+                            .setContentText("Do you want to open location setting.")
+                            .setConfirmText("Yes")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    requireContext().startActivity(intent);
+                                }
+                            })
+                            .setCancelText("Cancel")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            }).show();
+                    mBinding.attendanceImage.setImageDrawable(getResources().getDrawable(R.drawable.doctor_icon));
+                    selectedImage= null;
+                }
 
-            customLocation.getLastLocation(locationResults);
+            }
+            else
+            {
+                permission.getLocationPermission();
+                mBinding.attendanceImage.setImageDrawable(getResources().getDrawable(R.drawable.doctor_icon));
+                selectedImage= null;
+            }
+
+
         }
         else
         {
@@ -181,7 +222,7 @@ public class AttendanceFragment extends Fragment {
     private void captureImage() {
         Permission permission = new Permission(requireContext(),requireActivity());
 
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED&&ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permission.getCameraPermission();
         } else {
             Intent cameraIntent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

@@ -263,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(getResources().getDrawable(R.drawable.ic_route_svgrepo_com));
                 menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(getResources().getDrawable(R.drawable.ic_meeting));
+                menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(getResources().getDrawable(R.drawable.ic_location));
+
 
             }
         } else {

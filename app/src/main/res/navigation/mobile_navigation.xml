@@ -419,4 +419,9 @@
         android:name="com.example.myapplication.MeetingFragment"
         android:label="Meeting"
         tools:layout="@layout/fragment_meeting" />
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.myapplication.MapsFragment"
+        android:label="Tracker"
+        tools:layout="@layout/fragment_maps2" />
 </navigation>
