@@ -282,8 +282,8 @@ public class TargetFragment extends Fragment {
 
         int checkmonth = (selectedMonth % 10);
         int checkday = (selectedDay % 10);
-        String mDay = null, mMonth = null, mYear = String.valueOf(selectedYear);
-        if (checkmonth > 0 && selectedMonth < 10) {
+        String mDay , mMonth , mYear = String.valueOf(selectedYear);
+        if (checkmonth > 0 && selectedMonth < 9) {
             mMonth = "0" + (selectedMonth + 1);
             //          date = day + "-" + "0" + (month + 1) + "-" + (year);
         } else {
@@ -337,7 +337,7 @@ public class TargetFragment extends Fragment {
                 int checkmonth = (month % 10);
                 int checkday = (day % 10);
                 String mDay = null, mMonth = null, mYear = String.valueOf(year);
-                if (checkmonth > 0 && month < 10) {
+                if (checkmonth > 0 && month < 9) {
                     mMonth = "0" + (month + 1);
                     //          date = day + "-" + "0" + (month + 1) + "-" + (year);
                 } else {
@@ -345,7 +345,7 @@ public class TargetFragment extends Fragment {
 
                 }
 
-                if (checkday > 0 && day < 10) {
+                if (checkday > 0 && day < 9) {
                     mDay = "0" + (day);
 
                 } else {

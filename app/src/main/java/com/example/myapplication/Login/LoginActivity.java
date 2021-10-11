@@ -88,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
+
         loginViewModel.getUser().observe(this, new Observer<LoginModel>() {
             @Override
             public void onChanged(@Nullable LoginModel loginUser) {
@@ -244,6 +245,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 mydialog.show();
             }
+
         });
 
         binding.ResetButton.setOnClickListener(new View.OnClickListener() {
@@ -427,9 +429,11 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         getUserInfoModel = response.body();
                         ffcDatabase.dao().delete_previous_user();
-                        ffcDatabase.dao().insert(getUserInfoModel);
+                        ffcDatabase.dao().insertUserInfo(getUserInfoModel);
 
                         SharedPreferenceHelper.getInstance(getApplicationContext()).setEmpID(getUserInfoModel.getEmpId());
+                        SharedPreferenceHelper.getInstance(getApplicationContext()).setUserID(getUserInfoModel.getID());
+
                         String a = ffcDatabase.dao().device_config().toString();
 
                         if(a.equals("true")){
@@ -645,5 +649,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finishAffinity();
     }
 }

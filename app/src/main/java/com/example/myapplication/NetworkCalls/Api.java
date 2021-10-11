@@ -20,6 +20,7 @@ import com.example.myapplication.ModelClasses.SaveDoctorModel;
 import com.example.myapplication.ModelClasses.SaveNewWorkPlanModel;
 import com.example.myapplication.ModelClasses.UpdateStatus;
 import com.example.myapplication.ModelClasses.UpdateWorkPlanStatus;
+import com.example.myapplication.WorkPlanHistory;
 
 import java.util.List;
 
@@ -118,5 +119,7 @@ public interface Api {
         // @GET("api/AreaSetupApi/GetDDLAreaD/{CompanyId}/{CountryID}/{Location_Id}/{Ac_Id}")
     Call<List<AreaModel>> getArea(@Header("Authorization") String token, @Path("CompanyId") int companyId, @Path("CountryID") int countryId, @Path("Location_Id") int locationId, @Path("Sub_Head_Code") int AreaId, @Path("Emp_Id") int Emp_Id);
 
+    @GET("api/FFCAppApi/WorkPlanVisitHistory")
+    Call<List<WorkPlanHistory>> GetWorkPlanHistory(@Header("Authorization") String token, @Query("Doctor_Id") int doctor_Id, @Query("Emp_Id") int emp_Id);
 }
 

@@ -30,7 +30,7 @@ import retrofit2.http.DELETE;
 @Dao
 public interface FfcDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Long insert(GetUserInfoModel u);
+    Long insertUserInfo(GetUserInfoModel u);
 
     @Query("Select Is_Device_Confg from User_Info")
     Boolean device_config();

@@ -9,7 +9,7 @@
     android:background="@drawable/background_top_curve"
     xmnls:layout_behavior="@string/bottom_sheet_behavior"
     xmnls:behavior_hideable="false"
-    xmnls:behavior_peekHeight="50dp">
+    xmnls:behavior_peekHeight="30dp">
 
     <ImageButton
         android:id="@+id/header_btn"
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_vertical"
-        android:text="Follow up Form"
+        android:text="FeedBack"
         style="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_marginStart="5dp"
         android:textColor="@color/APP_Theme_Color"

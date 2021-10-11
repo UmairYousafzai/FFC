@@ -17,10 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.myapplication.databinding.FragmentTargetSubMenuBinding;
 
 public class TargetPreMenuFragment extends Fragment {
     private NavController navController;
-    LinearLayout linear_system_suggested, linear_work_plan;
+    private FragmentTargetSubMenuBinding mBinding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,22 +38,40 @@ public class TargetPreMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_target_sub_menu, container, false);
-        init(root);
+        mBinding=  FragmentTargetSubMenuBinding.inflate(inflater,container,false);
+
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
-        linear_system_suggested.setOnClickListener(new View.OnClickListener() {
+        mBinding.innerTextSystemSuggested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
             }
         });
-        linear_work_plan.setOnClickListener(new View.OnClickListener() {
+        mBinding.linearWorkPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
             }
         });
+
+        mBinding.btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
+
+            }
+        });
+
+        mBinding.btnNext2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
+
+            }
+        });
+
+
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -61,12 +80,8 @@ public class TargetPreMenuFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
-        return root;
+        return mBinding.getRoot();
     }
 
-    private void init(View root) {
-        linear_system_suggested = root.findViewById(R.id.linear_system_suggested);
-        linear_work_plan = root.findViewById(R.id.linear_work_plan);
 
-    }
 }

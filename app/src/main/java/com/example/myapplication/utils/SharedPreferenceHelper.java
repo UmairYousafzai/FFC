@@ -19,7 +19,7 @@ public class SharedPreferenceHelper {
     public static final String BASE_URL = "http://161.97.178.106/FFCCloudapi/";
     public static final Integer ID = null;
     public static final String emp_ID = "Emp ID";
-    public static final String  Permission_state = "User ID";
+    public static final String  userID = "User ID";
     public static final String Login_State = "LoginState";
     private static SharedPreferenceHelper helperInstance = null;
     private SharedPreferences sharedPreferences;
@@ -50,6 +50,14 @@ public class SharedPreferenceHelper {
     }
     public int getEmpID() {
         return sharedPreferences.getInt(emp_ID,0);
+    }
+    public void setUserID(int id)
+    {
+        sharedPreferences.edit().putInt(userID, id).apply();;
+
+    }
+    public int getUserID() {
+        return sharedPreferences.getInt(userID,0);
     }
 
     public Boolean getGetDocListState() {

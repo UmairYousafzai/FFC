@@ -1,9 +1,14 @@
 package com.example.myapplication.Target;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +39,7 @@ import com.example.myapplication.SplashScreen.SplashActivity;
 import com.example.myapplication.databinding.FragmentAddworkPlanBinding;
 import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.SharedPreferenceHelper;
+import com.example.myapplication.utils.SyncDataToDB;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,7 +62,7 @@ public class AddworkPlanFragment extends Fragment {
     private AddWorkPlanDialogFragment dialogFragment;
     private List<DoctorsByAreaIdsModel> doctorModelList;
     private List<AreasByEmpIdModel> areasModelList;
-    private String dataIDs = "", dataTittles = "", mDate;
+    private String dataIDs = "", dataTittles = "", mDate="";
     private NavController navController;
     private NavBackStackEntry navBackStackEntry;
     private String remarks="";
@@ -150,8 +156,7 @@ public class AddworkPlanFragment extends Fragment {
         mbinding.workPlanDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mbinding.workPlanDateLayout.setEnabled(false);
-                mbinding.workPlanDate.setEnabled(false);
+
                 Calendar calendar = Calendar.getInstance();
                 mYear = calendar.get(Calendar.YEAR);
                 mDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -162,7 +167,7 @@ public class AddworkPlanFragment extends Fragment {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         int checkMonth= month%10, checkday = (dayOfMonth%10);;
                         String mMonth,mDay;
-                        if (checkMonth>0&&month<10)
+                        if (checkMonth>0&&month<9)
                         {
                             mMonth= "0"+(month+1);
                         }
@@ -182,8 +187,7 @@ public class AddworkPlanFragment extends Fragment {
 
                         }
                         mDate = mMonth + "/" + mDay + "/" + year;
-                        mbinding.workPlanDateLayout.setEnabled(true);
-                        mbinding.workPlanDate.setEnabled(true);
+
                         mbinding.workPlanDate.setText(mDate);
                     }
                 }, mYear, mMonth, mDay);
@@ -238,7 +242,7 @@ public class AddworkPlanFragment extends Fragment {
                 intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
 
                 try {
-                    startActivityForResult(intent, CONSTANTS.REQUEST_CODE_SPEECH_INPUT);
+                    ActivityResultLauncher.launch(intent);
                 } catch (Exception e) {
                     Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -304,20 +308,7 @@ public class AddworkPlanFragment extends Fragment {
                 }
                 else
                 {
-                    new SweetAlertDialog( requireContext(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Error")
-                            .setContentText(response.message()+"\nSession Expire Please Login Again")
-                            .setConfirmText("Cancel")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    SharedPreferenceHelper.getInstance(requireContext()).setLogin_State(false);
-                                    Intent intent = new Intent(requireContext(), SplashActivity.class);
-                                    requireActivity().startActivity(intent);
-
-                                }
-                            })
-                            .show();
+                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
                 }
                 mbinding.saveBtn.setEnabled(true);
 
@@ -334,18 +325,23 @@ public class AddworkPlanFragment extends Fragment {
         });
     }
 
+    ActivityResultLauncher<Intent> ActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        if ( data != null) {
+                            ArrayList<String> resultString = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                            remarks=remarks+" "+resultString.get(0);
+                            mbinding.remarks.setText(remarks);
+                        }
+                    }
+                }
+            });
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CONSTANTS.REQUEST_CODE_SPEECH_INPUT) {
-            if (resultCode == RESULT_OK && data != null) {
-                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                remarks=remarks+" "+result.get(0);
-                mbinding.remarks.setText(remarks);
-            }
 
-        }
-    }
 }

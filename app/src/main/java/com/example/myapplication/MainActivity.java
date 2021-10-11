@@ -12,9 +12,13 @@ import android.view.Menu;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.AttendanceActivity.AttendanceViewModel;
 import com.example.myapplication.Database.FfcDatabase;
 import com.example.myapplication.Login.GetUserInfoModel;
 import com.example.myapplication.ModelClasses.Activity;
+import com.example.myapplication.SplashScreen.SplashActivity;
+import com.example.myapplication.Target.utils.DoctorViewModel;
+import com.example.myapplication.Target.utils.TargetViewModel;
 import com.example.myapplication.utils.ActivityViewModel;
 import com.example.myapplication.utils.CustomLocation;
 import com.example.myapplication.utils.Permission;
@@ -22,6 +26,7 @@ import com.example.myapplication.utils.SyncDataToDB;
 import com.example.myapplication.databinding.ActivityMainBinding;
 import com.example.myapplication.databinding.NavigationDrawerHeaderBinding;
 import com.example.myapplication.utils.SharedPreferenceHelper;
+import com.example.myapplication.utils.UserViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -56,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private Permission permission;
     private ActivityViewModel activityViewModel;
     private List<Activity> runningActivity;
+
     private boolean menuCheck = true;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -191,6 +197,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+         UserViewModel userViewModel;
+         DoctorViewModel doctorViewModel;
+         TargetViewModel targetViewModel;
+        AttendanceViewModel attendanceViewModel;
+        if (item.getItemId()==R.id.signOut)
+        {
+            userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+            targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
+            doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
+            attendanceViewModel = new ViewModelProvider(this).get(AttendanceViewModel.class);
+
+            userViewModel.deleteAllClassification();
+            userViewModel.deleteAllGrades();
+            userViewModel.deleteAllQualification();
+
+            targetViewModel.DeleteAllDoctor();
+
+            doctorViewModel.deleteAllSchedule();
+            doctorViewModel.deleteAllFilterDoctor();
+
+
+            activityViewModel.deleteAllActivity();
+            attendanceViewModel.deleteAllAttendance();
+
+            ffcDatabase.dao().delete_all_menu();
+
+            ffcDatabase.dao().delete_previous_user();
+
+            SharedPreferenceHelper.getInstance(this).setUserID(0);
+            SharedPreferenceHelper.getInstance(this).setFlterDocListState(false);
+            SharedPreferenceHelper.getInstance(this).setGetDocListState(false);
+            SharedPreferenceHelper.getInstance(this).setLogin_State(false);
+            SharedPreferenceHelper.getInstance(this).setStart(false);
+            Intent intent = new Intent(this, SplashActivity.class);
+            startActivity(intent);
+            finish();
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
@@ -290,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
         String formattedDate = df.format(c);
         Permission permission= new Permission(this,this);
 
-        if (runningActivity!=null)
+        if (runningActivity!=null&&!runningActivity.isEmpty())
         {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {

@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -102,6 +103,7 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
         mBinding = FragmentMaps2Binding.inflate(inflater,container,false);
         return mBinding.getRoot();
@@ -238,8 +240,10 @@ public class MapsFragment extends Fragment {
 
     public void checkTrack(String date) {
 
+
         if (mMap!=null)
         {
+            mMap.clear();
             Drawable drawable = getResources().getDrawable(R.drawable.ic_baseline_location_on_24);
             Canvas canvas = new Canvas();
             Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -250,37 +254,11 @@ public class MapsFragment extends Fragment {
                 if (trackerModel.getDate().equals(date))
                 {
                     String[] locationString = trackerModel.getCoordinates().split(",");
-                    LatLng marker1 = new LatLng(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
-                    latLngList.add(marker1);
-                    if (i==trackerModelList.size()-1)
-                    {
-                        drawable = getResources().getDrawable(R.drawable.ic_baseline_destination_end_24);
-                        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                        canvas.setBitmap(bitmap);
-                        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-                        drawable.draw(canvas);
-                        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(bitmap);
+                    LatLng marker = new LatLng(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
+                    latLngList.add(marker);
+                    String dateTime= trackerModel.getTime()+"\n"+trackerModel.getDate();
 
-                        icon = BitmapDescriptorFactory.fromBitmap(bitmap);
-                        mMap.addMarker(new MarkerOptions().position(marker1).title("Marker Four").icon(icon));
-                    }
-                    else if (i==0)
-                    {
-                        drawable = getResources().getDrawable(R.drawable.ic_baseline_location_on_24);
-                        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                        canvas.setBitmap(bitmap);
-                        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-                        drawable.draw(canvas);
-                        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(bitmap);
-
-                        icon = BitmapDescriptorFactory.fromBitmap(bitmap);
-                        mMap.addMarker(new MarkerOptions().position(marker1).title("Marker Four").icon(icon));
-                    }
-                    else
-                    {
-                        mMap.addMarker(new MarkerOptions().position(marker1).title("Marker Four"));
-
-                    }
+                    mMap.addMarker(new MarkerOptions().position(marker).title(dateTime));
 
                 }
 

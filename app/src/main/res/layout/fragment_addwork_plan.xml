@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:inputType="none"
+                android:editable="false"
                 android:textColor="@color/black"
                 android:text="@string/select_date">
 

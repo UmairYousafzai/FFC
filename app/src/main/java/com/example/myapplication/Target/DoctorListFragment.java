@@ -36,6 +36,7 @@ import com.example.myapplication.Target.Adapters.FilterDoctorRecyclerAdapter;
 import com.example.myapplication.Target.utils.DoctorViewModel;
 import com.example.myapplication.databinding.FragmentDoctorListBinding;
 import com.example.myapplication.utils.SharedPreferenceHelper;
+import com.example.myapplication.utils.SyncDataToDB;
 import com.example.myapplication.utils.UserViewModel;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
     private FilterDoctorRecyclerAdapter adapter;
     private List<FilteredDoctoredModel> filteredDoctoredModelList= new ArrayList<>();
     private SweetAlertDialog progressDialog;
-
+    private UserViewModel userViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
+         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
 
 
@@ -130,7 +132,6 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
 
         btnListener();
 
-        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         userViewModel.getAllClassification().observe(getViewLifecycleOwner(), new Observer<List<ClassificationModel>>() {
             @Override
             public void onChanged(List<ClassificationModel> list) {
@@ -252,6 +253,10 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
                         dismissProgressbar();
 
                     }
+                }
+                else
+                {
+                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
                 }
             }
 

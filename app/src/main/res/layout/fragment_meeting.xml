@@ -21,7 +21,8 @@
             android:textColor="@color/APP_Theme_Color"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
             android:padding="5dp"
             />
         <View
@@ -34,6 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
             style="Widget.MaterialComponents.CompoundButton.RadioButton"
             android:id="@+id/radioGroup">
 
@@ -235,7 +238,8 @@
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/APP_Theme_Color"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
             />
         <TextView
             android:id="@+id/host_textview"
@@ -245,8 +249,8 @@
             android:text="@string/host_name"
             android:textSize="15sp"
             android:textColor="@color/gray"
-            android:layout_margin="5dp"
-            />
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"            />
 
         <View
             android:layout_width="match_parent"
@@ -262,7 +266,8 @@
             android:textColor="@color/APP_Theme_Color"
             android:textStyle="bold"
             android:textSize="15sp"
-            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"
             android:padding="5dp"
             />
 
@@ -271,15 +276,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="100"
-            android:layout_marginHorizontal="5dp"
-            >
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"            >
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/spinner_bg"
                 android:padding="5dp"
-                android:layout_margin="5dp"
                 android:layout_weight="90"
                 >
                 <ImageButton
@@ -324,15 +328,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="100"
-            android:layout_marginHorizontal="5dp"
-            >
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"            >
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/spinner_bg"
                 android:padding="5dp"
-                android:layout_margin="5dp"
                 android:layout_weight="90"
                 >
                 <ImageButton
@@ -381,8 +384,8 @@
             android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/gray"
-            android:layout_margin="5dp"
-            />
+            android:layout_marginVertical="5dp"
+            android:layout_marginHorizontal="10dp"            />
 
 
         <com.google.android.material.button.MaterialButton

@@ -32,6 +32,7 @@ import com.example.myapplication.NetworkCalls.ApiClient;
 import com.example.myapplication.Target.Adapters.ScheduleAdapter;
 import com.example.myapplication.databinding.FragmentFilteredDocFullInfoBinding;
 import com.example.myapplication.utils.SharedPreferenceHelper;
+import com.example.myapplication.utils.SyncDataToDB;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -168,6 +169,10 @@ public class FilteredDocFullInfoFragment extends Fragment {
                     adapter.setScheduleModelList(doctoredFullInfoModel.getScheduleModels());
                     adapter.notifyDataSetChanged();
                     progressDialog.dismiss();
+                }
+                else
+                {
+                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
                 }
             }
 

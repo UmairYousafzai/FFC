@@ -57,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:inputType="none"
+                android:focusableInTouchMode="false"
                 android:editable="false"
                 android:text="@string/select_date">
 
@@ -84,6 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
+                android:focusableInTouchMode="false"
                 android:inputType="none"
                 android:editable="false"
                 android:text="@string/select_time">

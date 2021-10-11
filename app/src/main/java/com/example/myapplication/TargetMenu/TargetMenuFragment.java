@@ -222,18 +222,29 @@ public class TargetMenuFragment extends Fragment {
                     @Override
                     public void gotLocation(Location location) {
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-                        String[] locationStringArray = runningActivity.getStartCoordinates().split(",");
                         Location startLocation = new Location("");
+                        if (runningActivity.getStartCoordinates()!=null&& !runningActivity.getStartCoordinates().isEmpty())
+                        {
+                            String[] locationStringArray = runningActivity.getStartCoordinates().split(",");
+                            startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
+                            startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
+                            String endAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                            String distance= String.valueOf(location.distanceTo(startLocation));
+                            runningActivity.setEndAddress(endAddress);
+                            runningActivity.setDistance(distance);
 
-                        startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
-                        startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
+                        }
+                        else
+                        {
+                            runningActivity.setEndAddress("");
+                            runningActivity.setDistance("");
+                        }
 
-                        String distance= String.valueOf(location.distanceTo(startLocation));
 
 
-                        String endAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
-                        runningActivity.setEndAddress(endAddress);
-                        runningActivity.setDistance(distance);
+
+
+
                         runningActivity.setEndCoordinates(locationString);
                         runningActivity.setEndDateTime(formattedDate);
                         String totalTime=calculateTotalTime(formattedDate,runningActivity.getStartDateTime());

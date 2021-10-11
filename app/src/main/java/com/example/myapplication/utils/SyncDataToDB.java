@@ -55,21 +55,7 @@ public class SyncDataToDB {
                 }
                 else
                 {
-                    errorMessage= response.message();
-                    new SweetAlertDialog( mContext, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Error")
-                            .setContentText(response.message()+"\nSession Expire Please Login Again")
-                            .setConfirmText("Cancel")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    SharedPreferenceHelper.getInstance(mContext).setLogin_State(false);
-                                    Intent intent = new Intent(mContext, SplashActivity.class);
-                                    mContext.startActivity(intent);
-
-                                }
-                            })
-                            .show();
+                    loginAgain(response.message());
                 }
             }
 
@@ -105,6 +91,10 @@ public class SyncDataToDB {
                     repository.InsertClassifications(classificationModelList);
  //                   progressDialog.dismiss();
                 }
+                else
+                {
+                    loginAgain(response.message());
+                }
 
             }
 
@@ -128,6 +118,10 @@ public class SyncDataToDB {
                     repository.InsertGrades(gradingModelList);
 //                    progressDialog.dismiss();
                 }
+                else
+                {
+                    loginAgain(response.message());
+                }
 
             }
 
@@ -150,6 +144,10 @@ public class SyncDataToDB {
                     repository.InsertQualifications(qualificationModelList);
 //                    progressDialog.dismiss();
                 }
+                else
+                {
+                    loginAgain(response.message());
+                }
 
             }
 
@@ -158,6 +156,26 @@ public class SyncDataToDB {
                 Toast.makeText(application.getBaseContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
+
+    }
+    public void loginAgain(String message)
+    {
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(mContext,SweetAlertDialog.ERROR_TYPE);
+
+        sweetAlertDialog.setTitleText("Error")
+                    .setContentText(message+"\nSession Expire Please Login Again")
+                    .setConfirmText("Cancel")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            SharedPreferenceHelper.getInstance(mContext).setLogin_State(false);
+                            Intent intent = new Intent(mContext, SplashActivity.class);
+                            mContext.startActivity(intent);
+
+
+                        }
+                    }).setCanceledOnTouchOutside(false);
+                    sweetAlertDialog.show();
 
     }
 }

@@ -49,6 +49,7 @@ public class ActivityTaskFragment extends Fragment {
         mBinding = FragmentActivityTaskBinding.inflate(inflater,container,false);
 
         String title = ActivityTaskFragmentArgs.fromBundle(getArguments()).getActivityType();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
         mBinding.heading.setText(title);
@@ -77,7 +78,7 @@ public class ActivityTaskFragment extends Fragment {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         int checkMonth= month%10, checkday = (dayOfMonth%10);;
                         String mMonth,mDay;
-                        if (checkMonth>0&&month<10)
+                        if (checkMonth>0&&month<9)
                         {
                             mMonth= "0"+(month+1);
                         }

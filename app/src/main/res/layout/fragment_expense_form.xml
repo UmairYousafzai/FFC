@@ -295,13 +295,7 @@
                         android:focusableInTouchMode="false"
                         android:inputType="none"
                         android:editable="false"
-
                         android:drawableEnd="@drawable/ic_baseline_date_range_24"
-                        android:lines="1"
-                        android:maxLength="40"
-
-                        android:maxLines="1"
-                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:drawableTint="@color/APP_Theme_Color"
                         android:textSize="16sp">
@@ -326,10 +320,6 @@
                         android:inputType="none"
                         android:editable="false"
                         android:drawableEnd="@drawable/ic_baseline_access_time_24"
-                        android:lines="1"
-                        android:maxLength="40"
-                        android:maxLines="1"
-                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:drawableTint="@color/APP_Theme_Color"
                         android:textSize="16sp">

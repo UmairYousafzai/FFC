@@ -15,6 +15,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -51,6 +52,7 @@ import com.example.myapplication.utils.CONSTANTS;
 import com.example.myapplication.utils.CustomLocation;
 import com.example.myapplication.utils.Permission;
 import com.example.myapplication.utils.SharedPreferenceHelper;
+import com.example.myapplication.utils.SyncDataToDB;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
@@ -90,6 +92,9 @@ public class TargetFullInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mBinding = FragmentTargetFullInfoBinding.inflate(inflater, container, false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+
         view = mBinding.getRoot();
 
         return view;
@@ -331,6 +336,16 @@ public class TargetFullInfoFragment extends Fragment {
     public void btnListener() {
         Permission permission = new Permission(requireContext(),requireActivity());
 
+        mBinding.historyCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long doc_id= doctorModel.getDoctorId();
+
+                TargetFullInfoFragmentDirections.ActionTargetPostMenuFragmentToNavHistory action = TargetFullInfoFragmentDirections.actionTargetPostMenuFragmentToNavHistory();
+                action.setDocId(doc_id);
+                navController.navigate(action);
+            }
+        });
         mBinding.btnCompelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -555,6 +570,10 @@ public class TargetFullInfoFragment extends Fragment {
 
 
                                 }
+                                else
+                                {
+                                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
+                                }
 
 
                             }
@@ -611,24 +630,35 @@ public class TargetFullInfoFragment extends Fragment {
                             public void gotLocation(Location location) {
 
                                 String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                                Location startLocation = new Location("");
 
                                 if(taskActivities!=null&&taskActivities.size()>0)
                                 {
                                     for (Activity activity:taskActivities)
                                     {
 
-                                        String[] locationStringArray = activity.getStartCoordinates().split(",");
-                                        Location startLocation = new Location("");
+                                        if (activity.getStartCoordinates()!=null&& !activity.getStartCoordinates().isEmpty())
+                                        {
+                                            String[] locationStringArray = activity.getStartCoordinates().split(",");
+                                            startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
+                                            startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
+                                            String endAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                                            String distance= String.valueOf(location.distanceTo(startLocation));
+                                            activity.setEndAddress(endAddress);
+                                            activity.setDistance(distance);
 
-                                        startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
-                                        startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
+                                        }
+                                        else
+                                        {
+                                            activity.setEndAddress("");
+                                            activity.setDistance("");
+                                        }
 
-                                        String distance= String.valueOf(location.distanceTo(startLocation));
+
 
 
                                         String endAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
                                         activity.setEndAddress(endAddress);
-                                        activity.setDistance(distance);
                                         activity.setEndCoordinates(locationString);
                                         activity.setEndDateTime(formattedDate);
 
