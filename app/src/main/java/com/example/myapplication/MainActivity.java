@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("onResume:","onResume of main activity" );
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
@@ -199,20 +201,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-         UserViewModel userViewModel;
+
          DoctorViewModel doctorViewModel;
          TargetViewModel targetViewModel;
-        AttendanceViewModel attendanceViewModel;
+
         if (item.getItemId()==R.id.signOut)
         {
-            userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
             targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
             doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
-            attendanceViewModel = new ViewModelProvider(this).get(AttendanceViewModel.class);
 
-            userViewModel.deleteAllClassification();
-            userViewModel.deleteAllGrades();
-            userViewModel.deleteAllQualification();
+
 
             targetViewModel.DeleteAllDoctor();
 
@@ -220,14 +218,12 @@ public class MainActivity extends AppCompatActivity {
             doctorViewModel.deleteAllFilterDoctor();
 
 
-            activityViewModel.deleteAllActivity();
-            attendanceViewModel.deleteAllAttendance();
 
-            ffcDatabase.dao().delete_all_menu();
 
-            ffcDatabase.dao().delete_previous_user();
 
-            SharedPreferenceHelper.getInstance(this).setUserID(0);
+
+
+
             SharedPreferenceHelper.getInstance(this).setFlterDocListState(false);
             SharedPreferenceHelper.getInstance(this).setGetDocListState(false);
             SharedPreferenceHelper.getInstance(this).setLogin_State(false);

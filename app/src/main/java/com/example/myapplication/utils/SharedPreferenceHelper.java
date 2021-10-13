@@ -20,6 +20,7 @@ public class SharedPreferenceHelper {
     public static final Integer ID = null;
     public static final String emp_ID = "Emp ID";
     public static final String  userID = "User ID";
+    public static final String  userPassword = "User Password";
     public static final String Login_State = "LoginState";
     private static SharedPreferenceHelper helperInstance = null;
     private SharedPreferences sharedPreferences;
@@ -37,7 +38,7 @@ public class SharedPreferenceHelper {
         sharedPreferences.edit().putBoolean(ATTENDANCE_CONFIGURATION, configuration).apply();    }
 
     public boolean getFlterDocListState() {
-        return sharedPreferences.getBoolean(FilterDocListState,true);
+        return sharedPreferences.getBoolean(FilterDocListState,false);
     }
 
     public void setFlterDocListState(boolean flterDocListState) {
@@ -50,6 +51,14 @@ public class SharedPreferenceHelper {
     }
     public int getEmpID() {
         return sharedPreferences.getInt(emp_ID,0);
+    }
+    public void setUserPassword(String password)
+    {
+        sharedPreferences.edit().putString(emp_ID, password).apply();;
+
+    }
+    public String getUserPassword() {
+        return sharedPreferences.getString(userPassword," ");
     }
     public void setUserID(int id)
     {

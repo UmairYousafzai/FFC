@@ -2,6 +2,8 @@ package com.example.myapplication.AttendanceActivity;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
@@ -11,12 +13,16 @@ import com.example.myapplication.ModelClasses.Activity;
 import com.example.myapplication.utils.ActivityRepository;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class AttendanceRepository {
 
 
     private FfcDAO mDao;
     Application application;
+    private Executor executor= Executors.newSingleThreadExecutor();
+    private Handler handler= new Handler(Looper.getMainLooper());
     private final LiveData<List<AttendanceModel>> allAttendance;
 
 
@@ -34,47 +40,66 @@ public class AttendanceRepository {
     }
 
     public void insertAttendance(AttendanceModel attendanceModel) {
-        new InsertAttendanceAsyncTask().execute(attendanceModel);
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.insertAttendance(attendanceModel);
+            }
+        });
     }
 
     public void deleteAttendance(AttendanceModel attendanceModel) {
-        new DeleteAttendanceAsyncTask().execute(attendanceModel);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteAttendance(attendanceModel);
+            }
+        });
     }
     public void deleteAllAttendance( ) {
-        new DeleteAllAttendanceAsyncTask().execute();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteAllAttendance();
+            }
+        });
     }
 
 
-    public class InsertAttendanceAsyncTask extends AsyncTask<AttendanceModel,Void,Void>
-    {
+//    public class InsertAttendanceAsyncTask extends AsyncTask<AttendanceModel,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(AttendanceModel... attendanceModels) {
+//            mDao.insertAttendance(attendanceModels[0]);
+//            return null;
+//        }
+//    }
+//
+//    public class DeleteAttendanceAsyncTask extends AsyncTask<AttendanceModel,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(AttendanceModel... attendanceModels) {
+//            mDao.deleteAttendance(attendanceModels[0]);
+//            return null;
+//        }
+//    }
+//
+//    public class DeleteAllAttendanceAsyncTask extends AsyncTask<Void,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            mDao.deleteAllAttendance();
+//            return null;
+//        }
+//    }
 
 
-        @Override
-        protected Void doInBackground(AttendanceModel... attendanceModels) {
-            mDao.insertAttendance(attendanceModels[0]);
-            return null;
-        }
-    }
 
-    public class DeleteAttendanceAsyncTask extends AsyncTask<AttendanceModel,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(AttendanceModel... attendanceModels) {
-            mDao.deleteAttendance(attendanceModels[0]);
-            return null;
-        }
-    }
-
-    public class DeleteAllAttendanceAsyncTask extends AsyncTask<Void,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mDao.deleteAllAttendance();
-            return null;
-        }
-    }
 }

@@ -2,6 +2,8 @@ package com.example.myapplication.utils;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 import androidx.sqlite.db.SimpleSQLiteQuery;
@@ -13,6 +15,8 @@ import com.example.myapplication.ModelClasses.ClassificationModel;
 
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ActivityRepository {
 
@@ -23,7 +27,8 @@ public class ActivityRepository {
     private  LiveData<List<Activity>> taskActivities;
     private  LiveData<List<Activity>> queryActivities;
     private  LiveData<List<Activity>> withoutTaskActivities;
-
+    private Executor executor= Executors.newSingleThreadExecutor();
+    private Handler handler= new Handler(Looper.getMainLooper());
 
 
     public ActivityRepository(Application application) {
@@ -58,61 +63,81 @@ public class ActivityRepository {
     }
 
     public void insertActivity(Activity activity) {
-        new ActivityRepository.InsertActivityAsyncTask().execute(activity);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.insertActivity(activity);
+            }
+        });
     }
 
     public void updateActivity(Activity activity) {
-        new ActivityRepository.UpdateActivityAsyncTask().execute(activity);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.updateActivity(activity);
+            }
+        });;
     }
 
     public void deleteActivity(Activity activity)
     {
-        new ActivityRepository.DeleteActivityAsyncTask().execute(activity);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteActivity(activity);
+            }
+        });
     }
     public void deleteAllActivity()
     {
-        new ActivityRepository.DeleteAllActivityAsyncTask().execute();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteAllActivity();
+            }
+        });
     }
 
-    public class InsertActivityAsyncTask extends AsyncTask<Activity,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(Activity... activities) {
-            mDao.insertActivity(activities[0]);
-            return null;
-        }
-    }
-
-    public class DeleteActivityAsyncTask extends AsyncTask<Activity,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(Activity... activities) {
-            mDao.deleteActivity(activities[0]);
-            return null;
-        }
-    }
-    public class DeleteAllActivityAsyncTask extends AsyncTask<Void,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mDao.deleteAllActivity();
-            return null;
-        }
-    }
-    public class UpdateActivityAsyncTask extends AsyncTask<Activity,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(Activity... activities) {
-            mDao.updateActivity(activities[0]);
-            return null;
-        }
-    }
+//    public class InsertActivityAsyncTask extends AsyncTask<Activity,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(Activity... activities) {
+//            mDao.insertActivity(activities[0]);
+//            return null;
+//        }
+//    }
+//
+//    public class DeleteActivityAsyncTask extends AsyncTask<Activity,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(Activity... activities) {
+//            mDao.deleteActivity(activities[0]);
+//            return null;
+//        }
+//    }
+//    public class DeleteAllActivityAsyncTask extends AsyncTask<Void,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            mDao.deleteAllActivity();
+//            return null;
+//        }
+//    }
+//    public class UpdateActivityAsyncTask extends AsyncTask<Activity,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(Activity... activities) {
+//            mDao.updateActivity(activities[0]);
+//            return null;
+//        }
+//    }
 }

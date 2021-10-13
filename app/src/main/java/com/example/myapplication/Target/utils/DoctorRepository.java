@@ -2,6 +2,8 @@ package com.example.myapplication.Target.utils;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
@@ -11,6 +13,8 @@ import com.example.myapplication.FilteredDoctoredModel;
 import com.example.myapplication.ScheduleModel;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class DoctorRepository {
 
@@ -18,7 +22,8 @@ public class DoctorRepository {
     Application application;
     private final LiveData<List<FilteredDoctoredModel>> allFilterDoctor;
     private final LiveData<List<ScheduleModel>> allSchedule;
-
+    private Executor executor= Executors.newSingleThreadExecutor();
+    private Handler handler= new Handler(Looper.getMainLooper());
 
 
 
@@ -32,11 +37,20 @@ public class DoctorRepository {
     }
 
     public void insertSchedule(List<ScheduleModel> list) {
-        new DoctorRepository.InsertScheduleAsyncTask().execute(list);
-    }
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.insertAllSchedule(list);
+            }
+        });      }
     public void deleteAllSchedule( )
     {
-        new DoctorRepository.DeleteAllScheduleAsyncTask().execute();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteAllSchedule();
+            }
+        });
     }
 
     public LiveData<List<ScheduleModel>> getAllSchedule()
@@ -49,12 +63,22 @@ public class DoctorRepository {
     }
 
     public void InsertFilterDoctor(List<FilteredDoctoredModel> list) {
-        new DoctorRepository.InsertFilterDoctorAsyncTask().execute(list);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.insertDoctor(list);
+            }
+        });
     }
 
     public void DeleteAllFilterDoctor( )
     {
-        new DoctorRepository.DeleteAllFilterDoctorAsyncTask().execute();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteAllDoctor();
+            }
+        });
     }
 
     public LiveData<List<FilteredDoctoredModel>> getAllFilterDoctor()
@@ -64,51 +88,51 @@ public class DoctorRepository {
 
 
 
-    public class InsertFilterDoctorAsyncTask extends AsyncTask<List<FilteredDoctoredModel>,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(List<FilteredDoctoredModel>... lists) {
-            mDao.insertDoctor(lists[0]);
-            return null;
-        }
-    }
-    public class InsertScheduleAsyncTask extends AsyncTask<List<ScheduleModel>,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(List<ScheduleModel>... lists) {
-            mDao.insertAllSchedule(lists[0]);
-            return null;
-        }
-    }
-
-
-
-
-    public class DeleteAllFilterDoctorAsyncTask extends AsyncTask<Void,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mDao.deleteAllDoctor();
-            return null;
-        }
-    }
-
-
-    public class DeleteAllScheduleAsyncTask extends AsyncTask<Void,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mDao.deleteAllSchedule();
-            return null;
-        }
-    }
+//    public class InsertFilterDoctorAsyncTask extends AsyncTask<List<FilteredDoctoredModel>,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(List<FilteredDoctoredModel>... lists) {
+//            mDao.insertDoctor(lists[0]);
+//            return null;
+//        }
+//    }
+//    public class InsertScheduleAsyncTask extends AsyncTask<List<ScheduleModel>,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(List<ScheduleModel>... lists) {
+//            mDao.insertAllSchedule(lists[0]);
+//            return null;
+//        }
+//    }
+//
+//
+//
+//
+//    public class DeleteAllFilterDoctorAsyncTask extends AsyncTask<Void,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            mDao.deleteAllDoctor();
+//            return null;
+//        }
+//    }
+//
+//
+//    public class DeleteAllScheduleAsyncTask extends AsyncTask<Void,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            mDao.deleteAllSchedule();
+//            return null;
+//        }
+//    }
 
 }

@@ -111,14 +111,14 @@ public class MeetingFragment extends Fragment {
                         int checkMonth = month % 10, checkday = (dayOfMonth % 10);
                         ;
                         String mMonth, mDay;
-                        if (checkMonth > 0 && month < 10) {
+                        if (checkMonth > 0 && month < 9) {
                             mMonth = "0" + (month + 1);
                         } else {
                             mMonth = String.valueOf(month + 1);
 
                         }
 
-                        if (checkday > 0 && dayOfMonth < 10) {
+                        if (checkday > 0 && dayOfMonth < 9) {
                             mDay = "0" + (dayOfMonth);
 
                         } else {
@@ -149,14 +149,14 @@ public class MeetingFragment extends Fragment {
                         int checkMonth = month % 10, checkday = (dayOfMonth % 10);
                         ;
                         String mMonth, mDay;
-                        if (checkMonth > 0 && month < 10) {
+                        if (checkMonth > 0 && month < 9) {
                             mMonth = "0" + (month + 1);
                         } else {
                             mMonth = String.valueOf(month + 1);
 
                         }
 
-                        if (checkday > 0 && dayOfMonth < 10) {
+                        if (checkday > 0 && dayOfMonth < 9) {
                             mDay = "0" + (dayOfMonth);
 
                         } else {

@@ -2,8 +2,11 @@
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,6 +18,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.biometrics.BiometricManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -29,13 +33,18 @@ import com.example.myapplication.LoginViewModel;
 import com.example.myapplication.NetworkCalls.ApiClient;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.databinding.CustomDialogBiometricBinding;
+import com.example.myapplication.databinding.DialogCustomImeiNumberBinding;
+import com.example.myapplication.databinding.DialogCustomResetUrlBinding;
 import com.example.myapplication.utils.SharedPreferenceHelper;
 import com.example.myapplication.databinding.ActivityLoginBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -83,10 +92,13 @@ public class LoginActivity extends AppCompatActivity {
 
         ffcDatabase = FfcDatabase.getInstance(getApplicationContext());
 
+
+
         if(urll==null){
             SharedPreferenceHelper.getInstance(getApplication()).setBaseUrl("http://161.97.178.106/FFCCloudapi/");
         }
 
+        showOptionalBiometricDialog();
 
 
         loginViewModel.getUser().observe(this, new Observer<LoginModel>() {
@@ -134,17 +146,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mydialog.setContentView(R.layout.dialog_custom_imei_number);
+                DialogCustomImeiNumberBinding dialogBinding= DialogCustomImeiNumberBinding.inflate(getLayoutInflater());
+                mydialog.setContentView(dialogBinding.getRoot());
                 heading_config_imei = mydialog.findViewById(R.id.heading_config_imei);
-                text_config_imei = mydialog.findViewById(R.id.text_config_imei);
-                text_imei_number = mydialog.findViewById(R.id.text_imei_number);
-                set_imei_button = mydialog.findViewById(R.id.set_imei_button);
-                set_imei_button.setVisibility(View.INVISIBLE);
-                txtclose = mydialog.findViewById(R.id.txtclose);
+
+                dialogBinding.setImeiButton.setVisibility(View.INVISIBLE);
                 mydialog.setCanceledOnTouchOutside(false);
                 mydialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                txtclose.setOnClickListener(new View.OnClickListener() {
+                dialogBinding.txtclose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mydialog.dismiss();
@@ -159,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     IMEINumber = telephonyManager.getDeviceId(0);
                 }
-                text_imei_number.setText(IMEINumber);
+                dialogBinding.textImeiNumber.setText(IMEINumber);
 
                 mydialog.show();
             }
@@ -251,42 +261,39 @@ public class LoginActivity extends AppCompatActivity {
         binding.ResetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        mydialog.setContentView(R.layout.dialog_custom_reset_url);
-                        heading_reset_server = mydialog.findViewById(R.id.heading_reset_server);
-                        text_reset_server = mydialog.findViewById(R.id.text_reset_server);
-                        reset_edit_text = mydialog.findViewById(R.id.reset_edit_text);
-                        set_button = mydialog.findViewById(R.id.set_button);
-                        txtclose = mydialog.findViewById(R.id.txtclose);
+
+                DialogCustomResetUrlBinding dialogBinding= DialogCustomResetUrlBinding.inflate(getLayoutInflater());
+                        mydialog.setContentView(dialogBinding.getRoot());
                         mydialog.setCanceledOnTouchOutside(false);
                         mydialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                        reset_edit_text.setText(urll);
+                        dialogBinding.resetEditText.setText(urll);
 
 
-                        set_button.setOnClickListener(new View.OnClickListener() {
+                        dialogBinding.setButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
-                                String url = reset_edit_text.getText().toString();
+                                String url = dialogBinding.resetEditText.getText().toString();
                                 if(!url.isEmpty()){
                                     if ((url.substring(url.length() - 1).equals("/")) && url.contains("http://") && url.contains(".") && !url.contains(" "))
                                     {
-                                        reset_edit_text.setText(url);
+                                        dialogBinding.resetEditText.setText(url);
                                         SharedPreferenceHelper.getInstance(getApplication()).setBaseUrl(url);
                                         mydialog.dismiss();
                                     }
                                     else{
-                                        reset_edit_text.setError("Invalid Url");
+                                        dialogBinding.resetEditText.setError("Invalid Url");
                                     }
                                 }
                                 else{
-                                    reset_edit_text.setError("Please enter Url");
+                                    dialogBinding.resetEditText.setError("Please enter Url");
                                 }
 
                             }
                         });
 
-                        txtclose.setOnClickListener(new View.OnClickListener() {
+                        dialogBinding.txtclose.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mydialog.dismiss();
@@ -384,7 +391,7 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferenceHelper.getInstance(getApplication()).setToken("bearer "+token);
 
                     getUserInfo(email,password);
-
+                    SharedPreferenceHelper.getInstance(LoginActivity.this).setUserPassword(password);
                     pDialog.cancel();
                 }
                 else{
@@ -517,6 +524,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -657,4 +665,122 @@ public class LoginActivity extends AppCompatActivity {
 
         finishAffinity();
     }
+
+
+    public void showOptionalBiometricDialog()
+    {
+        GetUserInfoModel userInfoModel = ffcDatabase.dao().getLoginUser();
+        String password = SharedPreferenceHelper.getInstance(this).getUserPassword();
+
+        if (userInfoModel!=null)
+        {
+
+            if (userInfoModel.getEmail()!=null&& !userInfoModel.getEmail().isEmpty() && password!=null && !password.isEmpty())
+            {
+                CustomDialogBiometricBinding dialogBinding = CustomDialogBiometricBinding.inflate(getLayoutInflater());
+
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+
+                bottomSheetDialog.setContentView(dialogBinding.getRoot());
+
+
+                dialogBinding.doneBtn.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.P)
+                    @Override
+                    public void onClick(View v) {
+
+
+                        bottomSheetDialog.dismiss();
+                        biometricAuthentication();
+
+
+                    }
+                });
+                dialogBinding.cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.P)
+                    @Override
+                    public void onClick(View v) {
+
+
+                        bottomSheetDialog.dismiss();
+
+
+                    }
+                });
+                bottomSheetDialog.show();
+            }
+        }
+    }
+
+    public void biometricAuthentication()
+    {
+        // creating a variable for our BiometricManager
+        // and lets check if our user can use biometric sensor or not
+        androidx.biometric.BiometricManager biometricManager = androidx.biometric.BiometricManager.from(LoginActivity.this);
+        switch (biometricManager.canAuthenticate(androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG| androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
+
+            // this means we can use biometric sensor
+            case BiometricManager.BIOMETRIC_SUCCESS:
+            {
+
+
+                break;
+
+            }
+
+
+            // this means that the device doesn't have fingerprint sensor
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+            {
+                Toast.makeText(LoginActivity.this, "This device doesn't have a fingerprint sensor", Toast.LENGTH_SHORT).show();
+                break;
+            }
+
+
+            // this means that biometric sensor is not available
+            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+            {
+                Toast.makeText(LoginActivity.this, "The biometric sensor is currently unavailable", Toast.LENGTH_SHORT).show();
+                break;
+            }
+
+
+            // this means that the device doesn't contain your fingerprint
+            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                Toast.makeText(LoginActivity.this, "Your device doesn't have fingerprint saved,please check your security settings", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        // creating a variable for our Executor
+        Executor executor = ContextCompat.getMainExecutor(LoginActivity.this);
+        // this will give us result of AUTHENTICATION
+        final BiometricPrompt biometricPrompt = new BiometricPrompt(LoginActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+            }
+
+            // THIS METHOD IS CALLED WHEN AUTHENTICATION IS SUCCESS
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+        });
+        // creating a variable for our promptInfo
+        // BIOMETRIC DIALOG
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder().setTitle("FFC")
+                .setDescription("Use your fingerprint to login ").setNegativeButtonText("Cancel").build();
+        biometricPrompt.authenticate(promptInfo);
+
+    }
+
 }

@@ -39,6 +39,7 @@ public class SyncDataToDB {
     public String saveDoctorsList(int empId)
     {
         TargetRepository targetRepository = new TargetRepository(application);
+        targetRepository.DeleteAllDoctor();
         String token = SharedPreferenceHelper.getInstance(application.getBaseContext()).getToken();
         Call<List<DoctorModel>> call= ApiClient.getInstance().getApi().GetDoctorsByEmployeeId(token, empId);
         call.enqueue(new Callback<List<DoctorModel>>() {

@@ -2,6 +2,8 @@ package com.example.myapplication.Target.utils;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
@@ -10,6 +12,8 @@ import com.example.myapplication.Database.FfcDatabase;
 import com.example.myapplication.DoctorModel;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class TargetRepository {
 
@@ -20,7 +24,8 @@ public class TargetRepository {
     private  LiveData<List<DoctorModel>> allEveningDoctorsByDate;
     private  LiveData<List<DoctorModel>> allMorningDoctorsByDate;
     private  LiveData<List<DoctorModel>> allDoctors;
-
+    private Executor executor= Executors.newSingleThreadExecutor();
+    private Handler handler= new Handler(Looper.getMainLooper());
 
     public TargetRepository(Application application) {
         FfcDatabase database = FfcDatabase.getInstance(application);
@@ -43,21 +48,40 @@ public class TargetRepository {
     }
 
     public void InsertDoctor(List<DoctorModel> list) {
-        new InsertDoctorAsyncTask().execute(list);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.insertWorkPlanDoctor(list);
+            }
+        });
     }
 
     public void DeleteDoctor(DoctorModel doctorModel)
     {
-        new DeleteDocotrAsycTask().execute(doctorModel);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.DeleteWorkPlanDoctor(doctorModel);
+            }
+        });
     }
 
     public void DeleteAllDoctor( )
     {
-        new DeleteAllDocotrAsycTask().execute();
-    }
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteAllWorkPlanDoctor();
+            }
+        });      }
     public void UpdateDoctor(DoctorModel doctorModel)
     {
-        new UpdateDocotrAsycTask().execute(doctorModel);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.updateDoctor(doctorModel);
+            }
+        });
     }
 
     public LiveData<List<DoctorModel>> getAllMorningDoctors()
@@ -75,46 +99,46 @@ public class TargetRepository {
     }
 
 
-
-    public class InsertDoctorAsyncTask extends AsyncTask<List<DoctorModel>,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(List<DoctorModel>... lists) {
-            mDao.insertWorkPlanDoctor(lists[0]);
-            return null;
-        }
-    }
-    public class DeleteDocotrAsycTask extends AsyncTask<DoctorModel,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(DoctorModel... lists) {
-            mDao.DeleteWorkPlanDoctor(lists[0]);
-            return null;
-        }
-    }
-    public class UpdateDocotrAsycTask extends AsyncTask<DoctorModel,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(DoctorModel... lists) {
-            mDao.updateDoctor(lists[0]);
-            return null;
-        }
-    }
-
-    public class DeleteAllDocotrAsycTask extends AsyncTask<Void,Void,Void>
-    {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mDao.deleteAllWorkPlanDoctor();
-            return null;
-        }
-    }
+//
+//    public class InsertDoctorAsyncTask extends AsyncTask<List<DoctorModel>,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(List<DoctorModel>... lists) {
+//            mDao.insertWorkPlanDoctor(lists[0]);
+//            return null;
+//        }
+//    }
+//    public class DeleteDocotrAsycTask extends AsyncTask<DoctorModel,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(DoctorModel... lists) {
+//            mDao.DeleteWorkPlanDoctor(lists[0]);
+//            return null;
+//        }
+//    }
+//    public class UpdateDocotrAsycTask extends AsyncTask<DoctorModel,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(DoctorModel... lists) {
+//            mDao.updateDoctor(lists[0]);
+//            return null;
+//        }
+//    }
+//
+//    public class DeleteAllDocotrAsycTask extends AsyncTask<Void,Void,Void>
+//    {
+//
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            mDao.deleteAllWorkPlanDoctor();
+//            return null;
+//        }
+//    }
 }

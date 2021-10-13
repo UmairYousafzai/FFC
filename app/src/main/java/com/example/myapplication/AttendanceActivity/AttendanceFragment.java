@@ -141,6 +141,11 @@ public class AttendanceFragment extends Fragment {
 
         if (selectedImage!=null)
         {
+            SweetAlertDialog pDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
+            pDialog.setTitleText("Loading");
+            pDialog.setCancelable(false);
+            pDialog.show();
             Date c = Calendar.getInstance().getTime();
 
             SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
@@ -155,6 +160,7 @@ public class AttendanceFragment extends Fragment {
                         @Override
                         public void gotLocation(Location location) {
 
+                            pDialog.dismiss();
                             String image = getBytesFromBitmap(selectedImage);
                             String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
                             int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
