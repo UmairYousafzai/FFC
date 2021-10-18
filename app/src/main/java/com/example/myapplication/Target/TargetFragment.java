@@ -63,6 +63,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -79,7 +80,6 @@ public class TargetFragment extends Fragment {
     private int morningFlag = 0, eveningFlag = 0;
     private Location location;
     private AlertDialog alertDialog;
-    private View viewRoot;
     private int selectedDay, selectedMonth, selectedYear;
     private String selectedDate = "",remarksForCancel="",remarksForReschedule="";
     private Calendar calendar;
@@ -97,8 +97,8 @@ public class TargetFragment extends Fragment {
         mbinding = FragmentTargetBinding.inflate(inflater, container, false);
         Log.e("onCreateView", "on create View Me ha ");
 
-        viewRoot = mbinding.getRoot();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        View viewRoot = mbinding.getRoot();
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
         DoctorViewModel doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
         doctorViewModel.deleteAllSchedule();

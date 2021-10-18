@@ -47,6 +47,16 @@
         <action
             android:id="@+id/action_nav_home_to_showRouteFragment"
             app:destination="@id/showRouteFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_meetingFragment"
+            app:destination="@id/meetingFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_expense_list"
+            app:destination="@id/nav_expense_list" />
 
 
     </fragment>
@@ -438,4 +448,20 @@
         android:name="com.example.myapplication.MapsFragment"
         android:label="Tracker"
         tools:layout="@layout/fragment_maps2" />
+    <fragment
+        android:id="@+id/expenseFormFragment"
+        android:name="com.example.myapplication.Expense.ExpenseFormFragment"
+        android:label="ExpenseFormFragment"
+        tools:layout="@layout/fragment_expense_form"
+        />
+    <fragment
+        android:id="@+id/nav_expense_list"
+        android:name="com.example.myapplication.Expense.ExpenseWalletFragment"
+        android:label="Expense Wallet"
+        tools:layout="@layout/fragment_expense_wallet"
+        >
+        <action
+            android:id="@+id/action_expenseWalletFragment_to_expenseFormFragment"
+            app:destination="@id/expenseFormFragment" />
+    </fragment>
 </navigation>

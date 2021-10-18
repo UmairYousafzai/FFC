@@ -25,6 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -44,8 +45,8 @@ public class HomeFragment extends Fragment {
         DoctorViewModel doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
          activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
-        if (!((AppCompatActivity)getActivity()).getSupportActionBar().isShowing()) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        if (!Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).isShowing()) {
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
         }
         doctorViewModel.deleteAllSchedule();
       navController = NavHostFragment.findNavController(this);

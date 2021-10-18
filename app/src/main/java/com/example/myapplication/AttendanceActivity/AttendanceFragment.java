@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -61,6 +62,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -86,7 +88,7 @@ public class AttendanceFragment extends Fragment {
         // Inflate the layout for this fragment
         mBinding = FragmentAttendanceBinding.inflate(inflater,container,false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 //        Toolbar toolbar=  (Toolbar)requireActivity().findViewById(R.id.custom_toolbar) ;
 //        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
@@ -202,7 +204,7 @@ public class AttendanceFragment extends Fragment {
                                     sweetAlertDialog.dismiss();
                                 }
                             }).show();
-                    mBinding.attendanceImage.setImageDrawable(getResources().getDrawable(R.drawable.doctor_icon));
+                    mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.doctor_icon,null));
                     selectedImage= null;
                 }
 
@@ -210,7 +212,8 @@ public class AttendanceFragment extends Fragment {
             else
             {
                 permission.getLocationPermission();
-                mBinding.attendanceImage.setImageDrawable(getResources().getDrawable(R.drawable.doctor_icon));
+                mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.doctor_icon,null));
+
                 selectedImage= null;
             }
 

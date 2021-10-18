@@ -16,18 +16,18 @@ public class SharedPreferenceHelper {
 
 
     public static final String ATTENDANCE_CONFIGURATION = "Attendance Configuration";
-    public static final String BASE_URL = "http://161.97.178.106/FFCCloudapi/";
+    public static final String BASE_URL = "http://88.99.49.132/FFCCloudapi/";
     public static final Integer ID = null;
     public static final String emp_ID = "Emp ID";
     public static final String  userID = "User ID";
     public static final String  userPassword = "User Password";
     public static final String Login_State = "LoginState";
     private static SharedPreferenceHelper helperInstance = null;
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
     public String activity = "Activity 0";
     public boolean startDay = false;
-    private String DocListState = "DocListState";
-    private String FilterDocListState ="FilterDocListState";
+    private final String DocListState = "DocListState";
+    private final String FilterDocListState ="FilterDocListState";
 
 
 
@@ -54,7 +54,7 @@ public class SharedPreferenceHelper {
     }
     public void setUserPassword(String password)
     {
-        sharedPreferences.edit().putString(emp_ID, password).apply();;
+        sharedPreferences.edit().putString(userPassword, password).apply();;
 
     }
     public String getUserPassword() {

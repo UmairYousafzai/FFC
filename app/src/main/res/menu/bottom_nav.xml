@@ -20,5 +20,8 @@
         android:id="@+id/nav_more"
         android:icon="@drawable/ic_baseline_notifications_none_24"
         android:title="@string/more"/>
-
+    <item
+        android:id="@+id/nav_expense_list"
+        android:icon="@drawable/ic_expense"
+        android:title="@string/more"/>
 </menu>

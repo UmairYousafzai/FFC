@@ -33,6 +33,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -210,18 +211,15 @@ public class MainActivity extends AppCompatActivity {
             targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
             doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
 
-
-
             targetViewModel.DeleteAllDoctor();
 
             doctorViewModel.deleteAllSchedule();
             doctorViewModel.deleteAllFilterDoctor();
 
-
-
-
-
-
+            ffcDatabase.dao().delete_all_menu();
+            ffcDatabase.dao().deleteAllGrade();
+            ffcDatabase.dao().deleteAllQualification();
+            ffcDatabase.dao().deleteAllClassification();
 
 
             SharedPreferenceHelper.getInstance(this).setFlterDocListState(false);
@@ -285,33 +283,33 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (filterList.get(ii)) {
                             case "Ac_Home":
-                                menu.add(1, R.id.nav_home, 1, "Home").setIcon(getResources().getDrawable(R.drawable.ic_home));
+                                menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_home,null));
                                 break;
                             case "Ac_Target":
-                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(getResources().getDrawable(R.drawable.ic_target));
+                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
                                 break;
                             case "Ac_Expense":
-                                menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(getResources().getDrawable(R.drawable.ic_expense));
+                                menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_expense,null));
                                 break;
                             case "Ac_SOrder":
-                                menu.add(1, R.id.doctorListFragment, 4, "Doctor Profile").setIcon(getResources().getDrawable(R.drawable.ic_profile));
+                                menu.add(1, R.id.doctorListFragment, 4, "Doctor Profile").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_profile,null));
                                 break;
                             case "Ac_MSetting":
-                                menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(getResources().getDrawable(R.drawable.ic_settings));
+                                menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_settings,null));
                                 break;
                             case "Ac_EndDay":
-                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(getResources().getDrawable(R.drawable.ic_end_day));
+                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
                                 break;
                             case "Ac_MyProfile":
-                                menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(getResources().getDrawable(R.drawable.ic_account));
+                                menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_account,null));
                                 break;
                         }
 
                     }
                 }
-                menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(getResources().getDrawable(R.drawable.ic_route_svgrepo_com));
-                menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(getResources().getDrawable(R.drawable.ic_meeting));
-                menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(getResources().getDrawable(R.drawable.ic_location));
+                menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_route_svgrepo_com,null));
+                menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_meeting,null));
+                menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_location,null));
 
 
             }

@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                     String password = b;
                     String grant_type = "password";
                     pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
                     pDialog.setTitleText("Loading");
                     //pDialog.setCancelable(false);
                     pDialog.setCanceledOnTouchOutside(false);
@@ -392,23 +392,26 @@ public class LoginActivity extends AppCompatActivity {
 
                     getUserInfo(email,password);
                     SharedPreferenceHelper.getInstance(LoginActivity.this).setUserPassword(password);
+
+                    String check = SharedPreferenceHelper.getInstance(LoginActivity.this).getUserPassword();
+
                     pDialog.cancel();
+                    Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT).show();
+
                 }
                 else{
-                    int code = response.code();
-                    switch (code) {
-                        case 400: {
 
-                       /*     new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText("Bad Request")
-                                    .setContentText("Provided username or password is incorrect.")
-                                    .show();*/
-                        }
+
+                    new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("Error")
+                                    .setContentText(response.message())
+                                    .show();
+
                     }
 
 
                 }
-            }
+            
 
             @Override
             public void onFailure(Call<TokenResponseModel> call, Throwable t) {
@@ -764,10 +767,31 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT).show();
+                GetUserInfoModel model = ffcDatabase.dao().getuserInfo();
+
+                if (model!=null)
+                {
+                    String email= model.getEmail();
+                    String password = SharedPreferenceHelper.getInstance(LoginActivity.this).getUserPassword();
+ 
+                    if (email!=null && !email.isEmpty() && password!=null  && !password.isEmpty())
+                    {pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+                        pDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
+                        pDialog.setTitleText("Loading");
+                        //pDialog.setCancelable(false);
+                        pDialog.setCanceledOnTouchOutside(false);
+                        pDialog.show();
+                        login(email,password,"password");
+                    }
+                    else 
+                    {
+                        Toast.makeText(LoginActivity.this, "Something went wrong.", Toast.LENGTH_SHORT).show();
+                    }
+             
+
+                }
+
+
             }
 
             @Override
