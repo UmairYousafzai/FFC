@@ -310,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
                 menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_route_svgrepo_com,null));
                 menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_meeting,null));
                 menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_location,null));
+                menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
 
 
             }

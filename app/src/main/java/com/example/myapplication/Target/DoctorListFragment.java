@@ -39,8 +39,11 @@ import com.example.myapplication.utils.SharedPreferenceHelper;
 import com.example.myapplication.utils.SyncDataToDB;
 import com.example.myapplication.utils.UserViewModel;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -52,9 +55,9 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
     private NavController navController;
     private FragmentDoctorListBinding mBinding;
     private boolean isSlideDown = false;
-    private String[] classificationArray = new String[20];
-    private String[] qualificationArray = new String[20];
-    private String[] gradesArray = new String[20];
+    private final String[] classificationArray = new String[20];
+    private final String[] qualificationArray = new String[20];
+    private final String[] gradesArray = new String[20];
     private DoctorViewModel doctorViewModel;
     private FilterDoctorRecyclerAdapter adapter;
     private List<FilteredDoctoredModel> filteredDoctoredModelList= new ArrayList<>();
@@ -71,10 +74,10 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.e("oncreateView"," on create view me ha");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
         mBinding = FragmentDoctorListBinding.inflate(inflater, container, false);
         return mBinding.getRoot();

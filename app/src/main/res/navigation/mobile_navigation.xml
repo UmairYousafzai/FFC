@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_nav_home_to_nav_expense_list"
             app:destination="@id/nav_expense_list" />
+        <action
+            android:id="@+id/action_nav_home_to_tableLayout"
+            app:destination="@id/tableLayout" />
 
 
     </fragment>
@@ -464,4 +467,9 @@
             android:id="@+id/action_expenseWalletFragment_to_expenseFormFragment"
             app:destination="@id/expenseFormFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/tableLayout"
+        android:name="com.example.myapplication.TableLayout"
+        android:label="Doctors Report"
+        tools:layout="@layout/fragment_table_layout" />
 </navigation>

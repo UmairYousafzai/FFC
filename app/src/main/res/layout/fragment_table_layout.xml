@@ -5,7 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TableLayout">
+    tools:context=".TableLayout"
+    android:background="#1F689EB8"
+    android:padding="10dp"
+
+    >
 
     <HorizontalScrollView
         android:layout_width="fill_parent"
@@ -16,30 +20,44 @@
         <TableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:padding="10dp">
+            >
 
             <TableRow
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:weightSum="98"
-                android:background="@color/gray"
+                android:background="@color/Light_APP_Theme_Color"
                 android:padding="2dp"
                 >
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_weight="14"
-                    android:text="ID"
-                    android:textStyle="bold"/>
+                    android:layout_marginHorizontal="16dp"
+                    android:weightSum="2"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="10dp"
+
+                        />
 
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
+                    <ImageButton
+                        android:id="@+id/sort_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_baseline_arrow_downward_24"
+                        />
+                </LinearLayout>
+
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -47,14 +65,11 @@
                     android:layout_weight="14"
                     android:text="@string/name"
                     android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -62,14 +77,10 @@
                     android:layout_weight="14"
                     android:text="@string/phone"
                     android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -77,14 +88,10 @@
                     android:layout_weight="14"
                     android:text="DOB"
                     android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -92,14 +99,11 @@
                     android:layout_weight="14"
                     android:text="Address"
                     android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -107,14 +111,11 @@
                     android:layout_weight="14"
                     android:text="@string/classification"
                     android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -122,223 +123,486 @@
                     android:layout_weight="14"
                     android:text="@string/grade"
                     android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
             </TableRow>
 
             <TableRow
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:weightSum="98"
-                android:background="@color/white_greyish"
+                android:background="@color/white"
                 android:padding="2dp"
                 >
 
                 <TextView
+                    android:id="@+id/tv_id1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="ID"
-                    android:textStyle="bold"/>
+                    android:paddingStart="16dp"
+
+                    />
 
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
+                    android:id="@+id/tv_name1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/name"
-                    android:textStyle="bold"
-
+                    android:paddingHorizontal="16dp"
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
+
 
                 <TextView
+                    android:id="@+id/tv_phone1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/phone"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
+
 
                 <TextView
+                    android:id="@+id/tv_dob1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="DOB"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
+                    android:id="@+id/tv_address1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="Address"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
+
 
                 <TextView
+                    android:id="@+id/tv_classification1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/classification"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
+                    android:id="@+id/tv_grade1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/grade"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
             </TableRow>
             <TableRow
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:weightSum="98"
-                android:background="@color/gray"
+                android:background="@color/gray_btn_bg_color"
                 android:padding="2dp"
                 >
 
                 <TextView
+                    android:id="@+id/tv_id2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="ID"
-                    android:textStyle="bold"/>
+                    android:paddingHorizontal="16dp"
+
+                    />
 
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
+                    android:id="@+id/tv_name2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/name"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
+                    android:id="@+id/tv_phone2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/phone"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
+                    android:id="@+id/tv_dob2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="DOB"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
+                    android:id="@+id/tv_address2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="Address"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
+
 
                 <TextView
+                    android:id="@+id/tv_classification2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/classification"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
 
                     />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:background="@color/APP_Theme_Color" />
 
                 <TextView
+                    android:id="@+id/tv_grade2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="14"
                     android:text="@string/grade"
-                    android:textStyle="bold"
+                    android:paddingHorizontal="16dp"
+
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:weightSum="98"
+                android:background="@color/white"
+                android:padding="2dp"
+                >
+
+                <TextView
+                    android:id="@+id/tv_id3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="ID"
+                    android:paddingStart="16dp"
+
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/tv_name3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="@string/name"
+                    android:paddingHorizontal="16dp"
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/tv_phone3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="@string/phone"
+                    android:paddingHorizontal="16dp"
+
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/tv_dob3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="DOB"
+                    android:paddingHorizontal="16dp"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/tv_address3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="Address"
+                    android:paddingHorizontal="16dp"
+
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/tv_classification3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="@string/classification"
+                    android:paddingHorizontal="16dp"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/tv_grade3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="@string/grade"
+                    android:paddingHorizontal="16dp"
+
+                    />
+            </TableRow>
+            <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:weightSum="98"
+            android:background="@color/gray_btn_bg_color"
+            android:padding="2dp"
+            >
+
+                <TextView
+                    android:id="@+id/tv_id4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="23dp"
+                    android:layout_weight="14"
+                    android:paddingStart="16dp"
+                    android:text="ID"
+
+                    />
+
+
+
+            <TextView
+                android:id="@+id/tv_name4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="14"
+                android:text="@string/name"
+                android:paddingHorizontal="16dp"
+                />
+
+
+
+            <TextView
+                android:id="@+id/tv_phone4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="14"
+                android:text="@string/phone"
+                android:paddingHorizontal="16dp"
+
+                />
+
+
+
+            <TextView
+                android:id="@+id/tv_dob4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="14"
+                android:text="DOB"
+                android:paddingHorizontal="16dp"
+
+                />
+
+
+            <TextView
+                android:id="@+id/tv_address4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="14"
+                android:text="Address"
+                android:paddingHorizontal="16dp"
+
+                />
+
+
+
+            <TextView
+                android:id="@+id/tv_classification4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="14"
+                android:text="@string/classification"
+                android:paddingHorizontal="16dp"
+
+                />
+
+
+            <TextView
+                android:id="@+id/tv_grade4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="14"
+                android:text="@string/grade"
+                android:paddingHorizontal="16dp"
+
+                />
+        </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:weightSum="98"
+                android:background="@color/white"
+                android:padding="2dp"
+                >
+
+                <TextView
+                    android:id="@+id/tv_id5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="ID"
+                    android:paddingStart="16dp"
+
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/tv_name5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="@string/name"
+                    android:paddingHorizontal="16dp"
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/tv_phone5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="@string/phone"
+                    android:paddingHorizontal="16dp"
+
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/tv_dob5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="DOB"
+                    android:paddingHorizontal="16dp"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/tv_address5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="Address"
+                    android:paddingHorizontal="16dp"
+
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/tv_classification5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="@string/classification"
+                    android:paddingHorizontal="16dp"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/tv_grade5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="14"
+                    android:text="@string/grade"
+                    android:paddingHorizontal="16dp"
 
                     />
             </TableRow>
 
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:background="@color/Light_APP_Theme_Color"
+                android:padding="2dp"
+
+                >
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                    <TextView
+                        android:id="@+id/tv_page_index"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1 to 5 of 20"
+                        android:textStyle="bold"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/backward_page_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_baseline_arrow_back_ios_24"
+                        android:scaleType="fitEnd"
+                        />
+                    <ImageButton
+                        android:id="@+id/forward_page_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_baseline_arrow_forward_ios_24"
+                        android:scaleType="fitStart"
+
+                        />
+
+            </TableRow>
         </TableLayout>
     </HorizontalScrollView>
 

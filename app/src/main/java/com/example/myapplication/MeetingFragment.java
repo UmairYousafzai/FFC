@@ -25,8 +25,11 @@ import com.example.myapplication.databinding.CustomDialogBinding;
 import com.example.myapplication.databinding.CustomSelectActivityDialogBinding;
 import com.example.myapplication.databinding.FragmentMeetingBinding;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class MeetingFragment extends Fragment {
 
@@ -37,16 +40,11 @@ public class MeetingFragment extends Fragment {
     private String mDate;
     private String time;
 
-    private ArrayAdapter<String> participantsAdapter;
-    private ArrayAdapter<String> relatedToAdapter;
-
-    private FfcDatabase ffcDatabase;
-     
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
         mBinding = FragmentMeetingBinding.inflate(inflater, container, false);
 
@@ -57,7 +55,7 @@ public class MeetingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ffcDatabase = FfcDatabase.getInstance(requireContext());
+        FfcDatabase ffcDatabase = FfcDatabase.getInstance(requireContext());
         GetUserInfoModel loginUser = ffcDatabase.dao().getLoginUser();
         mBinding.hostTextview.setText(loginUser.getUserName());
 
@@ -72,7 +70,7 @@ public class MeetingFragment extends Fragment {
         participantsList.add("Doctor");
         participantsList.add("Customer");
         participantsList.add("Vendor");
-        participantsAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, participantsList);
+        ArrayAdapter<String> participantsAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, participantsList);
         mBinding.participantsSpinner.setAdapter(participantsAdapter);
 
         ArrayList<String> relatedToList = new ArrayList<>();
@@ -82,7 +80,7 @@ public class MeetingFragment extends Fragment {
         relatedToList.add("Customer");
         relatedToList.add("Vendor");
         relatedToList.add("Contact");
-        relatedToAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, relatedToList);
+        ArrayAdapter<String> relatedToAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, relatedToList);
         mBinding.relatedToSpinner.setAdapter(relatedToAdapter);
 
     }

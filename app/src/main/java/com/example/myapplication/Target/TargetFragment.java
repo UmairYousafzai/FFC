@@ -103,7 +103,6 @@ public class TargetFragment extends Fragment {
         DoctorViewModel doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
         doctorViewModel.deleteAllSchedule();
         navController= NavHostFragment.findNavController(this);
-
         calendar = Calendar.getInstance();
 
         return viewRoot;
