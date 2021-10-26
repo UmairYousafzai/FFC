@@ -1,8 +1,10 @@
 package com.example.myapplication;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -19,6 +21,8 @@ import com.example.myapplication.databinding.FragmentTableLayoutBinding;
 import com.example.myapplication.utils.SharedPreferenceHelper;
 import com.example.myapplication.utils.SyncDataToDB;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,25 +34,25 @@ import retrofit2.Response;
 
 public class TableLayout extends Fragment {
     private FragmentTableLayoutBinding mBinding;
-    private List<FilteredDoctoredModel> filteredDoctoredModelList= new ArrayList<>();
+    private List<FilteredDoctoredModel> filteredDoctoredModelList = new ArrayList<>();
     private SweetAlertDialog dialog;
-    private final List<TextView> idTextViewList= new ArrayList<>();
-    private final List<TextView> nameTextViewList= new ArrayList<>();
-    private final List<TextView> phoneTextViewList= new ArrayList<>();
-    private final List<TextView> dobTextViewList= new ArrayList<>();
-    private final List<TextView> addressTextViewList= new ArrayList<>();
-    private final List<TextView> classificationTextViewList= new ArrayList<>();
-    private final List<TextView> gradeTextViewList= new ArrayList<>();
-    private  boolean backwardBtnCheck= false,forwardBtnCheck= false;
-    private int forwardCounter = 0,backwardCounter = 0, dataCounter=0;
+    private final List<TextView> idTextViewList = new ArrayList<>();
+    private final List<TextView> nameTextViewList = new ArrayList<>();
+    private final List<TextView> phoneTextViewList = new ArrayList<>();
+    private final List<TextView> dobTextViewList = new ArrayList<>();
+    private final List<TextView> addressTextViewList = new ArrayList<>();
+    private final List<TextView> classificationTextViewList = new ArrayList<>();
+    private final List<TextView> gradeTextViewList = new ArrayList<>();
+    private boolean backwardBtnCheck = false, forwardBtnCheck = false;
+    private int forwardCounter = 0, backwardCounter = 0, dataCounter = 0, startIndex = 0, endIndex = 0;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
-        mBinding = FragmentTableLayoutBinding.inflate(inflater,container,false);
+        mBinding = FragmentTableLayoutBinding.inflate(inflater, container, false);
 
         return mBinding.getRoot();
     }
@@ -56,9 +60,9 @@ public class TableLayout extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        dialog = new SweetAlertDialog(requireContext(),SweetAlertDialog.PROGRESS_TYPE);
+        dialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
 
-        dialog.getProgressHelper().setBarColor(ResourcesCompat.getColor(getResources(),R.color.APP_Theme_Color,null));
+        dialog.getProgressHelper().setBarColor(ResourcesCompat.getColor(getResources(), R.color.APP_Theme_Color, null));
         dialog.setTitleText("Loading");
         dialog.setCancelable(false);
         setUpTextViewsLists();
@@ -109,8 +113,6 @@ public class TableLayout extends Fragment {
         gradeTextViewList.add(mBinding.tvGrade5);
 
 
-
-
     }
 
     private void setUpTable() {
@@ -125,50 +127,83 @@ public class TableLayout extends Fragment {
         });
 
         mBinding.forwardPageBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
 
-                if (forwardBtnCheck)
-                {
-                    backwardBtnCheck= true;
-                    if (filteredDoctoredModelList.size()>dataCounter)
-                    {
-                        int check= filteredDoctoredModelList.size()-dataCounter;
+                if (forwardBtnCheck) {
 
-                        mBinding.backwardPageBtn.setEnabled(false);
-                        if (check>=5)
-                        {
-                            for (int i=0 ; i<5 ;i++)
-                            {
-                                FilteredDoctoredModel model =filteredDoctoredModelList.get(dataCounter);
+                    if (filteredDoctoredModelList.size() > dataCounter) {
+                        int check = filteredDoctoredModelList.size() - dataCounter;
+                        backwardBtnCheck = true;
+                        mBinding.backwardPageBtn.setEnabled(true);
+                        if (check >= 5) {
+                            startIndex= dataCounter;
+                            for (int i = 0; i < 5; i++, dataCounter++) {
+                                FilteredDoctoredModel model = filteredDoctoredModelList.get(dataCounter + 1);
                                 idTextViewList.get(i).setText(String.valueOf(model.getDoctorId()));
+                                idTextViewList.get(i).setTooltipText(String.valueOf(model.getDoctorId()));
+
                                 nameTextViewList.get(i).setText(model.getName());
+                                nameTextViewList.get(i).setTooltipText(model.getName());
+
                                 addressTextViewList.get(i).setText(model.getAddress());
+                                addressTextViewList.get(i).setTooltipText(model.getAddress());
+
                                 dobTextViewList.get(i).setText(model.getDOB());
+                                dobTextViewList.get(i).setTooltipText(model.getDOB());
+
                                 phoneTextViewList.get(i).setText(model.getPhone());
+                                phoneTextViewList.get(i).setTooltipText(model.getPhone());
+
                                 classificationTextViewList.get(i).setText(model.getClassificationTitle());
+                                classificationTextViewList.get(i).setTooltipText(model.getClassificationTitle());
+
                                 gradeTextViewList.get(i).setText(model.getGradeTitle());
-                                dataCounter++;
+                                gradeTextViewList.get(i).setTooltipText(model.getGradeTitle());
+
                             }
-                        }
-                        else
-                        {
-                            int i=0;
-                            for (FilteredDoctoredModel model:filteredDoctoredModelList)
-                            {
+                            if (dataCounter == filteredDoctoredModelList.size()) {
+                                mBinding.forwardPageBtn.setEnabled(false);
+                                forwardBtnCheck = false;
+                            }
+                            String pageIndex = (startIndex+1) +" to " + (dataCounter +1) + " of " + filteredDoctoredModelList.size();
+                            mBinding.tvPageIndex.setText(pageIndex);
+                        } else if (check != 0) {
+                            startIndex= dataCounter;
+                            for (int i = 0; dataCounter < filteredDoctoredModelList.size() - 1; i++, dataCounter++) {
+                                FilteredDoctoredModel model = filteredDoctoredModelList.get(dataCounter + 1);
                                 idTextViewList.get(i).setText(String.valueOf(model.getDoctorId()));
+                                idTextViewList.get(i).setTooltipText(String.valueOf(model.getDoctorId()));
+
                                 nameTextViewList.get(i).setText(model.getName());
+                                nameTextViewList.get(i).setTooltipText(model.getName());
+
                                 addressTextViewList.get(i).setText(model.getAddress());
+                                addressTextViewList.get(i).setTooltipText(model.getAddress());
+
                                 dobTextViewList.get(i).setText(model.getDOB());
+                                dobTextViewList.get(i).setTooltipText(model.getDOB());
+
                                 phoneTextViewList.get(i).setText(model.getPhone());
+                                phoneTextViewList.get(i).setTooltipText(model.getPhone());
+
                                 classificationTextViewList.get(i).setText(model.getClassificationTitle());
+                                classificationTextViewList.get(i).setTooltipText(model.getClassificationTitle());
+
                                 gradeTextViewList.get(i).setText(model.getGradeTitle());
-                                i++;
-                                dataCounter++;
+                                gradeTextViewList.get(i).setTooltipText(model.getGradeTitle());
+
+
+                            }
+                            String pageIndex =( startIndex+1) +" to " + (dataCounter +1) + " of " + filteredDoctoredModelList.size();
+                            mBinding.tvPageIndex.setText(pageIndex);
+                            if (dataCounter == filteredDoctoredModelList.size()) {
+                                mBinding.forwardPageBtn.setEnabled(false);
+                                forwardBtnCheck = false;
                             }
                         }
                     }
-
 
 
                 }
@@ -176,29 +211,79 @@ public class TableLayout extends Fragment {
         });
 
         mBinding.backwardPageBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                if (backwardBtnCheck)
-                {
+                if (backwardBtnCheck) {
 
-                    if (dataCounter>=0)
-                    {
-                        for (int i=0 ; i<5 ;i++)
-                        {
-                            FilteredDoctoredModel model =filteredDoctoredModelList.get(dataCounter);
+                    backwardCounter = dataCounter - 5;
+                    mBinding.forwardPageBtn.setEnabled(true);
+                    forwardBtnCheck = true;
+
+                    if (backwardCounter > 5) {
+                        startIndex= backwardCounter;
+
+                        for (int i = 4; i >= 0; i--, backwardCounter--, dataCounter--) {
+                            FilteredDoctoredModel model = filteredDoctoredModelList.get(backwardCounter);
                             idTextViewList.get(i).setText(String.valueOf(model.getDoctorId()));
+                            idTextViewList.get(i).setTooltipText(String.valueOf(model.getDoctorId()));
+
                             nameTextViewList.get(i).setText(model.getName());
+                            nameTextViewList.get(i).setTooltipText(model.getName());
+
                             addressTextViewList.get(i).setText(model.getAddress());
+                            addressTextViewList.get(i).setTooltipText(model.getAddress());
+
                             dobTextViewList.get(i).setText(model.getDOB());
+                            dobTextViewList.get(i).setTooltipText(model.getDOB());
+
                             phoneTextViewList.get(i).setText(model.getPhone());
+                            phoneTextViewList.get(i).setTooltipText(model.getPhone());
+
                             classificationTextViewList.get(i).setText(model.getClassificationTitle());
+                            classificationTextViewList.get(i).setTooltipText(model.getClassificationTitle());
+
                             gradeTextViewList.get(i).setText(model.getGradeTitle());
-                            dataCounter--;
+                            gradeTextViewList.get(i).setTooltipText(model.getGradeTitle());
+
                         }
-                    }
-                    else
-                    {
-                        backwardBtnCheck= false;
+                        startIndex= backwardCounter;
+                        String pageIndex = (startIndex+1) +" to" + (dataCounter +1) + " of " + filteredDoctoredModelList.size();
+
+                        mBinding.tvPageIndex.setText(pageIndex);
+                    } else if (backwardCounter != 0) {
+                        startIndex= backwardCounter;
+                        for (int i = backwardCounter; i >= 0; i--, backwardCounter--, dataCounter--) {
+                            FilteredDoctoredModel model = filteredDoctoredModelList.get(backwardCounter);
+                            idTextViewList.get(i).setText(String.valueOf(model.getDoctorId()));
+                            idTextViewList.get(i).setTooltipText(String.valueOf(model.getDoctorId()));
+
+                            nameTextViewList.get(i).setText(model.getName());
+                            nameTextViewList.get(i).setTooltipText(model.getName());
+
+                            addressTextViewList.get(i).setText(model.getAddress());
+                            addressTextViewList.get(i).setTooltipText(model.getAddress());
+
+                            dobTextViewList.get(i).setText(model.getDOB());
+                            dobTextViewList.get(i).setTooltipText(model.getDOB());
+
+                            phoneTextViewList.get(i).setText(model.getPhone());
+                            phoneTextViewList.get(i).setTooltipText(model.getPhone());
+
+                            classificationTextViewList.get(i).setText(model.getClassificationTitle());
+                            classificationTextViewList.get(i).setTooltipText(model.getClassificationTitle());
+
+                            gradeTextViewList.get(i).setText(model.getGradeTitle());
+                            gradeTextViewList.get(i).setTooltipText(model.getGradeTitle());
+
+
+                        }
+                        startIndex= backwardCounter;
+                        String pageIndex = (startIndex+1) +" to " + (dataCounter +1) + " of " + filteredDoctoredModelList.size();
+                        mBinding.tvPageIndex.setText(pageIndex);
+                        backwardBtnCheck = false;
+                        mBinding.backwardPageBtn.setEnabled(false);
+
                     }
 
 
@@ -219,43 +304,56 @@ public class TableLayout extends Fragment {
         Call<List<FilteredDoctoredModel>> call = ApiClient.getInstance().getApi().GetFilteredDoctorsByEmployeeId(token, id);
 
         call.enqueue(new Callback<List<FilteredDoctoredModel>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<List<FilteredDoctoredModel>> call, Response<List<FilteredDoctoredModel>> response) {
                 if (response.body() != null) {
                     List<FilteredDoctoredModel> list = response.body();
                     if (list.size() > 0) {
-                        filteredDoctoredModelList= list;
+                        filteredDoctoredModelList = list;
 
-                        if (filteredDoctoredModelList.size()>5)
-                        {
-                            forwardBtnCheck=true;
-                        }
-                        else
-                        {
-                            forwardBtnCheck= false;
+
+                        if (filteredDoctoredModelList.size() > 5) {
+                            forwardBtnCheck = true;
+
+                        } else {
+                            forwardBtnCheck = false;
+                            mBinding.forwardPageBtn.setEnabled(false);
+                            mBinding.forwardPageBtn.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.slategray, null));
                         }
 
-                        if (filteredDoctoredModelList.size()>=5)
-                        {
-                            for (int i =0 ; i<5; i++)
-                            {
-                                FilteredDoctoredModel model =filteredDoctoredModelList.get(i);
+                        if (filteredDoctoredModelList.size() >= 5) {
+                            for (int i = 0; i < 5; i++) {
+                                FilteredDoctoredModel model = filteredDoctoredModelList.get(i);
                                 idTextViewList.get(i).setText(String.valueOf(model.getDoctorId()));
-                                nameTextViewList.get(i).setText(model.getName());
-                                addressTextViewList.get(i).setText(model.getAddress());
-                                dobTextViewList.get(i).setText(model.getDOB());
-                                phoneTextViewList.get(i).setText(model.getPhone());
-                                classificationTextViewList.get(i).setText(model.getClassificationTitle());
-                                gradeTextViewList.get(i).setText(model.getGradeTitle());
-                                dataCounter++;
-                            }
+                                idTextViewList.get(i).setTooltipText(String.valueOf(model.getDoctorId()));
 
-                        }
-                        else
-                        {
-                            int i=0;
-                            for (FilteredDoctoredModel model:filteredDoctoredModelList)
-                            {
+                                nameTextViewList.get(i).setText(model.getName());
+                                nameTextViewList.get(i).setTooltipText(model.getName());
+
+                                addressTextViewList.get(i).setText(model.getAddress());
+                                addressTextViewList.get(i).setTooltipText(model.getAddress());
+
+                                dobTextViewList.get(i).setText(model.getDOB());
+                                dobTextViewList.get(i).setTooltipText(model.getDOB());
+
+                                phoneTextViewList.get(i).setText(model.getPhone());
+                                phoneTextViewList.get(i).setTooltipText(model.getPhone());
+
+                                classificationTextViewList.get(i).setText(model.getClassificationTitle());
+                                classificationTextViewList.get(i).setTooltipText(model.getClassificationTitle());
+
+                                gradeTextViewList.get(i).setText(model.getGradeTitle());
+                                gradeTextViewList.get(i).setTooltipText(model.getGradeTitle());
+                                dataCounter = i;
+                            }
+                            String pageIndex = "1 to " + (dataCounter +1)+ " of " + filteredDoctoredModelList.size();
+                            mBinding.tvPageIndex.setText(pageIndex);
+
+
+                        } else {
+                            int i = 0;
+                            for (FilteredDoctoredModel model : filteredDoctoredModelList) {
                                 idTextViewList.get(i).setText(String.valueOf(model.getDoctorId()));
                                 nameTextViewList.get(i).setText(model.getName());
                                 addressTextViewList.get(i).setText(model.getAddress());
@@ -264,22 +362,27 @@ public class TableLayout extends Fragment {
                                 classificationTextViewList.get(i).setText(model.getClassificationTitle());
                                 gradeTextViewList.get(i).setText(model.getGradeTitle());
                                 i++;
-                                dataCounter++;                            }
+                                dataCounter++;
+                            }
+                            String pageIndex = "1 to" +(dataCounter +1) + " of " + filteredDoctoredModelList.size();
+                            mBinding.tvPageIndex.setText(pageIndex);
                         }
 
-                        dialog.dismiss();
                     }
-                }
-                else
-                {
-                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
+                    dialog.dismiss();
+
+                } else {
+                    new SyncDataToDB(requireActivity().getApplication(), requireContext()).loginAgain(response.message());
+                    dialog.dismiss();
+
                 }
             }
 
             @Override
             public void onFailure(Call<List<FilteredDoctoredModel>> call, Throwable t) {
 
-                Toast.makeText(requireContext(),""+t.getMessage(),Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
 
             }
         });

@@ -176,6 +176,7 @@ public class SyncDataToDB {
 
                         }
                     }).setCanceledOnTouchOutside(false);
+        sweetAlertDialog.setCancelable(false);
                     sweetAlertDialog.show();
 
     }
