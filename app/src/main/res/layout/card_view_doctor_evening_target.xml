@@ -4,7 +4,7 @@
     <data>
         <variable
             name="DoctorEvening"
-            type="com.example.myapplication.DoctorModel" />
+            type="com.example.ffccloud.DoctorModel" />
 
     </data>
 

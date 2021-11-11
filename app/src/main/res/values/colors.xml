@@ -22,5 +22,6 @@
     <color name="slategray">#708090</color>
     <color name="goldenrod">#DAA520</color>
     <color name="blue">#6a9ff4</color>
+    <color name="background_color">#1F689EB8</color>
 
 </resources>

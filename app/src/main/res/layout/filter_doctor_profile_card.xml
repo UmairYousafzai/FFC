@@ -4,7 +4,7 @@
     <data>
         <variable
             name="Doctor"
-            type="com.example.myapplication.FilteredDoctoredModel" />
+            type="com.example.ffccloud.FilteredDoctoredModel" />
 
     </data>
 

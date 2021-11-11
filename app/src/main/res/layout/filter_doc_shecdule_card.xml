@@ -5,7 +5,7 @@
     <data>
         <variable
             name="scheduleModel"
-            type="com.example.myapplication.ScheduleModel" />
+            type="com.example.ffccloud.ScheduleModel" />
 
     </data>
 

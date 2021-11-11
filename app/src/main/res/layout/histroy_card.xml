@@ -3,7 +3,7 @@
     <data>
         <variable
             name="workPlanHistory"
-            type="com.example.myapplication.WorkPlanHistory" />
+            type="com.example.ffccloud.WorkPlanHistory" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

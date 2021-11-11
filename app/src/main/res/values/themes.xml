@@ -17,7 +17,7 @@
     </style>
 
     <style name="login_cursor_color" parent="Widget.Design.TextInputLayout">
-        <item name="colorControlActivated">@color/teal_200</item>
+        <item name="colorControlActivated">@color/APP_Theme_Color</item>
     </style>
 
 

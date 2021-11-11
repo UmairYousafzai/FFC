@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="user"
+            type="com.example.ffccloud.UserModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="10dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/user_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="@color/APP_Theme_Color"
+            app:strokeWidth="1dp"
+            app:rippleColor="@color/Light_APP_Theme_Color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{user.userName}"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_margin="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv_user_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{user.email}"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="@id/tv_user_name"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_user_name"
+                    android:layout_marginBottom="5dp"
+                    />
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/btn_send_request"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_add_location_point_svgrepo_com"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toStartOf="@id/btn_track"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_margin="20dp"
+                    android:tooltipText="Send Location Request"
+                    />
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/btn_track"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_gps_fixed_24"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_margin="20dp"
+                    android:tooltipText="Track User"
+
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

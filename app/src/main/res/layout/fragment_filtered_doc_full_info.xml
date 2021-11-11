@@ -6,7 +6,7 @@
     <data>
         <variable
             name="Doctor"
-            type="com.example.myapplication.FilteredDoctorInfomationModel" />
+            type="com.example.ffccloud.FilteredDoctorInfomationModel" />
 
     </data>
 
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/APP_Theme_Color"
-        tools:context=".Target.FilteredDocFullInfoFragment">
+        tools:context="com.example.ffccloud.Target.FilteredDocFullInfoFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"

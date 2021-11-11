@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.myapplication.ui.home.HomeFragment"
+        android:name="com.example.ffccloud.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -66,19 +66,19 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.myapplication.ui.gallery.GalleryFragment"
+        android:name="com.example.ffccloud.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.example.myapplication.ui.slideshow.SlideshowFragment"
+        android:name="com.example.ffccloud.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
         android:id="@+id/nav_start_day"
-        android:name="com.example.myapplication.TargetMenu.StartDayFragment"
+        android:name="com.example.ffccloud.TargetMenu.StartDayFragment"
         android:label="Start Day"
         tools:layout="@layout/fragment_start_day" >
         <action
@@ -101,7 +101,7 @@
 
     <fragment
         android:id="@+id/nav_target_main"
-        android:name="com.example.myapplication.TargetMenu.TargetMainFragment"
+        android:name="com.example.ffccloud.TargetMenu.TargetMainFragment"
         android:label="Target Main"
         tools:layout="@layout/fragment_target_main" >
         <action
@@ -131,7 +131,7 @@
 
     <fragment
         android:id="@+id/nav_target_sub_menu"
-        android:name="com.example.myapplication.Target.TargetPreMenuFragment"
+        android:name="com.example.ffccloud.Target.TargetPreMenuFragment"
         android:label="Target Sub Menu"
         tools:layout="@layout/fragment_target_sub_menu" >
         <action
@@ -151,7 +151,7 @@
 
     <fragment
         android:id="@+id/target_fragment"
-        android:name="com.example.myapplication.Target.TargetFragment"
+        android:name="com.example.ffccloud.Target.TargetFragment"
         android:label="Target"
         tools:layout="@layout/fragment_target" >
         <action
@@ -172,13 +172,13 @@
 
     <fragment
         android:id="@+id/nav_product_info"
-        android:name="com.example.myapplication.Target.Visit.ProductInfoFragment"
+        android:name="com.example.ffccloud.Target.Visit.ProductInfoFragment"
         android:label="Product Info"
         tools:layout="@layout/fragment_product_info" />
 
     <fragment
         android:id="@+id/nav_history"
-        android:name="com.example.myapplication.Target.Visit.HistoryFragment"
+        android:name="com.example.ffccloud.Target.Visit.HistoryFragment"
         android:label="History"
         tools:layout="@layout/fragment_history" >
 
@@ -190,14 +190,14 @@
 
     <fragment
         android:id="@+id/nav_product_slider"
-        android:name="com.example.myapplication.Target.Visit.ProductSliderFragment"
+        android:name="com.example.ffccloud.Target.Visit.ProductSliderFragment"
         android:label="Product Slider"
         tools:layout="@layout/fragment_product_slider" />
 
 
     <fragment
         android:id="@+id/fragment_menu"
-        android:name="com.example.myapplication.TargetMenu.TargetMenuFragment"
+        android:name="com.example.ffccloud.TargetMenu.TargetMenuFragment"
         android:label="Office"
         tools:layout="@layout/fragment_target_menu" >
         <action
@@ -221,37 +221,37 @@
 
     <fragment
         android:id="@+id/Scan"
-        android:name="com.example.myapplication.Target.ScanFragment"
+        android:name="com.example.ffccloud.Target.ScanFragment"
         android:label="Scan Fragment"
         tools:layout="@layout/fragment_scan" />
 
     <fragment
         android:id="@+id/nav_visit"
-        android:name="com.example.myapplication.Target.Visit.VisitFragment"
+        android:name="com.example.ffccloud.Target.Visit.VisitFragment"
         android:label="Visit"
         tools:layout="@layout/fragment_visit" />
 
     <fragment
         android:id="@+id/nav_sample"
-        android:name="com.example.myapplication.Target.Sample.SampleFragment"
+        android:name="com.example.ffccloud.Target.Sample.SampleFragment"
         android:label="Sample"
         tools:layout="@layout/fragment_sample" />
 
     <fragment
         android:id="@+id/nav_followup"
-        android:name="com.example.myapplication.Target.FollowUp.FollowUpFragment"
+        android:name="com.example.ffccloud.Target.FollowUp.FollowUpFragment"
         android:label="Follow Up"
         tools:layout="@layout/fragment_follow_up" />
 
     <fragment
         android:id="@+id/nav_recovery"
-        android:name="com.example.myapplication.Target.Recovery.RecoveryFragment"
+        android:name="com.example.ffccloud.Target.Recovery.RecoveryFragment"
         android:label="Recovery"
         tools:layout="@layout/fragment_recovery" />
 
     <fragment
         android:id="@+id/nav_attendance"
-        android:name="com.example.myapplication.AttendanceActivity.AttendanceFragment"
+        android:name="com.example.ffccloud.AttendanceActivity.AttendanceFragment"
         android:label="Attendance"
         tools:layout="@layout/fragment_attendance" >
         <action
@@ -265,12 +265,12 @@
     </fragment>
     <fragment
         android:id="@+id/targetPostMenuFragment"
-        android:name="com.example.myapplication.Target.TargetFullInfoFragment"
+        android:name="com.example.ffccloud.Target.TargetFullInfoFragment"
         android:label="Post Menu"
         tools:layout="@layout/fragment_target_full_info" >
         <argument
             android:name="DoctorModel"
-            app:argType="com.example.myapplication.DoctorModel" />
+            app:argType="com.example.ffccloud.DoctorModel" />
         <action
             android:id="@+id/action_targetPostMenuFragment_to_activityTaskFragment"
             app:destination="@id/activityTaskFragment"
@@ -291,7 +291,7 @@
     </fragment>
     <fragment
         android:id="@+id/addworkPlanFragment"
-        android:name="com.example.myapplication.Target.AddworkPlanFragment"
+        android:name="com.example.ffccloud.Target.AddworkPlanFragment"
         android:label="Add Work Plan"
         tools:layout="@layout/fragment_addwork_plan" >
         <action
@@ -328,7 +328,7 @@
     </fragment>
     <dialog
         android:id="@+id/addWorkPlanDialogFragment"
-        android:name="com.example.myapplication.Target.AddWorkPlanDialogFragment"
+        android:name="com.example.ffccloud.Target.AddWorkPlanDialogFragment"
         android:label="AddWorkPlanDialogFragment"
         tools:layout="@layout/custom_add_workplan_dialog"
         >
@@ -349,7 +349,7 @@
     </dialog>
     <fragment
         android:id="@+id/doctorListFragment"
-        android:name="com.example.myapplication.Target.DoctorListFragment"
+        android:name="com.example.ffccloud.Target.DoctorListFragment"
         android:label="Doctor List"
         tools:layout="@layout/fragment_doctor_list" >
         <action
@@ -372,7 +372,7 @@
     </fragment><action android:id="@+id/action_global_doctorListFragment" app:destination="@id/doctorListFragment"/>
     <fragment
         android:id="@+id/filteredDocFullInfoFragment"
-        android:name="com.example.myapplication.Target.FilteredDocFullInfoFragment"
+        android:name="com.example.ffccloud.Target.FilteredDocFullInfoFragment"
         android:label="Doctor Info"
         tools:layout="@layout/fragment_filtered_doc_full_info" >
         <argument
@@ -390,7 +390,7 @@
     </fragment>
     <fragment
         android:id="@+id/doctorFormFragment"
-        android:name="com.example.myapplication.Target.DoctorFormFragment"
+        android:name="com.example.ffccloud.Target.DoctorFormFragment"
         android:label="Doctor Form"
         tools:layout="@layout/fragment_doctor_form" >
         <action
@@ -403,7 +403,7 @@
             />
         <argument
             android:name="filter_doc"
-            app:argType="com.example.myapplication.FilteredDoctorInfomationModel"
+            app:argType="com.example.ffccloud.FilteredDoctorInfomationModel"
             app:nullable="true"
             android:defaultValue="@null" />
 
@@ -411,18 +411,18 @@
     </fragment>
     <fragment
         android:id="@+id/addScheduleFragment"
-        android:name="com.example.myapplication.Target.Schedule.AddScheduleFragment"
+        android:name="com.example.ffccloud.Target.Schedule.AddScheduleFragment"
         android:label="Add Schedule"
         tools:layout="@layout/fragment_add_schedule" >
         <argument
             android:name="doctorToSave"
-            app:argType="com.example.myapplication.ModelClasses.SaveDoctorModel"
+            app:argType="com.example.ffccloud.SaveDoctorModel"
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/showRouteFragment"
-        android:name="com.example.myapplication.TargetMenu.ShowRouteFragment"
+        android:name="com.example.ffccloud.TargetMenu.ShowRouteFragment"
         android:label="Routes"
         tools:layout="@layout/fragment_show_route" >
         <action
@@ -433,7 +433,7 @@
     </fragment>
     <fragment
         android:id="@+id/activityTaskFragment"
-        android:name="com.example.myapplication.Target.Task.ActivityTaskFragment"
+        android:name="com.example.ffccloud.Target.Task.ActivityTaskFragment"
         android:label="ActivityTaskFragment"
         tools:layout="@layout/fragment_activity_task">
         <argument
@@ -443,23 +443,23 @@
     </fragment>
     <fragment
         android:id="@+id/meetingFragment"
-        android:name="com.example.myapplication.MeetingFragment"
+        android:name="com.example.ffccloud.MeetingFragment"
         android:label="Meeting"
         tools:layout="@layout/fragment_meeting" />
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.example.myapplication.MapsFragment"
+        android:name="com.example.ffccloud.MapsFragment"
         android:label="Tracker"
         tools:layout="@layout/fragment_maps2" />
     <fragment
         android:id="@+id/expenseFormFragment"
-        android:name="com.example.myapplication.Expense.ExpenseFormFragment"
+        android:name="com.example.ffccloud.Expense.ExpenseFormFragment"
         android:label="ExpenseFormFragment"
         tools:layout="@layout/fragment_expense_form"
         />
     <fragment
         android:id="@+id/nav_expense_list"
-        android:name="com.example.myapplication.Expense.ExpenseWalletFragment"
+        android:name="com.example.ffccloud.Expense.ExpenseWalletFragment"
         android:label="Expense Wallet"
         tools:layout="@layout/fragment_expense_wallet"
         >
@@ -469,7 +469,32 @@
     </fragment>
     <fragment
         android:id="@+id/tableLayout"
-        android:name="com.example.myapplication.TableLayout"
+        android:name="com.example.ffccloud.TableLayout"
         android:label="Doctors Report"
         tools:layout="@layout/fragment_table_layout" />
+    <fragment
+        android:id="@+id/usersListFragment"
+        android:name="com.example.ffccloud.Tracking.UsersListFragment"
+        android:label="fragment_users_list"
+        tools:layout="@layout/fragment_users_list" >
+        <action
+            android:id="@+id/action_usersListFragment_to_trackerFragment"
+            app:destination="@id/trackerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationRequestFragment"
+        android:name="com.example.ffccloud.Tracking.LocationRequestFragment"
+        android:label="fragment_location_request"
+        tools:layout="@layout/fragment_location_request" />
+    <fragment
+        android:id="@+id/trackerFragment"
+        android:name="com.example.ffccloud.Tracking.TrackerFragment"
+        android:label="fragment_tracker"
+        tools:layout="@layout/fragment_tracker" >
+        <argument
+            android:name="recevierID"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue=" "/>
+    </fragment>
 </navigation>

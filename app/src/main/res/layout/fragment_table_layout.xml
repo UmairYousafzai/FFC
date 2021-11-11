@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TableLayout"
+    tools:context="com.example.ffccloud.TableLayout"
     android:background="#1F689EB8"
     android:padding="10dp"
 
