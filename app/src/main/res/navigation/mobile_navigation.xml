@@ -475,7 +475,7 @@
     <fragment
         android:id="@+id/usersListFragment"
         android:name="com.example.ffccloud.Tracking.UsersListFragment"
-        android:label="fragment_users_list"
+        android:label="Users "
         tools:layout="@layout/fragment_users_list" >
         <action
             android:id="@+id/action_usersListFragment_to_trackerFragment"
@@ -484,15 +484,40 @@
     <fragment
         android:id="@+id/locationRequestFragment"
         android:name="com.example.ffccloud.Tracking.LocationRequestFragment"
-        android:label="fragment_location_request"
+        android:label="Location Requests"
         tools:layout="@layout/fragment_location_request" />
     <fragment
         android:id="@+id/trackerFragment"
         android:name="com.example.ffccloud.Tracking.TrackerFragment"
-        android:label="fragment_tracker"
+        android:label="Tracker"
         tools:layout="@layout/fragment_tracker" >
         <argument
             android:name="recevierID"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue=" "/>
+    </fragment>
+    <fragment
+        android:id="@+id/chatUserListFragment"
+        android:name="com.example.ffccloud.Messages.ChatUserListFragment"
+        android:label="Chats"
+        tools:layout="@layout/fragment_chat_user_list" >
+        <action
+            android:id="@+id/action_chatUserListFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.ffccloud.Messages.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="recevierID"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue=" "/>
+        <argument
+            android:name="recevierUserName"
             app:argType="string"
             app:nullable="true"
             android:defaultValue=" "/>

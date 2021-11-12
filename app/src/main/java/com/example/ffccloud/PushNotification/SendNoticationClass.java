@@ -3,6 +3,7 @@ package com.example.ffccloud.PushNotification;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,36 +28,27 @@ import retrofit2.Response;
 
 public class SendNoticationClass {
 
-    private APIService apiService;
     private String refreshToken;
     private ProgressDialog progressDialog;
-    private Context context;
+    private final Context context;
 
     public SendNoticationClass(Context context) {
         this.context = context;
     }
 
     public void UpdateToken(){
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                refreshToken=task.getResult();
-                Token token= new Token(refreshToken);
-                String userID= String.valueOf(SharedPreferenceHelper.getInstance(context).getUserID());
-                FirebaseDatabase.getInstance().getReference("Tokens").child(userID).setValue(token);
-            }
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            refreshToken=task.getResult();
+            Token token= new Token(refreshToken);
+            String userID= String.valueOf(SharedPreferenceHelper.getInstance(context).getUserID());
+            FirebaseDatabase.getInstance().getReference("Tokens").child(userID).setValue(token);
         });
 
     }
     public void sendNotifications(String usertoken, GetUserInfoModel senderUser, String title, String message, Context context) {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Sending Request...");
-        progressDialog.setCancelable(false);
-        progressDialog.getWindow().
-                setBackgroundDrawable(new ColorDrawable(ResourcesCompat.getColor(context.getResources(), R.color.white, null)));
-        progressDialog.show();
 
-        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+
+        APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
 
 
@@ -82,18 +74,18 @@ public class SendNoticationClass {
                     assert response.body() != null;
                     if (response.body().success != 1) {
                         Toast.makeText(context, "Failed ", Toast.LENGTH_LONG).show();
-                        progressDialog.dismiss();
+
                     }
                     else {
-                        Toast.makeText(context, "Request sent Successfully", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+                        Log.d("Notification", "onResponse: Request sent Successfully ");
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<MyResponse> call, Throwable t) {
-                progressDialog.dismiss();
+            public void onFailure(@NotNull Call<MyResponse> call, @NotNull Throwable t) {
+                Log.d("Notification", "onResponse: "+t.getMessage());
+
             }
         });
     }

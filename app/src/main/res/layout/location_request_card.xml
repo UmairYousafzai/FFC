@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="user"
             type="com.example.ffccloud.LocationRequestedUser" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="4dp"
-        android:layout_marginHorizontal="10dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -20,10 +16,8 @@
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="5dp"
             app:cardElevation="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginVertical="4dp"
+            android:layout_marginHorizontal="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -65,8 +59,7 @@
                     android:textColor="@color/gray"
                     app:layout_constraintStart_toEndOf="@id/tv_location_status"
                     app:layout_constraintBottom_toBottomOf="@id/tv_location_status"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp" />
+                    android:layout_marginStart="5dp" />
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/btn_done"
                     android:layout_width="wrap_content"
@@ -95,5 +88,4 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

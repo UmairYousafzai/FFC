@@ -70,11 +70,11 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
         bundle.putString("recevierID", user.getId());
         PendingIntent pendingIntent;
         if (title.equals("Message")) {
-//            pendingIntent = new NavDeepLinkBuilder(this)
-//                    .setGraph(R.navigation.nav_graph)
-//                    .setDestination(R.id.chatFragment)
-//                    .setArguments( bundle)
-//                    .createPendingIntent();
+            pendingIntent = new NavDeepLinkBuilder(this)
+                    .setGraph(R.navigation.mobile_navigation)
+                    .setDestination(R.id.chatFragment)
+                    .setArguments( bundle)
+                    .createPendingIntent();
         } else if (title.equals("Location Request")) {
 
             pendingIntent = new NavDeepLinkBuilder(this)
@@ -102,7 +102,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
         builder.setContentTitle(title);
         builder.setContentText(message);
         builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-//        builder.setContentIntent(pendingIntent);
+        builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
         builder.setPriority(Notification.PRIORITY_MAX);
 
