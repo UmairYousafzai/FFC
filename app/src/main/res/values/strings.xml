@@ -157,6 +157,33 @@
     <string name="chats">Chats</string>
     <string name="type_message_here">Type message here…</string>
     <string name="send">Send</string>
+    <string name="party_name">Party Name</string>
+    <string name="party_abbreviation">Party Abbreviation</string>
+    <string name="focal_peron_name">Focal Peron Name</string>
+    <string name="focal_person_cnic">Focal Person CNIC</string>
+    <string name="sale_tax_no">Sale Tax No.</string>
+    <string name="ntn">NTN</string>
+    <string name="tax_information">Tax Information</string>
+    <string name="company">Company</string>
+    <string name="credit_information">Credit Information</string>
+    <string name="credit_days">Credit Days</string>
+    <string name="credit_limit">Credit Limit</string>
+    <string name="apply_cr_limit">Apply Cr Limit</string>
+    <string name="email_cc">Email CC</string>
+    <string name="email_bcc">Email BCC</string>
+    <string name="enter_multiple_contact">Enter Multiple Contact</string>
+    <string name="fax">Fax</string>
+    <string name="city">City</string>
+    <string name="contact_information">Contact Information</string>
+    <string name="payee">Payee</string>
+    <string name="n_a">N/A</string>
+    <string name="warning">Warning</string>
+    <string name="critical">Critical</string>
+    <string name="credit_limits_prompt_type">Credit Limits Prompt Type</string>
+    <string name="address">Address</string>
+    <string name="instruction">Instruction</string>
+    <string name="comment">Comment</string>
+    <string name="designation">Designation</string>
 
 
 </resources>

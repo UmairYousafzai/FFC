@@ -522,4 +522,9 @@
             app:nullable="true"
             android:defaultValue=" "/>
     </fragment>
+    <fragment
+        android:id="@+id/addCustomerFragment"
+        android:name="com.example.ffccloud.Customer.AddCustomerFragment"
+        android:label="fragment_add_customer"
+        tools:layout="@layout/fragment_add_customer" />
 </navigation>

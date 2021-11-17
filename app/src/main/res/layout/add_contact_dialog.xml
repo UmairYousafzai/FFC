@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:xmnls="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_Name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/name"
+        app:startIconDrawable="@drawable/ic_baseline_person_24"
+        xmnls:boxBackgroundColor="@color/white"
+        xmnls:hintTextColor="@color/APP_Theme_Color"
+        app:startIconTint="@color/APP_Theme_Color"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/APP_Theme_Color" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_designation_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/designation"
+        app:startIconDrawable="@drawable/ic_men_circle"
+        xmnls:boxBackgroundColor="@color/white"
+        xmnls:hintTextColor="@color/APP_Theme_Color"
+        app:startIconTint="@color/APP_Theme_Color"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_designation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/APP_Theme_Color" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/phone"
+
+        app:startIconDrawable="@drawable/ic_outline_comment_24"
+        xmnls:boxBackgroundColor="@color/white"
+        xmnls:hintTextColor="@color/APP_Theme_Color"
+        app:startIconTint="@color/APP_Theme_Color"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:inputType="numberSigned"
+            android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/APP_Theme_Color" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/email"
+
+        app:startIconDrawable="@drawable/ic_baseline_email_24"
+        xmnls:boxBackgroundColor="@color/white"
+        xmnls:hintTextColor="@color/APP_Theme_Color"
+        app:startIconTint="@color/APP_Theme_Color"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:inputType="textEmailAddress"
+            android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/APP_Theme_Color" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/done"
+            app:strokeWidth="1dp"
+            android:backgroundTint="@color/white"
+            app:strokeColor="@color/APP_Theme_Color"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            app:rippleColor="@color/APP_Theme_Color"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            app:elevation="5dp"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

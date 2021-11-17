@@ -315,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
                 menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_location,null));
                 menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
                 menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_baseline_gps_fixed_24,null));
+                menu.add(1, R.id.addCustomerFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_client_profile_svgrepo_com,null));
 
 
             }

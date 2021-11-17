@@ -21,7 +21,7 @@ import java.util.List;
 public class MessageRecyclerViewAdapter extends RecyclerView.Adapter {
     private LayoutInflater layoutInflater;
     private List<Message> messageList;
-    private Context context;
+    private final Context context;
 
 
     public MessageRecyclerViewAdapter(Context context) {
