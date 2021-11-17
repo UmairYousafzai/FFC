@@ -184,6 +184,7 @@
     <string name="instruction">Instruction</string>
     <string name="comment">Comment</string>
     <string name="designation">Designation</string>
+    <string name="add_contact">Add Contact</string>
 
 
 </resources>
