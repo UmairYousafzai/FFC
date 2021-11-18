@@ -4,7 +4,10 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:xmnls="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="10dp"
+    >
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_Name_layout"
@@ -52,11 +55,12 @@
 
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_phone_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/phone"
 
-        app:startIconDrawable="@drawable/ic_outline_comment_24"
+        app:startIconDrawable="@drawable/ic_baseline_call_black_24"
         xmnls:boxBackgroundColor="@color/white"
         xmnls:hintTextColor="@color/APP_Theme_Color"
         app:startIconTint="@color/APP_Theme_Color"
@@ -87,7 +91,7 @@
 
         >
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_comment"
+            android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="1"

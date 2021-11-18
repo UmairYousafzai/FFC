@@ -185,6 +185,9 @@
     <string name="comment">Comment</string>
     <string name="designation">Designation</string>
     <string name="add_contact">Add Contact</string>
+    <string name="select_salesman">Select Salesman</string>
+    <string name="select_city">Select City</string>
+    <string name="reset_form">Reset Form</string>
 
 
 </resources>

@@ -10,6 +10,7 @@ import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.AreaModel;
 import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
+import com.example.ffccloud.ModelClasses.CustomerModel;
 import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
@@ -25,7 +26,9 @@ import com.example.ffccloud.WorkPlanHistory;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -125,5 +128,8 @@ public interface Api {
 
     @GET("api/AppUser/FFCGetTeamUsers/{Emp_ID}")
     Call<List<UserModel>> getUsersForTracking(@Header("Authorization") String token, @Path("Emp_ID") int Emp_ID);
+
+    @POST("api/SupplierApi/InsertUpdate")
+    Call<UpdateStatus>  insertCustomer(@Body CustomerModel customerModel);
 }
 
