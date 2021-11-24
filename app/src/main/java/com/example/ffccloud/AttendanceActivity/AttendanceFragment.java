@@ -171,6 +171,7 @@ public class AttendanceFragment extends Fragment {
                 }
                 else
                 {
+                    pDialog.dismiss();
                     new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Please turn on  location for this action.")
                             .setContentText("Do you want to open location setting.")
@@ -190,6 +191,7 @@ public class AttendanceFragment extends Fragment {
                                     sweetAlertDialog.dismiss();
                                 }
                             }).show();
+
                     mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.doctor_icon,null));
                     selectedImage= null;
                 }
@@ -197,6 +199,7 @@ public class AttendanceFragment extends Fragment {
             }
             else
             {
+                pDialog.dismiss();
                 permission.getLocationPermission();
                 mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.doctor_icon,null));
 

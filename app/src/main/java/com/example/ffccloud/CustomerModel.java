@@ -1,11 +1,15 @@
-package com.example.ffccloud.ModelClasses;
+package com.example.ffccloud;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.example.ffccloud.ContactPersonsModel;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CustomerModel {
+public class CustomerModel implements Parcelable {
 
     private int Company_Id;
     private int Country_Id;
@@ -50,6 +54,10 @@ public class CustomerModel {
 
     private boolean Is_Company;
     private String Prompt_Type;
+
+    @SerializedName("Mobile_No")
+    @Expose
+    private String mobileNo;
     private List<ContactPersonsModel> Contact_PersonsList;
 
     public CustomerModel() {
@@ -87,6 +95,60 @@ public class CustomerModel {
         Is_Company = is_Company;
         Prompt_Type = prompt_Type;
         Contact_PersonsList = contact_PersonsList;
+    }
+
+    protected CustomerModel(Parcel in) {
+        Company_Id = in.readInt();
+        Country_Id = in.readInt();
+        Location_Id = in.readInt();
+        Project_Id = in.readInt();
+        partyID = in.readInt();
+        userID = in.readLong();
+        salesManID = in.readLong();
+        UserTypeName = in.readString();
+        partyCode = in.readString();
+        partyName = in.readString();
+        partyAbbreviation = in.readString();
+        Focal_Person = in.readString();
+        CNICNo = in.readString();
+        Sales_Tax_No = in.readString();
+        NTN = in.readString();
+        Cr_Limit = in.readDouble();
+        Cr_Limit_Amount = in.readDouble();
+        Apply_Cr_Limit = in.readByte() != 0;
+        Email = in.readString();
+        EMail_CC = in.readString();
+        EMail_BCC = in.readString();
+        contacts = in.readString();
+        Fax_No = in.readString();
+        City_Id = in.readInt();
+        Payee = in.readString();
+        Address = in.readString();
+        Instruction = in.readString();
+        Comments = in.readString();
+        Is_Company = in.readByte() != 0;
+        Prompt_Type = in.readString();
+        mobileNo = in.readString();
+    }
+
+    public static final Creator<CustomerModel> CREATOR = new Creator<CustomerModel>() {
+        @Override
+        public CustomerModel createFromParcel(Parcel in) {
+            return new CustomerModel(in);
+        }
+
+        @Override
+        public CustomerModel[] newArray(int size) {
+            return new CustomerModel[size];
+        }
+    };
+
+    public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
     }
 
     public String getPrompt_Type() {
@@ -335,5 +397,45 @@ public class CustomerModel {
 
     public void setIs_Company(boolean is_Company) {
         Is_Company = is_Company;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(Company_Id);
+        dest.writeInt(Country_Id);
+        dest.writeInt(Location_Id);
+        dest.writeInt(Project_Id);
+        dest.writeInt(partyID);
+        dest.writeLong(userID);
+        dest.writeLong(salesManID);
+        dest.writeString(UserTypeName);
+        dest.writeString(partyCode);
+        dest.writeString(partyName);
+        dest.writeString(partyAbbreviation);
+        dest.writeString(Focal_Person);
+        dest.writeString(CNICNo);
+        dest.writeString(Sales_Tax_No);
+        dest.writeString(NTN);
+        dest.writeDouble(Cr_Limit);
+        dest.writeDouble(Cr_Limit_Amount);
+        dest.writeByte((byte) (Apply_Cr_Limit ? 1 : 0));
+        dest.writeString(Email);
+        dest.writeString(EMail_CC);
+        dest.writeString(EMail_BCC);
+        dest.writeString(contacts);
+        dest.writeString(Fax_No);
+        dest.writeInt(City_Id);
+        dest.writeString(Payee);
+        dest.writeString(Address);
+        dest.writeString(Instruction);
+        dest.writeString(Comments);
+        dest.writeByte((byte) (Is_Company ? 1 : 0));
+        dest.writeString(Prompt_Type);
+        dest.writeString(mobileNo);
     }
 }

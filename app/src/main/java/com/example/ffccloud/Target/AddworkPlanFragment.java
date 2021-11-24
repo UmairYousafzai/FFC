@@ -59,10 +59,10 @@ public class AddworkPlanFragment extends Fragment {
     private AddWorkPlanDialogFragment dialogFragment;
     private List<DoctorsByAreaIdsModel> doctorModelList;
     private List<AreasByEmpIdModel> areasModelList;
-    private String dataIDs = "", dataTittles = "", mDate="";
+    private String dataIDs = "", dataTittles = "", mDate = "";
     private NavController navController;
     private NavBackStackEntry navBackStackEntry;
-    private String remarks="";
+    private String remarks = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,7 +122,7 @@ public class AddworkPlanFragment extends Fragment {
     public void setuptextFields() {
         if (key == 2 && areasModelList != null) {
             dataTittles = "";
-            dataIDs= "";
+            dataIDs = "";
 
             for (AreasByEmpIdModel model : areasModelList) {
                 dataTittles = dataTittles + model.getAreaTittle() + ",";
@@ -133,7 +133,7 @@ public class AddworkPlanFragment extends Fragment {
 
         } else if (doctorModelList != null && key == 3) {
             dataTittles = "";
-            dataIDs= "";
+            dataIDs = "";
             for (DoctorsByAreaIdsModel model : doctorModelList) {
                 dataTittles = dataTittles + model.getName() + ",";
                 dataIDs = dataIDs + model.getId() + ",";
@@ -162,25 +162,21 @@ public class AddworkPlanFragment extends Fragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        int checkMonth= month%10, checkday = (dayOfMonth%10);;
-                        String mMonth,mDay;
-                        if (checkMonth>0&&month<9)
-                        {
-                            mMonth= "0"+(month+1);
-                        }
-                        else
-                        {
-                            mMonth=String.valueOf(month+1);
+                        int checkMonth = month % 10, checkday = (dayOfMonth % 10);
+                        ;
+                        String mMonth, mDay;
+                        if (checkMonth > 0 && month < 9) {
+                            mMonth = "0" + (month + 1);
+                        } else {
+                            mMonth = String.valueOf(month + 1);
 
                         }
 
-                        if (checkday>0 && dayOfMonth<10){
+                        if (checkday > 0 && dayOfMonth < 10) {
                             mDay = "0" + (dayOfMonth);
 
-                        }
-                        else
-                        {
-                            mDay= String.valueOf(dayOfMonth);
+                        } else {
+                            mDay = String.valueOf(dayOfMonth);
 
                         }
                         mDate = mMonth + "/" + mDay + "/" + year;
@@ -258,7 +254,7 @@ public class AddworkPlanFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                remarks= s.toString();
+                remarks = s.toString();
             }
         });
 
@@ -283,6 +279,10 @@ public class AddworkPlanFragment extends Fragment {
                     mbinding.remarks.setText("");
                     dataTittles = "";
                     mDate = "";
+                } else {
+                    Toast.makeText(requireContext(), "Please Enter The Remarks", Toast.LENGTH_SHORT).show();
+                    mbinding.saveBtn.setEnabled(true);
+
                 }
             }
         });
@@ -302,10 +302,8 @@ public class AddworkPlanFragment extends Fragment {
                             .setTitleText("Add Work Plan")
                             .setContentText(updateStatus.getStrMessage())
                             .show();
-                }
-                else
-                {
-                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
+                } else {
+                    new SyncDataToDB(requireActivity().getApplication(), requireContext()).loginAgain(response.message());
                 }
                 mbinding.saveBtn.setEnabled(true);
 
@@ -318,7 +316,8 @@ public class AddworkPlanFragment extends Fragment {
                 new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Add Work Plan")
                         .setContentText(t.getMessage())
-                        .show();            }
+                        .show();
+            }
         });
     }
 
@@ -330,15 +329,14 @@ public class AddworkPlanFragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         // There are no request codes
                         Intent data = result.getData();
-                        if ( data != null) {
+                        if (data != null) {
                             ArrayList<String> resultString = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                            remarks=remarks+" "+resultString.get(0);
+                            remarks = remarks + " " + resultString.get(0);
                             mbinding.remarks.setText(remarks);
                         }
                     }
                 }
             });
-
 
 
 }

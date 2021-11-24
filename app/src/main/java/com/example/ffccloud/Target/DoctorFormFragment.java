@@ -210,50 +210,7 @@ public class DoctorFormFragment extends Fragment {
         Log.e("onViewStateRestored","dcotor form key on view State restored  me ha");
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.e("onStart","dcotor form key on start  me ha");
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e("onResume","dcotor form key on Resume me ha ");
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.e("onPause","dcotor form key on pause me ha");
-
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.e("onStop","dcotor form key on stop me ha");
-
-
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.e("onSaveInstanceState"," dcotor form key on save instance state me ha");
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        Log.e("onDestroyView","dcotor form key on destroy view me ha");
-
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();

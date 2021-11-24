@@ -17,6 +17,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -35,6 +38,7 @@ import com.example.ffccloud.R;
 import com.example.ffccloud.Target.Adapters.FilterDoctorRecyclerAdapter;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
 import com.example.ffccloud.databinding.FragmentDoctorListBinding;
+import com.example.ffccloud.databinding.FragmentSalesOrderListBinding;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.SyncDataToDB;
 import com.example.ffccloud.utils.UserViewModel;
@@ -50,7 +54,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DoctorListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class DoctorListFragment extends Fragment {
 
     private NavController navController;
     private FragmentDoctorListBinding mBinding;
@@ -60,24 +64,21 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
     private final String[] gradesArray = new String[20];
     private DoctorViewModel doctorViewModel;
     private FilterDoctorRecyclerAdapter adapter;
-    private List<FilteredDoctoredModel> filteredDoctoredModelList= new ArrayList<>();
+    private List<FilteredDoctoredModel> filteredDoctoredModelList = new ArrayList<>();
     private SweetAlertDialog progressDialog;
     private UserViewModel userViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("oncreate","on create me ha ");
+        setHasOptionsMenu(true);
 
     }
-
 
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("oncreateView"," on create view me ha");
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
         mBinding = FragmentDoctorListBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
@@ -87,11 +88,9 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = NavHostFragment.findNavController(this);
-        Log.e("onViewCreated","on view created me ha");
+        Log.e("onViewCreated", "on view created me ha");
         // styling searchView
-        EditText editText = mBinding.docSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        editText.setTextColor(Color.WHITE);
-        editText.setHintTextColor(getResources().getColor(R.color.white_greyish));
+
         progressDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
         progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
         progressDialog.setTitleText("Loading");
@@ -99,29 +98,22 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
-         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-
-
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
 
     }
-
 
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        Log.e("onViewStateRestored","on view restored me ha");
+        Log.e("onViewStateRestored", "on view restored me ha");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.e("onStart","on start me ha");
-
-
-
-
+        Log.e("onStart", "on start me ha");
 
 
     }
@@ -129,8 +121,7 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("onResume","on resume me ha ");
-
+        Log.e("onResume", "on resume me ha ");
 
 
         btnListener();
@@ -150,24 +141,21 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
         });
 
 
-
         setUpRecyclerView();
-        searchViewListener();
+
         setPullToFresh();
         doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
-        doctorViewModel .deleteAllSchedule();
+        doctorViewModel.deleteAllSchedule();
 
         if (SharedPreferenceHelper.getInstance(requireContext()).getFlterDocListState()) {
             getDoctorList();
             SharedPreferenceHelper.getInstance(requireContext()).setFlterDocListState(false);
-        }
-        else
-        {
+        } else {
             doctorViewModel.getAllFilterDoctor().observe(getViewLifecycleOwner(), new Observer<List<FilteredDoctoredModel>>() {
                 @Override
                 public void onChanged(List<FilteredDoctoredModel> list) {
                     adapter.setFilteredDoctoredModelList(list);
-                    filteredDoctoredModelList=list;
+                    filteredDoctoredModelList = list;
                     dismissProgressbar();
 
                 }
@@ -176,63 +164,19 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
 
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.e("onPause","on pause me ha");
 
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.e("onStop","on stop me ha");
-
-
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.e("onSaveInstanceState"," on save instance me ha");
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.e("onDestroyView"," on destroy view me ha");
-
-
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.e("onDestroy","on destroy me ha");
-
-
-
-    }
-
-    public void dismissProgressbar()
-    {
-       if( adapter.getItemCount()==filteredDoctoredModelList.size())
-       {
-           progressDialog.dismiss();
-       }
+    public void dismissProgressbar() {
+        if (adapter.getItemCount() == filteredDoctoredModelList.size()) {
+            progressDialog.dismiss();
+        }
     }
 
     private void setUpRecyclerView() {
 
 
-
         adapter = new FilterDoctorRecyclerAdapter(this);
         mBinding.doctorListRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
         mBinding.doctorListRecyclerview.setAdapter(adapter);
-
 
 
     }
@@ -251,22 +195,20 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
                     List<FilteredDoctoredModel> list = response.body();
                     if (list.size() > 0) {
                         doctorViewModel.insertFilterDoctors(list);
-                        filteredDoctoredModelList= list;
+                        filteredDoctoredModelList = list;
                         adapter.setFilteredDoctoredModelList(list);
                         dismissProgressbar();
 
                     }
-                }
-                else
-                {
-                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
+                } else {
+                    new SyncDataToDB(requireActivity().getApplication(), requireContext()).loginAgain(response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<FilteredDoctoredModel>> call, Throwable t) {
 
-                Toast.makeText(requireContext(),""+t.getMessage(),Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -292,7 +234,6 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
             ArrayAdapter adapter = new ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, classificationArrayFilter);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mBinding.classificationSpinner.setAdapter(adapter);
-            mBinding.classificationSpinner.setOnItemSelectedListener(this);
         }
 
     }
@@ -317,7 +258,6 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
             ArrayAdapter adapter = new ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, gradeArrayFilter);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mBinding.gradeSpinner.setAdapter(adapter);
-            mBinding.gradeSpinner.setOnItemSelectedListener(this);
 
         }
 
@@ -325,31 +265,8 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
 
 
     public void btnListener() {
-        mBinding.backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                navController.popBackStack();
-            }
-        });
 
-        mBinding.filterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isSlideDown) {
-                    Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down);
-                    mBinding.filterLayout.setAnimation(animation);
-                    mBinding.filterLayout.setVisibility(View.VISIBLE);
-                    isSlideDown = true;
-                } else {
-                    Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
-                    mBinding.filterLayout.setAnimation(animation);
-                    mBinding.filterLayout.setVisibility(View.GONE);
-                    isSlideDown = false;
-                }
-
-            }
-        });
         mBinding.setBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -370,29 +287,18 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
                 isSlideDown = false;
             }
         });
-    mBinding.fabAddDoctor.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        mBinding.fabAddDoctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
 
-            navController.navigate(R.id.doctorFormFragment);
-        }
-    });
+                navController.navigate(R.id.doctorFormFragment);
+            }
+        });
     }
 
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        Spinner spinner = (Spinner) parent;
-
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 
     public void setPullToFresh() {
         mBinding.refreshDocLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -406,19 +312,50 @@ public class DoctorListFragment extends Fragment implements AdapterView.OnItemSe
         });
     }
 
-    public void searchViewListener() {
-        mBinding.docSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
+        menu.findItem(R.id.filter).setVisible(true);
+        menu.findItem(R.id.search).setVisible(true);
+        menu.findItem(R.id.search1).setVisible(false);
+    }
 
-                adapter.getFilter().filter(newText);
-                return false;
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.filter) {
+            if (mBinding.filterLayout.getVisibility() == View.GONE) {
+                Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down);
+                mBinding.filterLayout.setAnimation(animation);
+                mBinding.filterLayout.setVisibility(View.VISIBLE);
+
+            } else {
+                Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
+                mBinding.filterLayout.setAnimation(animation);
+                mBinding.filterLayout.setVisibility(View.GONE);
             }
-        });
+        } else if (item.getItemId() == R.id.search) {
+
+
+            final SearchView searchView = (SearchView) item.getActionView();
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+
+                    return false;
+
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+
+                    return false;
+                }
+            });
+        }
+        return true;
     }
 }
+

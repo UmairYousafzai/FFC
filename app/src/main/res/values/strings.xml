@@ -188,6 +188,15 @@
     <string name="select_salesman">Select Salesman</string>
     <string name="select_city">Select City</string>
     <string name="reset_form">Reset Form</string>
+    <string name="focal_person_name">Focal Person Name:</string>
+    <string name="Phone">Phone:</string>
+    <string name="Email">Email:</string>
+    <string name="City">City:</string>
+    <string name="Status">Status:</string>
+    <string name="by_date">By Date</string>
+    <string name="Days_ago">days ago</string>
+    <string name="from_date">From Date: </string>
+    <string name="select_customer">Select Customer</string>
 
 
 </resources>

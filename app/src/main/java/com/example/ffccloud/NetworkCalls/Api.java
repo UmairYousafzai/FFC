@@ -10,13 +10,14 @@ import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.AreaModel;
 import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.CustomerModel;
+import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.ModelClasses.QualificationModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
+import com.example.ffccloud.SaleOrderModel;
 import com.example.ffccloud.SaveDoctorModel;
 import com.example.ffccloud.ModelClasses.SaveNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
@@ -26,9 +27,7 @@ import com.example.ffccloud.WorkPlanHistory;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -131,5 +130,23 @@ public interface Api {
 
     @POST("api/SupplierApi/InsertUpdate")
     Call<UpdateStatus>  insertCustomer(@Body CustomerModel customerModel);
+
+    @GET("api/SupplierApi/GetAllbyUser")
+    Call<List<CustomerModel>>  getAllCustomer(@Query("Company_Id") int companyID,
+                                              @Query("Country_Id") int Country_Id,
+                                              @Query("UserType") String userType,
+                                              @Query("UserId") int UserId);
+
+    @GET("api/SalesOrder/Get_SalesOrderInvoice_List")
+    Call<List<SaleOrderModel>>  getSalesOrder(@Query("Company_Id") int companyID,
+                                              @Query("Location_Id") int Location_Id,
+                                              @Query("Country_Id") int Country_Id,
+                                              @Query("Project_Id") int Project_Id,
+                                              @Query("From_Date") String From_Date,
+                                              @Query("To_Date") String To_Date,
+                                              @Query("Supplier_Id") int Supplier_Id,
+                                              @Query("Status") int Status,
+                                              @Query("DateStatus") int DateStatus,
+                                              @Query("PriorityStatus") int PriorityStatus);
 }
 

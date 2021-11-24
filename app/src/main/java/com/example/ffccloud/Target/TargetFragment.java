@@ -616,13 +616,16 @@ public class TargetFragment extends Fragment {
                                         sweetAlertDialog.dismiss();
                                         alertDialog.dismiss();
                                     }
+                                    else {
+                                        sweetAlertDialog.dismiss();
+                                    }
 
 
                                 }
 
                                 @Override
                                 public void onFailure(Call<UpdateStatus> call, Throwable t) {
-
+                                    sweetAlertDialog.dismiss();
                                     t.getMessage();
                                 }
                             });

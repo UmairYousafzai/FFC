@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout>
-
     <data>
-
         <variable
-            name="customer"
-            type="com.example.ffccloud.CustomerModel" />
+            name="saleOrder"
+            type="com.example.ffccloud.SaleOrderModel" />
     </data>
 
 
@@ -31,39 +28,41 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="10dp">
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp">
 
                 <TextView
                     android:id="@+id/tv_code"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Code: "
+                    android:text="@{saleOrder.supplierName}"
                     android:textColor="@color/white"
                     android:textStyle="bold"
+                    android:padding="5dp"
+                    app:layout_constraintEnd_toStartOf="@id/status"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-                <ImageButton
-                    android:id="@+id/btn_add"
+
+                <TextView
+                    android:id="@+id/status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="4dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_baseline_add_white_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_edit"
+                    android:text="@string/Status"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@id/tv_status"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     />
-                <ImageButton
-                    android:id="@+id/btn_edit"
+
+                <TextView
+                    android:id="@+id/tv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="4dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_baseline_mode_edit_24"
+                    android:paddingVertical="4dp"
+                    android:text=""
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -71,63 +70,72 @@
                     />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                >
+
                 <TextView
+                    android:id="@+id/tv_heading_sales_order_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name: "
-                    android:textColor="@color/APP_Theme_Color"
-                    android:textStyle="bold"
-                    android:paddingStart="10dp"
                     android:paddingVertical="8dp"
+                    android:paddingStart="10dp"
+                    android:text="Sales Order #  "
+                    android:textColor="@color/APP_Theme_Color"
                     android:textSize="14sp"
-                    />
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
                     android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="8dp"
-                    android:text="@{customer.partyName}"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:text="@{saleOrder.saleOrderNo}"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_heading_sales_order_num"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/focal_person_name"
-                    android:textColor="@color/APP_Theme_Color"
-                    android:textStyle="bold"
-                    android:paddingStart="10dp"
                     android:paddingVertical="8dp"
+                    android:paddingStart="10dp"
+                    android:text="Sales Order Date: "
+                    android:textColor="@color/APP_Theme_Color"
                     android:textSize="14sp"
-                    />
+                    android:textStyle="bold" />
 
 
                 <TextView
-                    android:id="@+id/tv_focal_person"
+                    android:id="@+id/tv_sales_order_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="8dp"
-                    android:text="@{customer.focal_Person}"
+                    android:text="@{saleOrder.saleOrderDate}"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -136,21 +144,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/gray" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/Phone"
-                    android:textColor="@color/APP_Theme_Color"
-                    android:textStyle="bold"
-                    android:paddingStart="10dp"
                     android:paddingVertical="8dp"
+                    android:paddingStart="10dp"
+                    android:text="Amount: "
+                    android:textColor="@color/APP_Theme_Color"
                     android:textSize="14sp"
-                    />
+                    android:textStyle="bold" />
 
 
                 <TextView
@@ -160,7 +169,7 @@
                     android:background="@color/white"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="8dp"
-                    android:text="@{customer.mobileNo}"
+                    android:text="@{String.valueOf(saleOrder.netAmount)}"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -169,70 +178,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/gray" />
-            <LinearLayout
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal">
+                >
+
                 <TextView
+                    android:id="@+id/days_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/Email"
-                    android:textColor="@color/APP_Theme_Color"
-                    android:textStyle="bold"
-                    android:paddingStart="10dp"
                     android:paddingVertical="8dp"
+                    android:paddingStart="10dp"
+                    android:text="@{String.valueOf(saleOrder.days).concat(@string/Days_ago)}"
+                    android:textColor="@color/white"
                     android:textSize="14sp"
-                    />
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
 
-                <TextView
+                <ImageButton
                     android:id="@+id/tv_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="8dp"
-                    android:text="@{customer.email}"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal">
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/City"
-                    android:textColor="@color/APP_Theme_Color"
-                    android:textStyle="bold"
-                    android:paddingStart="10dp"
-                    android:paddingVertical="8dp"
-                    android:textSize="14sp"
+                    android:src="@drawable/ic_baseline_preview_24"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginVertical="4dp"
                     />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-                <TextView
-                    android:id="@+id/tv_city"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="8dp"
-                    android:text=""
-                    android:textSize="14sp" />
-            </LinearLayout>
 
 
 
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
+
 </layout>
+

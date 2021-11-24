@@ -56,15 +56,16 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
     private SaveDoctorModel saveDoctorModel;
     private FragmentAddScheduleBinding mBinding;
-    private List<ScheduleModel> scheduleModelList= new ArrayList<>();
+    private List<ScheduleModel> scheduleModelList = new ArrayList<>();
     private ArrayList<String> regionList = new ArrayList<>(), areaList = new ArrayList<>();
     private HashMap<String, Integer> regionHashmap = new HashMap<>(), areaHashmap = new HashMap<>(), dayhashMap = new HashMap<>();
     private int mHour, mMinute;
-    private String openingTime="", closingTime="";
-    private boolean primaryLocation=false,primaryLocationLock=false, checkPrimaryLoation=false;;
+    private String openingTime = "", closingTime = "";
+    private boolean primaryLocation = false, primaryLocationLock = false, checkPrimaryLoation = false;
+    ;
     private String[] days;
     private ScheduleAdapter adapter;
-    private String locationString= "";
+    private String locationString = "";
     private DoctorViewModel doctorViewModel;
     private SweetAlertDialog progressDialog;
 
@@ -96,20 +97,17 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
         doctorViewModel.getAllschedule().observe(getViewLifecycleOwner(), new Observer<List<ScheduleModel>>() {
             @Override
             public void onChanged(List<ScheduleModel> list) {
-                if (list.size()>0&&list!=null)
-                {
-                    scheduleModelList=list;
+                if (list.size() > 0 && list != null) {
+                    scheduleModelList = list;
                     adapter.setScheduleModelList(scheduleModelList);
 
 
-                    if (scheduleModelList!=null)
-                    {
-                        for (ScheduleModel model:scheduleModelList)
-                        {
+                    if (scheduleModelList != null) {
+                        for (ScheduleModel model : scheduleModelList) {
                             if (model.getPrimaryLoc()) {
-                                checkPrimaryLoation=model.getPrimaryLoc();
+                                checkPrimaryLoation = model.getPrimaryLoc();
                                 //this can prevent user from selecting different primary location
-                                primaryLocationLock= true;
+                                primaryLocationLock = true;
                                 mBinding.primaryLocationBtn.setChecked(false);
                                 mBinding.primaryLocationBtn.setEnabled(false);
                                 return;
@@ -136,8 +134,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
         mBinding.scheduleRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new ScheduleAdapter();
         mBinding.scheduleRecyclerview.setAdapter(adapter);
-        if (scheduleModelList.size()>0&&scheduleModelList!=null)
-        {
+        if (scheduleModelList.size() > 0 && scheduleModelList != null) {
         }
     }
 
@@ -186,10 +183,9 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
         mBinding.locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isLocationEnabled())
-                {
-                    CustomLocation customLocation= new CustomLocation(requireContext());
-                    CustomLocation.CustomLocationResults results= new CustomLocation.CustomLocationResults() {
+                if (isLocationEnabled()) {
+                    CustomLocation customLocation = new CustomLocation(requireContext());
+                    CustomLocation.CustomLocationResults results = new CustomLocation.CustomLocationResults() {
                         @Override
                         public void gotLocation(Location location) {
 
@@ -197,23 +193,18 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                             if (mBinding.locationBtn.isChecked()) {
                                 String address = getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.textLocation.setText(address);
-                                locationString = String.valueOf(location.getLongitude())+","+String.valueOf(location.getLatitude());
-                            }
-                            else
-                            {
-                                locationString="";
+                                locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                            } else {
+                                locationString = "";
                                 mBinding.textLocation.setText(locationString);
                             }
-
 
 
                         }
                     };
                     customLocation.getLastLocation(results);
-                }
-                else
-                {
-                    new SweetAlertDialog(requireContext(),SweetAlertDialog.ERROR_TYPE)
+                } else {
+                    new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Please turn on  location for this action.")
                             .setContentText("Do you want to open location setting.")
                             .setConfirmText("Yes")
@@ -244,7 +235,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
             public void onClick(View v) {
 
 
-                new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
+                new SweetAlertDialog(requireContext(), SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Adding Schedule.")
                         .setContentText("Do you want to Save schedule?")
                         .setConfirmText("Yes")
@@ -252,54 +243,40 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                                if (mBinding.primaryLocationBtn.isChecked()||checkPrimaryLoation)
-                                {
+                                if (mBinding.primaryLocationBtn.isChecked() || checkPrimaryLoation) {
                                     //this can prevent user from selecting different primary location
-                                    primaryLocationLock= true;
+                                    primaryLocationLock = true;
                                     mBinding.primaryLocationBtn.setChecked(false);
                                     mBinding.primaryLocationBtn.setEnabled(false);
                                 }
 
-                                ScheduleModel model= new ScheduleModel();
-                                int regionId,areaId,dayId;
+                                ScheduleModel model = new ScheduleModel();
+                                int regionId, areaId, dayId;
 
-                                if (mBinding.regionSpinner.getSelectedItem().toString().isEmpty())
-                                {
+                                if (mBinding.regionSpinner.getSelectedItem() != null) {
                                     mBinding.regionSpinner.requestFocus();
-                                    Toast.makeText(requireContext(),"Please Select region for adding schedule",Toast.LENGTH_SHORT).show();
-                                }
-                                else if (mBinding.areaSpinner.getSelectedItem().toString().isEmpty())
-                                {
+                                    Toast.makeText(requireContext(), "Please Select region for adding schedule", Toast.LENGTH_SHORT).show();
+                                } else if (mBinding.areaSpinner.getSelectedItem() != null) {
                                     mBinding.areaSpinner.requestFocus();
-                                    Toast.makeText(requireContext(),"Please Select area for adding schedule",Toast.LENGTH_SHORT).show();
-                                }
-                                else if (mBinding.daySpinner.getSelectedItem().toString().isEmpty())
-                                {
+                                    Toast.makeText(requireContext(), "Please Select area for adding schedule", Toast.LENGTH_SHORT).show();
+                                } else if (mBinding.daySpinner.getSelectedItem() != null) {
                                     mBinding.daySpinner.requestFocus();
-                                    Toast.makeText(requireContext(),"Please Select day for adding schedule",Toast.LENGTH_SHORT).show();
-                                }
-                                else if (openingTime.isEmpty())
-                                {
+                                    Toast.makeText(requireContext(), "Please Select day for adding schedule", Toast.LENGTH_SHORT).show();
+                                } else if (openingTime.isEmpty()) {
                                     mBinding.openingTimeText.requestFocus();
                                     mBinding.openingTimeText.setError("Please Select open timing for adding schedule");
-                                    Toast.makeText(requireContext(),"Please Select open timing for adding schedule",Toast.LENGTH_SHORT).show();
-                                }
-                                else if (closingTime.isEmpty())
-                                {
+                                    Toast.makeText(requireContext(), "Please Select open timing for adding schedule", Toast.LENGTH_SHORT).show();
+                                } else if (closingTime != null) {
                                     mBinding.closingTimeText.requestFocus();
                                     mBinding.closingTimeText.setError("Please Select close timing for adding schedule");
-                                    Toast.makeText(requireContext(),"Please Select close timing for adding schedule",Toast.LENGTH_SHORT).show();
-                                }
-                                else if(locationString.isEmpty())
-                                {
+                                    Toast.makeText(requireContext(), "Please Select close timing for adding schedule", Toast.LENGTH_SHORT).show();
+                                } else if (locationString != null) {
                                     mBinding.locationBtn.requestFocus();
                                     mBinding.textLocation.setError("Please Select turn on location for adding schedule");
-                                    Toast.makeText(requireContext(),"Please turn on location for adding schedule",Toast.LENGTH_SHORT).show();
-                                }
-                                else
-                                {
+                                    Toast.makeText(requireContext(), "Please turn on location for adding schedule", Toast.LENGTH_SHORT).show();
+                                } else {
 
-                                    regionId= regionHashmap.get(mBinding.regionSpinner.getSelectedItem().toString());
+                                    regionId = regionHashmap.get(mBinding.regionSpinner.getSelectedItem().toString());
                                     areaId = areaHashmap.get(mBinding.areaSpinner.getSelectedItem().toString());
                                     dayId = dayhashMap.get(mBinding.daySpinner.getSelectedItem().toString());
 
@@ -313,22 +290,19 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                                     model.setDayId(dayId);
                                     model.setPrimaryLoc(primaryLocation);
 
-                                    if (!scheduleModelList.contains(model))
-                                    {
+                                    if (!scheduleModelList.contains(model)) {
                                         scheduleModelList.add(model);
                                         getRegion();
                                         mBinding.textLocation.setText("");
                                         mBinding.closingTimeText.setText("");
                                         mBinding.openingTimeText.setText("");
                                         mBinding.locationBtn.setChecked(false);
-                                        openingTime="";
-                                        closingTime="";
-                                        Toast.makeText(requireContext(),"Schedule Added",Toast.LENGTH_SHORT).show();
+                                        openingTime = "";
+                                        closingTime = "";
+                                        Toast.makeText(requireContext(), "Schedule Added", Toast.LENGTH_SHORT).show();
                                         adapter.setScheduleModelList(scheduleModelList);
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(requireContext(),"Schedule Already Exist",Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(requireContext(), "Schedule Already Exist", Toast.LENGTH_SHORT).show();
                                     }
 
                                 }
@@ -345,8 +319,6 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                         }).show();
 
 
-
-
             }
         });
 
@@ -354,19 +326,17 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
             @Override
             public void onClick(View v) {
 
-                if (!primaryLocationLock)
-                {
-                    if (mBinding.primaryLocationBtn.isChecked())
-                    {
+                if (!primaryLocationLock) {
+                    if (mBinding.primaryLocationBtn.isChecked()) {
 
-                        new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
+                        new SweetAlertDialog(requireContext(), SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Primary Location Alert")
                                 .setContentText("Do you want set Primary Location for this schedule?")
                                 .setConfirmText("Yes")
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        primaryLocation= true;
+                                        primaryLocation = true;
                                         sweetAlertDialog.dismiss();
                                     }
                                 })
@@ -374,7 +344,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        primaryLocation= false;
+                                        primaryLocation = false;
                                         mBinding.primaryLocationBtn.setChecked(false);
                                         sweetAlertDialog.dismiss();
                                     }
@@ -391,7 +361,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
             public void onClick(View v) {
 
                 mBinding.btnSaveDoctor.setEnabled(false);
-                new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
+                new SweetAlertDialog(requireContext(), SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Adding Doctor.")
                         .setContentText("Do you want to Save Doctor?")
                         .setConfirmText("Yes")
@@ -408,7 +378,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                                 //pDialog.setCancelable(false);
                                 progressDialog.setCanceledOnTouchOutside(false);
                                 progressDialog.show();
-                                Call<UpdateStatus> call = ApiClient.getInstance().getApi().SendSaveDoctor(token,"application/json",saveDoctorModel);
+                                Call<UpdateStatus> call = ApiClient.getInstance().getApi().SendSaveDoctor(token, "application/json", saveDoctorModel);
                                 call.enqueue(new Callback<UpdateStatus>() {
                                     @Override
                                     public void onResponse(Call<UpdateStatus> call, Response<UpdateStatus> response) {
@@ -425,7 +395,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                                     @Override
                                     public void onFailure(Call<UpdateStatus> call, Throwable t) {
 
-                                        Toast.makeText(requireContext(),t.getMessage(),Toast.LENGTH_LONG).show();
+                                        Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_LONG).show();
 
                                     }
                                 });
@@ -443,8 +413,6 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
                             }
                         }).show();
-
-
 
 
             }
@@ -547,13 +515,11 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
     }
 
-    public List<DoctorScheduleModel> getSchedule()
-    {
+    public List<DoctorScheduleModel> getSchedule() {
         List<DoctorScheduleModel> doctorScheduleModelList = new ArrayList<>();
-        DoctorScheduleModel doctorScheduleModel= new DoctorScheduleModel();
+        DoctorScheduleModel doctorScheduleModel = new DoctorScheduleModel();
 
-        for (ScheduleModel model:scheduleModelList)
-        {
+        for (ScheduleModel model : scheduleModelList) {
             doctorScheduleModel.setAc_No(model.getAcNo());
             doctorScheduleModel.setSub_Head_Code(model.getSubHeadCode());
             doctorScheduleModel.setClosing_Time(model.getClosingTime());
@@ -591,6 +557,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
         }
         return strAdd;
     }
+
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);

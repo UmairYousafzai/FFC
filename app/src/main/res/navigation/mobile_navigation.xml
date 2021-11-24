@@ -429,7 +429,11 @@
             android:id="@+id/action_showRouteFragment_to_nav_home"
             app:destination="@id/nav_home"
             app:popUpTo="@+id/nav_home"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/activityTaskFragment"
@@ -465,7 +469,11 @@
         >
         <action
             android:id="@+id/action_expenseWalletFragment_to_expenseFormFragment"
-            app:destination="@id/expenseFormFragment" />
+            app:destination="@id/expenseFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/tableLayout"
@@ -479,7 +487,11 @@
         tools:layout="@layout/fragment_users_list" >
         <action
             android:id="@+id/action_usersListFragment_to_trackerFragment"
-            app:destination="@id/trackerFragment" />
+            app:destination="@id/trackerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/locationRequestFragment"
@@ -504,7 +516,11 @@
         tools:layout="@layout/fragment_chat_user_list" >
         <action
             android:id="@+id/action_chatUserListFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -525,6 +541,49 @@
     <fragment
         android:id="@+id/addCustomerFragment"
         android:name="com.example.ffccloud.Customer.AddCustomerFragment"
-        android:label="fragment_add_customer"
-        tools:layout="@layout/fragment_add_customer" />
+        android:label="Add Customer"
+        tools:layout="@layout/fragment_add_customer" >
+        <argument
+            android:name="customer"
+            app:argType="com.example.ffccloud.CustomerModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerListFragment"
+        android:name="com.example.ffccloud.Customer.CustomerListFragment"
+        android:label="Customer List"
+        tools:layout="@layout/fragment_customer_list" >
+        <action
+            android:id="@+id/action_customerListFragment_to_addCustomerFragment"
+            app:destination="@id/addCustomerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_customerListFragment_to_salesOrderListFragment"
+            app:destination="@id/salesOrderListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="CallingFragmentKey"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/salesOrderListFragment"
+        android:name="com.example.ffccloud.salesOrder.SalesOrderListFragment"
+        android:label="Sales Order"
+        tools:layout="@layout/fragment_sales_order_list" >
+        <action
+            android:id="@+id/action_salesOrderListFragment_to_customerListFragment"
+            app:destination="@id/customerListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 </navigation>

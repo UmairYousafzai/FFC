@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.room.Update;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
 import com.example.ffccloud.ContactPersonsModel;
-import com.example.ffccloud.ModelClasses.CustomerModel;
+import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
@@ -31,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +45,7 @@ public class AddCustomerFragment extends Fragment {
     private boolean applyCredit = false,isCompany= false;
     private List<ContactPersonsModel> contactPersonsModelList = new ArrayList<>();
     private ContactRecyclerAdapter adapter;
+    private CustomerModel customerModel;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -61,6 +62,64 @@ public class AddCustomerFragment extends Fragment {
         btnListener();
         getCity();
         setupRecyclerView();
+
+        customerModel = AddCustomerFragmentArgs.fromBundle(getArguments()).getCustomer();
+
+        if (customerModel!=null)
+        {
+            setUpFields();
+        }
+
+
+    }
+
+    private void setUpFields() {
+
+        mBinding.etPartName.setText(customerModel.getPartyName());
+        mBinding.etPartAbbreviation.setText(customerModel.getPartyAbbreviation());
+        mBinding.etFocalPersonName.setText(customerModel.getFocal_Person());
+        mBinding.etFocalPersonCNIC.setText(customerModel.getCNICNo());
+        if (customerModel.isIs_Company())
+        {
+            mBinding.companyCheckBox.setChecked(true);
+        }
+        mBinding.etSaleTax.setText(customerModel.getSales_Tax_No());
+        mBinding.etNtnNum.setText(customerModel.getNTN());
+        mBinding.etCreditDays.setText(String.valueOf(customerModel.getCr_Limit()) );
+        mBinding.etCreditLimit.setText(String.valueOf(customerModel.getCr_Limit_Amount()));
+
+        if (customerModel.getPrompt_Type().equals("1"))
+        {
+            mBinding.creditLimitNaRadio.setChecked(true);
+        }
+        else if (customerModel.getPrompt_Type().equals("2"))
+        {
+            mBinding.creditLimitWarningRadio.setChecked(true);
+
+        }
+        else if (customerModel.getPrompt_Type().equals("3"))
+        {
+            mBinding.creditLimitCriticalRadio.setChecked(true);
+
+        }
+
+        if (customerModel.isApply_Cr_Limit())
+        {
+            mBinding.applyCreditLimitCheckBox.setChecked(true);
+        }
+
+        mBinding.etEmail.setText(customerModel.getEmail());
+        mBinding.etEmailCc.setText(customerModel.getEMail_CC());
+        mBinding.etBccEmail.setText(customerModel.getEMail_BCC());
+        mBinding.etContact.setText(customerModel.getContacts());
+        mBinding.etFax.setText(customerModel.getFax_No());
+        mBinding.etAddress.setText(customerModel.getAddress());
+        mBinding.etPayee.setText(customerModel.getPayee());
+        mBinding.etInstruction.setText(customerModel.getInstruction());
+        mBinding.etComment.setText(customerModel.getComments());
+
+        adapter.setContactPersonsModelList(customerModel.getContact_PersonsList());
+
     }
 
     private void setupRecyclerView() {
@@ -73,69 +132,46 @@ public class AddCustomerFragment extends Fragment {
 
     private void btnListener() {
 
-        mBinding.addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog();
-            }
-        });
-        mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                insertCustomer();
-            }
-        });
+        mBinding.addBtn.setOnClickListener(v -> showDialog());
+        mBinding.saveBtn.setOnClickListener(v -> insertCustomer());
 
-        mBinding.applyCreditLimitCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                applyCredit = mBinding.applyCreditLimitCheckBox.isChecked();
-            }
-        });
-        mBinding.companyCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isCompany = mBinding.companyCheckBox.isChecked();
-            }
-        });
-        mBinding.creditLimitRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton radioButton = mBinding.getRoot().findViewById(checkedId);
-                if (radioButton.getText().toString().equals("N/A")) {
-                    creditLimitPromptType = "1";
-                    Toast.makeText(requireContext(), "Credit Limits Prompt Type " + radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
-                } else if (radioButton.getText().toString().equals("Warning")) {
-                    creditLimitPromptType = "2";
+        mBinding.applyCreditLimitCheckBox.setOnClickListener(v -> applyCredit = mBinding.applyCreditLimitCheckBox.isChecked());
+        mBinding.companyCheckBox.setOnClickListener(v -> isCompany = mBinding.companyCheckBox.isChecked());
+        mBinding.creditLimitRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton radioButton = mBinding.getRoot().findViewById(checkedId);
+            if (radioButton.getText().toString().equals("N/A")) {
+                creditLimitPromptType = "1";
+                Toast.makeText(requireContext(), "Credit Limits Prompt Type " + radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+            } else if (radioButton.getText().toString().equals("Warning")) {
+                creditLimitPromptType = "2";
 
-                    Toast.makeText(requireContext(), "Credit Limits Prompt Type " + radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Credit Limits Prompt Type " + radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
 
-                } else if (radioButton.getText().toString().equals("Critical")) {
-                    creditLimitPromptType = "3";
+            } else if (radioButton.getText().toString().equals("Critical")) {
+                creditLimitPromptType = "3";
 
-                    Toast.makeText(requireContext(), "Credit Limits Prompt Type " + radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                }
+                Toast.makeText(requireContext(), "Credit Limits Prompt Type " + radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
 
             }
+
         });
     }
 
     private void insertCustomer() {
 
         int userID = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
-        String partyName = mBinding.etPartName.getText().toString().trim();
-        double crLimit = Double.parseDouble(mBinding.etCreditDays.getText().toString());
-        double crLimitAmount = Double.parseDouble(mBinding.etCreditLimit.getText().toString());
+        String partyName = Objects.requireNonNull(mBinding.etPartName.getText()).toString().trim();
+        double crLimit = Double.parseDouble(Objects.requireNonNull(mBinding.etCreditDays.getText()).toString());
+        double crLimitAmount = Double.parseDouble(Objects.requireNonNull(mBinding.etCreditLimit.getText()).toString());
         int cityId = cityHashMap.get(mBinding.citySpinner.getSelectedItem().toString());
-        String email = mBinding.etEmail.getText().toString().trim();
-        String emailCC = mBinding.etEmailCc.getText().toString().trim();
-        String emailBCC = mBinding.etBccEmail.getText().toString().trim();
+        String email = Objects.requireNonNull(mBinding.etEmail.getText()).toString().trim();
+        String emailCC = Objects.requireNonNull(mBinding.etEmailCc.getText()).toString().trim();
+        String emailBCC = Objects.requireNonNull(mBinding.etBccEmail.getText()).toString().trim();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
 
 
-        if (partyName != null && cityId > 0) {
+        if (cityId > 0) {
 
             if (email.matches(emailPattern) )
             {
@@ -145,20 +181,20 @@ public class AddCustomerFragment extends Fragment {
                     {
                         CustomerModel customerModel = new CustomerModel(1, 1, 1, 1, 0, userID, 0, "c", null
                                 , partyName
-                                , mBinding.etPartAbbreviation.getText().toString()
-                                , mBinding.etFocalPersonName.getText().toString()
-                                , mBinding.etFocalPersonCNIC.getText().toString()
-                                , mBinding.etSaleTax.getText().toString()
-                                , mBinding.etNtnNum.getText().toString()
+                                , Objects.requireNonNull(mBinding.etPartAbbreviation.getText()).toString()
+                                , Objects.requireNonNull(mBinding.etFocalPersonName.getText()).toString()
+                                , Objects.requireNonNull(mBinding.etFocalPersonCNIC.getText()).toString()
+                                , Objects.requireNonNull(mBinding.etSaleTax.getText()).toString()
+                                , Objects.requireNonNull(mBinding.etNtnNum.getText()).toString()
                                 , crLimit
                                 , crLimitAmount, applyCredit
                                 ,email,emailCC,emailBCC
-                        ,mBinding.etContact.getText().toString()
-                        ,mBinding.etFax.getText().toString()
-                        ,cityId,mBinding.etPayee.getText().toString()
-                        ,mBinding.etAddress.getText().toString()
-                        ,mBinding.etInstruction.getText().toString()
-                        ,mBinding.etComment.getText().toString()
+                        , Objects.requireNonNull(mBinding.etContact.getText()).toString()
+                        , Objects.requireNonNull(mBinding.etFax.getText()).toString()
+                        ,cityId, Objects.requireNonNull(mBinding.etPayee.getText()).toString()
+                        , Objects.requireNonNull(mBinding.etAddress.getText()).toString()
+                        , Objects.requireNonNull(mBinding.etInstruction.getText()).toString()
+                        , Objects.requireNonNull(mBinding.etComment.getText()).toString()
                         ,isCompany,creditLimitPromptType,contactPersonsModelList);
 
                         apiCallforsavingCustomer(customerModel);

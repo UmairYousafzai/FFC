@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityViewModel activityViewModel;
     private List<Activity> runningActivity;
 
+
     private boolean menuCheck = true;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -79,31 +80,13 @@ public class MainActivity extends AppCompatActivity {
         sendNoticationClass.UpdateToken();
 
 
-        setSupportActionBar(mbinding.customToolbar);
+
         ffcDatabase = FfcDatabase.getInstance(getApplicationContext());
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
-        assert navHostFragment != null;
-        navController = navHostFragment.getNavController();
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph())
-                .setOpenableLayout(mbinding.drawerLayout)
-                .build();
-        NavigationUI.setupWithNavController(mbinding.navView, navController);
-        NavigationUI.setupWithNavController(mbinding.customToolbar, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(mbinding.bottomNavigation, navController);
-
-        setDrawerHeader();
 
         permission = new Permission(this, this);
 
-        if (SharedPreferenceHelper.getInstance(getApplication()).getGetDocListState()) {
-            int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
-            SyncDataToDB syncDataToDB = new SyncDataToDB(getApplication(), this);
-            syncDataToDB.saveDoctorsList(id);
-            syncDataToDB.SyncData(id);
-            SharedPreferenceHelper.getInstance(getApplication()).setGetDocListState(false);
-        }
 
         activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
@@ -117,7 +100,45 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        setupToolbar();
+        syncData();
+        setUpNavigation();
+        setDrawerHeader();
         drawerItemSelectedListener();
+
+    }
+
+    private void setUpNavigation() {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+
+        assert navHostFragment != null;
+        navController = navHostFragment.getNavController();
+
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph())
+                .setOpenableLayout(mbinding.drawerLayout)
+                .build();
+        NavigationUI.setupWithNavController(mbinding.navView, navController);
+        NavigationUI.setupWithNavController(mbinding.customToolbar, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(mbinding.bottomNavigation, navController);
+
+    }
+
+    private void syncData() {
+
+        if (SharedPreferenceHelper.getInstance(getApplication()).getGetDocListState()) {
+            int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
+            SyncDataToDB syncDataToDB = new SyncDataToDB(getApplication(), this);
+            syncDataToDB.saveDoctorsList(id);
+            syncDataToDB.SyncData(id);
+            SharedPreferenceHelper.getInstance(getApplication()).setGetDocListState(false);
+        }
+
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(mbinding.customToolbar);
 
     }
 
@@ -199,6 +220,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+//        invalidateOptionsMenu();
+//
+        menu.findItem(R.id.filter).setVisible(false);
+        menu.findItem(R.id.search).setVisible(false);
+        menu.findItem(R.id.search1).setVisible(false);
+
         return true;
     }
 
@@ -226,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             SharedPreferenceHelper.getInstance(this).setFlterDocListState(false);
-            SharedPreferenceHelper.getInstance(this).setGetDocListState(false);
+            SharedPreferenceHelper.getInstance(this).setGetDocListState(true);
             SharedPreferenceHelper.getInstance(this).setLogin_State(false);
             SharedPreferenceHelper.getInstance(this).setStart(false);
             Intent intent = new Intent(this, SplashActivity.class);
@@ -264,7 +291,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setMenus(Menu menu) {
-
+        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_route_svgrepo_com,null));
+        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_meeting,null));
+        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_location,null));
+        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
+        menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_baseline_gps_fixed_24,null));
+        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_client_profile_svgrepo_com,null));
+        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_orders,null));
         ArrayList<String> menuIds = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menu_items_ids)));
         SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *from User_Menu Order By Menu_Order Asc");
         ffcDatabase.dao().sortMenus();
@@ -310,12 +343,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
-                menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_route_svgrepo_com,null));
-                menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_meeting,null));
-                menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_location,null));
-                menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
-                menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_baseline_gps_fixed_24,null));
-                menu.add(1, R.id.addCustomerFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_client_profile_svgrepo_com,null));
+
 
 
             }

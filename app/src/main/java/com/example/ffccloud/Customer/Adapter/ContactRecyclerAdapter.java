@@ -1,6 +1,7 @@
 package com.example.ffccloud.Customer.Adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ffccloud.ContactPersonsModel;
 import com.example.ffccloud.databinding.ContactPersonsCardBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecyclerAdapter.ContactViewHolder> {
@@ -16,7 +18,10 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
     private LayoutInflater layoutInflater;
     private List<ContactPersonsModel> contactPersonsModelList;
 
+    public ContactRecyclerAdapter() {
 
+        contactPersonsModelList= new ArrayList<>();
+    }
 
     @NonNull
     @Override
@@ -62,7 +67,7 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
         notifyDataSetChanged();
     }
 
-    public static class ContactViewHolder extends RecyclerView.ViewHolder
+    public  class ContactViewHolder extends RecyclerView.ViewHolder
     {
         ContactPersonsCardBinding mBinding;
 
@@ -70,6 +75,15 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
             super(binding.getRoot());
 
             mBinding = binding;
+
+            mBinding.btnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    contactPersonsModelList.remove(contactPersonsModelList.get(getAdapterPosition()));
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 }

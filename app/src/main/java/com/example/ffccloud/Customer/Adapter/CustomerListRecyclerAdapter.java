@@ -1,14 +1,17 @@
 package com.example.ffccloud.Customer.Adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ffccloud.ContactPersonsModel;
-import com.example.ffccloud.ModelClasses.CustomerModel;
-import com.example.ffccloud.databinding.ContactPersonsCardBinding;
+import com.example.ffccloud.Customer.CustomerListFragmentDirections;
+import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.databinding.CustomerCardBinding;
 
 import java.util.List;
@@ -17,8 +20,12 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
 
     private LayoutInflater layoutInflater;
     private List<CustomerModel> customerModelList;
+    private final Fragment fragment;
+    private int callingFragmentKey=0;
 
-
+    public CustomerListRecyclerAdapter(Fragment fragment) {
+        this.fragment = fragment;
+    }
 
     @NonNull
     @Override
@@ -41,6 +48,9 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
         CustomerModel customerModel = new CustomerModel();
         customerModel = customerModelList.get(position);
 
+        holder.mBinding.setCustomer(customerModel);
+        holder.mBinding.executePendingBindings();
+        holder.mBinding.tvCity.setText(String.valueOf(customerModel.getCity_Id()));
 
 
     }
@@ -49,6 +59,12 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
     public int getItemCount() {
         return customerModelList==null? 0:customerModelList.size();
     }
+
+
+    public void setCallingFragmentKey(int callingFragmentKey) {
+        this.callingFragmentKey = callingFragmentKey;
+    }
+
 
     public  void setContactPersonsModelList(List<CustomerModel> list)
     {
@@ -63,7 +79,7 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
         notifyDataSetChanged();
     }
 
-    public static class CustomerViewHolder extends RecyclerView.ViewHolder
+    public  class CustomerViewHolder extends RecyclerView.ViewHolder
     {
         CustomerCardBinding mBinding;
 
@@ -71,6 +87,18 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
             super(binding.getRoot());
 
             mBinding = binding;
+
+            mBinding.btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NavController navController = NavHostFragment.findNavController(fragment);
+                    CustomerListFragmentDirections.ActionCustomerListFragmentToAddCustomerFragment action = CustomerListFragmentDirections.actionCustomerListFragmentToAddCustomerFragment();
+                    action.setCustomer(customerModelList.get(getAdapterPosition()));
+                    navController.navigate(action);
+
+
+                }
+            });
         }
     }
 }

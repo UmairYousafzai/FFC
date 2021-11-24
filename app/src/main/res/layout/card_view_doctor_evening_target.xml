@@ -109,7 +109,8 @@
                             android:text="@{DoctorEvening.name}"
                             android:textColor="@color/black"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:paddingBottom="4dp"/>
 
                         <Button
                             android:id="@+id/btn_map_evening_card"
