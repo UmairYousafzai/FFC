@@ -6,9 +6,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
+
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,19 +24,23 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
 import com.example.ffccloud.SaleOrderModel;
 import com.example.ffccloud.databinding.FragmentSalesOrderListBinding;
-import com.example.ffccloud.databinding.SaleOrderSearchDialogBinding;
 import com.example.ffccloud.salesOrder.adapter.SaleOrderAdapter;
+import com.example.ffccloud.utils.CONSTANTS;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,6 +52,11 @@ public class SalesOrderListFragment extends Fragment {
     private SaleOrderAdapter adapter;
     private ProgressDialog progressDialog;
     private NavController navController;
+    private CustomerModel customerModel;
+    private ArrayList<String> byDateList = new ArrayList<>(), byStatusList = new ArrayList<>(), byPriorityList = new ArrayList<>();
+    private HashMap<String, Integer>  byDateHashmap = new HashMap<>(), byStatusHashmap = new HashMap<>(), byPriorityHashMap = new HashMap<>();
+    private int byDateKey = 0 , byStatusKey = 0 , byPriorityKey = 0;
+    private String fromDate, toDate;
 
 
     @Override
@@ -65,39 +75,105 @@ public class SalesOrderListFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = NavHostFragment.findNavController(this);
+
+        MutableLiveData<CustomerModel> liveData = navController.getCurrentBackStackEntry()
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.CUSTOMER_KEY);
+        liveData.observe(getViewLifecycleOwner(), new Observer<CustomerModel>() {
+            @Override
+            public void onChanged(CustomerModel model) {
+                if (model!=null)
+                {
+                    customerModel = model;
+                    mBinding.tvSelectCustomer.setText(customerModel.getPartyName());
+                }
+
+
+            }
+        });
+        setUpFilterSpinners();
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
-        navController = NavHostFragment.findNavController(this);
         progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading...");
-        progressDialog.show();
 
+        Calendar calendar = Calendar.getInstance();
+        String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
         setUpRecyclerView();
-        getSalesOrder();
+        getSalesOrder(0,date,date,0,0,0);
         btnListener();
     }
 
-    private void btnListener() {
-        mBinding.fromDateLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int mYear,mDay,mMonth;
-                Calendar calendar = Calendar.getInstance();
-                mYear = calendar.get(Calendar.YEAR);
-                mDay = calendar.get(Calendar.DAY_OF_MONTH);
-                mMonth = calendar.get(Calendar.MONTH);
+    private void setUpFilterSpinners() {
+        //setting for by date spinner
+        byDateList.add("Show All");
+        byDateHashmap.put("Show All",0);
+        byDateList.add("Today");
+        byDateHashmap.put("Today",1);
+        byDateList.add("Yesterday");
+        byDateHashmap.put("Yesterday",2);
+        byDateList.add("This Week");
+        byDateHashmap.put("This Week",3);
+        byDateList.add("This Month");
+        byDateHashmap.put("This Month",4);
+        byDateList.add("This Year");
+        byDateHashmap.put("This Year",4);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byDateList);
+        mBinding.dateSpinner.setAdapter(adapter);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String mDate;
-                        mDate=month+"/"+dayOfMonth+"/"+year;
-                        mBinding.tvFromDate.setText(mDate);
-                    }
-                },mYear,mMonth,mDay);
-                datePickerDialog.show();
-            }
+        //setting for by status spinner
+        byStatusList.add("Show All");
+        byStatusHashmap.put("Show All",0);
+        byStatusList.add("UnPosted ");
+        byStatusHashmap.put("UnPosted ",1);
+        byStatusList.add("Posted");
+        byStatusHashmap.put("Posted",2);
+        byStatusList.add("Closed");
+        byStatusHashmap.put("Closed",3);
+        byStatusList.add("Canceled");
+        byStatusHashmap.put("Canceled",4);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byStatusList);
+        mBinding.statusSpinner.setAdapter(adapter1);
+
+        //setting for by priority spinner
+        byPriorityList.add("Show All");
+        byPriorityHashMap.put("Show All",0);
+        byPriorityList.add("High");
+        byPriorityHashMap.put("High",1);
+        byPriorityList.add("Normal");
+        byPriorityHashMap.put("Normal",2);
+        byPriorityList.add("Low");
+        byPriorityHashMap.put("Low",3);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
+        mBinding.prioritySpinner.setAdapter(adapter2);
+    }
+
+    private void btnListener() {
+        mBinding.fromDateLayout.setOnClickListener(v -> {
+            int mYear,mDay,mMonth;
+            Calendar calendar = Calendar.getInstance();
+            mYear = calendar.get(Calendar.YEAR);
+            mDay = calendar.get(Calendar.DAY_OF_MONTH);
+            mMonth = calendar.get(Calendar.MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    String mDate;
+                    mDate=month+"/"+dayOfMonth+"/"+year;
+                    fromDate =String.valueOf(year)+String.valueOf(month)+String.valueOf(dayOfMonth);
+                    mBinding.tvFromDate.setText(mDate);
+                }
+            },mYear,mMonth,mDay);
+            datePickerDialog.show();
         });
         mBinding.toDateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +189,8 @@ public class SalesOrderListFragment extends Fragment {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         String mDate;
                         mDate=month+"/"+dayOfMonth+"/"+year;
+                        toDate =String.valueOf(year)+String.valueOf(month)+String.valueOf(dayOfMonth);
+
                         mBinding.tvToDate.setText(mDate);
                     }
                 },mYear,mMonth,mDay);
@@ -133,7 +211,48 @@ public class SalesOrderListFragment extends Fragment {
         mBinding.searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (customerModel!=null)
+                {
+                    if (customerModel.getPartyID()!=0)
+                    {
+                        if (fromDate!=null)
+                        {
+                            if (toDate!=null)
+                            {
+                                getSalesOrder(customerModel.getPartyID(),fromDate,toDate,byStatusKey,byDateKey,byPriorityKey);
+                            }
+                            else {
+                                mBinding.tvToDate.setError("Please select date");
+                            }
+                        }
+                        else
+                        {
+                            mBinding.tvFromDate.setError("Please select date");
+                        }
+                    }
+                    else {
+                        Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
 
+                }
+                else
+                {
+                    mBinding.tvSelectCustomer.setError("Select customer please");
+                }
+
+
+            }
+        });
+        mBinding.setBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                byDateKey = byDateHashmap.get(mBinding.dateSpinner.getSelectedItem());
+                byStatusKey = byStatusHashmap.get(mBinding.statusSpinner.getSelectedItem());
+                byPriorityKey = byPriorityHashMap.get(mBinding.prioritySpinner.getSelectedItem());
+                Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
+                mBinding.salesOrderFilterLayout.setAnimation(animation);
+                mBinding.salesOrderFilterLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -147,22 +266,33 @@ public class SalesOrderListFragment extends Fragment {
 
     }
 
-    private void getSalesOrder() {
+    private void getSalesOrder(int supplierID,String fromDate, String toDate, int byStatusKey, int byDateKey, int byPriorityKey) {
+        progressDialog.show();
 
         Call<List<SaleOrderModel>> call = ApiClient.getInstance().getApi().getSalesOrder(1,1,1,1,
-                "20211111"
-        ,"20211111",0,0,5,0);
+                fromDate
+        ,toDate,supplierID,byStatusKey,byDateKey,byPriorityKey);
 
         call.enqueue(new Callback<List<SaleOrderModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<SaleOrderModel>> call, @NotNull Response<List<SaleOrderModel>> response) {
+                if (response.body().size()==0)
+                {
+                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+
+                }
+                else {
+                    mBinding.tvNothingFound.setVisibility(View.GONE);
+
+                }
                 if (response.body()!=null)
                 {
-
                     adapter.setSaleOrderModelList(response.body());
                     progressDialog.dismiss();
                 }
                 else {
+                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+
                     progressDialog.dismiss();
                     Toast.makeText(requireContext(), "web response"+ response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
@@ -173,6 +303,8 @@ public class SalesOrderListFragment extends Fragment {
             public void onFailure(@NotNull Call<List<SaleOrderModel>> call, @NotNull Throwable t) {
                 Toast.makeText(requireContext(), "web response"+ t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
+                mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+
             }
         });
     }
@@ -182,7 +314,6 @@ public class SalesOrderListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
         menu.findItem(R.id.filter).setVisible(true);
-        menu.findItem(R.id.search1).setVisible(true);
         menu.findItem(R.id.search).setVisible(false);
 
     }

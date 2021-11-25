@@ -41,6 +41,8 @@ import com.example.ffccloud.databinding.FragmentAddScheduleBinding;
 import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -436,7 +438,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
         call.enqueue(new Callback<List<RegionModel>>() {
             @Override
-            public void onResponse(Call<List<RegionModel>> call, Response<List<RegionModel>> response) {
+            public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
                     regionHashmap.clear();
                     regionList.clear();
@@ -445,14 +447,15 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                     for (RegionModel model : regionModelList) {
                         regionList.add(model.getName());
                         regionHashmap.put(model.getName(), model.getRegionId());
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
-                        mBinding.regionSpinner.setAdapter(adapter);
+
                     }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                    mBinding.regionSpinner.setAdapter(adapter);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<RegionModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<RegionModel>> call, @NotNull Throwable t) {
 
             }
         });
@@ -467,7 +470,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
             call.enqueue(new Callback<List<AreaModel>>() {
                 @Override
-                public void onResponse(Call<List<AreaModel>> call, Response<List<AreaModel>> response) {
+                public void onResponse(@NotNull Call<List<AreaModel>> call, @NotNull Response<List<AreaModel>> response) {
                     if (response.isSuccessful()) {
                         areaHashmap.clear();
                         areaList.clear();
@@ -484,7 +487,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                 }
 
                 @Override
-                public void onFailure(Call<List<AreaModel>> call, Throwable t) {
+                public void onFailure(@NotNull Call<List<AreaModel>> call, @NotNull Throwable t) {
 
                 }
             });

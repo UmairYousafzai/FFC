@@ -8,12 +8,7 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:icon="@drawable/ic_search"
         />
-    <item
-        android:id="@+id/search1"
-        android:title="@string/search"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:icon="@drawable/ic_search"
-        />
+
     <item
         android:id="@+id/filter"
         android:title="@string/filter"

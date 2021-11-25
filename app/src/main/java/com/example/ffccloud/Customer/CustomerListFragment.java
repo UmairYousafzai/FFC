@@ -3,6 +3,7 @@ package com.example.ffccloud.Customer;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
@@ -56,14 +57,31 @@ public class CustomerListFragment extends Fragment {
         setupRecyclerView();
         getCustomerData();
         btnListener();
+        searchViewListener();
         //if key = 1 then it means calling fragment is salesOrder Fragment
         assert getArguments() != null;
         int callingFragmentKey= CustomerListFragmentArgs.fromBundle(getArguments()).getCallingFragmentKey();
         if (callingFragmentKey==1)
         {
-
+            mBinding.addBtn.setVisibility(View.GONE);
+            adapter.setCallingFragmentKey(callingFragmentKey);
         }
 
+    }
+
+    private void searchViewListener() {
+        mBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
     private void btnListener() {
@@ -90,7 +108,15 @@ public class CustomerListFragment extends Fragment {
         call.enqueue(new Callback<List<CustomerModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<CustomerModel>> call, @NotNull Response<List<CustomerModel>> response) {
+                if (response.body().size()==0)
+                {
+                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
 
+                }
+                else {
+                    mBinding.tvNothingFound.setVisibility(View.GONE);
+
+                }
                 if(response.body()!=null)
                 {
                  adapter.setContactPersonsModelList(response.body());
@@ -99,6 +125,7 @@ public class CustomerListFragment extends Fragment {
                 else
                 {
                     progressDialog.dismiss();
+                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
 
                 }
 
@@ -107,6 +134,7 @@ public class CustomerListFragment extends Fragment {
             @Override
             public void onFailure(@NotNull Call<List<CustomerModel>> call, @NotNull Throwable t) {
                 progressDialog.dismiss();
+                mBinding.tvNothingFound.setVisibility(View.VISIBLE);
 
             }
         });

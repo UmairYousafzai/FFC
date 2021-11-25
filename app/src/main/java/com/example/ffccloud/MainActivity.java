@@ -224,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
 //
         menu.findItem(R.id.filter).setVisible(false);
         menu.findItem(R.id.search).setVisible(false);
-        menu.findItem(R.id.search1).setVisible(false);
 
         return true;
     }

@@ -3,6 +3,8 @@ package com.example.ffccloud.Customer.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,19 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ffccloud.Customer.CustomerListFragmentDirections;
 import com.example.ffccloud.CustomerModel;
+import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
 import com.example.ffccloud.databinding.CustomerCardBinding;
+import com.example.ffccloud.utils.CONSTANTS;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerListRecyclerAdapter.CustomerViewHolder> {
+public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerListRecyclerAdapter.CustomerViewHolder> implements Filterable {
 
     private LayoutInflater layoutInflater;
-    private List<CustomerModel> customerModelList;
+    private List<CustomerModel> customerModelList,customerModelListFull;
     private final Fragment fragment;
     private int callingFragmentKey=0;
 
     public CustomerListRecyclerAdapter(Fragment fragment) {
         this.fragment = fragment;
+        customerModelListFull = new ArrayList<>();
     }
 
     @NonNull
@@ -47,6 +53,12 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
 
         CustomerModel customerModel = new CustomerModel();
         customerModel = customerModelList.get(position);
+        if (callingFragmentKey==1)
+        {
+            holder.mBinding.btnAdd.setVisibility(View.VISIBLE);
+            holder.mBinding.btnEdit.setVisibility(View.GONE);
+
+        }
 
         holder.mBinding.setCustomer(customerModel);
         holder.mBinding.executePendingBindings();
@@ -71,6 +83,7 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
         if (list!=null)
         {
             customerModelList = list;
+            customerModelListFull.addAll(customerModelList);
         }
         else
         {
@@ -78,6 +91,57 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
         }
         notifyDataSetChanged();
     }
+
+
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+
+    private final Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+
+                List<CustomerModel> filterList= new ArrayList<>();
+
+                if (constraint==null||constraint.length()==0)
+                {
+                    filterList= customerModelListFull;
+                }
+                else {
+                    String filterPattern= constraint.toString().toLowerCase().trim();
+                    for (CustomerModel model:customerModelListFull)
+                    {
+                        if (model.getPartyName().toString().toLowerCase().trim().contains(filterPattern))
+                        {
+                            filterList.add(model);
+                        }
+                    }
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values= filterList;
+                return filterResults;
+
+
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+
+                customerModelList.clear();
+                customerModelList.addAll((List)results.values);
+                notifyDataSetChanged();
+
+
+
+        }
+    };
+
 
     public  class CustomerViewHolder extends RecyclerView.ViewHolder
     {
@@ -96,6 +160,16 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
                     action.setCustomer(customerModelList.get(getAdapterPosition()));
                     navController.navigate(action);
 
+
+                }
+            });
+
+            mBinding.btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NavController navController = NavHostFragment.findNavController(fragment);
+                    navController.getPreviousBackStackEntry().getSavedStateHandle().set(CONSTANTS.CUSTOMER_KEY, customerModelList.get(getAdapterPosition()));
+                    navController.popBackStack();
 
                 }
             });

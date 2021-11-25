@@ -196,7 +196,23 @@
     <string name="by_date">By Date</string>
     <string name="Days_ago">days ago</string>
     <string name="from_date">From Date: </string>
-    <string name="select_customer">Select Customer</string>
+    <string name="select_customer">Select Customer -\-</string>
+    <string name="to_date">To Date:</string>
+    <string name="by_priority">By Priority</string>
+    <string name="add">Add</string>
+    <string name="nothing_found">Nothing Found</string>
+    <string name="sale_order_no">Sale Order No.</string>
+    <string name="credit_limit">Credit Limit</string>
+    <string name="ledger_balance">Ledger Balance</string>
+    <string name="select_delivery_mode">Select Delivery Mode:</string>
+    <string name="select_priority">Select Priority:</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="calculate_sales_tax">Calculate Sales Tax</string>
+    <string name="gross_amount">Gross Amount</string>
+    <string name="discounted_amount">Discounted Amount</string>
+    <string name="products">Products</string>
+    <string name="code">Code:</string>
+    <string name="title">Title:</string>
 
 
 </resources>

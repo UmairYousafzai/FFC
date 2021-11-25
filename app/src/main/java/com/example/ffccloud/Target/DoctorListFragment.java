@@ -318,7 +318,6 @@ public class DoctorListFragment extends Fragment {
 
         menu.findItem(R.id.filter).setVisible(true);
         menu.findItem(R.id.search).setVisible(true);
-        menu.findItem(R.id.search1).setVisible(false);
     }
 
     @Override

@@ -1,177 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".salesOrder.SalesOrderListFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:grid="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/heading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:text="@string/search"
-            android:textColor="@color/APP_Theme_Color"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/from_date_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:weightSum="10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/heading">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:background="@color/APP_Theme_Color"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/from_date"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_baseline_date_range_white" />
-
-            <TextView
-                android:id="@+id/tv_from_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="6"
-                android:hint="@string/select_date"
-                android:textColor="@color/black" />
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/from_date_layout" />
-
-        <LinearLayout
-            android:id="@+id/to_date_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:weightSum="10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view1"
-
-            >
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:background="@color/APP_Theme_Color"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="To Date"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_baseline_date_range_white" />
-
-            <TextView
-                android:id="@+id/tv_to_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="5"
-                android:hint="@string/select_date"
-                android:textColor="@color/black" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/to_date_layout" />
-
-        <LinearLayout
-            android:id="@+id/customer_spinner_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/spinner_bg"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp"
-            android:paddingStart="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/to_date_layout">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_baseline_person_add_blue" />
-
-            <TextView
-                android:id="@+id/tv_select_customer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingHorizontal="10dp"
-                android:text="@string/select_customer"
-
-                />
-
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/search_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/white"
-            android:text="@string/search"
-            android:textColor="@color/APP_Theme_Color"
-            android:textStyle="bold"
-            app:elevation="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/customer_spinner_layout"
-            app:rippleColor="@color/APP_Theme_Color"
-            app:strokeColor="@color/APP_Theme_Color"
-            app:strokeWidth="1dp" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <LinearLayout
         android:id="@+id/sales_order_filter_layout"
         android:layout_width="match_parent"
@@ -181,7 +15,11 @@
         android:elevation="5dp"
         android:orientation="vertical"
         android:paddingBottom="10dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -257,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
             android:elevation="2dp"
-            android:text="@string/by_date"
+            android:text="@string/by_priority"
             android:textColor="@color/APP_Theme_Color"
             android:textStyle="bold" />
 
@@ -285,19 +123,224 @@
             android:id="@+id/set_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="6dp"
-            android:elevation="5dp"
-            android:text="@string/set" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/set"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            app:elevation="5dp"
+            android:layout_gravity="center"
+            app:rippleColor="@color/APP_Theme_Color"
+            app:strokeColor="@color/APP_Theme_Color"
+            app:strokeWidth="1dp" />
 
     </LinearLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:grid="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/search_layout"
+        >
+
+        <TextView
+            android:id="@+id/heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:text="@string/search"
+            android:textColor="@color/APP_Theme_Color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:id="@+id/customer_spinner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/spinner_bg"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:paddingStart="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/heading">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_baseline_person_add_blue" />
+
+            <TextView
+                android:id="@+id/tv_select_customer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingHorizontal="10dp"
+                android:text="@string/select_customer"
+                android:textColor="@color/black"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/from_date_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/customer_spinner_layout">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3.5"
+                android:background="@color/APP_Theme_Color"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/from_date"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_baseline_date_range_white" />
+
+            <TextView
+                android:id="@+id/tv_from_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="6"
+                android:hint="@string/select_date"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/from_date_layout" />
+
+        <LinearLayout
+            android:id="@+id/to_date_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view1"
+
+            >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3.5"
+                android:background="@color/APP_Theme_Color"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/to_date"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_baseline_date_range_white" />
+
+            <TextView
+                android:id="@+id/tv_to_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="6"
+                android:hint="@string/select_date"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/to_date_layout" />
+
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/search"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            app:elevation="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/to_date_layout"
+            app:rippleColor="@color/APP_Theme_Color"
+            app:strokeColor="@color/APP_Theme_Color"
+            app:strokeWidth="1dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_layout"
+     />
+
 
     <androidx.recyclerview.widget.RecyclerView
 
         android:id="@+id/sales_order_recycler_view"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:listitem="@layout/sale_order_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view"
+        app:layout_constraintBottom_toBottomOf="parent"
+       />
+    <TextView
+        android:id="@+id/tv_nothing_found"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/sale_order_card" />
+        android:text="@string/nothing_found"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:visibility="gone"
+        />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

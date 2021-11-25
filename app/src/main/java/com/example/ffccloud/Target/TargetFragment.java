@@ -172,57 +172,6 @@ public class TargetFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        Log.e("onViewStateRestored", "on view restored me ha");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.e("onStart", "on start me ha");
-
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.e("onPause", "on pause me ha");
-
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.e("onStop", "on stop me ha");
-
-
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.e("onSaveInstanceState", " on save instance me ha");
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.e("onDestroyView", " on destroy view me ha");
-
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.e("onDestroy", "on destroy me ha");
-
-    }
 
 
     public void setUpRecyclerView() {
