@@ -15,6 +15,7 @@ import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.ProductModel;
 import com.example.ffccloud.ModelClasses.QualificationModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.SaleOrderModel;
@@ -148,5 +149,15 @@ public interface Api {
                                               @Query("Status") int Status,
                                               @Query("DateStatus") int DateStatus,
                                               @Query("PriorityStatus") int PriorityStatus);
+
+
+
+    @GET("api/SharedFunction/ItSearch")
+    Call<List<ProductModel>> getAllProducts(@Header("Authorization") String token,
+                                            @Query("It") String it,
+                                            @Query("Company_Id") int Company_Id,
+                                            @Query("Country_Id") int Country_Id,
+                                            @Query("IsStatus") int IsStatus,
+                                            @Query("LocationId") int LocationId );
 }
 

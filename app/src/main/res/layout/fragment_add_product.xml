@@ -1,26 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".salesOrder.AddProductFragment"
-    android:padding="10dp"
-    android:orientation="vertical"
-    android:background="@color/background_color">
+    android:id="@+id/swipe_layout"
+  >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:background="@color/background_color" >
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:iconifiedByDefault="false"
+            android:background="@drawable/spinner_bg"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/product_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            tools:listitem="@layout/product_card"
+            />
+        <TextView
+            android:id="@+id/tv_nothing_found"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nothing_found"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:iconifiedByDefault="false"
-        android:background="@drawable/spinner_bg"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/product_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        tools:listitem="@layout/product_card"
-        />
-</LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

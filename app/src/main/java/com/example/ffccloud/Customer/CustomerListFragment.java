@@ -9,6 +9,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,7 @@ public class CustomerListFragment extends Fragment {
         getCustomerData();
         btnListener();
         searchViewListener();
+        setPullToFresh();
         //if key = 1 then it means calling fragment is salesOrder Fragment
         assert getArguments() != null;
         int callingFragmentKey= CustomerListFragmentArgs.fromBundle(getArguments()).getCallingFragmentKey();
@@ -66,6 +68,7 @@ public class CustomerListFragment extends Fragment {
             mBinding.addBtn.setVisibility(View.GONE);
             adapter.setCallingFragmentKey(callingFragmentKey);
         }
+
 
     }
 
@@ -139,7 +142,15 @@ public class CustomerListFragment extends Fragment {
             }
         });
     }
-
+    public void setPullToFresh() {
+        mBinding.swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mBinding.swipeLayout.setRefreshing(false);
+               getCustomerData();
+            }
+        });
+    }
     private void setupRecyclerView() {
         mBinding.customerListRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new CustomerListRecyclerAdapter(this);

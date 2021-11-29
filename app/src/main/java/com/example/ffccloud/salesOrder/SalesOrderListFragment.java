@@ -14,6 +14,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,7 +81,7 @@ public class SalesOrderListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = NavHostFragment.findNavController(this);
 
-        MutableLiveData<CustomerModel> liveData = navController.getCurrentBackStackEntry()
+        MutableLiveData<CustomerModel> liveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.CUSTOMER_KEY);
         liveData.observe(getViewLifecycleOwner(), new Observer<CustomerModel>() {
@@ -110,6 +112,7 @@ public class SalesOrderListFragment extends Fragment {
         setUpRecyclerView();
         getSalesOrder(0,date,date,0,0,0);
         btnListener();
+        setPullToFresh();
     }
 
     private void setUpFilterSpinners() {
@@ -126,7 +129,7 @@ public class SalesOrderListFragment extends Fragment {
         byDateHashmap.put("This Month",4);
         byDateList.add("This Year");
         byDateHashmap.put("This Year",4);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byDateList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byDateList);
         mBinding.dateSpinner.setAdapter(adapter);
 
         //setting for by status spinner
@@ -140,7 +143,7 @@ public class SalesOrderListFragment extends Fragment {
         byStatusHashmap.put("Closed",3);
         byStatusList.add("Canceled");
         byStatusHashmap.put("Canceled",4);
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byStatusList);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byStatusList);
         mBinding.statusSpinner.setAdapter(adapter1);
 
         //setting for by priority spinner
@@ -152,7 +155,7 @@ public class SalesOrderListFragment extends Fragment {
         byPriorityHashMap.put("Normal",2);
         byPriorityList.add("Low");
         byPriorityHashMap.put("Low",3);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
         mBinding.prioritySpinner.setAdapter(adapter2);
     }
 
@@ -164,84 +167,69 @@ public class SalesOrderListFragment extends Fragment {
             mDay = calendar.get(Calendar.DAY_OF_MONTH);
             mMonth = calendar.get(Calendar.MONTH);
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    String mDate;
-                    mDate=month+"/"+dayOfMonth+"/"+year;
-                    fromDate =String.valueOf(year)+String.valueOf(month)+String.valueOf(dayOfMonth);
-                    mBinding.tvFromDate.setText(mDate);
-                }
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+                String mDate;
+                mDate=month+"/"+dayOfMonth+"/"+year;
+                fromDate =String.valueOf(year)+ month + dayOfMonth;
+                mBinding.tvFromDate.setText(mDate);
             },mYear,mMonth,mDay);
             datePickerDialog.show();
         });
-        mBinding.toDateLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int mYear,mDay,mMonth;
-                Calendar calendar = Calendar.getInstance();
-                mYear = calendar.get(Calendar.YEAR);
-                mDay = calendar.get(Calendar.DAY_OF_MONTH);
-                mMonth = calendar.get(Calendar.MONTH);
+        mBinding.toDateLayout.setOnClickListener(v -> {
+            int mYear,mDay,mMonth;
+            Calendar calendar = Calendar.getInstance();
+            mYear = calendar.get(Calendar.YEAR);
+            mDay = calendar.get(Calendar.DAY_OF_MONTH);
+            mMonth = calendar.get(Calendar.MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String mDate;
-                        mDate=month+"/"+dayOfMonth+"/"+year;
-                        toDate =String.valueOf(year)+String.valueOf(month)+String.valueOf(dayOfMonth);
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+                String mDate;
+                mDate=month+"/"+dayOfMonth+"/"+year;
+                toDate =String.valueOf(year)+String.valueOf(month)+String.valueOf(dayOfMonth);
 
-                        mBinding.tvToDate.setText(mDate);
-                    }
-                },mYear,mMonth,mDay);
-                datePickerDialog.show();
-            }
+                mBinding.tvToDate.setText(mDate);
+            },mYear,mMonth,mDay);
+            datePickerDialog.show();
         });
 
-        mBinding.tvSelectCustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SalesOrderListFragmentDirections.ActionSalesOrderListFragmentToCustomerListFragment action = SalesOrderListFragmentDirections.actionSalesOrderListFragmentToCustomerListFragment();
-                action.setCallingFragmentKey(1);
-                navController.navigate(action);
-            }
+        mBinding.tvSelectCustomer.setOnClickListener(v -> {
+            SalesOrderListFragmentDirections.ActionSalesOrderListFragmentToCustomerListFragment action = SalesOrderListFragmentDirections.actionSalesOrderListFragmentToCustomerListFragment();
+            action.setCallingFragmentKey(1);
+            navController.navigate(action);
         });
 
 
-        mBinding.searchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (customerModel!=null)
+        mBinding.searchBtn.setOnClickListener(v -> {
+            if (customerModel!=null)
+            {
+                if (customerModel.getPartyID()!=0)
                 {
-                    if (customerModel.getPartyID()!=0)
+                    if (fromDate!=null)
                     {
-                        if (fromDate!=null)
+                        if (toDate!=null)
                         {
-                            if (toDate!=null)
-                            {
-                                getSalesOrder(customerModel.getPartyID(),fromDate,toDate,byStatusKey,byDateKey,byPriorityKey);
-                            }
-                            else {
-                                mBinding.tvToDate.setError("Please select date");
-                            }
+                            getSalesOrder(customerModel.getPartyID(),fromDate,toDate,byStatusKey,byDateKey,byPriorityKey);
                         }
-                        else
-                        {
-                            mBinding.tvFromDate.setError("Please select date");
+                        else {
+                            mBinding.tvToDate.setError("Please select date");
                         }
                     }
-                    else {
-                        Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                    else
+                    {
+                        mBinding.tvFromDate.setError("Please select date");
                     }
-
                 }
-                else
-                {
-                    mBinding.tvSelectCustomer.setError("Select customer please");
+                else {
+                    Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
-
 
             }
+            else
+            {
+                mBinding.tvSelectCustomer.setError("Select customer please");
+            }
+
+
         });
         mBinding.setBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,8 +243,31 @@ public class SalesOrderListFragment extends Fragment {
                 mBinding.salesOrderFilterLayout.setVisibility(View.GONE);
             }
         });
+
+        mBinding.btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NavDirections action = SalesOrderListFragmentDirections.actionSalesOrderListFragmentToSaleOrderFormFragment();
+
+                navController.navigate(action);
+
+            }
+        });
     }
 
+
+    public void setPullToFresh() {
+        mBinding.swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {   Calendar calendar = Calendar.getInstance();
+                String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+                mBinding.swipeLayout.setRefreshing(false);
+                getSalesOrder(0,date,date,0,0,0);
+            }
+        });
+    }
     private void setUpRecyclerView() {
 
         mBinding.salesOrderRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -276,19 +287,20 @@ public class SalesOrderListFragment extends Fragment {
         call.enqueue(new Callback<List<SaleOrderModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<SaleOrderModel>> call, @NotNull Response<List<SaleOrderModel>> response) {
-                if (response.body().size()==0)
-                {
-                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
 
-                }
-                else {
-                    mBinding.tvNothingFound.setVisibility(View.GONE);
-
-                }
                 if (response.body()!=null)
                 {
-                    adapter.setSaleOrderModelList(response.body());
-                    progressDialog.dismiss();
+                    if (response.body().size()==0)
+                    {
+                        mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+
+                    }
+                    else {
+                        mBinding.tvNothingFound.setVisibility(View.GONE);
+                        adapter.setSaleOrderModelList(response.body());
+                        progressDialog.dismiss();
+                    }
+
                 }
                 else {
                     mBinding.tvNothingFound.setVisibility(View.VISIBLE);

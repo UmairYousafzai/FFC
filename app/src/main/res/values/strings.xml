@@ -202,7 +202,6 @@
     <string name="add">Add</string>
     <string name="nothing_found">Nothing Found</string>
     <string name="sale_order_no">Sale Order No.</string>
-    <string name="credit_limit">Credit Limit</string>
     <string name="ledger_balance">Ledger Balance</string>
     <string name="select_delivery_mode">Select Delivery Mode:</string>
     <string name="select_priority">Select Priority:</string>
@@ -213,6 +212,12 @@
     <string name="products">Products</string>
     <string name="code">Code:</string>
     <string name="title">Title:</string>
+    <string name="add_sale_order">Add Sale Order</string>
+    <string name="unit">Unit: </string>
+    <string name="gst">GST</string>
+    <string name="gst_percentage">GST %</string>
+    <string name="net_amount">Net Amount</string>
+    <string name="comments">Comments</string>
 
 
 </resources>

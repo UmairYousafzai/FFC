@@ -20,6 +20,7 @@ import com.example.ffccloud.utils.CONSTANTS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerListRecyclerAdapter.CustomerViewHolder> implements Filterable {
 
@@ -168,8 +169,12 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
                 @Override
                 public void onClick(View v) {
                     NavController navController = NavHostFragment.findNavController(fragment);
-                    navController.getPreviousBackStackEntry().getSavedStateHandle().set(CONSTANTS.CUSTOMER_KEY, customerModelList.get(getAdapterPosition()));
-                    navController.popBackStack();
+
+                        Objects.requireNonNull(navController.getPreviousBackStackEntry()).getSavedStateHandle().set(CONSTANTS.CUSTOMER_KEY, customerModelList.get(getAdapterPosition()));
+                        navController.popBackStack();
+
+
+
 
                 }
             });
