@@ -3,7 +3,7 @@ package com.example.ffccloud;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ProductModel {
+public class GetProductModel {
     @SerializedName("It_Code")
     @Expose
     private double itCode;
@@ -41,7 +41,7 @@ public class ProductModel {
     @Expose
     private Boolean isFinishedGood;
 
-    public ProductModel() {
+    public GetProductModel() {
     }
 
     public double getItCode() {

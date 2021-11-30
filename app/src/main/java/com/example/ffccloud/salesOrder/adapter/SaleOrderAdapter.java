@@ -7,8 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.ffccloud.ContactPersonsModel;
-import com.example.ffccloud.SaleOrderModel;
+import com.example.ffccloud.GetSaleOrderModel;
 import com.example.ffccloud.databinding.SaleOrderCardBinding;
 
 import java.util.ArrayList;
@@ -18,11 +17,11 @@ public class SaleOrderAdapter extends RecyclerView.Adapter<SaleOrderAdapter.sale
 
 
     private LayoutInflater layoutInflater;
-    private List<SaleOrderModel> saleOrderModelList;
+    private List<GetSaleOrderModel> getSaleOrderModelList;
 
     public SaleOrderAdapter() {
 
-        saleOrderModelList= new ArrayList<>();
+        getSaleOrderModelList = new ArrayList<>();
     }
 
     @NonNull
@@ -43,21 +42,21 @@ public class SaleOrderAdapter extends RecyclerView.Adapter<SaleOrderAdapter.sale
     @Override
     public void onBindViewHolder(@NonNull saleOrderViewHolder holder, int position) {
 
-        SaleOrderModel saleOrderModel = new SaleOrderModel();
-        saleOrderModel = saleOrderModelList.get(position);
+        GetSaleOrderModel getSaleOrderModel = new GetSaleOrderModel();
+        getSaleOrderModel = getSaleOrderModelList.get(position);
 
-        holder.mBinding.setSaleOrder(saleOrderModel);
+        holder.mBinding.setSaleOrder(getSaleOrderModel);
         holder.mBinding.executePendingBindings();
 
-        if (saleOrderModel.getPost())
+        if (getSaleOrderModel.getPost())
         {
             holder.mBinding.status.setText("Posted");
         }
-        else  if (saleOrderModel.isClose())
+        else  if (getSaleOrderModel.isClose())
         {
             holder.mBinding.status.setText("Closed");
         }
-        else  if (saleOrderModel.isCancel())
+        else  if (getSaleOrderModel.isCancel())
         {
             holder.mBinding.status.setText("Canceled");
         }
@@ -68,18 +67,18 @@ public class SaleOrderAdapter extends RecyclerView.Adapter<SaleOrderAdapter.sale
 
     @Override
     public int getItemCount() {
-        return saleOrderModelList==null? 0:saleOrderModelList.size();
+        return getSaleOrderModelList ==null? 0: getSaleOrderModelList.size();
     }
 
-    public  void setSaleOrderModelList(List<SaleOrderModel> list)
+    public  void setGetSaleOrderModelList(List<GetSaleOrderModel> list)
     {
         if (list!=null)
         {
-            saleOrderModelList = list;
+            getSaleOrderModelList = list;
         }
         else
         {
-            saleOrderModelList.clear();
+            getSaleOrderModelList.clear();
         }
         notifyDataSetChanged();
     }

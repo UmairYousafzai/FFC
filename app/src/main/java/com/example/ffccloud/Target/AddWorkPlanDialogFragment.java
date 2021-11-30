@@ -235,16 +235,7 @@ public class AddWorkPlanDialogFragment extends DialogFragment   {
             public void onClick(View v) {
                 if (docListForOtherFragment!=null||areaListForOtherFragment!=null)
                 {
-//                    NavHostFragment navHostFragment = (NavHostFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-//                    assert navHostFragment != null;
-//                     navController = navHostFragment.getNavController();
-//                    AddWorkPlanDialogFragmentDirections.ActionAddWorkPlanDialogFragmentToAddworkPlanFragment action = AddWorkPlanDialogFragmentDirections.actionAddWorkPlanDialogFragmentToAddworkPlanFragment();
 //
-//                    action.setKey(key);
-//                    action.setAreaIds(dataIDs);
-//                    action.setAreaTittles(dataTittl);
-//
-//                      navController.navigate(action);
                     if (key==2)
                     {
                         navController.getPreviousBackStackEntry().getSavedStateHandle().set("Object",areaListForOtherFragment);

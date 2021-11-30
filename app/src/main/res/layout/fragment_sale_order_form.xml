@@ -1,385 +1,408 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:xmnls="http://schemas.android.com/apk/res-auto"
     tools:context=".salesOrder.SaleOrderFormFragment"
-    android:padding="10dp"
     android:background="@color/background_color">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
-        android:id="@+id/tv_ledger_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/delivery_address_layout"
-        android:background="@drawable/spinner_bg"
-        android:layout_marginVertical="10dp"
-
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:elevation="2dp"
-            android:text="@string/ledger_balance"
-            android:textColor="@color/APP_Theme_Color"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/tv_ledger_balance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ledger Balance"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:background="@drawable/spinner_bg"
-            android:padding="10dp"
-            android:drawablePadding="15dp"
-            app:drawableStartCompat="@drawable/ic_dollar_blue_24" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/tv_credit_limit_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_ledger_layout"
-        android:background="@drawable/spinner_bg"
-        android:layout_marginVertical="10dp"
-
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:elevation="2dp"
-            android:text="@string/credit_limit"
-            android:textColor="@color/APP_Theme_Color"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/tv_credit_limit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="credit limit"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:background="@drawable/spinner_bg"
-            android:padding="10dp"
-            android:drawablePadding="15dp"
-
-            app:drawableStartCompat="@drawable/ic_dollar_blue_24" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/order_date_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:weightSum="10"
-        android:background="@drawable/spinner_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:drawablePadding="4dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Sale Order Date: "
-            android:textColor="@color/APP_Theme_Color"
-            android:textStyle="bold"
-            app:drawableStartCompat="@drawable/ic_baseline_date_range_24" />
-
-        <TextView
-            android:id="@+id/tv_sales_order_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="5"
-            android:hint="@string/select_date"
-            android:textColor="@color/black" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/delivery_date_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:weightSum="10"
-        android:background="@drawable/spinner_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/order_date_layout"
-        >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:drawablePadding="4dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Delivery Date: "
-            android:textColor="@color/APP_Theme_Color"
-            android:textStyle="bold"
-            app:drawableStartCompat="@drawable/ic_baseline_date_range_24" />
-
-        <TextView
-            android:id="@+id/tv_delivery_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="5"
-            android:hint="@string/select_date"
-            android:textColor="@color/black" />
-    </LinearLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/delivery_address_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/delivery_address"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/delivery_date_layout"
-        app:startIconDrawable="@drawable/ic_location"
-        app:startIconTint="@color/APP_Theme_Color"
-        xmnls:boxBackgroundColor="@color/white"
-        xmnls:hintTextColor="@color/APP_Theme_Color">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:maxLines="1"
-            android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textColorHint="@color/APP_Theme_Color" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:id="@+id/customer_spinner_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
-        android:background="@drawable/spinner_bg"
-        android:orientation="horizontal"
-        android:paddingVertical="10dp"
-        android:paddingStart="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_credit_limit_layout">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_baseline_person_add_blue" />
-
-        <TextView
-            android:id="@+id/tv_select_customer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingHorizontal="10dp"
-            android:text="@string/select_customer"
-            android:textColor="@color/black"
-            />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/priority_spinner_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/customer_spinner_layout"
-        android:background="@color/white"
-        android:layout_marginVertical="8dp"
-        android:elevation="5dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:elevation="2dp"
-            android:text="@string/select_priority"
-            android:textColor="@color/APP_Theme_Color"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray" />
-
-        <Spinner
-            android:id="@+id/priority_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"
-            android:elevation="5dp"
-            android:popupElevation="3dp"
-
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"
-            android:layout_marginBottom="5dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/delivery_mode_spinner_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/priority_spinner_layout"
-        android:background="@color/white"
-        android:layout_marginVertical="8dp"
-        android:elevation="5dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:elevation="2dp"
-            android:text="@string/select_delivery_mode"
-            android:textColor="@color/APP_Theme_Color"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray" />
-
-        <Spinner
-            android:id="@+id/deliver_mode_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"
-            android:elevation="5dp"
-            android:popupElevation="3dp"
-
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"
-            android:layout_marginBottom="5dp"/>
-    </LinearLayout>
-    <TextView
-        android:id="@+id/radio_heading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/calculate_sales_tax"
-        android:textSize="15sp"
-        android:textColor="@color/APP_Theme_Color"
-        android:textStyle="bold"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/delivery_mode_spinner_layout"
-        android:layout_marginTop="10dp"
-        />
-
-    <RadioGroup
-        android:id="@+id/calculate_sale_tax_radio_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/radio_heading"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:weightSum="2"
-
-
-        >
-        <RadioButton
-            android:id="@+id/gross_amount_radio"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/gross_amount"
-            android:textColor="@color/black"
-            android:buttonTint="@color/APP_Theme_Color"
-            android:layout_weight="1"
-            />
-        <RadioButton
-            android:id="@+id/discount_amount_radio"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/discounted_amount"
-            android:textColor="@color/black"
-            android:buttonTint="@color/APP_Theme_Color"
-            android:layout_weight="1"
-
-            />
-
-    </RadioGroup>
-    <TextView
-        android:padding="8dp"
-        android:id="@+id/product_list_heading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/products"
-        android:textSize="18sp"
-        android:textColor="@color/APP_Theme_Color"
-        android:textStyle="bold"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/calculate_sale_tax_radio_group"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginVertical="10dp"
-        />
-    <ImageButton
-        android:id="@+id/add_product_btn"
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_add_white_24"
-        android:background="@color/APP_Theme_Color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/product_list_heading"
-        app:layout_constraintBottom_toBottomOf="@id/product_list_heading"
-        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        app:icon="@drawable/tick_two"
+        android:text="@string/save"
         />
-    <androidx.recyclerview.widget.RecyclerView
 
-        android:id="@+id/product_recyler_view"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/product_list_heading"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginVertical="10dp"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:layout_marginBottom="50dp"
+            >
 
 
-</androidx.core.widget.NestedScrollView>
+            <LinearLayout
+                android:id="@+id/tv_ledger_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/delivery_address_layout"
+                android:background="@drawable/spinner_bg"
+                android:layout_marginVertical="10dp"
+
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:elevation="2dp"
+                    android:text="@string/ledger_balance"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_ledger_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ledger Balance"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:background="@drawable/spinner_bg"
+                    android:padding="10dp"
+                    android:drawablePadding="15dp"
+                    app:drawableStartCompat="@drawable/ic_dollar_blue_24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tv_credit_limit_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_ledger_layout"
+                android:background="@drawable/spinner_bg"
+                android:layout_marginVertical="10dp"
+
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:elevation="2dp"
+                    android:text="@string/credit_limit"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_credit_limit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="credit limit"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:background="@drawable/spinner_bg"
+                    android:padding="10dp"
+                    android:drawablePadding="15dp"
+
+                    app:drawableStartCompat="@drawable/ic_dollar_blue_24" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/order_date_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="10"
+                android:background="@drawable/spinner_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Sale Order Date: "
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_baseline_date_range_24" />
+
+                <TextView
+                    android:id="@+id/tv_sales_order_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="5"
+                    android:hint="@string/select_date"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/delivery_date_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="10"
+                android:background="@drawable/spinner_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/order_date_layout"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Delivery Date: "
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_baseline_date_range_24" />
+
+                <TextView
+                    android:id="@+id/tv_delivery_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="5"
+                    android:hint="@string/select_date"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/delivery_address_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/delivery_address"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/delivery_date_layout"
+                app:startIconDrawable="@drawable/ic_location"
+                app:startIconTint="@color/APP_Theme_Color"
+                xmnls:boxBackgroundColor="@color/white"
+                xmnls:hintTextColor="@color/APP_Theme_Color">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/APP_Theme_Color" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/customer_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:background="@drawable/spinner_bg"
+                android:orientation="horizontal"
+                android:paddingVertical="10dp"
+                android:paddingStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_credit_limit_layout">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_baseline_person_add_blue" />
+
+                <TextView
+                    android:id="@+id/tv_select_customer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/select_customer"
+                    android:textColor="@color/black"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/priority_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customer_spinner_layout"
+                android:background="@color/white"
+                android:layout_marginVertical="8dp"
+                android:elevation="5dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:elevation="2dp"
+                    android:text="@string/select_priority"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <Spinner
+                    android:id="@+id/priority_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:elevation="5dp"
+                    android:popupElevation="3dp"
+
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray"
+                    android:layout_marginBottom="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/delivery_mode_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/priority_spinner_layout"
+                android:background="@color/white"
+                android:layout_marginVertical="8dp"
+                android:elevation="5dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:elevation="2dp"
+                    android:text="@string/select_delivery_mode"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <Spinner
+                    android:id="@+id/deliver_mode_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:elevation="5dp"
+                    android:popupElevation="3dp"
+
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray"
+                    android:layout_marginBottom="5dp"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/radio_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/calculate_sales_tax"
+                android:textSize="15sp"
+                android:textColor="@color/APP_Theme_Color"
+                android:textStyle="bold"
+                android:background="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/delivery_mode_spinner_layout"
+                android:layout_marginTop="10dp"
+                />
+
+            <RadioGroup
+                android:id="@+id/calculate_sale_tax_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/radio_heading"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:weightSum="2"
+
+
+                >
+                <RadioButton
+                    android:id="@+id/gross_amount_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gross_amount"
+                    android:textColor="@color/black"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:layout_weight="1"
+                    />
+                <RadioButton
+                    android:id="@+id/discount_amount_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/discounted_amount"
+                    android:textColor="@color/black"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:layout_weight="1"
+
+                    />
+
+            </RadioGroup>
+            <TextView
+                android:padding="8dp"
+                android:id="@+id/product_list_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/products"
+                android:textSize="18sp"
+                android:textColor="@color/APP_Theme_Color"
+                android:textStyle="bold"
+                android:background="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/calculate_sale_tax_radio_group"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginVertical="10dp"
+                />
+            <ImageButton
+                android:id="@+id/add_product_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_add_white_24"
+                android:background="@color/APP_Theme_Color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/product_list_heading"
+                app:layout_constraintBottom_toBottomOf="@id/product_list_heading"
+                android:layout_marginEnd="5dp"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:id="@+id/product_recyler_view"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                tools:listitem="@layout/insert_product_card"
+                app:layout_constraintTop_toBottomOf="@id/product_list_heading"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginVertical="10dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+    <include
+        android:id="@+id/bottom_sheet"
+        layout="@layout/term_and_condition_bottom_sheet"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

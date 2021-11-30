@@ -24,15 +24,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.example.ffccloud.CustomerModel;
+import com.example.ffccloud.GetSaleOrderModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
-import com.example.ffccloud.SaleOrderModel;
 import com.example.ffccloud.databinding.FragmentSalesOrderListBinding;
 import com.example.ffccloud.salesOrder.adapter.SaleOrderAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
@@ -280,13 +278,13 @@ public class SalesOrderListFragment extends Fragment {
     private void getSalesOrder(int supplierID,String fromDate, String toDate, int byStatusKey, int byDateKey, int byPriorityKey) {
         progressDialog.show();
 
-        Call<List<SaleOrderModel>> call = ApiClient.getInstance().getApi().getSalesOrder(1,1,1,1,
+        Call<List<GetSaleOrderModel>> call = ApiClient.getInstance().getApi().getSalesOrder(1,1,1,1,
                 fromDate
         ,toDate,supplierID,byStatusKey,byDateKey,byPriorityKey);
 
-        call.enqueue(new Callback<List<SaleOrderModel>>() {
+        call.enqueue(new Callback<List<GetSaleOrderModel>>() {
             @Override
-            public void onResponse(@NotNull Call<List<SaleOrderModel>> call, @NotNull Response<List<SaleOrderModel>> response) {
+            public void onResponse(@NotNull Call<List<GetSaleOrderModel>> call, @NotNull Response<List<GetSaleOrderModel>> response) {
 
                 if (response.body()!=null)
                 {
@@ -297,7 +295,7 @@ public class SalesOrderListFragment extends Fragment {
                     }
                     else {
                         mBinding.tvNothingFound.setVisibility(View.GONE);
-                        adapter.setSaleOrderModelList(response.body());
+                        adapter.setGetSaleOrderModelList(response.body());
                         progressDialog.dismiss();
                     }
 
@@ -312,7 +310,7 @@ public class SalesOrderListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NotNull Call<List<SaleOrderModel>> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<List<GetSaleOrderModel>> call, @NotNull Throwable t) {
                 Toast.makeText(requireContext(), "web response"+ t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
                 mBinding.tvNothingFound.setVisibility(View.VISIBLE);

@@ -3,7 +3,7 @@ package com.example.ffccloud;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SaleOrderModel {
+public class GetSaleOrderModel {
 
 
     @SerializedName("sno")

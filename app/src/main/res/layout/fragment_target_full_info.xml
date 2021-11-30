@@ -341,7 +341,7 @@
 
     <include
         android:id="@+id/feedback_bottom_sheet"
-        layout="@layout/bottom_sheet_foreground_followup_fragment"/>
+        layout="@layout/bottom_sheet_feedback"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

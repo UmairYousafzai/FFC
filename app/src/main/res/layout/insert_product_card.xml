@@ -3,7 +3,7 @@
     <data>
         <variable
             name="product"
-            type="com.example.ffccloud.ProductModel" />
+            type="com.example.ffccloud.InsertProductModel" />
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,19 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
-            <ImageButton
-                android:id="@+id/btn_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="4dp"
-                android:layout_marginEnd="10dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_baseline_add_white_24"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_code"
-                app:layout_constraintBottom_toTopOf="@+id/title_heading"
-                />
+
 
             <TextView
                 android:id="@+id/code_heading"
@@ -52,10 +40,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="@{String.valueOf(product.itCode)}"
+                android:text="@{String.valueOf(product.item_Code)}"
                 app:layout_constraintStart_toEndOf="@id/code_heading"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_add"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:padding="5dp"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/title_heading"
@@ -90,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:background="@color/white"
-                android:text="@{ product.title}"
+                android:text="@{ product.titleProduct}"
                 app:layout_constraintStart_toEndOf="@id/title_heading"
                 app:layout_constraintTop_toBottomOf="@id/view"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -125,9 +113,122 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:background="@color/white"
-                android:text="@{product.unit}"
+                android:text="@{product.unitProduct}"
                 app:layout_constraintStart_toEndOf="@id/Unit_heading"
                 app:layout_constraintTop_toBottomOf="@id/view1"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="5dp"
+                android:textSize="16sp"
+
+                />
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/Unit_heading"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+            <TextView
+                android:id="@+id/rate_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rate"
+                android:textColor="@color/APP_Theme_Color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view3"
+                android:padding="5dp"
+
+                />
+            <TextView
+                android:id="@+id/tv_rate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:background="@color/white"
+                android:text="@{String.valueOf(product.rate)}"
+                app:layout_constraintStart_toEndOf="@id/rate_heading"
+                app:layout_constraintTop_toBottomOf="@id/view3"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="5dp"
+                android:textSize="16sp"
+
+                />
+            <View
+                android:id="@+id/view4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/tv_rate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+            <TextView
+                android:id="@+id/quantity_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quantity"
+                android:textColor="@color/APP_Theme_Color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view4"
+                app:layout_constraintEnd_toStartOf="@id/tv_quantity"
+                android:padding="5dp"
+                />
+            <TextView
+                android:id="@+id/tv_quantity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:background="@color/white"
+                android:text="@{String.valueOf(product.qty)}"
+                app:layout_constraintStart_toEndOf="@id/quantity_heading"
+                app:layout_constraintTop_toBottomOf="@id/view4"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="5dp"
+                android:textSize="16sp"
+
+                />
+
+            <View
+                android:id="@+id/view5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/quantity_heading"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+            <TextView
+                android:id="@+id/amount_heading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/amount1"
+                android:textColor="@color/APP_Theme_Color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view5"
+                app:layout_constraintEnd_toStartOf="@id/tv_quantity"
+                android:padding="5dp"
+                />
+            <TextView
+                android:id="@+id/tv_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:background="@color/white"
+                android:text="@{String.valueOf(product.amount)}"
+                app:layout_constraintStart_toEndOf="@id/amount_heading"
+                app:layout_constraintTop_toBottomOf="@id/view5"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:padding="5dp"
                 android:textSize="16sp"
@@ -138,7 +239,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="@color/APP_Theme_Color"
-                app:layout_constraintTop_toBottomOf="@id/Unit_heading"
+                app:layout_constraintTop_toBottomOf="@id/amount_heading"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 />

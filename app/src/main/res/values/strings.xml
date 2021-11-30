@@ -215,9 +215,19 @@
     <string name="add_sale_order">Add Sale Order</string>
     <string name="unit">Unit: </string>
     <string name="gst">GST</string>
-    <string name="gst_percentage">GST %</string>
+    <string name="gst_percentage">GST (%)</string>
     <string name="net_amount">Net Amount</string>
     <string name="comments">Comments</string>
+    <string name="term_and_condition">Term And Condition</string>
+    <string name="add_new_line">Add new Line</string>
+    <string name="rate">Rate</string>
+    <string name="order_quantity">Order Quantity</string>
+    <string name="discount_percentage">Discount (%)</string>
+    <string name="discount">Discount</string>
+    <string name="discounted_value">Discounted Value</string>
+    <string name="amount">Amount</string>
+    <string name="quantity">Quantity:</string>
+    <string name="amount1">Amount:</string>
 
 
 </resources>

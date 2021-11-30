@@ -1,5 +1,7 @@
 package com.example.ffccloud.NetworkCalls;
 
+import com.example.ffccloud.GetProductModel;
+import com.example.ffccloud.InsertProductModel;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.Login.GetUserMenuModel;
 import com.example.ffccloud.Login.ForgotPasswordModel;
@@ -15,10 +17,10 @@ import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
-import com.example.ffccloud.ProductModel;
+import com.example.ffccloud.ModelClasses.InsertSaleOrderModel;
 import com.example.ffccloud.ModelClasses.QualificationModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
-import com.example.ffccloud.SaleOrderModel;
+import com.example.ffccloud.GetSaleOrderModel;
 import com.example.ffccloud.SaveDoctorModel;
 import com.example.ffccloud.ModelClasses.SaveNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
@@ -139,25 +141,28 @@ public interface Api {
                                               @Query("UserId") int UserId);
 
     @GET("api/SalesOrder/Get_SalesOrderInvoice_List")
-    Call<List<SaleOrderModel>>  getSalesOrder(@Query("Company_Id") int companyID,
-                                              @Query("Location_Id") int Location_Id,
-                                              @Query("Country_Id") int Country_Id,
-                                              @Query("Project_Id") int Project_Id,
-                                              @Query("From_Date") String From_Date,
-                                              @Query("To_Date") String To_Date,
-                                              @Query("Supplier_Id") int Supplier_Id,
-                                              @Query("Status") int Status,
-                                              @Query("DateStatus") int DateStatus,
-                                              @Query("PriorityStatus") int PriorityStatus);
+    Call<List<GetSaleOrderModel>>  getSalesOrder(@Query("Company_Id") int companyID,
+                                                 @Query("Location_Id") int Location_Id,
+                                                 @Query("Country_Id") int Country_Id,
+                                                 @Query("Project_Id") int Project_Id,
+                                                 @Query("From_Date") String From_Date,
+                                                 @Query("To_Date") String To_Date,
+                                                 @Query("Supplier_Id") int Supplier_Id,
+                                                 @Query("Status") int Status,
+                                                 @Query("DateStatus") int DateStatus,
+                                                 @Query("PriorityStatus") int PriorityStatus);
 
 
 
     @GET("api/SharedFunction/ItSearch")
-    Call<List<ProductModel>> getAllProducts(@Header("Authorization") String token,
-                                            @Query("It") String it,
-                                            @Query("Company_Id") int Company_Id,
-                                            @Query("Country_Id") int Country_Id,
-                                            @Query("IsStatus") int IsStatus,
-                                            @Query("LocationId") int LocationId );
+    Call<List<GetProductModel>> getAllProducts(@Header("Authorization") String token,
+                                               @Query("It") String it,
+                                               @Query("Company_Id") int Company_Id,
+                                               @Query("Country_Id") int Country_Id,
+                                               @Query("IsStatus") int IsStatus,
+                                               @Query("LocationId") int LocationId );
+    @POST("api/SalesOrder/InsertUpdate")
+    Call<UpdateStatus>  insertSaleOrder(@Body InsertSaleOrderModel saleOrderModel);
+
 }
 

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="saleOrder"
-            type="com.example.ffccloud.SaleOrderModel" />
+            type="com.example.ffccloud.GetSaleOrderModel" />
     </data>
 
 

@@ -617,5 +617,10 @@
         android:id="@+id/productInfoBottomSheetDialogFragment"
         android:name="com.example.ffccloud.salesOrder.ProductInfoBottomSheetDialogFragment"
         android:label="Product Info"
-        tools:layout="@layout/fragment_product_info_bottom_sheet_dialog" />
+        tools:layout="@layout/fragment_product_info_bottom_sheet_dialog" >
+        <argument
+            android:name="productModel"
+            app:argType="com.example.ffccloud.InsertProductModel"
+            app:nullable="true" />
+    </dialog>
 </navigation>

@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            tools:listitem="@layout/product_card"
+            tools:listitem="@layout/get_product_card"
             />
         <TextView
             android:id="@+id/tv_nothing_found"

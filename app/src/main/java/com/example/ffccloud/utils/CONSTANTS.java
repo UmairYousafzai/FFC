@@ -21,6 +21,7 @@ public class CONSTANTS {
     public final static String CUSTOMER_KEY="customer";
     public final static int ITEM_SENT = 1;
     public final static int ITEM_RECEIVE = 2;
+    public final static String PRODUCT_MODEL="product model";
 
 
 

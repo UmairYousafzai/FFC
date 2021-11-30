@@ -9,25 +9,25 @@ import android.widget.Filterable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ffccloud.ProductModel;
-import com.example.ffccloud.databinding.ProductCardBinding;
+import com.example.ffccloud.GetProductModel;
+import com.example.ffccloud.InsertProductModel;
+import com.example.ffccloud.databinding.GetProductCardBinding;
 import com.example.ffccloud.salesOrder.AddProductFragmentDirections;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecyclerAdapter.ProductViewHolder> implements Filterable {
+public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRecyclerAdapter.ProductViewHolder> implements Filterable {
 
 
     private LayoutInflater layoutInflater;
-    private List<ProductModel> productModelList,productModelListFull;
+    private List<GetProductModel> productModelList,productModelListFull;
     private final Fragment fragment;
 
-    public ProductRecyclerAdapter(Fragment fragment) {
+    public GetProductRecyclerAdapter(Fragment fragment) {
         this.fragment = fragment;
         productModelListFull = new ArrayList<>();
     }
@@ -41,7 +41,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
             layoutInflater = LayoutInflater.from(parent.getContext());
         }
 
-        ProductCardBinding binding = ProductCardBinding.inflate(layoutInflater,parent,false);
+        GetProductCardBinding binding = GetProductCardBinding.inflate(layoutInflater,parent,false);
 
         return new ProductViewHolder(binding);
 
@@ -50,7 +50,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
 
-        ProductModel productModel = new ProductModel();
+        GetProductModel productModel = new GetProductModel();
         productModel = productModelList.get(position);
 
         holder.mBinding.setProduct(productModel);
@@ -69,7 +69,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
 
 
 
-    public  void setProductModelList(List<ProductModel> list)
+    public  void setProductModelList(List<GetProductModel> list)
     {
         if (list!=null)
         {
@@ -96,7 +96,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
         protected FilterResults performFiltering(CharSequence constraint) {
 
 
-            List<ProductModel> filterList= new ArrayList<>();
+            List<GetProductModel> filterList= new ArrayList<>();
 
             if (constraint==null||constraint.length()==0)
             {
@@ -104,7 +104,7 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
             }
             else {
                 String filterPattern= constraint.toString().toLowerCase().trim();
-                for (ProductModel model:productModelListFull)
+                for (GetProductModel model:productModelListFull)
                 {
                     if (model.getTitle().toLowerCase().trim().contains(filterPattern))
                     {
@@ -136,19 +136,28 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
 
     public  class ProductViewHolder extends RecyclerView.ViewHolder
     {
-        ProductCardBinding mBinding;
+        GetProductCardBinding mBinding;
 
-        public ProductViewHolder(@NonNull ProductCardBinding binding) {
+        public ProductViewHolder(@NonNull GetProductCardBinding binding) {
             super(binding.getRoot());
 
             mBinding = binding;
             mBinding.btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    InsertProductModel productModel = new InsertProductModel();
+
+                    int unitID= (int) productModelList.get(getAdapterPosition()).getUnitId();
+
+                    productModel.setRate(productModelList.get(getAdapterPosition()).getSaleRate());
+                    productModel.setUnit_Id(unitID);
+                    productModel.setTitleProduct(productModelList.get(getAdapterPosition()).getTitle());
+                    productModel.setUnitProduct(productModelList.get(getAdapterPosition()).getUnit());
                     NavController navController = NavHostFragment.findNavController(fragment);
 
-                    NavDirections navDirections = AddProductFragmentDirections.actionAddProductFragmentToProductInfoBottomSheetDialogFragment();
-                    navController.navigate(navDirections);
+                    AddProductFragmentDirections.ActionAddProductFragmentToProductInfoBottomSheetDialogFragment action = AddProductFragmentDirections.actionAddProductFragmentToProductInfoBottomSheetDialogFragment(productModel);
+                    navController.navigate(action);
                 }
             });
 
