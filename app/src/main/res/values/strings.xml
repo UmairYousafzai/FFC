@@ -228,6 +228,19 @@
     <string name="amount">Amount</string>
     <string name="quantity">Quantity:</string>
     <string name="amount1">Amount:</string>
+    <string name="owner_name">Owner Name</string>
+    <string name="procurement">Procurement:</string>
+    <string name="selected_doctors">Selected Doctors</string>
+    <string name="nothing_selected_yet">Nothing selected yet</string>
+    <string name="number_of_animals">Number Of Animals:</string>
+    <string name="large_animal">Large animal</string>
+    <string name="sheep_goat">Sheep Goat</string>
+    <string name="poultry">Poultry</string>
+    <string name="select_animal">Select animal</string>
+    <string name="type_of_medicine">Type of medicine</string>
+    <string name="other">Other</string>
+    <string name="medicine">Medicine</string>
+    <string name="company1">Company:</string>
 
 
 </resources>

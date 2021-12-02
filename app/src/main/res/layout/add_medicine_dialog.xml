@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:xmnls="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="10dp"
+    >
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_Name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/name"
+        app:startIconDrawable="@drawable/ic_baseline_person_24"
+        xmnls:boxBackgroundColor="@color/white"
+        xmnls:hintTextColor="@color/APP_Theme_Color"
+        app:startIconTint="@color/APP_Theme_Color"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/APP_Theme_Color" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_company_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/company"
+        app:startIconDrawable="@drawable/ic_office_block_urban_svgrepo_com"
+        xmnls:boxBackgroundColor="@color/white"
+        xmnls:hintTextColor="@color/APP_Theme_Color"
+        app:startIconTint="@color/APP_Theme_Color"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_company"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/APP_Theme_Color" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/done"
+        app:strokeWidth="1dp"
+        android:backgroundTint="@color/white"
+        app:strokeColor="@color/APP_Theme_Color"
+        android:textColor="@color/APP_Theme_Color"
+        android:textStyle="bold"
+        app:rippleColor="@color/APP_Theme_Color"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        app:elevation="5dp"
+        />
+</LinearLayout>

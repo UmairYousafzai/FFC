@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:xmnls="http://schemas.android.com/apk/res-auto"
+    tools:context=".farm.AddFarmFormFragment"
+    android:background="@color/background_color"
+    android:fillViewport="true"
+   >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_owner_name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/owner_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:startIconDrawable="@drawable/ic_baseline_person_24"
+            xmnls:boxBackgroundColor="@color/white"
+            xmnls:hintTextColor="@color/APP_Theme_Color"
+            app:startIconTint="@color/APP_Theme_Color"
+
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_owner_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:maxLines="1"
+                android:inputType="textMultiLine"
+                android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/APP_Theme_Color" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_contact_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/phone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_owner_name_layout"
+            app:startIconDrawable="@drawable/ic_baseline_call_black_24"
+            xmnls:boxBackgroundColor="@color/white"
+            xmnls:hintTextColor="@color/APP_Theme_Color"
+            app:startIconTint="@color/APP_Theme_Color"
+            android:layout_marginTop="5dp"
+
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:lines="1"
+                android:maxLines="1"
+                android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/APP_Theme_Color" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_address_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_contact_layout"
+            app:startIconDrawable="@drawable/ic_location"
+            xmnls:boxBackgroundColor="@color/white"
+            xmnls:hintTextColor="@color/APP_Theme_Color"
+            app:startIconTint="@color/APP_Theme_Color"
+            android:layout_marginTop="5dp"
+
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="2"
+                android:maxLines="2"
+                android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/APP_Theme_Color" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/heading1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/select_doctors"
+                android:background="@color/white"
+                android:textColor="@color/APP_Theme_Color"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="15dp"
+                android:padding="10dp"
+                app:layout_constraintEnd_toStartOf="@id/btn_add_doctor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_address_layout"
+                />
+            <ImageButton
+                android:id="@+id/btn_add_doctor"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_baseline_add_white_24"
+                android:background="@color/APP_Theme_Color"
+                app:layout_constraintStart_toEndOf="@id/heading1"
+                app:layout_constraintTop_toTopOf="@id/heading1"
+                app:layout_constraintBottom_toBottomOf="@id/heading1"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="@string/select_doctors"
+                />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/doctor_list_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/heading1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="15dp"
+            app:layout_constraintBottom_toTopOf="@id/heading3"
+            tools:listitem="@layout/filter_doctor_profile_card"
+            tools:itemCount="3"
+            />
+        <TextView
+            android:id="@+id/tv_nothing_selected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nothing_selected_yet"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/heading1"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/heading3"
+            />
+
+
+
+
+        <TextView
+            android:id="@+id/heading3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/number_of_animals"
+            android:background="@color/white"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/doctor_list_recyclerview"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            />
+        <RadioGroup
+            android:id="@+id/animal_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/heading3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/white"
+            android:weightSum="3"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:id="@+id/large_animal_radio_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/large_animal"
+                android:buttonTint="@color/APP_Theme_Color"
+                android:layout_weight="1"
+
+                />
+            <RadioButton
+                android:id="@+id/Sheep_goat_radio_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sheep_goat"
+                android:buttonTint="@color/APP_Theme_Color"
+                android:layout_weight="1"
+
+                />
+            <RadioButton
+                android:id="@+id/poultry_radio_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/poultry"
+                android:buttonTint="@color/APP_Theme_Color"
+                android:layout_weight="1"
+
+                />
+        </RadioGroup>
+        <LinearLayout
+            android:id="@+id/animal_spinner_spinner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/animal_radio_group"
+            android:background="@color/white"
+            android:layout_marginVertical="8dp"
+            android:elevation="5dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:elevation="2dp"
+                android:text="@string/select_animal"
+                android:textColor="@color/APP_Theme_Color"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+
+            <Spinner
+                android:id="@+id/animal_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="5dp"
+                android:elevation="5dp"
+                android:popupElevation="3dp"
+
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                android:layout_marginBottom="5dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/heading4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:text="@string/type_of_medicine"
+            android:textColor="@color/APP_Theme_Color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/animal_spinner_spinner_layout" />
+
+        <RadioGroup
+            android:id="@+id/medicine_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/heading4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <RadioButton
+                android:id="@+id/company_medicine_radio_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/company"
+                android:buttonTint="@color/APP_Theme_Color"
+                android:layout_weight="1"
+                />
+            <RadioButton
+                android:id="@+id/other_medicine_radio_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/other"
+                android:buttonTint="@color/APP_Theme_Color"
+                android:layout_weight="1"
+
+                />
+
+        </RadioGroup>
+
+
+        <TextView
+            android:id="@+id/heading5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Add_medicine"
+            android:background="@color/white"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="15dp"
+            android:padding="10dp"
+            app:layout_constraintEnd_toStartOf="@id/btn_add_medicine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medicine_radio_group"
+            />
+        <ImageButton
+            android:id="@+id/btn_add_medicine"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_baseline_add_white_24"
+            android:background="@color/APP_Theme_Color"
+            app:layout_constraintStart_toEndOf="@id/heading5"
+            app:layout_constraintTop_toTopOf="@id/heading5"
+            app:layout_constraintBottom_toBottomOf="@id/heading5"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/select_doctors"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/medicine_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/medicine_card"
+            app:layout_constraintTop_toBottomOf="@id/heading5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>

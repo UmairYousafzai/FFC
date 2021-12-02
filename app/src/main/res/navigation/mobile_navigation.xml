@@ -623,4 +623,24 @@
             app:argType="com.example.ffccloud.InsertProductModel"
             app:nullable="true" />
     </dialog>
+    <fragment
+        android:id="@+id/addFarmFormFragment"
+        android:name="com.example.ffccloud.farm.AddFarmFormFragment"
+        android:label="Farm Form"
+        tools:layout="@layout/fragment_add_farm_form" >
+        <action
+            android:id="@+id/action_addFarmFormFragment_to_search_DoctorFragment"
+            app:destination="@id/search_DoctorFragment" />
+        <action
+            android:id="@+id/action_addFarmFormFragment_to_medicineListFragment"
+            app:destination="@id/medicineListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medicineListFragment"
+        android:name="com.example.ffccloud.farm.MedicineListFragment"
+        android:label="Medicines" />
+    <fragment
+        android:id="@+id/search_DoctorFragment"
+        android:name="com.example.ffccloud.farm.Search_DoctorFragment"
+        android:label="Doctors" />
 </navigation>

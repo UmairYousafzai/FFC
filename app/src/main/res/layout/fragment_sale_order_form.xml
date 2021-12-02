@@ -98,7 +98,7 @@
 
 
             <LinearLayout
-                android:id="@+id/order_date_layout"
+                android:id="@+id/sales_order_date_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -144,7 +144,7 @@
                 android:background="@drawable/spinner_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/order_date_layout"
+                app:layout_constraintTop_toBottomOf="@id/sales_order_date_layout"
                 >
 
                 <TextView

@@ -791,6 +791,7 @@
                 app:layout_constraintTop_toBottomOf="@id/view5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/add_btn"
+                app:layout_constraintBottom_toTopOf="@id/contact_recycler_view"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -801,7 +802,7 @@
                 tools:listitem="@layout/contact_persons_card"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="50dp"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

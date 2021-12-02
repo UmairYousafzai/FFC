@@ -297,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_baseline_gps_fixed_24,null));
         menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_client_profile_svgrepo_com,null));
         menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_orders,null));
+        menu.add(1, R.id.addFarmFormFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_farm_svgrepo_com,null));
         ArrayList<String> menuIds = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menu_items_ids)));
         SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *from User_Menu Order By Menu_Order Asc");
         ffcDatabase.dao().sortMenus();
