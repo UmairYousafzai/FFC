@@ -612,6 +612,10 @@
         <action
             android:id="@+id/action_addProductFragment_to_productInfoBottomSheetDialogFragment"
             app:destination="@id/productInfoBottomSheetDialogFragment" />
+        <argument
+            android:name="key"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <dialog
         android:id="@+id/productInfoBottomSheetDialogFragment"
@@ -630,15 +634,19 @@
         tools:layout="@layout/fragment_add_farm_form" >
         <action
             android:id="@+id/action_addFarmFormFragment_to_search_DoctorFragment"
-            app:destination="@id/search_DoctorFragment" />
+            app:destination="@id/search_DoctorFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
-            android:id="@+id/action_addFarmFormFragment_to_medicineListFragment"
-            app:destination="@id/medicineListFragment" />
+            android:id="@+id/action_addFarmFormFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
-    <fragment
-        android:id="@+id/medicineListFragment"
-        android:name="com.example.ffccloud.farm.MedicineListFragment"
-        android:label="Medicines" />
     <fragment
         android:id="@+id/search_DoctorFragment"
         android:name="com.example.ffccloud.farm.Search_DoctorFragment"

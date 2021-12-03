@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -42,6 +43,7 @@ public class AddProductFragment extends Fragment {
     private GetProductRecyclerAdapter adapter;
     private NavController navController;
     private List<InsertProductModel> productModelList=new ArrayList<>();
+    private int key =0;
 
 
     @Override
@@ -52,8 +54,20 @@ public class AddProductFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //key is to check from which location we have requested this fragment
+
+        assert getArguments() != null;
+        key = AddProductFragmentArgs.fromBundle(getArguments()).getKey();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+
 
         navController = NavHostFragment.findNavController(this);
         NavBackStackEntry navBackStackEntry = navController.getBackStackEntry(R.id.addProductFragment  );

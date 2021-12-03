@@ -26,6 +26,7 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
     private LayoutInflater layoutInflater;
     private List<GetProductModel> productModelList,productModelListFull;
     private final Fragment fragment;
+    private int key=0;
 
     public GetProductRecyclerAdapter(Fragment fragment) {
         this.fragment = fragment;
@@ -67,6 +68,10 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
 
 
 
+    public void setKey(int key)
+    {
+        this.key= key;
+    }
 
 
     public  void setProductModelList(List<GetProductModel> list)
@@ -154,6 +159,10 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
                     productModel.setUnit_Id(unitID);
                     productModel.setTitleProduct(productModelList.get(getAdapterPosition()).getTitle());
                     productModel.setUnitProduct(productModelList.get(getAdapterPosition()).getUnit());
+                    if (key==1)
+                    {
+
+                    }
                     NavController navController = NavHostFragment.findNavController(fragment);
 
                     AddProductFragmentDirections.ActionAddProductFragmentToProductInfoBottomSheetDialogFragment action = AddProductFragmentDirections.actionAddProductFragmentToProductInfoBottomSheetDialogFragment(productModel);

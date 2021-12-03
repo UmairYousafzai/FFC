@@ -241,6 +241,9 @@
     <string name="other">Other</string>
     <string name="medicine">Medicine</string>
     <string name="company1">Company:</string>
+    <string name="enter_number_of_animal">Enter Number Of Animal</string>
+    <string name="enable_location">Enable Location</string>
+    <string name="add_medicine">Add medicine</string>
 
 
 </resources>
