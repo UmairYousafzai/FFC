@@ -16,9 +16,11 @@ import com.example.ffccloud.GetProductModel;
 import com.example.ffccloud.InsertProductModel;
 import com.example.ffccloud.databinding.GetProductCardBinding;
 import com.example.ffccloud.salesOrder.AddProductFragmentDirections;
+import com.example.ffccloud.utils.CONSTANTS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRecyclerAdapter.ProductViewHolder> implements Filterable {
 
@@ -159,14 +161,19 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
                     productModel.setUnit_Id(unitID);
                     productModel.setTitleProduct(productModelList.get(getAdapterPosition()).getTitle());
                     productModel.setUnitProduct(productModelList.get(getAdapterPosition()).getUnit());
-                    if (key==1)
-                    {
-
-                    }
                     NavController navController = NavHostFragment.findNavController(fragment);
 
-                    AddProductFragmentDirections.ActionAddProductFragmentToProductInfoBottomSheetDialogFragment action = AddProductFragmentDirections.actionAddProductFragmentToProductInfoBottomSheetDialogFragment(productModel);
-                    navController.navigate(action);
+                    if (key==1)
+                    {
+                        Objects.requireNonNull(navController.getPreviousBackStackEntry()).getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL,productModel);
+                        navController.popBackStack();
+                    }
+                    else {
+                        AddProductFragmentDirections.ActionAddProductFragmentToProductInfoBottomSheetDialogFragment action = AddProductFragmentDirections.actionAddProductFragmentToProductInfoBottomSheetDialogFragment(productModel);
+                        navController.navigate(action);
+                    }
+
+
                 }
             });
 

@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".doctor.AddDoctorFragment"
+    android:background="@color/background_color"
+    >
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:layout_margin="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:icon="@drawable/tick_two"
+        app:iconTint="@color/white"
+        />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <com.google.android.material.textfield.TextInputLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Name"
+                android:textColorHint="@color/black"
+                android:elevation="5dp"
+                android:background="@color/white"
+                app:startIconTint="@color/APP_Theme_Color"
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_docName"
+
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Phone(format: 92xxxxxxxxx)"
+                android:textColorHint="@color/black"
+                app:startIconTint="@color/APP_Theme_Color"
+                android:background="@color/white"
+
+                android:elevation="5dp"
+                app:startIconDrawable="@drawable/ic_baseline_call_black_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_docPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="phone"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Email"
+                android:textColorHint="@color/black"
+                app:startIconTint="@color/APP_Theme_Color"
+                android:background="@color/white"
+
+                android:elevation="5dp"
+                app:startIconDrawable="@drawable/ic_baseline_email_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_docEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="textEmailAddress"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:startIconTint="@color/APP_Theme_Color"
+                android:background="@color/white"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:hint="Address"
+                android:textColorHint="@color/black"
+                android:elevation="5dp"
+                app:startIconDrawable="@drawable/ic_home">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_docAdress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <CheckBox
+                android:id="@id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:text="Enable Location"
+                android:buttonTint="@color/APP_Theme_Color"
+                android:background="@color/white"
+
+                />
+
+            <LinearLayout
+                android:id="@+id/region_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
+                android:elevation="5dp"
+
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingBottom="2dp"
+                    android:text="@string/region"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+
+                <Spinner
+                    android:id="@+id/spinner_Region"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/gender_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
+                android:elevation="5dp"
+
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingBottom="2dp"
+                    android:text="@string/gender"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+
+                <Spinner
+                    android:id="@+id/spinner_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/education_designation"
+                android:gravity="center"
+                android:background="@color/white"
+                android:textStyle="bold"
+                android:textColor="@color/APP_Theme_Color"
+                android:elevation="5dp"
+
+                android:textSize="18sp">
+
+            </TextView>
+
+
+            <LinearLayout
+                android:id="@+id/classification_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
+                android:elevation="5dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingBottom="2dp"
+                    android:text="Classification"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+
+                <Spinner
+                    android:id="@+id/spinner_classification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/qualification_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
+                android:elevation="5dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingBottom="2dp"
+                    android:text="@string/qualification"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+
+                <Spinner
+                    android:id="@+id/spinner_qualification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/grade_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
+                android:elevation="5dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingBottom="2dp"
+                    android:text="@string/grade"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+
+                <Spinner
+                    android:id="@+id/spinner_grade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/gray" />
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/timings_schedule"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@color/white"
+                android:elevation="5dp"
+                android:textColor="@color/APP_Theme_Color"
+                android:textSize="18sp">
+
+            </TextView>
+
+
+            <RadioGroup
+                android:id="@+id/docTiming_radio_group"
+                style="Widget.MaterialComponents.CompoundButton.RadioButton"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:checkedButton="@+id/radio_button_1"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_button_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/morning"
+                    android:elevation="5dp"
+
+                    />
+
+                <RadioButton
+                    android:id="@+id/radio_button_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:fontFamily="sans-serif-light"
+                    android:elevation="5dp"
+                    android:text="@string/evening" />
+
+
+            </RadioGroup>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/heading9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:text="@string/type_of_medicine"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/medicine_radio_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/heading9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:checkedButton="@id/company_medicine_radio_btn"
+                    >
+                    <RadioButton
+                        android:id="@+id/company_medicine_radio_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/company"
+                        android:buttonTint="@color/APP_Theme_Color"
+                        android:layout_weight="1"
+                        />
+                    <RadioButton
+                        android:id="@+id/other_medicine_radio_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/other"
+                        android:buttonTint="@color/APP_Theme_Color"
+                        android:layout_weight="1"
+
+                        />
+
+                </RadioGroup>
+
+
+                <TextView
+                    android:id="@+id/heading8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_medicine"
+                    android:background="@color/white"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginStart="10dp"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toStartOf="@id/btn_add_medicine"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/medicine_radio_group"
+                    android:elevation="5dp"
+                    />
+                <ImageButton
+                    android:id="@+id/btn_add_medicine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:src="@drawable/ic_baseline_add_white_24"
+                    android:background="@color/APP_Theme_Color"
+                    app:layout_constraintStart_toEndOf="@id/heading8"
+                    app:layout_constraintTop_toTopOf="@id/heading8"
+                    app:layout_constraintBottom_toBottomOf="@id/heading8"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    android:elevation="5dp"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/medicine_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/medicine_card"
+                    tools:itemCount="2"
+                    app:layout_constraintTop_toBottomOf="@id/heading8"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="70dp"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

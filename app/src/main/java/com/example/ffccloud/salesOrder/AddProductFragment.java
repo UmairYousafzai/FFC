@@ -173,6 +173,7 @@ public class AddProductFragment extends Fragment {
         mBinding.productRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter= new GetProductRecyclerAdapter(this);
         mBinding.productRecyclerView.setAdapter(adapter);
+        adapter.setKey(key);
     }
 
     public void setPullToFresh() {

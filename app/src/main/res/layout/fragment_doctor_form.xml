@@ -42,20 +42,6 @@
                     app:civ_border_width="0.1dp" />
 
 
-<!--                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-<!--                    android:id="@+id/id_addProfileImage"-->
-<!--                    android:layout_width="20dp"-->
-<!--                    android:layout_height="20dp"-->
-
-<!--                    android:layout_alignEnd="@+id/id_docImage"-->
-<!--                    android:layout_alignBottom="@+id/id_docImage"-->
-<!--                    app:backgroundTint="@color/APP_Theme_Color"-->
-<!--                    app:elevation="3dp"-->
-<!--                    app:icon="@drawable/ic_baseline_camera_alt_24"-->
-<!--                    >-->
-
-<!--                </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
-
                 <ImageButton
                     android:id="@+id/id_addProfileImage"
                     android:elevation="3dp"

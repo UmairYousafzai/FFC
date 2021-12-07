@@ -1,32 +1,63 @@
 package com.example.ffccloud;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Medicine_modal {
-    private String medicineName;
-    private String companyName;
-    private boolean isCompany;
 
-    public String getMedicineName() {
+    @SerializedName("Supplier_Item_Link_Id_dtl")
+    @Expose
+    private Long supplierItemLinkIdDtl;
+    @SerializedName("It_Code")
+    @Expose
+    private String itCode;
+    @SerializedName("It_Head")
+    @Expose
+    private String itHead;
+    @SerializedName("Is_Registered")
+    @Expose
+    private String isRegistered;
+    @SerializedName("Comp_Name")
+    @Expose
+    private String compName;
 
-        return medicineName;
+    public Long getSupplierItemLinkIdDtl() {
+        return supplierItemLinkIdDtl;
     }
 
-    public void setMedicineName(String medicineName) {
-        this.medicineName = medicineName;
+    public void setSupplierItemLinkIdDtl(Long supplierItemLinkIdDtl) {
+        this.supplierItemLinkIdDtl = supplierItemLinkIdDtl;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getItCode() {
+        return itCode;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setItCode(String itCode) {
+        this.itCode = itCode;
     }
 
-    public boolean isCompany() {
-        return isCompany;
+    public String getItHead() {
+        return itHead;
     }
 
-    public void setCompany(boolean company) {
-        isCompany = company;
+    public void setItHead(String itHead) {
+        this.itHead = itHead;
+    }
+
+    public String getIsRegistered() {
+        return isRegistered;
+    }
+
+    public void setIsRegistered(String isRegistered) {
+        this.isRegistered = isRegistered;
+    }
+
+    public String getCompName() {
+        return compName;
+    }
+
+    public void setCompName(String compName) {
+        this.compName = compName;
     }
 }

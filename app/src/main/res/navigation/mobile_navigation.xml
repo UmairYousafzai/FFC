@@ -651,4 +651,28 @@
         android:id="@+id/search_DoctorFragment"
         android:name="com.example.ffccloud.farm.Search_DoctorFragment"
         android:label="Doctors" />
+    <fragment
+        android:id="@+id/addMedicalStoreFragment"
+        android:name="com.example.ffccloud.medicalStore.AddMedicalStoreFragment"
+        android:label="Medical Store"
+        tools:layout="@layout/fragment_add_medical_store" />
+    <fragment
+        android:id="@+id/addHospitalFragment"
+        android:name="com.example.ffccloud.hospital.AddHospitalFragment"
+        android:label="Add Hospital"
+        tools:layout="@layout/fragment_add_hospital" >
+        <action
+            android:id="@+id/action_addHospitalFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/addDoctorFragment"
+        android:name="com.example.ffccloud.doctor.AddDoctorFragment"
+        android:label="Add Doctor"
+        tools:layout="@layout/fragment_add_doctor" >
+        <action
+            android:id="@+id/action_addDoctorFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment" />
+    </fragment>
 </navigation>

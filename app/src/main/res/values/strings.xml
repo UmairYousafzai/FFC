@@ -244,6 +244,13 @@
     <string name="enter_number_of_animal">Enter Number Of Animal</string>
     <string name="enable_location">Enable Location</string>
     <string name="add_medicine">Add medicine</string>
+    <string name="yes">Yes</string>
+    <string name="store_sale_monthly">Store Sale Monthly</string>
+    <string name="attached_companies">Attached Companies</string>
+    <string name="farm">Farm</string>
+    <string name="add_farm">Add Farm</string>
+    <string name="registered">Registered</string>
+    <string name="add_gas_days">Add Gas Days</string>
 
 
 </resources>
