@@ -3,7 +3,7 @@
     <data>
         <variable
             name="contactPerson"
-            type="com.example.ffccloud.ContactPersonsModel" />
+            type="com.example.ffccloud.ContactPersons" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

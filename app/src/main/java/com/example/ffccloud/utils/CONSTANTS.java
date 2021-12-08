@@ -22,6 +22,10 @@ public class CONSTANTS {
     public final static int ITEM_SENT = 1;
     public final static int ITEM_RECEIVE = 2;
     public final static String PRODUCT_MODEL="product model";
+    public final static String USER_SUB_TYPE_FARM="Farm";
+    public final static String USER_SUB_TYPE_HOSPITAL="Hospital";
+    public final static String USER_SUB_TYPE_DOCTOR="Doctor";
+    public final static String USER_SUB_TYPE_STORE="Store";
 
 
 

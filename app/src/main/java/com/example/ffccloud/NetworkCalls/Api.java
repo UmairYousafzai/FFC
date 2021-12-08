@@ -1,7 +1,6 @@
 package com.example.ffccloud.NetworkCalls;
 
 import com.example.ffccloud.GetProductModel;
-import com.example.ffccloud.InsertProductModel;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.Login.GetUserMenuModel;
 import com.example.ffccloud.Login.ForgotPasswordModel;
@@ -21,6 +20,7 @@ import com.example.ffccloud.ModelClasses.InsertSaleOrderModel;
 import com.example.ffccloud.ModelClasses.QualificationModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.GetSaleOrderModel;
+import com.example.ffccloud.ModelClasses.SupplierMainModel;
 import com.example.ffccloud.SaveDoctorModel;
 import com.example.ffccloud.ModelClasses.SaveNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
@@ -163,6 +163,9 @@ public interface Api {
                                                @Query("LocationId") int LocationId );
     @POST("api/SalesOrder/InsertUpdate")
     Call<UpdateStatus>  insertSaleOrder(@Body InsertSaleOrderModel saleOrderModel);
+
+    @POST("api/SupplierApi/InsertUpdateSupplier")
+    Call<UpdateStatus>  insertSupplier(@Body SupplierMainModel supplierModelNew);
 
 }
 

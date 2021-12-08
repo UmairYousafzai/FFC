@@ -7,10 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ffccloud.ContactPersonsModel;
-import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
-import com.example.ffccloud.Medicine_modal;
-import com.example.ffccloud.databinding.ContactPersonsCardBinding;
+import com.example.ffccloud.SupplierItemLinking;
 import com.example.ffccloud.databinding.MedicineCardBinding;
 
 import java.util.ArrayList;
@@ -20,7 +17,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
 
 
     private LayoutInflater layoutInflater;
-    private List<Medicine_modal> medicineModalList;
+    private List<SupplierItemLinking> medicineModalList;
 
     public MedicineAdapter() {
 
@@ -45,7 +42,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
     @Override
     public void onBindViewHolder(@NonNull MedicineViewHolder holder, int position) {
 
-        Medicine_modal medicineModal = new Medicine_modal();
+        SupplierItemLinking medicineModal = new SupplierItemLinking();
         medicineModal = medicineModalList.get(position);
 
         holder.mBinding.setMedicine(medicineModal);
@@ -59,7 +56,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
         return medicineModalList==null? 0:medicineModalList.size();
     }
 
-    public  void setMedicineModalList(List<Medicine_modal> list)
+    public  void setMedicineModalList(List<SupplierItemLinking> list)
     {
         if (list!=null)
         {

@@ -7,8 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ffccloud.CompanyModel;
-import com.example.ffccloud.Medicine_modal;
+import com.example.ffccloud.SupplierCompDetail;
 import com.example.ffccloud.databinding.CompanyCardBinding;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.List;
 public class CompanyRecyclerViewAdapter extends RecyclerView.Adapter<CompanyRecyclerViewAdapter.CompanyViewHolder> {
 
     private LayoutInflater layoutInflater;
-    private List<CompanyModel> companyModelList;
+    private List<SupplierCompDetail> companyModelList;
 
     public CompanyRecyclerViewAdapter() {
 
@@ -42,7 +41,7 @@ public class CompanyRecyclerViewAdapter extends RecyclerView.Adapter<CompanyRecy
     @Override
     public void onBindViewHolder(@NonNull CompanyViewHolder holder, int position) {
 
-        CompanyModel companyModel = new CompanyModel();
+        SupplierCompDetail companyModel = new SupplierCompDetail();
         companyModel = companyModelList.get(position);
 
         holder.mBinding.setCompany(companyModel);
@@ -56,7 +55,7 @@ public class CompanyRecyclerViewAdapter extends RecyclerView.Adapter<CompanyRecy
         return companyModelList ==null? 0: companyModelList.size();
     }
 
-    public  void setCompanyModelList(List<CompanyModel> list)
+    public  void setCompanyModelList(List<SupplierCompDetail> list)
     {
         if (list!=null)
         {

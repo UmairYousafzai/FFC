@@ -1,8 +1,13 @@
 package com.example.ffccloud;
 
-public class ContactPersonsModel {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
+public class ContactPersons {
+    @SerializedName("Contact_Person_Id")
+    @Expose
     private String Contact_Person_Id;
+
     private int Supplier_Id;
     private String Contact_Person_Name;
     private String Contact_Person_Design ;

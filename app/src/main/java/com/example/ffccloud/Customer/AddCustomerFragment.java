@@ -12,11 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.ffccloud.ContactPersons;
 import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
-import com.example.ffccloud.ContactPersonsModel;
 import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
@@ -43,7 +42,7 @@ public class AddCustomerFragment extends Fragment {
     private final HashMap<String, Integer> cityHashMap = new HashMap<>();
     private String creditLimitPromptType;
     private boolean applyCredit = false,isCompany= false;
-    private List<ContactPersonsModel> contactPersonsModelList = new ArrayList<>();
+    private List<ContactPersons> contactPersonsList = new ArrayList<>();
     private ContactRecyclerAdapter adapter;
     private CustomerModel customerModel;
 
@@ -118,7 +117,7 @@ public class AddCustomerFragment extends Fragment {
         mBinding.etInstruction.setText(customerModel.getInstruction());
         mBinding.etComment.setText(customerModel.getComments());
 
-        adapter.setContactPersonsModelList(customerModel.getContact_PersonsList());
+        adapter.setContactPersonsList(customerModel.getContact_PersonsList());
 
     }
 
@@ -195,7 +194,7 @@ public class AddCustomerFragment extends Fragment {
                         , Objects.requireNonNull(mBinding.etAddress.getText()).toString()
                         , Objects.requireNonNull(mBinding.etInstruction.getText()).toString()
                         , Objects.requireNonNull(mBinding.etComment.getText()).toString()
-                        ,isCompany,creditLimitPromptType,contactPersonsModelList);
+                        ,isCompany,creditLimitPromptType, contactPersonsList);
 
                         apiCallforsavingCustomer(customerModel);
                     }
@@ -264,13 +263,13 @@ public class AddCustomerFragment extends Fragment {
                 {
                     if (phone!=null)
                     {
-                        ContactPersonsModel contactPersonsModel = new ContactPersonsModel();
-                        contactPersonsModel.setContact_Person_ContactNo(phone);
-                        contactPersonsModel.setContact_Person_Design(binding.etDesignation.getText().toString());
-                        contactPersonsModel.setContact_Person_Email(binding.etEmail.getText().toString());
-                        contactPersonsModel.setContact_Person_Name(name);
-                        contactPersonsModelList.add(contactPersonsModel);
-                        adapter.setContactPersonsModelList(contactPersonsModelList);
+                        ContactPersons contactPersons = new ContactPersons();
+                        contactPersons.setContact_Person_ContactNo(phone);
+                        contactPersons.setContact_Person_Design(binding.etDesignation.getText().toString());
+                        contactPersons.setContact_Person_Email(binding.etEmail.getText().toString());
+                        contactPersons.setContact_Person_Name(name);
+                        contactPersonsList.add(contactPersons);
+                        adapter.setContactPersonsList(contactPersonsList);
                     }
                     else
                     {

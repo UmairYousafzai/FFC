@@ -1,8 +1,8 @@
 package com.example.ffccloud.ModelClasses;
 
-import com.example.ffccloud.CompanyModel;
-import com.example.ffccloud.ContactPersonsModel;
-import com.example.ffccloud.Medicine_modal;
+import com.example.ffccloud.SupplierCompDetail;
+import com.example.ffccloud.ContactPersons;
+import com.example.ffccloud.SupplierItemLinking;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,24 +10,25 @@ import java.util.List;
 
 public class SupplierModelNew {
 
+
     @SerializedName("Company_Id")
     @Expose
-    private Long companyId;
+    private Integer companyId;
     @SerializedName("Country_Id")
     @Expose
-    private Long countryId;
+    private Integer countryId;
     @SerializedName("Location_Id")
     @Expose
-    private Long locationId;
+    private Integer locationId;
     @SerializedName("Project_Id")
     @Expose
-    private Long projectId;
+    private Integer projectId;
     @SerializedName("Supplier_Id")
     @Expose
-    private Long supplierId;
+    private Integer supplierId;
     @SerializedName("Supplier_Code")
     @Expose
-    private Long supplierCode;
+    private Integer supplierCode;
     @SerializedName("Supplier_Name")
     @Expose
     private String supplierName;
@@ -54,7 +55,7 @@ public class SupplierModelNew {
     private String userSubType;
     @SerializedName("UserId")
     @Expose
-    private Long userId;
+    private Integer userId;
     @SerializedName("Animals_Main_Type")
     @Expose
     private String animalsMainType;
@@ -66,7 +67,7 @@ public class SupplierModelNew {
     private String noOfAnimals;
     @SerializedName("Grade_id")
     @Expose
-    private Long gradeId;
+    private Integer gradeId;
     @SerializedName("Size")
     @Expose
     private String size;
@@ -79,64 +80,136 @@ public class SupplierModelNew {
     @SerializedName("Region_Id")
     @Expose
     private String regionId;
-    @SerializedName("ContactPersonsModelList")
+
+    private String Loc_Cord;
+    private String Loc_Cord_Address;
+    private boolean Is_update_Loc_Cord;
+    private int Classification_Id;
+    private int Qualification_Id ;
+    private String Gender  ;
+    private String Shift_Type   ;
+
+
+
+    @SerializedName("ContactPersonsList")
     @Expose
-    private List<ContactPersonsModel> ContactPersonsModelList = null;
+    private List<ContactPersons> contactPersonsList = null;
     @SerializedName("SupplierLinkingList")
     @Expose
     private List<SupplierLinking> supplierLinkingList = null;
     @SerializedName("SupplierItemLinkingList")
     @Expose
-    private List<Medicine_modal> supplierItemLinkingList = null;
+    private List<SupplierItemLinking> supplierItemLinkingList = null;
     @SerializedName("SupplierCompDetailList")
     @Expose
-    private List<CompanyModel> supplierCompDetailList = null;
+    private List<SupplierCompDetail> supplierCompDetailList = null;
 
-    public Long getCompanyId() {
+
+    public boolean isIs_update_Loc_Cord() {
+        return Is_update_Loc_Cord;
+    }
+
+    public int getClassification_Id() {
+        return Classification_Id;
+    }
+
+    public void setClassification_Id(int classification_Id) {
+        Classification_Id = classification_Id;
+    }
+
+    public int getQualification_Id() {
+        return Qualification_Id;
+    }
+
+    public void setQualification_Id(int qualification_Id) {
+        Qualification_Id = qualification_Id;
+    }
+
+    public String getGender() {
+        return Gender;
+    }
+
+    public void setGender(String gender) {
+        Gender = gender;
+    }
+
+    public String getShift_Type() {
+        return Shift_Type;
+    }
+
+    public void setShift_Type(String shift_Type) {
+        Shift_Type = shift_Type;
+    }
+
+    public String getLoc_Cord() {
+        return Loc_Cord;
+    }
+
+    public void setLoc_Cord(String loc_Cord) {
+        Loc_Cord = loc_Cord;
+    }
+
+    public String getLoc_Cord_Address() {
+        return Loc_Cord_Address;
+    }
+
+    public void setLoc_Cord_Address(String loc_Cord_Address) {
+        Loc_Cord_Address = loc_Cord_Address;
+    }
+
+    public boolean getIs_update_Loc_Cord() {
+        return Is_update_Loc_Cord;
+    }
+
+    public void setIs_update_Loc_Cord(boolean is_update_Loc_Cord) {
+        Is_update_Loc_Cord = is_update_Loc_Cord;
+    }
+
+    public Integer getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(Long companyId) {
+    public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
     }
 
-    public Long getCountryId() {
+    public Integer getCountryId() {
         return countryId;
     }
 
-    public void setCountryId(Long countryId) {
+    public void setCountryId(Integer countryId) {
         this.countryId = countryId;
     }
 
-    public Long getLocationId() {
+    public Integer getLocationId() {
         return locationId;
     }
 
-    public void setLocationId(Long locationId) {
+    public void setLocationId(Integer locationId) {
         this.locationId = locationId;
     }
 
-    public Long getProjectId() {
+    public Integer getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(Integer projectId) {
         this.projectId = projectId;
     }
 
-    public Long getSupplierId() {
+    public Integer getSupplierId() {
         return supplierId;
     }
 
-    public void setSupplierId(Long supplierId) {
+    public void setSupplierId(Integer supplierId) {
         this.supplierId = supplierId;
     }
 
-    public Long getSupplierCode() {
+    public Integer getSupplierCode() {
         return supplierCode;
     }
 
-    public void setSupplierCode(Long supplierCode) {
+    public void setSupplierCode(Integer supplierCode) {
         this.supplierCode = supplierCode;
     }
 
@@ -204,11 +277,11 @@ public class SupplierModelNew {
         this.userSubType = userSubType;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -236,11 +309,11 @@ public class SupplierModelNew {
         this.noOfAnimals = noOfAnimals;
     }
 
-    public Long getGradeId() {
+    public Integer getGradeId() {
         return gradeId;
     }
 
-    public void setGradeId(Long gradeId) {
+    public void setGradeId(Integer gradeId) {
         this.gradeId = gradeId;
     }
 
@@ -276,12 +349,12 @@ public class SupplierModelNew {
         this.regionId = regionId;
     }
 
-    public List<ContactPersonsModel> getContactPersonsModelList() {
-        return ContactPersonsModelList;
+    public List<ContactPersons> getContactPersonsList() {
+        return contactPersonsList;
     }
 
-    public void setContactPersonsModelList(List<ContactPersonsModel> ContactPersonsModelList) {
-        this.ContactPersonsModelList = ContactPersonsModelList;
+    public void setContactPersonsList(List<ContactPersons> contactPersonsList) {
+        this.contactPersonsList = contactPersonsList;
     }
 
     public List<SupplierLinking> getSupplierLinkingList() {
@@ -292,21 +365,21 @@ public class SupplierModelNew {
         this.supplierLinkingList = supplierLinkingList;
     }
 
-    public List<Medicine_modal> getSupplierItemLinkingList() {
+    public List<SupplierItemLinking> getSupplierItemLinkingList() {
         return supplierItemLinkingList;
     }
 
-    public void setSupplierItemLinkingList(List<Medicine_modal> supplierItemLinkingList) {
+    public void setSupplierItemLinkingList(List<SupplierItemLinking> supplierItemLinkingList) {
         this.supplierItemLinkingList = supplierItemLinkingList;
     }
 
-    public List<CompanyModel> getSupplierCompDetailList() {
+    public List<SupplierCompDetail> getSupplierCompDetailList() {
         return supplierCompDetailList;
     }
 
-    public void setSupplierCompDetailList(List<CompanyModel> supplierCompDetailList) {
+    public void setSupplierCompDetailList(List<SupplierCompDetail> supplierCompDetailList) {
         this.supplierCompDetailList = supplierCompDetailList;
     }
 
 }
-}
+

@@ -137,12 +137,11 @@
             </LinearLayout>
 
 
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/number_of_cases_layout"
+                android:id="@+id/size_of_hospital_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="No Of Cases"
+                android:hint="Size Of Hospital"
                 android:elevation="5dp"
 
                 app:layout_constraintEnd_toEndOf="parent"
@@ -156,11 +155,40 @@
                 xmnls:hintTextColor="@color/APP_Theme_Color">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_size_of_hospital"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/APP_Theme_Color" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/number_of_cases_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="No Of Cases"
+                android:elevation="5dp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/size_of_hospital_layout"
+                app:startIconDrawable="@drawable/ic_baseline_aspect_ratio_24"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                app:startIconTint="@color/APP_Theme_Color"
+                xmnls:boxBackgroundColor="@color/white"
+                xmnls:hintTextColor="@color/APP_Theme_Color">
+
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_no_of_cases"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lines="1"
                     android:maxLines="1"
+                    android:inputType="number"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textColorHint="@color/APP_Theme_Color" />

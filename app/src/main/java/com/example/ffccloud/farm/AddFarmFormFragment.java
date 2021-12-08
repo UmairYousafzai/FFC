@@ -21,15 +21,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.ffccloud.ContactPersonsModel;
+import com.example.ffccloud.ContactPersons;
 import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
-import com.example.ffccloud.GetProductModel;
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.Medicine_modal;
+import com.example.ffccloud.ModelClasses.SupplierMainModel;
+import com.example.ffccloud.SupplierItemLinking;
 import com.example.ffccloud.ModelClasses.RegionModel;
+import com.example.ffccloud.ModelClasses.SupplierModelNew;
+import com.example.ffccloud.ModelClasses.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.AddContactDialogBinding;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
@@ -55,12 +58,14 @@ public class AddFarmFormFragment extends Fragment {
 
     private FragmentAddFarmFormBinding mBinding;
     private NavController navController;
-    private List<ContactPersonsModel> contactPersonsModelList = new ArrayList<>();
-    private List<Medicine_modal> medicineModalList = new ArrayList<>();
+    private List<ContactPersons> contactPersonsList = new ArrayList<>();
+    private List<SupplierItemLinking> medicineModalList = new ArrayList<>();
     private ContactRecyclerAdapter contactRecyclerAdapter;
     private MedicineAdapter medicineAdapter;
     private ArrayList<String> animalArrayList = new ArrayList<>(), regionList = new ArrayList<>();
     private HashMap<String, Integer> regionHashmap = new HashMap<>();
+    private String locationString;
+    private String locationAddress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,9 +96,11 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onChanged(InsertProductModel model) {
                 if (model != null) {
-                    Medicine_modal medicineModal = new Medicine_modal();
-                    medicineModal.setMedicineName(model.getTitleProduct());
-                    medicineModal.setCompany(true);
+                    SupplierItemLinking medicineModal = new SupplierItemLinking();
+                    medicineModal.setItHead(model.getTitleProduct());
+                    medicineModal.setIsRegistered(true);
+                    medicineModal.setSupplierItemLinkIdDtl(0);
+                    medicineModal.setItCode(String.valueOf(model.getItem_Code()));
 
                     medicineModalList.add(medicineModal);
                     medicineAdapter.setMedicineModalList(medicineModalList);
@@ -199,9 +206,9 @@ public class AddFarmFormFragment extends Fragment {
 
 
                             if (mBinding.locationCheckbox.isChecked()) {
-                                String address = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                mBinding.locationCheckbox.setText(address);
-                                String locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
+                                mBinding.locationCheckbox.setText(locationAddress);
+                                 locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
                             } else {
 
                                 mBinding.locationCheckbox.setText("Enable Location");
@@ -217,6 +224,108 @@ public class AddFarmFormFragment extends Fragment {
                 }
             }
         });
+
+        mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                setUpSupplierModelForSave();
+            }
+        });
+    }
+
+    private void setUpSupplierModelForSave() {
+
+        String name = Objects.requireNonNull(mBinding.etOwnerName.getText()).toString();
+        String phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
+        String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
+        RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.animalRadioGroup.getCheckedRadioButtonId());
+        String animalMainType = radioButton.getText().toString();
+
+
+
+        if (name.length() > 0) {
+            if (phone.length() > 0) {
+                if (address.length() > 0) {
+                    if (regionList.size()>0) {
+                        int region = regionHashmap.get(mBinding.regionSpinner.getSelectedItem().toString());
+
+                        SupplierModelNew supplierModelNew = new SupplierModelNew();
+
+                        supplierModelNew.setCompanyId(1);
+                        supplierModelNew.setCountryId(1);
+                        supplierModelNew.setLocationId(1);
+                        supplierModelNew.setProjectId(1);
+                        supplierModelNew.setSupplierCode(0);
+                        supplierModelNew.setSupplierId(0);
+                        supplierModelNew.setAddress(address);
+                        supplierModelNew.setPhoneNo(phone);
+                        supplierModelNew.setSupplierName(name);
+                        supplierModelNew.setRegionId(String.valueOf(region));
+                        supplierModelNew.setUserSubType(CONSTANTS.USER_SUB_TYPE_FARM);
+                        supplierModelNew.setUserTypeName("F");
+                        supplierModelNew.setAnimalsMainType(animalMainType);
+                        supplierModelNew.setAnimalsSubType(mBinding.animalSpinner.getSelectedItem().toString());
+                        supplierModelNew.setNoOfAnimals(Objects.requireNonNull(mBinding.etNumberOfAnimal.getText()).toString());
+                        supplierModelNew.setSupplierItemLinkingList(medicineModalList);
+                        supplierModelNew.setContactPersonsList(contactPersonsList);
+                        supplierModelNew.setLoc_Cord(locationString);
+                        supplierModelNew.setLoc_Cord_Address(locationAddress);
+
+                        saveSupplier(supplierModelNew);
+                    } else {
+                        Toast.makeText(requireContext(), "Please select region", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(requireContext(), "Please enter the address", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(requireContext(), "Please enter the phone number", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(requireContext(), "Please enter the name", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    private void saveSupplier(SupplierModelNew supplierModelNew) {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Saving....");
+        progressDialog.show();
+
+
+        SupplierMainModel model = new SupplierMainModel();
+        model.setSupplierModelNew(supplierModelNew);
+
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(model);
+
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+                if (response.body()!=null)
+                {
+                    UpdateStatus updateStatus = response.body();
+                    Toast.makeText(requireContext(), " "+updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+                else
+                {
+                    Toast.makeText(requireContext(), " "+response.errorBody(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+                Toast.makeText(requireContext(), " "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+
     }
 
     private void showDialog(int key) {
@@ -236,10 +345,11 @@ public class AddFarmFormFragment extends Fragment {
                     String medicineName = Objects.requireNonNull(binding.etName.getText()).toString();
                     if (companyName.length() > 0) {
                         if (medicineName.length() > 0) {
-                            Medicine_modal medicineModal = new Medicine_modal();
-                            medicineModal.setCompanyName(companyName);
-                            medicineModal.setCompany(false);
-                            medicineModal.setMedicineName(medicineName);
+                            SupplierItemLinking medicineModal = new SupplierItemLinking();
+                            medicineModal.setCompName(companyName);
+                            medicineModal.setIsRegistered(false);
+                            medicineModal.setItHead(medicineName);
+                            medicineModal.setSupplierItemLinkIdDtl(0);
                             medicineModalList.add(medicineModal);
                             medicineAdapter.setMedicineModalList(medicineModalList);
                         } else {
@@ -271,13 +381,13 @@ public class AddFarmFormFragment extends Fragment {
 
                     if (name.length() > 0) {
                         if (phone.length() > 11) {
-                            ContactPersonsModel contactPersonsModel = new ContactPersonsModel();
-                            contactPersonsModel.setContact_Person_ContactNo(phone);
-                            contactPersonsModel.setContact_Person_Design(binding.etDesignation.getText().toString());
-                            contactPersonsModel.setContact_Person_Email(binding.etEmail.getText().toString());
-                            contactPersonsModel.setContact_Person_Name(name);
-                            contactPersonsModelList.add(contactPersonsModel);
-                            contactRecyclerAdapter.setContactPersonsModelList(contactPersonsModelList);
+                            ContactPersons contactPersons = new ContactPersons();
+                            contactPersons.setContact_Person_ContactNo(phone);
+                            contactPersons.setContact_Person_Design(binding.etDesignation.getText().toString());
+                            contactPersons.setContact_Person_Email(binding.etEmail.getText().toString());
+                            contactPersons.setContact_Person_Name(name);
+                            contactPersonsList.add(contactPersons);
+                            contactRecyclerAdapter.setContactPersonsList(contactPersonsList);
                             alertDialog.dismiss();
                         } else {
                             binding.etPhoneLayout.setError("Enter Phone Number");

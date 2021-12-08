@@ -3,7 +3,7 @@
     <data>
         <variable
             name="medicine"
-            type="com.example.ffccloud.Medicine_modal" />
+            type="com.example.ffccloud.SupplierItemLinking" />
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:background="@color/white"
-                android:text="@{ medicine.medicineName}"
+                android:text="@{ medicine.itHead}"
                 app:layout_constraintStart_toEndOf="@id/title_heading"
                 app:layout_constraintTop_toBottomOf="@id/view"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +99,7 @@
                 android:id="@+id/company_heading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/company1"
+                android:text="@string/code"
                 android:textColor="@color/APP_Theme_Color"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:background="@color/white"
-                android:text="@{medicine.companyName}"
+                android:text="@{medicine.itCode}"
                 app:layout_constraintStart_toEndOf="@id/company_heading"
                 app:layout_constraintTop_toBottomOf="@id/view1"
                 app:layout_constraintEnd_toEndOf="parent"

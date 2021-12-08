@@ -16,9 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.ffccloud.CompanyModel;
+import com.example.ffccloud.ModelClasses.SupplierMainModel;
+import com.example.ffccloud.ModelClasses.SupplierModelNew;
+import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.SupplierCompDetail;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
@@ -26,6 +30,7 @@ import com.example.ffccloud.databinding.CompaniesDialogBinding;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddMedicalStoreBinding;
 import com.example.ffccloud.medicalStore.adapter.CompanyRecyclerViewAdapter;
+import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.UserViewModel;
@@ -51,8 +56,9 @@ public class AddMedicalStoreFragment extends Fragment {
     private UserViewModel userViewModel;
     private List<GradingModel> gradingModelList;
     private CompanyRecyclerViewAdapter adapter;
-    private List<CompanyModel> companyModelList =  new ArrayList<>();
-
+    private List<SupplierCompDetail> companyModelList =  new ArrayList<>();
+    private String locationString;
+    private String locationAddress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -126,9 +132,9 @@ public class AddMedicalStoreFragment extends Fragment {
 
 
                             if (mBinding.locationCheckBox.isChecked()) {
-                                String address = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                mBinding.locationCheckBox.setText(address);
-                                String locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
+                                mBinding.locationCheckBox.setText(locationAddress);
+                                 locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
                             } else {
 
                                 mBinding.locationCheckBox.setText("Enable Location");
@@ -150,6 +156,109 @@ public class AddMedicalStoreFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showAddCompanyDialog();
+            }
+        });
+        mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setUpSupplierModelForSave();
+            }
+        });
+
+    }
+    private void setUpSupplierModelForSave() {
+
+        String name = Objects.requireNonNull(mBinding.etName.getText()).toString();
+        String phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
+        String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
+        int gradeID=0;
+        if (gradingModelList.size()>0)
+        {
+            gradeID= gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
+
+        }
+
+
+
+
+        if (name.length() > 0) {
+            if (phone.length() > 0) {
+                if (address.length() > 0) {
+                    if (regionList.size()>0) {
+                        int region = regionHashmap.get(mBinding.spinnerRegion.getSelectedItem().toString());
+
+                        SupplierModelNew supplierModelNew = new SupplierModelNew();
+
+                        supplierModelNew.setCompanyId(1);
+                        supplierModelNew.setCountryId(1);
+                        supplierModelNew.setLocationId(1);
+                        supplierModelNew.setProjectId(1);
+                        supplierModelNew.setSupplierCode(0);
+                        supplierModelNew.setSupplierId(0);
+                        supplierModelNew.setAddress(address);
+                        supplierModelNew.setPhoneNo(phone);
+                        supplierModelNew.setSupplierName(name);
+                        supplierModelNew.setRegionId(String.valueOf(region));
+                        supplierModelNew.setUserSubType(CONSTANTS.USER_SUB_TYPE_STORE);
+                        supplierModelNew.setUserTypeName("Str");
+                        supplierModelNew.setGradeId(gradeID);
+                        supplierModelNew.setMonthlySale(Objects.requireNonNull(mBinding.etMonthlySale.getText()).toString());
+                        supplierModelNew.setSupplierCompDetailList(companyModelList);
+                        supplierModelNew.setLoc_Cord(locationString);
+                        supplierModelNew.setLoc_Cord_Address(locationAddress);
+
+
+                        saveSupplier(supplierModelNew);
+                    } else {
+                        Toast.makeText(requireContext(), "Please select region", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(requireContext(), "Please enter the address", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(requireContext(), "Please enter the phone number", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(requireContext(), "Please enter the name", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    private void saveSupplier(SupplierModelNew supplierModelNew) {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Saving....");
+        progressDialog.show();
+
+
+        SupplierMainModel model = new SupplierMainModel();
+        model.setSupplierModelNew(supplierModelNew);
+
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(model);
+
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+                if (response.body()!=null)
+                {
+                    UpdateStatus updateStatus = response.body();
+                    Toast.makeText(requireContext(), " "+updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+                else
+                {
+                    Toast.makeText(requireContext(), " "+response.errorBody(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+                Toast.makeText(requireContext(), " "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
 
@@ -180,7 +289,10 @@ public class AddMedicalStoreFragment extends Fragment {
                         type="Stockist";
                     }
 
-                    CompanyModel model = new CompanyModel(0,type,name);
+                    SupplierCompDetail model = new SupplierCompDetail();
+                    model.setCompName(name);
+                    model.setType(type);
+                    model.setSupplierCompIdDtl(0);
                     companyModelList.add(model);
                     adapter.setCompanyModelList(companyModelList);
                     Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show();

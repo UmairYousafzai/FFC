@@ -3,7 +3,6 @@ package com.example.ffccloud;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.ffccloud.ContactPersonsModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -58,12 +57,12 @@ public class CustomerModel implements Parcelable {
     @SerializedName("Mobile_No")
     @Expose
     private String mobileNo;
-    private List<ContactPersonsModel> Contact_PersonsList;
+    private List<ContactPersons> Contact_PersonsList;
 
     public CustomerModel() {
     }
 
-    public CustomerModel(int company_Id, int country_Id, int location_Id, int project_Id, int partyID, long userID, long salesManID, String userTypeName, String partyCode, String partyName, String partyAbbreviation, String focal_Person, String CNICNo, String sales_Tax_No, String NTN, double cr_Limit, double cr_Limit_Amount, boolean apply_Cr_Limit, String email, String EMail_CC, String EMail_BCC, String contacts, String fax_No, int city_Id, String payee, String address, String instruction, String comments, boolean is_Company, String prompt_Type, List<ContactPersonsModel> contact_PersonsList) {
+    public CustomerModel(int company_Id, int country_Id, int location_Id, int project_Id, int partyID, long userID, long salesManID, String userTypeName, String partyCode, String partyName, String partyAbbreviation, String focal_Person, String CNICNo, String sales_Tax_No, String NTN, double cr_Limit, double cr_Limit_Amount, boolean apply_Cr_Limit, String email, String EMail_CC, String EMail_BCC, String contacts, String fax_No, int city_Id, String payee, String address, String instruction, String comments, boolean is_Company, String prompt_Type, List<ContactPersons> contact_PersonsList) {
         Company_Id = company_Id;
         Country_Id = country_Id;
         Location_Id = location_Id;
@@ -159,11 +158,11 @@ public class CustomerModel implements Parcelable {
         Prompt_Type = prompt_Type;
     }
 
-    public List<ContactPersonsModel> getContact_PersonsList() {
+    public List<ContactPersons> getContact_PersonsList() {
         return Contact_PersonsList;
     }
 
-    public void setContact_PersonsList(List<ContactPersonsModel> contact_PersonsList) {
+    public void setContact_PersonsList(List<ContactPersons> contact_PersonsList) {
         Contact_PersonsList = contact_PersonsList;
     }
 

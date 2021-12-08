@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ffccloud.ContactPersonsModel;
+import com.example.ffccloud.ContactPersons;
 import com.example.ffccloud.databinding.ContactPersonsCardBinding;
 
 import java.util.ArrayList;
@@ -16,11 +16,11 @@ import java.util.List;
 public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecyclerAdapter.ContactViewHolder> {
 
     private LayoutInflater layoutInflater;
-    private List<ContactPersonsModel> contactPersonsModelList;
+    private List<ContactPersons> contactPersonsList;
 
     public ContactRecyclerAdapter() {
 
-        contactPersonsModelList= new ArrayList<>();
+        contactPersonsList = new ArrayList<>();
     }
 
     @NonNull
@@ -41,28 +41,28 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
 
-        ContactPersonsModel contactPersonsModel = new ContactPersonsModel();
-        contactPersonsModel = contactPersonsModelList.get(position);
+        ContactPersons contactPersons = new ContactPersons();
+        contactPersons = contactPersonsList.get(position);
 
-        holder.mBinding.setContactPerson(contactPersonsModel);
+        holder.mBinding.setContactPerson(contactPersons);
         holder.mBinding.executePendingBindings();
 
     }
 
     @Override
     public int getItemCount() {
-        return contactPersonsModelList==null? 0:contactPersonsModelList.size();
+        return contactPersonsList ==null? 0: contactPersonsList.size();
     }
 
-    public  void setContactPersonsModelList(List<ContactPersonsModel> list)
+    public  void setContactPersonsList(List<ContactPersons> list)
     {
         if (list!=null)
         {
-            contactPersonsModelList = list;
+            contactPersonsList = list;
         }
         else
         {
-            contactPersonsModelList.clear();
+            contactPersonsList.clear();
         }
         notifyDataSetChanged();
     }
@@ -80,7 +80,7 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
                 @Override
                 public void onClick(View v) {
 
-                    contactPersonsModelList.remove(contactPersonsModelList.get(getAdapterPosition()));
+                    contactPersonsList.remove(contactPersonsList.get(getAdapterPosition()));
                     notifyDataSetChanged();
                 }
             });

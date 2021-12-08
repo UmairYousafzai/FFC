@@ -3,11 +3,11 @@ package com.example.ffccloud;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Medicine_modal {
+public class SupplierItemLinking {
 
     @SerializedName("Supplier_Item_Link_Id_dtl")
     @Expose
-    private Long supplierItemLinkIdDtl;
+    private long supplierItemLinkIdDtl;
     @SerializedName("It_Code")
     @Expose
     private String itCode;
@@ -16,16 +16,16 @@ public class Medicine_modal {
     private String itHead;
     @SerializedName("Is_Registered")
     @Expose
-    private String isRegistered;
+    private boolean isRegistered;
     @SerializedName("Comp_Name")
     @Expose
     private String compName;
 
-    public Long getSupplierItemLinkIdDtl() {
+    public long getSupplierItemLinkIdDtl() {
         return supplierItemLinkIdDtl;
     }
 
-    public void setSupplierItemLinkIdDtl(Long supplierItemLinkIdDtl) {
+    public void setSupplierItemLinkIdDtl(long supplierItemLinkIdDtl) {
         this.supplierItemLinkIdDtl = supplierItemLinkIdDtl;
     }
 
@@ -45,11 +45,11 @@ public class Medicine_modal {
         this.itHead = itHead;
     }
 
-    public String getIsRegistered() {
+    public boolean isRegistered() {
         return isRegistered;
     }
 
-    public void setIsRegistered(String isRegistered) {
+    public void setIsRegistered(boolean isRegistered) {
         this.isRegistered = isRegistered;
     }
 
