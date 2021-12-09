@@ -1,6 +1,7 @@
 package com.example.ffccloud.NetworkCalls;
 
 import com.example.ffccloud.GetProductModel;
+import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.Login.GetUserMenuModel;
 import com.example.ffccloud.Login.ForgotPasswordModel;
@@ -15,12 +16,14 @@ import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
+import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.ModelClasses.InsertSaleOrderModel;
 import com.example.ffccloud.ModelClasses.QualificationModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.GetSaleOrderModel;
 import com.example.ffccloud.ModelClasses.SupplierMainModel;
+import com.example.ffccloud.ModelClasses.SupplierModelNew;
 import com.example.ffccloud.SaveDoctorModel;
 import com.example.ffccloud.ModelClasses.SaveNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
@@ -165,7 +168,12 @@ public interface Api {
     Call<UpdateStatus>  insertSaleOrder(@Body InsertSaleOrderModel saleOrderModel);
 
     @POST("api/SupplierApi/InsertUpdateSupplier")
-    Call<UpdateStatus>  insertSupplier(@Body SupplierMainModel supplierModelNew);
+    Call<UpdateStatus>  insertSupplier(@Body SupplierModelNew supplierModelNew);
 
+    @GET("api/SupplierApi/GetFFCSupplierByUser")
+    Call<List<GetSupplierModel>> getSupplier(@Query("User_Type")String userType, @Query("UserId")int userID,  @Query("Region_Id")int regionID);
+
+    @GET("api/SupplierApi/GetFFCSupplierById")
+    Call<GetSupplierDetailModel> getSupplierDetail(@Query("Supplier_id")int supplierID);
 }
 

@@ -1,35 +1,23 @@
 package com.example.ffccloud;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class ContactPersons {
-    @SerializedName("Contact_Person_Id")
-    @Expose
-    private String Contact_Person_Id;
 
-    private int Supplier_Id;
+    private int Contact_Person_Id;
+
     private String Contact_Person_Name;
     private String Contact_Person_Design ;
     private String Contact_Person_ContactNo  ;
     private String Contact_Person_Email   ;
 
 
-    public String getContact_Person_Id() {
+    public int getContact_Person_Id() {
         return Contact_Person_Id;
     }
 
-    public void setContact_Person_Id(String contact_Person_Id) {
+    public void setContact_Person_Id(int contact_Person_Id) {
         Contact_Person_Id = contact_Person_Id;
     }
 
-    public int getSupplier_Id() {
-        return Supplier_Id;
-    }
-
-    public void setSupplier_Id(int supplier_Id) {
-        Supplier_Id = supplier_Id;
-    }
 
     public String getContact_Person_Name() {
         return Contact_Person_Name;

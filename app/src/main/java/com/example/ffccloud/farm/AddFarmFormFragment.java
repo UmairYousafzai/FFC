@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -27,13 +26,17 @@ import android.widget.Toast;
 
 import com.example.ffccloud.ContactPersons;
 import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
+import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.InsertProductModel;
+import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
+import com.example.ffccloud.ModelClasses.SupplierLinking;
 import com.example.ffccloud.ModelClasses.SupplierMainModel;
 import com.example.ffccloud.SupplierItemLinking;
 import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.ModelClasses.SupplierModelNew;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
+import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.AddContactDialogBinding;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
@@ -63,9 +66,14 @@ public class AddFarmFormFragment extends Fragment {
     private ContactRecyclerAdapter contactRecyclerAdapter;
     private MedicineAdapter medicineAdapter;
     private ArrayList<String> animalArrayList = new ArrayList<>(), regionList = new ArrayList<>();
-    private HashMap<String, Integer> regionHashmap = new HashMap<>();
+    private HashMap<String, Integer> regionHashmapForID = new HashMap<>();
+    private HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
     private String locationString;
     private String locationAddress;
+    private int supplierID=0;
+    private List<GetSupplierModel> supplierDetailModelList= new ArrayList<>();
+    private SupplierRecyclerViewAdapter supplierRecyclerViewAdapter;
+    private String callingAddBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,33 +85,49 @@ public class AddFarmFormFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUpRecyclerView();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        btnListener();
-
-        setupAnimalSpinner();
-        getRegion();
         navController = NavHostFragment.findNavController(this);
 
-        MutableLiveData<InsertProductModel> liveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+        getRegion();
+        setUpRecyclerView();
+
+        assert getArguments() != null;
+        supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
+        if (supplierID > 0&&callingAddBtn==null){
+
+            //setup fields if edit request has been made
+            getSupplierByID(supplierID);
+        }
+        MutableLiveData<GetSupplierModel> supplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.DOCTOR_SUPPLIER_KEY);
+        supplierLiveData.observe(getViewLifecycleOwner(), new Observer<GetSupplierModel>() {
+            @Override
+            public void onChanged(GetSupplierModel model) {
+                if (model!=null)
+                {
+                    supplierDetailModelList.add(model);
+                    supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
+                }
+
+
+            }
+        });
+        MutableLiveData<InsertProductModel> productLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.PRODUCT_MODEL);
-        liveData.observe(getViewLifecycleOwner(), new Observer<InsertProductModel>() {
+        productLiveData.observe(getViewLifecycleOwner(), new Observer<InsertProductModel>() {
             @Override
             public void onChanged(InsertProductModel model) {
                 if (model != null) {
                     SupplierItemLinking medicineModal = new SupplierItemLinking();
                     medicineModal.setItHead(model.getTitleProduct());
                     medicineModal.setIsRegistered(true);
-                    medicineModal.setSupplierItemLinkIdDtl(0);
-                    medicineModal.setItCode(String.valueOf(model.getItem_Code()));
+                    medicineModal.setSupplierItemLinkIdDtl("0");
+                    medicineModal.setItCode(model.getItem_Code());
 
                     medicineModalList.add(medicineModal);
                     medicineAdapter.setMedicineModalList(medicineModalList);
+
 
 
                 }
@@ -111,10 +135,120 @@ public class AddFarmFormFragment extends Fragment {
 
             }
         });
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (callingAddBtn!=null)
+        {
+            medicineAdapter.setMedicineModalList(medicineModalList);
+            supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
+            contactRecyclerAdapter.setContactPersonsList(contactPersonsList);
+
+
+        }
+        btnListener();
+
+        setupAnimalSpinner();
+        getRegion();
+
+
 
 
     }
 
+    private void getSupplierByID(int supplierID) {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Loading Supplier...");
+        progressDialog.show();
+
+        Call<GetSupplierDetailModel> call = ApiClient.getInstance().getApi().getSupplierDetail(supplierID);
+
+        call.enqueue(new Callback<GetSupplierDetailModel>() {
+            @Override
+            public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
+
+                if (response.body()!=null)
+                {
+                    progressDialog.dismiss();
+                    GetSupplierDetailModel getSupplierDetailModel= response.body();
+                    setUpFields(getSupplierDetailModel);
+
+                }
+                else {
+                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<GetSupplierDetailModel> call, @NotNull Throwable t) {
+                Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+
+
+
+    }
+
+    private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
+
+        mBinding.etOwnerName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
+        mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
+        mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
+        mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+        mBinding.etNumberOfAnimal.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
+
+        medicineModalList.clear();
+        medicineModalList.addAll(getSupplierDetailModel.getSupplierItemLinkingList());
+        medicineAdapter.setMedicineModalList(medicineModalList);
+        contactPersonsList.clear();
+        contactPersonsList.addAll(getSupplierDetailModel.getContactPersonsList());
+        contactRecyclerAdapter.setContactPersonsList(contactPersonsList);
+
+        supplierDetailModelList.clear();
+        for (SupplierLinking model:getSupplierDetailModel.getSupplierLinkingList())
+        {
+            GetSupplierModel supplierModel = new GetSupplierModel();
+            supplierModel.setSupplier_Name(model.getSupplierName());
+            supplierModel.setAddress(model.getAddress());
+            supplierModel.setSupplier_Id(model.getSupplierId());
+            supplierDetailModelList.add(supplierModel);
+        }
+        supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
+
+        String animalsMainType= getSupplierDetailModel.getSupplierModelNewList().get(0).getAnimalsMainType();
+        String animalsSUbType= getSupplierDetailModel.getSupplierModelNewList().get(0).getAnimalsSubType();
+
+        switch (animalsMainType) {
+            case "Large animal":
+                mBinding.largeAnimalRadioBtn.setChecked(true);
+                setupAnimalSpinner();
+                mBinding.animalSpinner.setSelection(animalArrayList.indexOf(animalsSUbType));
+                break;
+            case "Sheep Goat":
+                mBinding.SheepGoatRadioBtn.setChecked(true);
+                setupAnimalSpinner();
+                mBinding.animalSpinner.setSelection(animalArrayList.indexOf(animalsSUbType));
+
+                break;
+            case "Poultry":
+                mBinding.poultryRadioBtn.setChecked(true);
+                setupAnimalSpinner();
+                mBinding.animalSpinner.setSelection(animalArrayList.indexOf(animalsSUbType));
+
+                break;
+        }
+
+
+
+
+    }
 
     private void setupAnimalSpinner() {
 
@@ -147,6 +281,13 @@ public class AddFarmFormFragment extends Fragment {
         medicineAdapter = new MedicineAdapter();
         mBinding.medicineRecycler.setAdapter(medicineAdapter);
 
+        //setting up doctor recycler
+
+        mBinding.doctorListRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
+        supplierRecyclerViewAdapter = new SupplierRecyclerViewAdapter(this);
+        supplierRecyclerViewAdapter.setKey(2);
+        mBinding.doctorListRecyclerview.setAdapter(supplierRecyclerViewAdapter);
+
     }
 
     private void btnListener() {
@@ -154,8 +295,19 @@ public class AddFarmFormFragment extends Fragment {
         mBinding.btnAddDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavDirections directions = AddFarmFormFragmentDirections.actionAddFarmFormFragmentToSearchDoctorFragment();
-                navController.navigate(directions);
+                if (regionList.size()>0) {
+                    callingAddBtn= "";
+                    callingAddBtn= "DoctorAddBtn";
+                    int region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
+                    AddFarmFormFragmentDirections.ActionAddFarmFormFragmentToSearchDoctorFragment action = AddFarmFormFragmentDirections.actionAddFarmFormFragmentToSearchDoctorFragment();
+                    action.setKey(1);
+                    action.setRegionID(region);
+                    navController.navigate(action);
+                }
+                else {
+                    Toast.makeText(requireContext(), "Please select region", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         mBinding.btnAddMedicine.setOnClickListener(new View.OnClickListener() {
@@ -248,25 +400,25 @@ public class AddFarmFormFragment extends Fragment {
             if (phone.length() > 0) {
                 if (address.length() > 0) {
                     if (regionList.size()>0) {
-                        int region = regionHashmap.get(mBinding.regionSpinner.getSelectedItem().toString());
+                        int region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
-                        supplierModelNew.setCompanyId(1);
-                        supplierModelNew.setCountryId(1);
-                        supplierModelNew.setLocationId(1);
-                        supplierModelNew.setProjectId(1);
-                        supplierModelNew.setSupplierCode(0);
-                        supplierModelNew.setSupplierId(0);
+                        supplierModelNew.setCompany_Id(1);
+                        supplierModelNew.setCountry_Id(1);
+                        supplierModelNew.setLocation_Id(1);
+                        supplierModelNew.setProject_Id(1);
+                        supplierModelNew.setSupplier_Code("0");
+                        supplierModelNew.setSupplier_Id(0);
                         supplierModelNew.setAddress(address);
-                        supplierModelNew.setPhoneNo(phone);
-                        supplierModelNew.setSupplierName(name);
-                        supplierModelNew.setRegionId(String.valueOf(region));
-                        supplierModelNew.setUserSubType(CONSTANTS.USER_SUB_TYPE_FARM);
+                        supplierModelNew.setPhone_No(phone);
+                        supplierModelNew.setSupplier_Name(name);
+                        supplierModelNew.setRegion_Id(String.valueOf(region));
+                        supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_FARM);
                         supplierModelNew.setUserTypeName("F");
-                        supplierModelNew.setAnimalsMainType(animalMainType);
-                        supplierModelNew.setAnimalsSubType(mBinding.animalSpinner.getSelectedItem().toString());
-                        supplierModelNew.setNoOfAnimals(Objects.requireNonNull(mBinding.etNumberOfAnimal.getText()).toString());
+                        supplierModelNew.setAnimals_Main_Type(animalMainType);
+                        supplierModelNew.setAnimals_Sub_Type(mBinding.animalSpinner.getSelectedItem().toString());
+                        supplierModelNew.setNo_Of_Animals(mBinding.etNumberOfAnimal.getText().toString());
                         supplierModelNew.setSupplierItemLinkingList(medicineModalList);
                         supplierModelNew.setContactPersonsList(contactPersonsList);
                         supplierModelNew.setLoc_Cord(locationString);
@@ -301,7 +453,7 @@ public class AddFarmFormFragment extends Fragment {
         SupplierMainModel model = new SupplierMainModel();
         model.setSupplierModelNew(supplierModelNew);
 
-        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(model);
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(supplierModelNew);
 
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
@@ -349,7 +501,7 @@ public class AddFarmFormFragment extends Fragment {
                             medicineModal.setCompName(companyName);
                             medicineModal.setIsRegistered(false);
                             medicineModal.setItHead(medicineName);
-                            medicineModal.setSupplierItemLinkIdDtl(0);
+                            medicineModal.setSupplierItemLinkIdDtl("0");
                             medicineModalList.add(medicineModal);
                             medicineAdapter.setMedicineModalList(medicineModalList);
                         } else {
@@ -444,13 +596,14 @@ public class AddFarmFormFragment extends Fragment {
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
                     progressDialog.dismiss();
-                    regionHashmap.clear();
+                    regionHashmapForID.clear();
                     regionList.clear();
                     List<RegionModel> regionModelList = new ArrayList<>();
                     regionModelList = response.body();
                     for (RegionModel model : regionModelList) {
                         regionList.add(model.getName());
-                        regionHashmap.put(model.getName(), model.getRegionId());
+                        regionHashmapForID.put(model.getName(), model.getRegionId());
+                        regionHashmapForTitle.put(model.getRegionId(), model.getName());
 
                     }
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);

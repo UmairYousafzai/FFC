@@ -8,33 +8,33 @@ public class SupplierLinking {
 
     @SerializedName("Supplier_Link_Id_dtl")
     @Expose
-    private Long supplierLinkIdDtl;
+    private String supplierLinkIdDtl;
     @SerializedName("Supplier_Id")
     @Expose
-    private String supplierId;
+    private int supplierId;
     @SerializedName("Supplier_Name")
     @Expose
     private String supplierName;
     @SerializedName("Is_Registered")
     @Expose
-    private String isRegistered;
+    private boolean isRegistered;
     @SerializedName("Address")
     @Expose
     private String address;
 
-    public Long getSupplierLinkIdDtl() {
+    public String getSupplierLinkIdDtl() {
         return supplierLinkIdDtl;
     }
 
-    public void setSupplierLinkIdDtl(Long supplierLinkIdDtl) {
+    public void setSupplierLinkIdDtl(String supplierLinkIdDtl) {
         this.supplierLinkIdDtl = supplierLinkIdDtl;
     }
 
-    public String getSupplierId() {
+    public int getSupplierId() {
         return supplierId;
     }
 
-    public void setSupplierId(String supplierId) {
+    public void setSupplierId(int supplierId) {
         this.supplierId = supplierId;
     }
 
@@ -46,11 +46,11 @@ public class SupplierLinking {
         this.supplierName = supplierName;
     }
 
-    public String getIsRegistered() {
+    public boolean isRegistered() {
         return isRegistered;
     }
 
-    public void setIsRegistered(String isRegistered) {
+    public void setIsRegistered(boolean isRegistered) {
         this.isRegistered = isRegistered;
     }
 

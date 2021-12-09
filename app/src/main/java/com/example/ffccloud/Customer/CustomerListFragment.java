@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.ffccloud.Customer.Adapter.CustomerListRecyclerAdapter;
 import com.example.ffccloud.CustomerModel;
@@ -111,24 +112,27 @@ public class CustomerListFragment extends Fragment {
         call.enqueue(new Callback<List<CustomerModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<CustomerModel>> call, @NotNull Response<List<CustomerModel>> response) {
-                if (response.body().size()==0)
-                {
-                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
 
-                }
-                else {
-                    mBinding.tvNothingFound.setVisibility(View.GONE);
-
-                }
                 if(response.body()!=null)
                 {
-                 adapter.setContactPersonsModelList(response.body());
-                 progressDialog.dismiss();
+                    if (response.body().size()==0)
+                    {
+                        mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+                        progressDialog.dismiss();
+
+                    }
+                    else {
+                        mBinding.tvNothingFound.setVisibility(View.GONE);
+                        adapter.setContactPersonsModelList(response.body());
+                        progressDialog.dismiss();
+                    }
+
                 }
                 else
                 {
                     progressDialog.dismiss();
                     mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
 
                 }
 

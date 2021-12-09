@@ -404,7 +404,7 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radio_button_1"
+                    android:id="@+id/morning_radio_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -416,7 +416,7 @@
                     />
 
                 <RadioButton
-                    android:id="@+id/radio_button_2"
+                    android:id="@+id/evening_radio_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

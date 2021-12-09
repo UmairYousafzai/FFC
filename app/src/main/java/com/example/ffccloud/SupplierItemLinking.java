@@ -7,10 +7,10 @@ public class SupplierItemLinking {
 
     @SerializedName("Supplier_Item_Link_Id_dtl")
     @Expose
-    private long supplierItemLinkIdDtl;
+    private String supplierItemLinkIdDtl;
     @SerializedName("It_Code")
     @Expose
-    private String itCode;
+    private int itCode;
     @SerializedName("It_Head")
     @Expose
     private String itHead;
@@ -21,19 +21,19 @@ public class SupplierItemLinking {
     @Expose
     private String compName;
 
-    public long getSupplierItemLinkIdDtl() {
+    public String getSupplierItemLinkIdDtl() {
         return supplierItemLinkIdDtl;
     }
 
-    public void setSupplierItemLinkIdDtl(long supplierItemLinkIdDtl) {
+    public void setSupplierItemLinkIdDtl(String supplierItemLinkIdDtl) {
         this.supplierItemLinkIdDtl = supplierItemLinkIdDtl;
     }
 
-    public String getItCode() {
+    public int getItCode() {
         return itCode;
     }
 
-    public void setItCode(String itCode) {
+    public void setItCode(int itCode) {
         this.itCode = itCode;
     }
 

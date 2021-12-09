@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:background="@color/white"
-                android:text="@{medicine.itCode}"
+                android:text="@{String.valueOf(medicine.itCode)}"
                 app:layout_constraintStart_toEndOf="@id/company_heading"
                 app:layout_constraintTop_toBottomOf="@id/view1"
                 app:layout_constraintEnd_toEndOf="parent"

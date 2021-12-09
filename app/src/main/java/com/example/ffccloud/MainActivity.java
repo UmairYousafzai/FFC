@@ -297,10 +297,10 @@ public class MainActivity extends AppCompatActivity {
         menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_baseline_gps_fixed_24,null));
         menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_client_profile_svgrepo_com,null));
         menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_orders,null));
-        menu.add(1, R.id.addFarmFormFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_farm_svgrepo_com,null));
-        menu.add(1, R.id.addMedicalStoreFragment, 16, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_medical_pharmacy_store,null));
-        menu.add(1, R.id.addHospitalFragment, 17, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_hospital,null));
-        menu.add(1, R.id.addDoctorFragment, 18, "Add Doctor").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_doctor,null));
+        menu.add(1, R.id.farmListFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_farm_svgrepo_com,null));
+        menu.add(1, R.id.medicalStoreListFragment, 16, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_medical_pharmacy_store,null));
+        menu.add(1, R.id.hospitalListFragment, 17, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_hospital,null));
+        menu.add(1, R.id.SupplierDoctorFragment, 18, "Add Doctor").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_doctor,null));
         ArrayList<String> menuIds = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menu_items_ids)));
         SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *from User_Menu Order By Menu_Order Asc");
         ffcDatabase.dao().sortMenus();

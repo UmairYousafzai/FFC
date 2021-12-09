@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -16,9 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
 import com.example.ffccloud.ModelClasses.SupplierMainModel;
 import com.example.ffccloud.ModelClasses.SupplierModelNew;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
@@ -29,6 +31,7 @@ import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.CompaniesDialogBinding;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddMedicalStoreBinding;
+import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.medicalStore.adapter.CompanyRecyclerViewAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
@@ -59,7 +62,8 @@ public class AddMedicalStoreFragment extends Fragment {
     private List<SupplierCompDetail> companyModelList =  new ArrayList<>();
     private String locationString;
     private String locationAddress;
-
+    private int supplierID;
+    private String callingAddBtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,13 +75,27 @@ public class AddMedicalStoreFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        assert getArguments() != null;
+        supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
+        if (supplierID > 0&&callingAddBtn==null){
+
+            //setup fields if edit request has been made
+            getSupplierByID(supplierID);
+        }
+        setUpCompanyRecyclerView();
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
         getRegion();
 
         btnListener();
         setUpGradeSpinner();
-        setUpCompanyRecyclerView();
     }
 
     private void setUpCompanyRecyclerView() {
@@ -155,6 +173,8 @@ public class AddMedicalStoreFragment extends Fragment {
         mBinding.btnAddCompanies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                callingAddBtn= "";
+                callingAddBtn= "CompanyAddBtn";
                 showAddCompanyDialog();
             }
         });
@@ -166,13 +186,78 @@ public class AddMedicalStoreFragment extends Fragment {
         });
 
     }
+
+
+    private void getSupplierByID(int supplierID) {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Loading Supplier...");
+        progressDialog.show();
+
+        Call<GetSupplierDetailModel> call = ApiClient.getInstance().getApi().getSupplierDetail(supplierID);
+
+        call.enqueue(new Callback<GetSupplierDetailModel>() {
+            @Override
+            public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
+
+                if (response.body()!=null)
+                {
+                    progressDialog.dismiss();
+                    GetSupplierDetailModel getSupplierDetailModel= response.body();
+                    setUpFields(getSupplierDetailModel);
+
+                }
+                else {
+                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<GetSupplierDetailModel> call, @NotNull Throwable t) {
+                Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+
+
+
+    }
+
+    private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
+
+        mBinding.etName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
+        mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
+        mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
+        mBinding.locationCheckBox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+        mBinding.etMonthlySale.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getMonthlySale()));
+
+
+
+        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGradeId();
+
+        String grade =  gradingHashMapForTitle.get(gradeID);
+
+
+        mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
+
+        companyModelList.clear();
+        companyModelList.addAll(getSupplierDetailModel.getSupplierCompDetailList());
+        adapter.setCompanyModelList(companyModelList);
+
+
+
+
+
+    }
+
+
     private void setUpSupplierModelForSave() {
 
         String name = Objects.requireNonNull(mBinding.etName.getText()).toString();
         String phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
         String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
         int gradeID=0;
-        if (gradingModelList.size()>0)
+        if (gradeArray.size()>0)
         {
             gradeID= gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
 
@@ -189,20 +274,20 @@ public class AddMedicalStoreFragment extends Fragment {
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
-                        supplierModelNew.setCompanyId(1);
-                        supplierModelNew.setCountryId(1);
-                        supplierModelNew.setLocationId(1);
-                        supplierModelNew.setProjectId(1);
-                        supplierModelNew.setSupplierCode(0);
-                        supplierModelNew.setSupplierId(0);
+                        supplierModelNew.setCompany_Id(1);
+                        supplierModelNew.setCountry_Id(1);
+                        supplierModelNew.setLocation_Id(1);
+                        supplierModelNew.setProject_Id(1);
+                        supplierModelNew.setSupplier_Code("0");
+                        supplierModelNew.setSupplier_Id(0);
                         supplierModelNew.setAddress(address);
-                        supplierModelNew.setPhoneNo(phone);
-                        supplierModelNew.setSupplierName(name);
-                        supplierModelNew.setRegionId(String.valueOf(region));
-                        supplierModelNew.setUserSubType(CONSTANTS.USER_SUB_TYPE_STORE);
+                        supplierModelNew.setPhone_No(phone);
+                        supplierModelNew.setSupplier_Name(name);
+                        supplierModelNew.setRegion_Id(String.valueOf(region));
+                        supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_STORE);
                         supplierModelNew.setUserTypeName("Str");
-                        supplierModelNew.setGradeId(gradeID);
-                        supplierModelNew.setMonthlySale(Objects.requireNonNull(mBinding.etMonthlySale.getText()).toString());
+                        supplierModelNew.setGrade_id(gradeID);
+                        supplierModelNew.setMonthly_Sale(mBinding.etMonthlySale.getText().toString());
                         supplierModelNew.setSupplierCompDetailList(companyModelList);
                         supplierModelNew.setLoc_Cord(locationString);
                         supplierModelNew.setLoc_Cord_Address(locationAddress);
@@ -237,7 +322,7 @@ public class AddMedicalStoreFragment extends Fragment {
         SupplierMainModel model = new SupplierMainModel();
         model.setSupplierModelNew(supplierModelNew);
 
-        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(model);
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(supplierModelNew);
 
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
@@ -292,7 +377,7 @@ public class AddMedicalStoreFragment extends Fragment {
                     SupplierCompDetail model = new SupplierCompDetail();
                     model.setCompName(name);
                     model.setType(type);
-                    model.setSupplierCompIdDtl(0);
+                    model.setSupplierCompIdDtl("0");
                     companyModelList.add(model);
                     adapter.setCompanyModelList(companyModelList);
                     Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show();

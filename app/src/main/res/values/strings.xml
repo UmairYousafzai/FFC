@@ -251,6 +251,8 @@
     <string name="add_farm">Add Farm</string>
     <string name="registered">Registered</string>
     <string name="add_gas_days">Add Gas Days</string>
+    <string name="id">ID:</string>
+    <string name="name1">Name:</string>
 
 
 </resources>

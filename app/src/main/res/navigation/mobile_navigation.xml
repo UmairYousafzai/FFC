@@ -634,7 +634,7 @@
         tools:layout="@layout/fragment_add_farm_form" >
         <action
             android:id="@+id/action_addFarmFormFragment_to_search_DoctorFragment"
-            app:destination="@id/search_DoctorFragment"
+            app:destination="@id/SupplierDoctorFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -646,16 +646,41 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="supplierId"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
-        android:id="@+id/search_DoctorFragment"
-        android:name="com.example.ffccloud.farm.Search_DoctorFragment"
-        android:label="Doctors" />
+        android:id="@+id/SupplierDoctorFragment"
+        android:name="com.example.ffccloud.doctor.SupplierDoctorListFragment"
+        android:label="Doctors" >
+        <argument
+            android:name="key"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="regionID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_SupplierDoctorFragment_to_addDoctorFragment"
+            app:destination="@id/addDoctorFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
     <fragment
         android:id="@+id/addMedicalStoreFragment"
         android:name="com.example.ffccloud.medicalStore.AddMedicalStoreFragment"
         android:label="Medical Store"
-        tools:layout="@layout/fragment_add_medical_store" />
+        tools:layout="@layout/fragment_add_medical_store">
+        <argument
+            android:name="supplierId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
     <fragment
         android:id="@+id/addHospitalFragment"
         android:name="com.example.ffccloud.hospital.AddHospitalFragment"
@@ -663,7 +688,29 @@
         tools:layout="@layout/fragment_add_hospital" >
         <action
             android:id="@+id/action_addHospitalFragment_to_addProductFragment"
-            app:destination="@id/addProductFragment" />
+            app:destination="@id/addProductFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_addHospitalFragment_to_SupplierDoctorFragment"
+            app:destination="@id/SupplierDoctorFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_addHospitalFragment_to_farmListFragment"
+            app:destination="@id/farmListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="supplierId"
+            app:argType="integer"
+            android:defaultValue="0" />
 
     </fragment>
     <fragment
@@ -673,6 +720,66 @@
         tools:layout="@layout/fragment_add_doctor" >
         <action
             android:id="@+id/action_addDoctorFragment_to_addProductFragment"
-            app:destination="@id/addProductFragment" />
+            app:destination="@id/addProductFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="supplierId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/farmListFragment"
+        android:name="com.example.ffccloud.farm.FarmListFragment"
+        android:label="Farms" >
+        <argument
+            android:name="key"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="regionID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_farmListFragment_to_addFarmFormFragment"
+            app:destination="@id/addFarmFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/hospitalListFragment"
+        android:name="com.example.ffccloud.hospital.HospitalListFragment"
+        android:label="Hospitals" >
+        <action
+            android:id="@+id/action_hospitalListFragment_to_addHospitalFragment"
+            app:destination="@id/addHospitalFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="key"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/medicalStoreListFragment"
+        android:name="com.example.ffccloud.medicalStore.MedicalStoreListFragment"
+        android:label="Medical Stores" >
+        <action
+            android:id="@+id/action_medicalStoreListFragment_to_addMedicalStoreFragment"
+            app:destination="@id/addMedicalStoreFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="key"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 </navigation>

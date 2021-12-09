@@ -25,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.ffccloud.InsertProductModel;
+import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
 import com.example.ffccloud.ModelClasses.SupplierMainModel;
 import com.example.ffccloud.ModelClasses.SupplierModelNew;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
@@ -37,6 +38,7 @@ import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddDoctorBinding;
+import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.farm.adapter.MedicineAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
@@ -57,26 +59,33 @@ import retrofit2.Response;
 public class AddDoctorFragment extends Fragment {
 
     private FragmentAddDoctorBinding mBinding;
-    private ArrayList<String> regionList = new ArrayList<>(), gradeArray = new ArrayList<>(), genderArray = new ArrayList<>(), classificationArray = new ArrayList<>(), qualificationArray = new ArrayList<>();
+    private final ArrayList<String> regionList = new ArrayList<>();
+    private final ArrayList<String> gradeArray = new ArrayList<>();
+    private final ArrayList<String> genderArray = new ArrayList<>();
+    private final ArrayList<String> classificationArray = new ArrayList<>();
+    private final ArrayList<String> qualificationArray = new ArrayList<>();
     private List<ClassificationModel> classificationModelList;
     private List<QualificationModel> qualificationModelList;
     private List<GradingModel> gradingModelList;
     private final HashMap<String, Integer> classificatoinHashMapForId = new HashMap<>();
     private final HashMap<String, Integer> gradingHashMapForId = new HashMap<>();
     private final HashMap<String, Integer> qualificationHashMapForId = new HashMap<>();
-    private HashMap<String, Integer> regionHashmap = new HashMap<>();
+    private final HashMap<String, Integer> regionHashmap = new HashMap<>();
 
-    private HashMap<Integer, String> qualificationHashMapForTitle = new HashMap<>();
-    private HashMap<Integer, String> classificationHashMapForTitle = new HashMap<>();
-    private HashMap<Integer, String> gradingHashMapForTitle = new HashMap<>();
+    private final HashMap<Integer, String> qualificationHashMapForTitle = new HashMap<>();
+    private final HashMap<Integer, String> classificationHashMapForTitle = new HashMap<>();
+    private final HashMap<Integer, String> gradingHashMapForTitle = new HashMap<>();
     private UserViewModel userViewModel;
     private NavController navController;
     private MedicineAdapter medicineAdapter;
     private String locationString;
     private String locationAddress;
+    private final List<SupplierItemLinking> medicineModalList= new ArrayList<>();
+    private int supplierID;
+    private String callingAddBtn;
 
 
-    private List<SupplierItemLinking> medicineModalList= new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,7 +101,14 @@ public class AddDoctorFragment extends Fragment {
 
         navController = NavHostFragment.findNavController(this);
         setUpRecyclerView();
+        getUserSyncData();
+        assert getArguments() != null;
+        supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
+        if (supplierID > 0&&callingAddBtn==null){
 
+            //setup fields if edit request has been made
+            getSupplierByID(supplierID);
+        }
         MutableLiveData<InsertProductModel> liveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.PRODUCT_MODEL);
@@ -103,8 +119,8 @@ public class AddDoctorFragment extends Fragment {
                     SupplierItemLinking medicineModal = new SupplierItemLinking();
                     medicineModal.setItHead(model.getTitleProduct());
                     medicineModal.setIsRegistered(true);
-                    medicineModal.setItCode(String.valueOf(model.getItem_Code()));
-                    medicineModal.setSupplierItemLinkIdDtl(0);
+                    medicineModal.setItCode(model.getItem_Code());
+                    medicineModal.setSupplierItemLinkIdDtl("0");
 
 
                     medicineModalList.add(medicineModal);
@@ -124,8 +140,15 @@ public class AddDoctorFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (callingAddBtn!=null)
+        {
+            medicineAdapter.setMedicineModalList(medicineModalList);
+
+
+        }
         btnListener();
-        getUserSyncData();
+
         getRegion();
     }
 
@@ -142,6 +165,8 @@ public class AddDoctorFragment extends Fragment {
             public void onClick(View v) {
                 if (mBinding.companyMedicineRadioBtn.isChecked())
                 {
+                    callingAddBtn= "";
+                    callingAddBtn= "MedicineAddBtn";
                     AddDoctorFragmentDirections.ActionAddDoctorFragmentToAddProductFragment action = AddDoctorFragmentDirections.actionAddDoctorFragmentToAddProductFragment();
                     action.setKey(1);
                     navController.navigate(action);
@@ -192,6 +217,103 @@ public class AddDoctorFragment extends Fragment {
             }
         });
     }
+
+    private void getSupplierByID(int supplierID) {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Loading Supplier...");
+        progressDialog.show();
+
+        Call<GetSupplierDetailModel> call = ApiClient.getInstance().getApi().getSupplierDetail(supplierID);
+
+        call.enqueue(new Callback<GetSupplierDetailModel>() {
+            @Override
+            public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
+
+                if (response.body()!=null)
+                {
+                    progressDialog.dismiss();
+                    GetSupplierDetailModel getSupplierDetailModel= response.body();
+                    setUpFields(getSupplierDetailModel);
+
+                }
+                else {
+                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<GetSupplierDetailModel> call, @NotNull Throwable t) {
+                Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+
+
+
+    }
+
+    private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
+
+        mBinding.idDocName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
+        mBinding.idDocPhone.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
+        mBinding.idDocAdress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
+        mBinding.idDocEmail.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getEmail());
+        mBinding.location.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+
+
+        medicineModalList.clear();
+        medicineModalList.addAll(getSupplierDetailModel.getSupplierItemLinkingList());
+        medicineAdapter.setMedicineModalList(medicineModalList);
+
+        int classificationId= getSupplierDetailModel.getSupplierModelNewList().get(0).getClassificationId();
+        int qualificationID= getSupplierDetailModel.getSupplierModelNewList().get(0).getQualificationId();
+        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGradeId();
+
+
+        String classification = classificationHashMapForTitle.get(classificationId);
+        String qualification =  qualificationHashMapForTitle.get(qualificationID);
+        String grade =  gradingHashMapForTitle.get(gradeID);
+
+        mBinding.spinnerClassification.setSelection(classificationArray.indexOf(classification));
+        mBinding.spinnerQualification.setSelection(qualificationArray.indexOf(qualification));
+        mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
+
+        String gender=getSupplierDetailModel.getSupplierModelNewList().get(0).getGender();
+        if (gender!=null)
+        {
+            switch (gender) {
+                case "Male":
+                    mBinding.spinnerGender.setSelection(genderArray.indexOf("Male"));
+                    break;
+                case "Female":
+                    mBinding.spinnerGender.setSelection(genderArray.indexOf("Female"));
+                    break;
+                case "Other":
+                    mBinding.spinnerGender.setSelection(genderArray.indexOf("Other"));
+                    break;
+            }
+        }
+
+String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
+        if (shift!=null)
+        {
+            if (shift.equals("Morning"))
+            {
+                mBinding.morningRadioBtn.setChecked(true);
+            }
+            else if (shift.equals("Evening"))
+            {
+                mBinding.eveningRadioBtn.setChecked(true);
+            }
+        }
+
+
+
+
+    }
+
+
     private void setUpSupplierModelForSave() {
 
         String name = Objects.requireNonNull(mBinding.idDocName.getText()).toString();
@@ -216,19 +338,19 @@ public class AddDoctorFragment extends Fragment {
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
-                        supplierModelNew.setCompanyId(1);
-                        supplierModelNew.setCountryId(1);
-                        supplierModelNew.setLocationId(1);
-                        supplierModelNew.setProjectId(1);
-                        supplierModelNew.setSupplierCode(0);
-                        supplierModelNew.setSupplierId(0);
+                        supplierModelNew.setCompany_Id(1);
+                        supplierModelNew.setCountry_Id(1);
+                        supplierModelNew.setLocation_Id(1);
+                        supplierModelNew.setProject_Id(1);
+                        supplierModelNew.setSupplier_Code("0");
+                        supplierModelNew.setSupplier_Id(0);
                         supplierModelNew.setAddress(address);
-                        supplierModelNew.setPhoneNo(phone);
-                        supplierModelNew.setSupplierName(name);
-                        supplierModelNew.setRegionId(String.valueOf(region));
-                        supplierModelNew.setUserSubType(CONSTANTS.USER_SUB_TYPE_DOCTOR);
+                        supplierModelNew.setPhone_No(phone);
+                        supplierModelNew.setSupplier_Name(name);
+                        supplierModelNew.setRegion_Id(String.valueOf(region));
+                        supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_DOCTOR);
                         supplierModelNew.setUserTypeName("Dr");
-                        supplierModelNew.setGradeId(gradeID);
+                        supplierModelNew.setGrade_id(gradeID);
                         supplierModelNew.setEmail(email);
                         supplierModelNew.setSupplierItemLinkingList(medicineModalList);
                         supplierModelNew.setLoc_Cord(locationString);
@@ -268,7 +390,7 @@ public class AddDoctorFragment extends Fragment {
         SupplierMainModel model = new SupplierMainModel();
         model.setSupplierModelNew(supplierModelNew);
 
-        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(model);
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(supplierModelNew);
 
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
@@ -457,7 +579,7 @@ public class AddDoctorFragment extends Fragment {
                         medicineModal.setCompName(companyName);
                         medicineModal.setIsRegistered(false);
                         medicineModal.setItHead(medicineName);
-                        medicineModal.setSupplierItemLinkIdDtl(0);
+                        medicineModal.setSupplierItemLinkIdDtl("0");
                         medicineModalList.add(medicineModal);
                         medicineAdapter.setMedicineModalList(medicineModalList);
                     }

@@ -18,22 +18,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.ffccloud.FarmModel;
+import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.InsertProductModel;
+import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
+import com.example.ffccloud.ModelClasses.SupplierLinking;
 import com.example.ffccloud.ModelClasses.SupplierMainModel;
 import com.example.ffccloud.ModelClasses.SupplierModelNew;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.SupplierItemLinking;
 import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddHospitalBinding;
 import com.example.ffccloud.databinding.OtherFarmDialogBinding;
+import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.farm.adapter.MedicineAdapter;
-import com.example.ffccloud.hospital.adapter.FarmRecyclerAdapter;
 import com.example.ffccloud.hospital.adapter.GasDaysRecyclerAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.UserViewModel;
@@ -57,14 +59,19 @@ public class AddHospitalFragment extends Fragment {
     private HashMap<Integer, String> gradingHashMapForTitle = new HashMap<>();
     private ArrayList<String>gradeArray=new ArrayList<>();
     private List<GradingModel> gradingModelList;
-    private FarmRecyclerAdapter farmRecyclerAdapter;
     private GasDaysRecyclerAdapter gasDaysRecyclerAdapter;
-    private List<FarmModel> farmModelList= new ArrayList<>();
     private List<String> gasDaysList = new ArrayList<>();
     private NavController navController;
     private MedicineAdapter medicineAdapter;
-
+    private int supplierID;
+    private List<GetSupplierModel> doctorModelList = new ArrayList<>();
+    private List<GetSupplierModel> FarmModelList = new ArrayList<>();
+    private SupplierRecyclerViewAdapter doctorRecyclerViewAdapter;
+    private SupplierRecyclerViewAdapter farmRecyclerViewAdapter;
     private List<SupplierItemLinking> medicineModalList= new ArrayList<>();
+    private String callingAddBtn;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,12 +87,58 @@ public class AddHospitalFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
         setUpRecyclerView();
+        assert getArguments() != null;
+        supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
+        if (supplierID > 0&&callingAddBtn==null){
 
-    }
+          //  setup fields if edit request has been made
+            getSupplierByID(supplierID);
+        }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+        MutableLiveData<GetSupplierModel> doctorsupplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.DOCTOR_SUPPLIER_KEY);
+        doctorsupplierLiveData.observe(getViewLifecycleOwner(), new Observer<GetSupplierModel>() {
+            @Override
+            public void onChanged(GetSupplierModel model) {
+                if (model!=null)
+                {
+
+                    if (callingAddBtn.equals("DoctorAddBtn"))
+                    {
+                        doctorModelList.add(model);
+                        doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
+                    }
+
+
+
+                }
+
+
+            }
+        });
+
+        MutableLiveData<GetSupplierModel> farmSupplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.FARM_SUPPLIER_KEY);
+        farmSupplierLiveData.observe(getViewLifecycleOwner(), new Observer<GetSupplierModel>() {
+            @Override
+            public void onChanged(GetSupplierModel model) {
+                if (model!=null)
+                {
+                    if (callingAddBtn.equals("FarmAddBtn"))
+                    {
+                        FarmModelList.add(model);
+                        farmRecyclerViewAdapter.setGetSupplierModelList(FarmModelList);
+                    }
+
+
+
+                }
+
+
+            }
+        });
 
 
         MutableLiveData<InsertProductModel> liveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
@@ -95,14 +148,19 @@ public class AddHospitalFragment extends Fragment {
             @Override
             public void onChanged(InsertProductModel model) {
                 if (model != null) {
-                    SupplierItemLinking medicineModal = new SupplierItemLinking();
-                    medicineModal.setItHead(model.getTitleProduct());
-                    medicineModal.setIsRegistered(true);
-                    medicineModal.setSupplierItemLinkIdDtl(0);
-                    medicineModal.setItCode(String.valueOf(model.getItem_Code()));
+                    if (callingAddBtn.equals("MedicineAddBtn"))
+                    {
+                        SupplierItemLinking medicineModal = new SupplierItemLinking();
+                        medicineModal.setItHead(model.getTitleProduct());
+                        medicineModal.setIsRegistered(true);
+                        medicineModal.setSupplierItemLinkIdDtl("0");
+                        medicineModal.setItCode(model.getItem_Code());
 
-                    medicineModalList.add(medicineModal);
-                    medicineAdapter.setMedicineModalList(medicineModalList);
+
+                        medicineModalList.add(medicineModal);
+                        medicineAdapter.setMedicineModalList(medicineModalList);
+                    }
+
 
 
                 }
@@ -110,6 +168,22 @@ public class AddHospitalFragment extends Fragment {
 
             }
         });
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (callingAddBtn!=null)
+        {
+            medicineAdapter.setMedicineModalList(medicineModalList);
+            doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
+            farmRecyclerViewAdapter.setGetSupplierModelList(FarmModelList);
+
+
+        }
+
         setUpGradeSpinner();
         btnListener();
 
@@ -118,9 +192,6 @@ public class AddHospitalFragment extends Fragment {
 
     private void setUpRecyclerView() {
 
-        mBinding.farmRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-        farmRecyclerAdapter = new FarmRecyclerAdapter();
-        mBinding.farmRecycler.setAdapter(farmRecyclerAdapter);
 
         mBinding.gasDaysRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
         gasDaysRecyclerAdapter = new GasDaysRecyclerAdapter();
@@ -129,6 +200,16 @@ public class AddHospitalFragment extends Fragment {
         mBinding.medicineRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         medicineAdapter = new MedicineAdapter();
         mBinding.medicineRecycler.setAdapter(medicineAdapter);
+
+        mBinding.doctorListRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
+        doctorRecyclerViewAdapter = new SupplierRecyclerViewAdapter(this);
+        doctorRecyclerViewAdapter.setKey(2);
+        mBinding.doctorListRecyclerview.setAdapter(doctorRecyclerViewAdapter);
+
+        mBinding.farmRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        farmRecyclerViewAdapter = new SupplierRecyclerViewAdapter(this);
+        farmRecyclerViewAdapter.setKey(2);
+        mBinding.farmRecycler.setAdapter(farmRecyclerViewAdapter);
     }
 
     private void btnListener() {
@@ -137,7 +218,20 @@ public class AddHospitalFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                showAddFarmDialog();
+                if (mBinding.registerFarmRadioBtn.isChecked())
+                {
+                    callingAddBtn= "";
+                    callingAddBtn= "FarmAddBtn";
+                    farmRecyclerViewAdapter.setCalledSupplier("Farm");
+                    AddHospitalFragmentDirections.ActionAddHospitalFragmentToFarmListFragment action = AddHospitalFragmentDirections.actionAddHospitalFragmentToFarmListFragment();
+                    action.setKey(1);
+                    navController.navigate(action);
+                }
+                else
+                {
+                    showAddFarmDialog();
+
+                }
 
             }
         });
@@ -165,6 +259,8 @@ public class AddHospitalFragment extends Fragment {
             public void onClick(View v) {
                 if (mBinding.companyMedicineRadioBtn.isChecked())
                 {
+                    callingAddBtn= "";
+                    callingAddBtn= "MedicineAddBtn";
                  AddHospitalFragmentDirections.ActionAddHospitalFragmentToAddProductFragment action = AddHospitalFragmentDirections.actionAddHospitalFragmentToAddProductFragment();
                     action.setKey(1);
                     navController.navigate(action);
@@ -173,6 +269,16 @@ public class AddHospitalFragment extends Fragment {
 
                     showDialog();
                 }
+            }
+        });
+        mBinding.btnAddDoctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callingAddBtn= "";
+                callingAddBtn= "DoctorAddBtn";
+                AddHospitalFragmentDirections.ActionAddHospitalFragmentToSupplierDoctorFragment action = AddHospitalFragmentDirections.actionAddHospitalFragmentToSupplierDoctorFragment();
+                action.setKey(1);
+                navController.navigate(action);
             }
         });
 
@@ -184,6 +290,80 @@ public class AddHospitalFragment extends Fragment {
         });
 
     }
+
+    private void getSupplierByID(int supplierID) {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Loading Supplier...");
+        progressDialog.show();
+
+        Call<GetSupplierDetailModel> call = ApiClient.getInstance().getApi().getSupplierDetail(supplierID);
+
+        call.enqueue(new Callback<GetSupplierDetailModel>() {
+            @Override
+            public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
+
+                if (response.body()!=null)
+                {
+                    progressDialog.dismiss();
+                    GetSupplierDetailModel getSupplierDetailModel= response.body();
+                    setUpFields(getSupplierDetailModel);
+
+                }
+                else {
+                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<GetSupplierDetailModel> call, @NotNull Throwable t) {
+                Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+
+
+
+    }
+
+    private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
+
+        mBinding.etName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
+        mBinding.etNoOfCases.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
+        mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
+
+        mBinding.etSizeOfHospital.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getSize()));
+
+
+        medicineModalList.clear();
+        medicineModalList.addAll(getSupplierDetailModel.getSupplierItemLinkingList());
+        medicineAdapter.setMedicineModalList(medicineModalList);
+
+        doctorModelList.clear();
+        for (SupplierLinking model:getSupplierDetailModel.getSupplierLinkingList())
+        {
+            GetSupplierModel supplierModel = new GetSupplierModel();
+            supplierModel.setSupplier_Name(model.getSupplierName());
+            supplierModel.setAddress(model.getAddress());
+            supplierModel.setSupplier_Id(model.getSupplierId());
+            doctorModelList.add(supplierModel);
+        }
+        doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
+
+        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGradeId();
+
+        String grade =  gradingHashMapForTitle.get(gradeID);
+
+        mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
+
+
+
+
+
+
+
+    }
+
     private void setUpSupplierModelForSave() {
 
         String name = Objects.requireNonNull(mBinding.etName.getText()).toString();
@@ -199,20 +379,20 @@ public class AddHospitalFragment extends Fragment {
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
-                        supplierModelNew.setCompanyId(1);
-                        supplierModelNew.setCountryId(1);
-                        supplierModelNew.setLocationId(1);
-                        supplierModelNew.setProjectId(1);
-                        supplierModelNew.setSupplierCode(0);
-                        supplierModelNew.setSupplierId(0);
+                        supplierModelNew.setCompany_Id(1);
+                        supplierModelNew.setCountry_Id(1);
+                        supplierModelNew.setLocation_Id(1);
+                        supplierModelNew.setProject_Id(1);
+                        supplierModelNew.setSupplier_Code("0");
+                        supplierModelNew.setSupplier_Id(0);
                         supplierModelNew.setAddress(address);
-                        supplierModelNew.setGradeId(gradeID);
-                        supplierModelNew.setGasDays(Objects.requireNonNull(mBinding.etGasDays.getText()).toString());
-                        supplierModelNew.setSize(Objects.requireNonNull(mBinding.etSizeOfHospital.getText()).toString());
-                        supplierModelNew.setSupplierName(name);
-                        supplierModelNew.setUserSubType(CONSTANTS.USER_SUB_TYPE_HOSPITAL);
+                        supplierModelNew.setGrade_id(gradeID);
+                        supplierModelNew.setGas_Days(Objects.requireNonNull(mBinding.etGasDays.getText()).toString());
+                        supplierModelNew.setSize(mBinding.etSizeOfHospital.getText().toString());
+                        supplierModelNew.setSupplier_Name(name);
+                        supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_HOSPITAL);
                         supplierModelNew.setUserTypeName("H");
-                        supplierModelNew.setNoOfAnimals(Objects.requireNonNull(mBinding.etNoOfCases.getText()).toString());
+                    supplierModelNew.setNo_Of_Animals(mBinding.etNoOfCases.getText().toString());
                         supplierModelNew.setSupplierItemLinkingList(medicineModalList);
 
 
@@ -241,7 +421,7 @@ public class AddHospitalFragment extends Fragment {
         SupplierMainModel model = new SupplierMainModel();
         model.setSupplierModelNew(supplierModelNew);
 
-        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(model);
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSupplier(supplierModelNew);
 
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
@@ -283,9 +463,12 @@ public class AddHospitalFragment extends Fragment {
 
                 if (name.length()>0)
                 {
-                    FarmModel farmModel = new FarmModel(name, Objects.requireNonNull(binding.etFarmAddress.getText()).toString());
-                    farmModelList.add(farmModel);
-                    farmRecyclerAdapter.setFarmModelList(farmModelList);
+
+                    GetSupplierModel farmSupplierModel= new GetSupplierModel();
+                    farmSupplierModel.setAddress(binding.etFarmAddress.getText().toString());
+                    farmSupplierModel.setSupplier_Name(name);
+                    FarmModelList.add(farmSupplierModel);
+                    farmRecyclerViewAdapter.setGetSupplierModelList(FarmModelList);
                 }
                 else
                 {
@@ -350,7 +533,7 @@ public class AddHospitalFragment extends Fragment {
                             medicineModal.setCompName(companyName);
                             medicineModal.setIsRegistered(false);
                             medicineModal.setItHead(medicineName);
-                            medicineModal.setSupplierItemLinkIdDtl(0);
+                            medicineModal.setSupplierItemLinkIdDtl("0");
                             medicineModalList.add(medicineModal);
                             medicineAdapter.setMedicineModalList(medicineModalList);
                         }

@@ -11,75 +11,52 @@ import java.util.List;
 public class SupplierModelNew {
 
 
-    @SerializedName("Company_Id")
-    @Expose
-    private Integer companyId;
-    @SerializedName("Country_Id")
-    @Expose
-    private Integer countryId;
-    @SerializedName("Location_Id")
-    @Expose
-    private Integer locationId;
-    @SerializedName("Project_Id")
-    @Expose
-    private Integer projectId;
-    @SerializedName("Supplier_Id")
-    @Expose
-    private Integer supplierId;
-    @SerializedName("Supplier_Code")
-    @Expose
-    private Integer supplierCode;
-    @SerializedName("Supplier_Name")
-    @Expose
-    private String supplierName;
-    @SerializedName("Address")
-    @Expose
-    private String address;
-    @SerializedName("Email")
-    @Expose
-    private String email;
-    @SerializedName("Phone_No")
-    @Expose
-    private String phoneNo;
-    @SerializedName("Comments")
-    @Expose
-    private String comments;
-    @SerializedName("Instruction")
-    @Expose
-    private String instruction;
-    @SerializedName("UserTypeName")
-    @Expose
-    private String userTypeName;
-    @SerializedName("User_Sub_Type")
-    @Expose
-    private String userSubType;
-    @SerializedName("UserId")
-    @Expose
-    private Integer userId;
-    @SerializedName("Animals_Main_Type")
-    @Expose
-    private String animalsMainType;
-    @SerializedName("Animals_Sub_Type")
-    @Expose
-    private String animalsSubType;
-    @SerializedName("No_Of_Animals")
-    @Expose
-    private String noOfAnimals;
-    @SerializedName("Grade_id")
-    @Expose
-    private Integer gradeId;
-    @SerializedName("Size")
-    @Expose
-    private String size;
-    @SerializedName("Gas_Days")
-    @Expose
-    private String gasDays;
-    @SerializedName("Monthly_Sale")
-    @Expose
-    private String monthlySale;
-    @SerializedName("Region_Id")
-    @Expose
-    private String regionId;
+
+    private double Company_Id;
+
+    private double Country_Id;
+
+    private double Location_Id;
+
+    private double Project_Id;
+
+    private int Supplier_Id;
+
+    private String Supplier_Code;
+
+    private String Supplier_Name;
+
+    private String Address;
+
+    private String Email;
+
+    private String Phone_No;
+
+    private String Comments;
+
+    private String Instruction;
+
+    private String UserTypeName;
+
+    private String User_Sub_Type;
+
+    private int UserId;
+
+    private String Animals_Main_Type;
+
+    private String Animals_Sub_Type;
+
+    private String No_Of_Animals;
+
+    private int Grade_id;
+
+    private String Size;
+
+    private String Gas_Days;
+
+    private String Monthly_Sale;
+
+    private String Region_Id;
 
     private String Loc_Cord;
     private String Loc_Cord_Address;
@@ -165,188 +142,188 @@ public class SupplierModelNew {
         Is_update_Loc_Cord = is_update_Loc_Cord;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
+    public double getCompany_Id() {
+        return Company_Id;
     }
 
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setCompany_Id(int company_Id) {
+        this.Company_Id = company_Id;
     }
 
-    public Integer getCountryId() {
-        return countryId;
+    public double getCountry_Id() {
+        return Country_Id;
     }
 
-    public void setCountryId(Integer countryId) {
-        this.countryId = countryId;
+    public void setCountry_Id(int country_Id) {
+        this.Country_Id = country_Id;
     }
 
-    public Integer getLocationId() {
-        return locationId;
+    public double getLocation_Id() {
+        return Location_Id;
     }
 
-    public void setLocationId(Integer locationId) {
-        this.locationId = locationId;
+    public void setLocation_Id(int location_Id) {
+        this.Location_Id = location_Id;
     }
 
-    public Integer getProjectId() {
-        return projectId;
+    public double getProject_Id() {
+        return Project_Id;
     }
 
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
+    public void setProject_Id(int project_Id) {
+        this.Project_Id = project_Id;
     }
 
-    public Integer getSupplierId() {
-        return supplierId;
+    public int getSupplier_Id() {
+        return Supplier_Id;
     }
 
-    public void setSupplierId(Integer supplierId) {
-        this.supplierId = supplierId;
+    public void setSupplier_Id(int supplier_Id) {
+        this.Supplier_Id = supplier_Id;
     }
 
-    public Integer getSupplierCode() {
-        return supplierCode;
+    public String getSupplier_Code() {
+        return Supplier_Code;
     }
 
-    public void setSupplierCode(Integer supplierCode) {
-        this.supplierCode = supplierCode;
+    public void setSupplier_Code(String supplier_Code) {
+        this.Supplier_Code = supplier_Code;
     }
 
-    public String getSupplierName() {
-        return supplierName;
+    public String getSupplier_Name() {
+        return Supplier_Name;
     }
 
-    public void setSupplierName(String supplierName) {
-        this.supplierName = supplierName;
+    public void setSupplier_Name(String supplier_Name) {
+        this.Supplier_Name = supplier_Name;
     }
 
     public String getAddress() {
-        return address;
+        return Address;
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        this.Address = address;
     }
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.Email = email;
     }
 
-    public String getPhoneNo() {
-        return phoneNo;
+    public String getPhone_No() {
+        return Phone_No;
     }
 
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
+    public void setPhone_No(String phone_No) {
+        this.Phone_No = phone_No;
     }
 
     public String getComments() {
-        return comments;
+        return Comments;
     }
 
     public void setComments(String comments) {
-        this.comments = comments;
+        this.Comments = comments;
     }
 
     public String getInstruction() {
-        return instruction;
+        return Instruction;
     }
 
     public void setInstruction(String instruction) {
-        this.instruction = instruction;
+        this.Instruction = instruction;
     }
 
     public String getUserTypeName() {
-        return userTypeName;
+        return UserTypeName;
     }
 
     public void setUserTypeName(String userTypeName) {
-        this.userTypeName = userTypeName;
+        this.UserTypeName = userTypeName;
     }
 
-    public String getUserSubType() {
-        return userSubType;
+    public String getUser_Sub_Type() {
+        return User_Sub_Type;
     }
 
-    public void setUserSubType(String userSubType) {
-        this.userSubType = userSubType;
+    public void setUser_Sub_Type(String user_Sub_Type) {
+        this.User_Sub_Type = user_Sub_Type;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public int getUserId() {
+        return UserId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUserId(int userId) {
+        this.UserId = userId;
     }
 
-    public String getAnimalsMainType() {
-        return animalsMainType;
+    public String getAnimals_Main_Type() {
+        return Animals_Main_Type;
     }
 
-    public void setAnimalsMainType(String animalsMainType) {
-        this.animalsMainType = animalsMainType;
+    public void setAnimals_Main_Type(String animals_Main_Type) {
+        this.Animals_Main_Type = animals_Main_Type;
     }
 
-    public String getAnimalsSubType() {
-        return animalsSubType;
+    public String getAnimals_Sub_Type() {
+        return Animals_Sub_Type;
     }
 
-    public void setAnimalsSubType(String animalsSubType) {
-        this.animalsSubType = animalsSubType;
+    public void setAnimals_Sub_Type(String animals_Sub_Type) {
+        this.Animals_Sub_Type = animals_Sub_Type;
     }
 
-    public String getNoOfAnimals() {
-        return noOfAnimals;
+    public String getNo_Of_Animals() {
+        return No_Of_Animals;
     }
 
-    public void setNoOfAnimals(String noOfAnimals) {
-        this.noOfAnimals = noOfAnimals;
+    public void setNo_Of_Animals(String no_Of_Animals) {
+        this.No_Of_Animals = no_Of_Animals;
     }
 
-    public Integer getGradeId() {
-        return gradeId;
+    public int getGrade_id() {
+        return Grade_id;
     }
 
-    public void setGradeId(Integer gradeId) {
-        this.gradeId = gradeId;
+    public void setGrade_id(int grade_id) {
+        this.Grade_id = grade_id;
     }
 
     public String getSize() {
-        return size;
+        return Size;
     }
 
     public void setSize(String size) {
-        this.size = size;
+        this.Size = size;
     }
 
-    public String getGasDays() {
-        return gasDays;
+    public String getGas_Days() {
+        return Gas_Days;
     }
 
-    public void setGasDays(String gasDays) {
-        this.gasDays = gasDays;
+    public void setGas_Days(String gas_Days) {
+        this.Gas_Days = gas_Days;
     }
 
-    public String getMonthlySale() {
-        return monthlySale;
+    public String getMonthly_Sale() {
+        return Monthly_Sale;
     }
 
-    public void setMonthlySale(String monthlySale) {
-        this.monthlySale = monthlySale;
+    public void setMonthly_Sale(String monthly_Sale) {
+        this.Monthly_Sale = monthly_Sale;
     }
 
-    public String getRegionId() {
-        return regionId;
+    public String getRegion_Id() {
+        return Region_Id;
     }
 
-    public void setRegionId(String regionId) {
-        this.regionId = regionId;
+    public void setRegion_Id(String region_Id) {
+        this.Region_Id = region_Id;
     }
 
     public List<ContactPersons> getContactPersonsList() {

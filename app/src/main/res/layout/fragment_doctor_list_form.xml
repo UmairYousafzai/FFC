@@ -31,7 +31,7 @@
             android:id="@+id/doctor_list_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            tools:listitem="@layout/filter_doctor_profile_card"
+            tools:listitem="@layout/supplier_card"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_view"
@@ -52,7 +52,17 @@
             android:gravity="center"
             android:visibility="gone"
             />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_add_24"
+            app:backgroundTint="@color/APP_Theme_Color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="16dp"
 
+            android:contentDescription="@string/add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

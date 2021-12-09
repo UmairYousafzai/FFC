@@ -269,7 +269,7 @@
                 android:background="@color/white"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                android:checkedButton="@id/company_medicine_radio_btn"
+                android:checkedButton="@id/register_farm_radio_btn"
                 android:layout_marginHorizontal="10dp"
                 >
                 <RadioButton
@@ -361,7 +361,7 @@
                     android:layout_height="wrap_content"
                     android:lines="1"
                     android:maxLines="1"
-                    android:inputType="numberSigned"
+                    android:inputType="number"
                     android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
                     android:singleLine="true"
                     android:textColor="@color/black"

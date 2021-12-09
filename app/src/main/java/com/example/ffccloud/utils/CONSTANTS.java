@@ -19,6 +19,8 @@ public class CONSTANTS {
     public final static String ACTION_START_LOCATION_SERVICE="start_location_service";
     public final static String ACTION_STOP_LOCATION_SERVICE="stop_location_service";
     public final static String CUSTOMER_KEY="customer";
+    public final static String DOCTOR_SUPPLIER_KEY="Doctor Supplier";
+    public final static String FARM_SUPPLIER_KEY="Farm Supplier";
     public final static int ITEM_SENT = 1;
     public final static int ITEM_RECEIVE = 2;
     public final static String PRODUCT_MODEL="product model";
