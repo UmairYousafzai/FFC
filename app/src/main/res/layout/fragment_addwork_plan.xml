@@ -43,44 +43,65 @@
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/Areas_layout"
 
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/region_spinner_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
-            android:hint="@string/areas"
-
+            android:hint="@string/select_region"
+            android:elevation="5dp"
             android:textColorHint="@color/black"
-
-
             app:helperTextTextColor="@color/APP_Theme_Color"
+            app:hintTextColor="@color/APP_Theme_Color">
 
-            >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/Areas"
-                android:focusableInTouchMode="false"
+            <AutoCompleteTextView
+                android:id="@+id/region_spinner"
                 android:layout_width="match_parent"
-                android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:fontFamily="sans-serif-light"
-                android:textColor="@color/black"
-                android:text="@string/select_areas">
 
-            </com.google.android.material.textfield.TextInputEditText>
+
+                android:fontFamily="sans-serif-light"
+                android:inputType="none" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/Doctors_layout"
+            android:id="@+id/client_type_spinner_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:hint="@string/select_client"
+            android:elevation="5dp"
+            android:textColorHint="@color/black"
+            app:helperTextTextColor="@color/APP_Theme_Color"
+            app:hintTextColor="@color/APP_Theme_Color">
+
+            <AutoCompleteTextView
+                android:id="@+id/client_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+                android:fontFamily="sans-serif-light"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/clients_layout"
 
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
-            android:hint="@string/doctors"
+            android:hint="@string/client"
 
             android:textColorHint="@color/black"
 
@@ -89,14 +110,14 @@
 
             >
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/Doctors"
+                android:id="@+id/clients"
                 android:focusableInTouchMode="false"
                 android:layout_width="match_parent"
                 android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_24"
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/select_doctors">
+                android:text="@string/select_client">
 
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>

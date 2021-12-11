@@ -221,6 +221,7 @@ public class AddDoctorFragment extends Fragment {
     private void getSupplierByID(int supplierID) {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading Supplier...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         Call<GetSupplierDetailModel> call = ApiClient.getInstance().getApi().getSupplierDetail(supplierID);
@@ -320,6 +321,7 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
         String phone = Objects.requireNonNull(mBinding.idDocPhone.getText()).toString();
         String address = Objects.requireNonNull(mBinding.idDocAdress.getText()).toString();
         String email = Objects.requireNonNull(mBinding.idDocEmail.getText()).toString();
+        int userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
         int region = 0;
         int gradeID=0;
         if (gradingModelList.size()>0)
@@ -339,11 +341,12 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
                         supplierModelNew.setCompany_Id(1);
+                        supplierModelNew.setUserId(userId);
                         supplierModelNew.setCountry_Id(1);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
                         supplierModelNew.setSupplier_Code("0");
-                        supplierModelNew.setSupplier_Id(0);
+                        supplierModelNew.setSupplier_Id(supplierID);
                         supplierModelNew.setAddress(address);
                         supplierModelNew.setPhone_No(phone);
                         supplierModelNew.setSupplier_Name(name);
@@ -384,6 +387,7 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
     private void saveSupplier(SupplierModelNew supplierModelNew) {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Saving....");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
 
@@ -418,7 +422,7 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
     }
     public void getUserSyncData() {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
-
+        progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -522,6 +526,7 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
     public void getRegion() {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
         String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
         int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();

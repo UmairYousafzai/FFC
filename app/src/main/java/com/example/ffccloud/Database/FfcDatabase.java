@@ -13,6 +13,7 @@ import com.example.ffccloud.Login.GetUserSettingModel;
 import com.example.ffccloud.ModelClasses.Activity;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
 import com.example.ffccloud.FilteredDoctoredModel;
+import com.example.ffccloud.ModelClasses.DeliveryModeModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.ModelClasses.QualificationModel;
@@ -22,7 +23,8 @@ import com.example.ffccloud.ScheduleModel;
 
 @Database(entities = {GetUserInfoModel.class, GetUserMenuModel.class, GetUserSettingModel.class ,
         RouteActivityModel.class, DoctorModel.class, ClassificationModel.class, GradingModel.class, QualificationModel.class,
-        FilteredDoctoredModel.class, ScheduleModel.class, Activity.class, AttendanceModel.class, LocationRequestedUser.class}, version = 1, exportSchema = false)
+        FilteredDoctoredModel.class, ScheduleModel.class, Activity.class, AttendanceModel.class, LocationRequestedUser.class,
+        DeliveryModeModel.class}, version = 1, exportSchema = false)
 public abstract class FfcDatabase extends RoomDatabase {
 
     private static  FfcDatabase database;

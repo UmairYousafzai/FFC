@@ -41,8 +41,8 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginHorizontal="10dp"
 
-                android:elevation="10dp"
-                android:hint="name"
+                android:elevation="5dp"
+                android:hint="@string/name"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,7 @@
                     android:id="@+id/et_contact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberSigned"
+                    android:inputType="phone"
                     android:lines="1"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -113,8 +113,8 @@
                     android:layout_height="wrap_content"
                     android:lines="2"
                     android:maxLines="2"
+                    android:inputType="textMultiLine"
                     android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textColorHint="@color/APP_Theme_Color" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -239,7 +239,7 @@
                     android:id="@+id/et_monthly_sale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:lines="1"
                     android:maxLines="1"
                     android:singleLine="true"

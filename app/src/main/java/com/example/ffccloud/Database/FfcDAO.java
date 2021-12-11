@@ -15,6 +15,7 @@ import com.example.ffccloud.Login.GetUserSettingModel;
 import com.example.ffccloud.ModelClasses.Activity;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
 import com.example.ffccloud.FilteredDoctoredModel;
+import com.example.ffccloud.ModelClasses.DeliveryModeModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.ModelClasses.QualificationModel;
@@ -99,6 +100,8 @@ public interface FfcDAO {
 
     @Insert
     void insertQualification(List<QualificationModel> list);
+    @Insert
+    void insertDeliveryModes(List<DeliveryModeModel> list);
 
     @Query("Delete From Classification")
     void deleteAllClassification();
@@ -109,6 +112,9 @@ public interface FfcDAO {
     @Query("Delete From Qualification")
     void deleteAllQualification();
 
+    @Query("Delete From delivery_Mode")
+    void deleteAllDeliveryModes();
+
     @Query("Select *from Classification")
     LiveData<List<ClassificationModel>> getAllClassification();
 
@@ -118,6 +124,8 @@ public interface FfcDAO {
     @Query("Select *from Qualification")
     LiveData<List<QualificationModel>> getAllQualification();
 
+    @Query("Select *from delivery_Mode")
+    LiveData<List<DeliveryModeModel>> getAllDeliveryModes();
 
     @Insert
     void insertUser(LocationRequestedUser user);

@@ -200,13 +200,13 @@ public class SalesOrderListFragment extends Fragment {
         mBinding.searchBtn.setOnClickListener(v -> {
             if (customerModel!=null)
             {
-                if (customerModel.getPartyID()!=0)
+                if (customerModel.getSupplier_Id()!=0)
                 {
                     if (fromDate!=null)
                     {
                         if (toDate!=null)
                         {
-                            getSalesOrder(customerModel.getPartyID(),fromDate,toDate,byStatusKey,byDateKey,byPriorityKey);
+                            getSalesOrder(customerModel.getSupplier_Id(),fromDate,toDate,byStatusKey,byDateKey,byPriorityKey);
                         }
                         else {
                             mBinding.tvToDate.setError("Please select date");
@@ -232,13 +232,29 @@ public class SalesOrderListFragment extends Fragment {
         mBinding.setBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Calendar calendar = Calendar.getInstance();
+                String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
                 byDateKey = byDateHashmap.get(mBinding.dateSpinner.getSelectedItem());
                 byStatusKey = byStatusHashmap.get(mBinding.statusSpinner.getSelectedItem());
                 byPriorityKey = byPriorityHashMap.get(mBinding.prioritySpinner.getSelectedItem());
                 Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
                 mBinding.salesOrderFilterLayout.setAnimation(animation);
                 mBinding.salesOrderFilterLayout.setVisibility(View.GONE);
+                int supplierId=0;
+                if (customerModel!=null)
+                {
+                    supplierId= customerModel.getSupplier_Id();
+                }
+                if (fromDate!=null&&toDate!=null)
+                {
+                    getSalesOrder(supplierId,fromDate,toDate,0,0,0);
+                }else
+                {
+                    getSalesOrder(supplierId,date,date,0,0,0);
+                }
+
+
+
             }
         });
 
@@ -291,6 +307,7 @@ public class SalesOrderListFragment extends Fragment {
                     if (response.body().size()==0)
                     {
                         mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+                        progressDialog.dismiss();
 
                     }
                     else {

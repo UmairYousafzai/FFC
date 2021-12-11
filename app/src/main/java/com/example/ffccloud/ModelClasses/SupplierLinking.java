@@ -22,6 +22,20 @@ public class SupplierLinking {
     @Expose
     private String address;
 
+    private String user_Type;
+
+    public String getUser_Type() {
+        return user_Type;
+    }
+
+    public void setUser_Type(String user_Type) {
+        this.user_Type = user_Type;
+    }
+
+    public void setRegistered(boolean registered) {
+        isRegistered = registered;
+    }
+
     public String getSupplierLinkIdDtl() {
         return supplierLinkIdDtl;
     }

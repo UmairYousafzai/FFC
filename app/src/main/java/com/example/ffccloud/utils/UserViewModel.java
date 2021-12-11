@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.ffccloud.ModelClasses.ClassificationModel;
+import com.example.ffccloud.ModelClasses.DeliveryModeModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.ModelClasses.QualificationModel;
@@ -19,6 +20,7 @@ public class UserViewModel extends AndroidViewModel {
     private final LiveData<List<QualificationModel>> allQualification;
     private final LiveData<List<ClassificationModel>> allClassification;
     private final  LiveData<List<GradingModel>> allGrades;
+    private final  LiveData<List<DeliveryModeModel>> allDeliveryModes;
     private final LiveData<List<LocationRequestedUser>> allUsers;
 
 
@@ -29,6 +31,7 @@ public class UserViewModel extends AndroidViewModel {
         allGrades = userRepository.getAllGrades();
         allQualification = userRepository.getAllQualification();
         allUsers = userRepository.getAllUser();
+        allDeliveryModes = userRepository.getAllDeliveryModes();
     }
 
     public void deleteAllClassification()
@@ -41,6 +44,10 @@ public class UserViewModel extends AndroidViewModel {
         userRepository.DeleteAllGrades();
     }
     public void deleteAllQualification()
+    {
+        userRepository.DeleteAllQualification();
+    }
+    public void deleteAllDeliveryModes()
     {
         userRepository.DeleteAllQualification();
     }
@@ -58,13 +65,20 @@ public class UserViewModel extends AndroidViewModel {
     {
         return allQualification;
     }
+    public LiveData<List<DeliveryModeModel>> getAllDeliveryModes()
+    {
+        return allDeliveryModes;
+    }
 
 
     public void insertUser(LocationRequestedUser user)
     {
         userRepository.insertUser(user);
     }
-
+    public void insertDeliveryModes(List<DeliveryModeModel> list)
+    {
+        userRepository.InsertDeliveryModes(list);
+    }
     public void deleteAllUsers()
     {
         userRepository.deleteAllUser();

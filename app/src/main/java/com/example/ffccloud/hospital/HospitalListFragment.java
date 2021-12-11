@@ -126,7 +126,7 @@ public class HospitalListFragment extends Fragment {
     }
     private void getSupplier() {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
-
+        progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
@@ -136,7 +136,7 @@ public class HospitalListFragment extends Fragment {
             userID= SharedPreferenceHelper.getInstance(requireContext()).getUserID();
         }
 
-        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier("H",0,regionId);
+        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier("H",userID,regionId);
 
         call.enqueue(new Callback<List<GetSupplierModel>>() {
             @Override

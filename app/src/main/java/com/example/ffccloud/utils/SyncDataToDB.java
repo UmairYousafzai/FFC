@@ -1,11 +1,13 @@
 package com.example.ffccloud.utils;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
 import com.example.ffccloud.ModelClasses.ClassificationModel;
+import com.example.ffccloud.ModelClasses.DeliveryModeModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.ModelClasses.QualificationModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
@@ -75,6 +77,7 @@ public class SyncDataToDB {
     {
 //        ProgressDialog progressDialog= new ProgressDialog(application.getBaseContext());
 //        progressDialog.setTitle("Loading");
+//        progressDialog.setCancelable(false);
 //        progressDialog.show();
         String token = SharedPreferenceHelper.getInstance(application.getBaseContext()).getToken();
         UserRepository repository = new UserRepository(application);
@@ -82,7 +85,7 @@ public class SyncDataToDB {
         Call<List<ClassificationModel>> callClassification= ApiClient.getInstance().getApi().GetClassification(token);
         callClassification.enqueue(new Callback<List<ClassificationModel>>() {
             @Override
-            public void onResponse(Call<List<ClassificationModel>> call, Response<List<ClassificationModel>> response) {
+            public void onResponse(@NotNull Call<List<ClassificationModel>> call, @NotNull Response<List<ClassificationModel>> response) {
                 List<ClassificationModel> classificationModelList= new ArrayList<>();
 
                 if (response.body()!=null)
@@ -99,7 +102,7 @@ public class SyncDataToDB {
             }
 
             @Override
-            public void onFailure(Call<List<ClassificationModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<ClassificationModel>> call, @NotNull Throwable t) {
                 Toast.makeText(application.getBaseContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
@@ -109,7 +112,7 @@ public class SyncDataToDB {
         Call<List<GradingModel>> callGrade= ApiClient.getInstance().getApi().GetGrading(token);
         callGrade.enqueue(new Callback<List<GradingModel>>() {
             @Override
-            public void onResponse(Call<List<GradingModel>> call, Response<List<GradingModel>> response) {
+            public void onResponse(@NotNull Call<List<GradingModel>> call, @NotNull Response<List<GradingModel>> response) {
                 List<GradingModel> gradingModelList= new ArrayList<>();
 
                 if (response.body()!=null)
@@ -126,7 +129,7 @@ public class SyncDataToDB {
             }
 
             @Override
-            public void onFailure(Call<List<GradingModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<GradingModel>> call, @NotNull Throwable t) {
                 Toast.makeText(application.getBaseContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
@@ -135,7 +138,7 @@ public class SyncDataToDB {
         Call<List<QualificationModel>> callQualification= ApiClient.getInstance().getApi().GetQualification(token);
         callQualification.enqueue(new Callback<List<QualificationModel>>() {
             @Override
-            public void onResponse(Call<List<QualificationModel>> call, Response<List<QualificationModel>> response) {
+            public void onResponse(@NotNull Call<List<QualificationModel>> call, @NotNull Response<List<QualificationModel>> response) {
                 List<QualificationModel> qualificationModelList= new ArrayList<>();
 
                 if (response.body()!=null)
@@ -152,8 +155,33 @@ public class SyncDataToDB {
             }
 
             @Override
-            public void onFailure(Call<List<QualificationModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<QualificationModel>> call, @NotNull Throwable t) {
                 Toast.makeText(application.getBaseContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Call<List<DeliveryModeModel>> call = ApiClient.getInstance().getApi().getDeliveryModeTypes(token,1,1);
+
+        call.enqueue(new Callback<List<DeliveryModeModel>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<DeliveryModeModel>> call, @NotNull Response<List<DeliveryModeModel>> response) {
+                if (response.body()!=null)
+                {
+                    List<DeliveryModeModel> list= response.body();
+                    repository.InsertDeliveryModes(list);
+//                    progressDialog.dismiss();
+                }
+                else
+                {
+                    loginAgain(response.message());
+//                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<List<DeliveryModeModel>> call, @NotNull Throwable t) {
+//                progressDialog.dismiss();
+                Toast.makeText(mContext, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

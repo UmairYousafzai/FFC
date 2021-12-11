@@ -105,8 +105,12 @@ public class AddFarmFormFragment extends Fragment {
             public void onChanged(GetSupplierModel model) {
                 if (model!=null)
                 {
-                    supplierDetailModelList.add(model);
-                    supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
+                    if(callingAddBtn.equals("DoctorAddBtn"))
+                    {
+                        supplierDetailModelList.add(model);
+                        supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
+                    }
+
                 }
 
 
@@ -119,14 +123,19 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onChanged(InsertProductModel model) {
                 if (model != null) {
-                    SupplierItemLinking medicineModal = new SupplierItemLinking();
-                    medicineModal.setItHead(model.getTitleProduct());
-                    medicineModal.setIsRegistered(true);
-                    medicineModal.setSupplierItemLinkIdDtl("0");
-                    medicineModal.setItCode(model.getItem_Code());
+                    if(callingAddBtn.equals("MedicineAddBtn"))
+                    {
+                        SupplierItemLinking medicineModal = new SupplierItemLinking();
+                        medicineModal.setItHead(model.getTitleProduct());
+                        medicineModal.setIsRegistered(true);
+                        medicineModal.setSupplierItemLinkIdDtl("0");
+                        medicineModal.setItCode(model.getItem_Code());
 
-                    medicineModalList.add(medicineModal);
-                    medicineAdapter.setMedicineModalList(medicineModalList);
+                        medicineModalList.add(medicineModal);
+                        medicineAdapter.setMedicineModalList(medicineModalList);
+                    }
+
+
 
 
 
@@ -202,6 +211,7 @@ public class AddFarmFormFragment extends Fragment {
         mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
         mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+
         mBinding.etNumberOfAnimal.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
 
         medicineModalList.clear();
@@ -314,6 +324,8 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mBinding.companyMedicineRadioBtn.isChecked()) {
+                    callingAddBtn= "";
+                    callingAddBtn= "MedicineAddBtn";
                     AddFarmFormFragmentDirections.ActionAddFarmFormFragmentToAddProductFragment action = AddFarmFormFragmentDirections.actionAddFarmFormFragmentToAddProductFragment();
                     action.setKey(1);
 
@@ -335,6 +347,8 @@ public class AddFarmFormFragment extends Fragment {
         mBinding.btnAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                callingAddBtn= "";
+                callingAddBtn= "ContactAddBtn";
                 showDialog(2);
             }
         });
@@ -393,6 +407,7 @@ public class AddFarmFormFragment extends Fragment {
         String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
         RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.animalRadioGroup.getCheckedRadioButtonId());
         String animalMainType = radioButton.getText().toString();
+        int userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
 
 
@@ -405,11 +420,12 @@ public class AddFarmFormFragment extends Fragment {
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
                         supplierModelNew.setCompany_Id(1);
+                        supplierModelNew.setUserId(userId);
                         supplierModelNew.setCountry_Id(1);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
                         supplierModelNew.setSupplier_Code("0");
-                        supplierModelNew.setSupplier_Id(0);
+                        supplierModelNew.setSupplier_Id(supplierID);
                         supplierModelNew.setAddress(address);
                         supplierModelNew.setPhone_No(phone);
                         supplierModelNew.setSupplier_Name(name);

@@ -290,6 +290,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setMenus(Menu menu) {
+        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
+
         menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_route_svgrepo_com,null));
         menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_meeting,null));
         menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_location,null));
@@ -324,9 +326,9 @@ public class MainActivity extends AppCompatActivity {
                             case "Ac_Home":
                                 menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_home,null));
                                 break;
-                            case "Ac_Target":
-                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
-                                break;
+//                            case "Ac_Target":
+//                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
+//                                break;
                             case "Ac_Expense":
                                 menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_expense,null));
                                 break;

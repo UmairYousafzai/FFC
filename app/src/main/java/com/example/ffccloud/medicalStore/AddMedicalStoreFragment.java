@@ -253,6 +253,7 @@ public class AddMedicalStoreFragment extends Fragment {
 
     private void setUpSupplierModelForSave() {
 
+        int userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
         String name = Objects.requireNonNull(mBinding.etName.getText()).toString();
         String phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
         String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
@@ -275,11 +276,12 @@ public class AddMedicalStoreFragment extends Fragment {
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
                         supplierModelNew.setCompany_Id(1);
+                        supplierModelNew.setUserId(userId);
                         supplierModelNew.setCountry_Id(1);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
                         supplierModelNew.setSupplier_Code("0");
-                        supplierModelNew.setSupplier_Id(0);
+                        supplierModelNew.setSupplier_Id(supplierID);
                         supplierModelNew.setAddress(address);
                         supplierModelNew.setPhone_No(phone);
                         supplierModelNew.setSupplier_Name(name);

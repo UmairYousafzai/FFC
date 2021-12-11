@@ -254,11 +254,13 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
                                 ScheduleModel model = new ScheduleModel();
                                 int regionId, areaId, dayId;
+                                String region= mBinding.regionSpinner.getSelectedItem().toString();
+                                String area= mBinding.areaSpinner.getSelectedItem().toString();
 
-                                if (mBinding.regionSpinner.getSelectedItem() != null) {
+                                if (!region.equals("")) {
                                     mBinding.regionSpinner.requestFocus();
                                     Toast.makeText(requireContext(), "Please Select region for adding schedule", Toast.LENGTH_SHORT).show();
-                                } else if (mBinding.areaSpinner.getSelectedItem() != null) {
+                                } else if (!area.equals("")) {
                                     mBinding.areaSpinner.requestFocus();
                                     Toast.makeText(requireContext(), "Please Select area for adding schedule", Toast.LENGTH_SHORT).show();
                                 } else if (mBinding.daySpinner.getSelectedItem() != null) {

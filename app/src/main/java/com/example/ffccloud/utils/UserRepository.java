@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import com.example.ffccloud.Database.FfcDAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
+import com.example.ffccloud.ModelClasses.DeliveryModeModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.ModelClasses.QualificationModel;
@@ -25,6 +26,7 @@ public class UserRepository {
     private final LiveData<List<ClassificationModel>> allClassification;
     private  LiveData<List<GradingModel>> allGrades;
     private final LiveData<List<LocationRequestedUser>> allUsers;
+    private final LiveData<List<DeliveryModeModel>> allDeliveryModes;
 
     private Executor executor= Executors.newSingleThreadExecutor();
     private Handler handler= new Handler(Looper.getMainLooper());
@@ -38,6 +40,7 @@ public class UserRepository {
         allGrades = mDao.getAllGrades();
         allQualification = mDao.getAllQualification();
         allUsers = mDao.getAllUser();
+        allDeliveryModes = mDao.getAllDeliveryModes();
 
     }
 
@@ -50,6 +53,7 @@ public class UserRepository {
                 mDao.insertClassification(list);
             }
         });    }
+
     public void InsertGrades(List<GradingModel> list) {
         executor.execute(new Runnable() {
             @Override
@@ -65,6 +69,15 @@ public class UserRepository {
                 mDao.insertQualification(list);
             }
         });    }
+
+    public void InsertDeliveryModes(List<DeliveryModeModel> list) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.insertDeliveryModes(list);
+            }
+        });    }
+
 
     public void DeleteAllClassification( )
     {
@@ -92,6 +105,15 @@ public class UserRepository {
             }
         });    }
 
+    public void DeleteAllDeliveryModes( )
+    {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteAllDeliveryModes();
+            }
+        });    }
+
     public LiveData<List<ClassificationModel>> getAllClassification()
     {
         return allClassification;
@@ -106,6 +128,10 @@ public class UserRepository {
         return allQualification;
     }
 
+    public LiveData<List<DeliveryModeModel>> getAllDeliveryModes()
+    {
+        return allDeliveryModes;
+    }
 
     public void insertUser(LocationRequestedUser user) {
         executor.execute(new Runnable() {

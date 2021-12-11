@@ -178,23 +178,39 @@ public class AddCustomerFragment extends Fragment {
                 {
                     if (emailCC.matches(emailPattern))
                     {
-                        CustomerModel customerModel = new CustomerModel(1, 1, 1, 1, 0, userID, 0, "c", null
-                                , partyName
-                                , Objects.requireNonNull(mBinding.etPartAbbreviation.getText()).toString()
-                                , Objects.requireNonNull(mBinding.etFocalPersonName.getText()).toString()
-                                , Objects.requireNonNull(mBinding.etFocalPersonCNIC.getText()).toString()
-                                , Objects.requireNonNull(mBinding.etSaleTax.getText()).toString()
-                                , Objects.requireNonNull(mBinding.etNtnNum.getText()).toString()
-                                , crLimit
-                                , crLimitAmount, applyCredit
-                                ,email,emailCC,emailBCC
-                        , Objects.requireNonNull(mBinding.etContact.getText()).toString()
-                        , Objects.requireNonNull(mBinding.etFax.getText()).toString()
-                        ,cityId, Objects.requireNonNull(mBinding.etPayee.getText()).toString()
-                        , Objects.requireNonNull(mBinding.etAddress.getText()).toString()
-                        , Objects.requireNonNull(mBinding.etInstruction.getText()).toString()
-                        , Objects.requireNonNull(mBinding.etComment.getText()).toString()
-                        ,isCompany,creditLimitPromptType, contactPersonsList);
+                        CustomerModel customerModel = new CustomerModel();
+
+                        customerModel.setCompany_Id(1);
+                        customerModel.setLocation_Id(1);
+                        customerModel.setProject_Id(1);
+                        customerModel.setCountry_Id(1);
+                        customerModel.setSupplier_Id(0);
+                        customerModel.setUserID(userID);
+                        customerModel.setSalesManID(0);
+                        customerModel.setUserTypeName("C");
+                        customerModel.setPartyName(partyName);
+                        customerModel.setCr_Limit(crLimit);
+                        customerModel.setCr_Limit_Amount(crLimitAmount);
+                        customerModel.setApply_Cr_Limit(applyCredit);
+                        customerModel.setEmail(email);
+                        customerModel.setEMail_BCC(emailBCC);
+                        customerModel.setEMail_CC(emailCC);
+                        customerModel.setCity_Id(cityId);
+                        customerModel.setIs_Company(isCompany);
+                        customerModel.setPrompt_Type(creditLimitPromptType);
+                        customerModel.setContact_PersonsList(contactPersonsList);
+                        customerModel.setComments(Objects.requireNonNull(mBinding.etComment.getText()).toString());
+                        customerModel.setInstruction(Objects.requireNonNull(mBinding.etInstruction.getText()).toString());
+                        customerModel.setAddress(Objects.requireNonNull(mBinding.etAddress.getText()).toString());
+                        customerModel.setPayee(Objects.requireNonNull(mBinding.etPayee.getText()).toString());
+                        customerModel.setFax_No(Objects.requireNonNull(mBinding.etFax.getText()).toString());
+                        customerModel.setContacts( Objects.requireNonNull(mBinding.etContact.getText()).toString());
+                        customerModel.setNTN(Objects.requireNonNull(mBinding.etNtnNum.getText()).toString());
+                        customerModel.setSales_Tax_No(Objects.requireNonNull(mBinding.etSaleTax.getText()).toString());
+                        customerModel.setCNICNo(Objects.requireNonNull(mBinding.etFocalPersonCNIC.getText()).toString());
+                        customerModel.setFocal_Person( Objects.requireNonNull(mBinding.etFocalPersonName.getText()).toString());
+                        customerModel.setPartyAbbreviation( Objects.requireNonNull(mBinding.etPartAbbreviation.getText()).toString());
+
 
                         apiCallforsavingCustomer(customerModel);
                     }

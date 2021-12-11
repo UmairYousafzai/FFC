@@ -337,9 +337,16 @@
             app:argType="integer"
             android:defaultValue="1"
             />
-        <action
-            android:id="@+id/action_addWorkPlanDialogFragment_to_addworkPlanFragment"
-            app:destination="@id/addworkPlanFragment" />
+        <argument
+            android:name="regionID"
+            app:argType="integer"
+            android:defaultValue="0"
+            />
+        <argument
+            android:name="ClientType"
+            app:argType="string"
+            android:defaultValue="none"
+            />
         <argument
             android:name="dataIds"
             app:argType="string"

@@ -11,6 +11,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -27,6 +28,8 @@ import android.widget.Toast;
 
 import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.InsertProductModel;
+import com.example.ffccloud.ModelClasses.DeliveryModeModel;
+import com.example.ffccloud.ModelClasses.GetLedgerBalanceModel;
 import com.example.ffccloud.ModelClasses.InsertSaleOrderModel;
 import com.example.ffccloud.ModelClasses.TermAndConditionModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
@@ -35,6 +38,8 @@ import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentSaleOrderFormBinding;
 import com.example.ffccloud.salesOrder.adapter.InsertProductRecyclerAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
+import com.example.ffccloud.utils.SharedPreferenceHelper;
+import com.example.ffccloud.utils.UserViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.jetbrains.annotations.NotNull;
@@ -59,11 +64,13 @@ public class SaleOrderFormFragment extends Fragment {
     private int numberOfLines=0;
     private List<InsertProductModel> productModelList;
     private InsertProductRecyclerAdapter adapter;
-    private ArrayList<String>  byPriorityList = new ArrayList<>();
-    private HashMap<String, Integer> byPriorityHashMap = new HashMap<>();
+    private final ArrayList<String>  byPriorityList = new ArrayList<>(), deliverModeList= new ArrayList<>();
+    private HashMap<String, Integer> byPriorityHashMap = new HashMap<>(), deliverModeHashMap= new HashMap<>();
     private String saleOrderDate,deliveryDate;
     private InsertSaleOrderModel saleOrderModel;
     private List<EditText> editTextList= new ArrayList<>();
+    private ProgressDialog progressDialog;
+    private UserViewModel userViewModel;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -78,7 +85,37 @@ public class SaleOrderFormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        progressDialog = new ProgressDialog(requireContext());
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         bottomSheetBehavior= BottomSheetBehavior.from(mBinding.bottomSheet.getRoot());
+        navController = NavHostFragment.findNavController(this);
+        MutableLiveData<CustomerModel> customerModelMutableLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.CUSTOMER_KEY);
+        customerModelMutableLiveData.observe(getViewLifecycleOwner(), new Observer<CustomerModel>() {
+            @Override
+            public void onChanged(CustomerModel model) {
+                if (model!=null)
+                {
+                    customerModel = model;
+                    mBinding.tvSelectCustomer.setText(customerModel.getPartyName());
+                    getLedgerBalance();
+                }
+
+
+            }
+        });
+        MutableLiveData<List<InsertProductModel>> productModelMutableLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.PRODUCT_MODEL);
+        productModelMutableLiveData.observe(getViewLifecycleOwner(), new Observer<List<InsertProductModel>>() {
+            @Override
+            public void onChanged(List<InsertProductModel> insertProductModels) {
+                productModelList= insertProductModels;
+                adapter.setProductModelList(productModelList);
+            }
+        });
 
         setUpBottomSheet();
         bottomSheetBtnListener();
@@ -98,36 +135,13 @@ public class SaleOrderFormFragment extends Fragment {
         btnListener();
         setUpRecyclerView();
 
-        navController = NavHostFragment.findNavController(this);
-        MutableLiveData<CustomerModel> customerModelMutableLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
-                .getSavedStateHandle()
-                .getLiveData(CONSTANTS.CUSTOMER_KEY);
-        customerModelMutableLiveData.observe(getViewLifecycleOwner(), new Observer<CustomerModel>() {
-            @Override
-            public void onChanged(CustomerModel model) {
-                if (model!=null)
-                {
-                    customerModel = model;
-                    mBinding.tvSelectCustomer.setText(customerModel.getPartyName());
-                }
-
-
-            }
-        });
-        MutableLiveData<List<InsertProductModel>> productModelMutableLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
-                .getSavedStateHandle()
-                .getLiveData(CONSTANTS.PRODUCT_MODEL);
-        productModelMutableLiveData.observe(getViewLifecycleOwner(), new Observer<List<InsertProductModel>>() {
-            @Override
-            public void onChanged(List<InsertProductModel> insertProductModels) {
-                 productModelList= insertProductModels;
-                 adapter.setProductModelList(productModelList);
-            }
-        });
 
 
 
+        getLedgerBalance();
     }
+
+
 
     private void setUpRecyclerView() {
 
@@ -239,6 +253,9 @@ public class SaleOrderFormFragment extends Fragment {
     }
 
     private void setUpSpinners() {
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         //setting for by priority spinner
         byPriorityList.add("High");
@@ -249,6 +266,23 @@ public class SaleOrderFormFragment extends Fragment {
         byPriorityHashMap.put("Low",3);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
         mBinding.prioritySpinner.setAdapter(adapter2);
+
+        userViewModel.getAllDeliveryModes().observe(getViewLifecycleOwner(), new Observer<List<DeliveryModeModel>>() {
+            @Override
+            public void onChanged(List<DeliveryModeModel> list) {
+                for (DeliveryModeModel modeModel: list)
+                {
+                    deliverModeList.add(modeModel.getDeliveryMode());
+                    deliverModeHashMap.put(modeModel.getDeliveryMode(),(int)modeModel.getDeliveryModeId());
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, deliverModeList);
+                mBinding.deliverModeSpinner.setAdapter(adapter);
+
+                progressDialog.dismiss();
+            }
+        });
+
+
     }
 
     private void saveSaleOrder() {
@@ -274,7 +308,7 @@ public class SaleOrderFormFragment extends Fragment {
                 mBinding.etAddress.getText().toString(),
                 Integer.parseInt(mBinding.tvLedgerBalance.getText().toString()),
                 Integer.parseInt(mBinding.tvCreditLimit.getText().toString()),
-                customerModel.getPartyID(),priorityId,0);
+                customerModel.getSupplier_Id(),priorityId,0);
 
         Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertSaleOrder(saleOrderModel);
         call.enqueue(new Callback<UpdateStatus>() {
@@ -370,5 +404,47 @@ public class SaleOrderFormFragment extends Fragment {
         editTextList.add(editText);
         numberOfLines++;
     }
+    private void getLedgerBalance() {
 
+        if (customerModel!=null) {
+            progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
+            Call<GetLedgerBalanceModel> call = ApiClient.getInstance().getApi().getLedgerBalance(token, 1,
+                    1, 1, 1,customerModel.getSupplier_Id() );
+
+            call.enqueue(new Callback<GetLedgerBalanceModel>() {
+                @Override
+                public void onResponse(@NotNull Call<GetLedgerBalanceModel> call, @NotNull Response<GetLedgerBalanceModel> response) {
+
+                    if (response.body()!=null)
+                    {
+                        GetLedgerBalanceModel model = new GetLedgerBalanceModel();
+                        model= response.body();
+
+                        mBinding.tvLedgerBalance.setText(String.valueOf(model.getLedgerBalance()));
+                        mBinding.tvCreditLimit.setText(String.valueOf(model.getCreditLimit()));
+                        progressDialog.dismiss();
+                    }
+                    else
+                    {
+                        Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<GetLedgerBalanceModel> call, @NotNull Throwable t) {
+                    Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    progressDialog.dismiss();
+                }
+            });
+        }
+
+
+
+    }
 }

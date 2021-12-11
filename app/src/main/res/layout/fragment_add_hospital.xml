@@ -52,7 +52,6 @@
                     android:id="@+id/et_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
                     android:lines="1"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -84,12 +83,69 @@
                     android:layout_height="wrap_content"
                     android:lines="2"
                     android:maxLines="2"
+                    android:inputType="textMultiLine"
                     android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textColorHint="@color/APP_Theme_Color" />
             </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:id="@+id/region_spinner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_address_layout"
+                android:background="@color/white"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:elevation="5dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:elevation="2dp"
+                    android:text="@string/select_region"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <Spinner
+                    android:id="@+id/region_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:elevation="5dp"
+                    android:popupElevation="3dp"
+
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray"
+                    android:layout_marginBottom="5dp"/>
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/location_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enable_location"
+                android:background="@color/white"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"                android:gravity="center"
+                android:buttonTint="@color/APP_Theme_Color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/region_spinner_layout"
+                />
             <LinearLayout
                 android:id="@+id/grade_spinner_layout"
                 android:layout_width="match_parent"
@@ -99,7 +155,7 @@
                 android:elevation="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_address_layout"
+                app:layout_constraintTop_toBottomOf="@id/location_checkbox"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
@@ -343,7 +399,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Add Gas Days x,y,z"
-                android:layout_marginStart="10dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="5dp"
                 app:layout_constraintEnd_toStartOf="@id/btn_add_gas_day"
                 app:layout_constraintStart_toStartOf="parent"
@@ -361,7 +417,6 @@
                     android:layout_height="wrap_content"
                     android:lines="1"
                     android:maxLines="1"
-                    android:inputType="number"
                     android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
                     android:singleLine="true"
                     android:textColor="@color/black"
@@ -381,6 +436,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/et_gas_days_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:contentDescription="@string/select_doctors"
+                android:visibility="gone"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -394,6 +450,7 @@
                 android:layout_marginTop="15dp"
                 tools:listitem="@layout/gas_day_card"
                 tools:itemCount="1"
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@+id/heading9"

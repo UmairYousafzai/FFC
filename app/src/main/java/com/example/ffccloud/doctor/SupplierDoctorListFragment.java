@@ -133,7 +133,7 @@ public class SupplierDoctorListFragment extends Fragment {
             userID=SharedPreferenceHelper.getInstance(requireContext()).getUserID();
         }
 
-        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier("Dr",0,regionId);
+        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier("Dr",userID,regionId);
 
         call.enqueue(new Callback<List<GetSupplierModel>>() {
             @Override

@@ -14,6 +14,9 @@ public class DoctorsByAreaIdsModel implements Parcelable {
 
     private boolean ischecked;
 
+    public DoctorsByAreaIdsModel() {
+    }
+
     public boolean isIschecked() {
         return ischecked;
     }

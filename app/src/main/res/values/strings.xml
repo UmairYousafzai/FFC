@@ -253,6 +253,8 @@
     <string name="add_gas_days">Add Gas Days</string>
     <string name="id">ID:</string>
     <string name="name1">Name:</string>
+    <string name="client">Client</string>
+    <string name="select_client">Select Client</string>
 
 
 </resources>

@@ -13,9 +13,11 @@ import com.example.ffccloud.ModelClasses.AreaModel;
 import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
 import com.example.ffccloud.CustomerModel;
+import com.example.ffccloud.ModelClasses.DeliveryModeModel;
 import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
+import com.example.ffccloud.ModelClasses.GetLedgerBalanceModel;
 import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.ModelClasses.InsertSaleOrderModel;
@@ -175,5 +177,15 @@ public interface Api {
 
     @GET("api/SupplierApi/GetFFCSupplierById")
     Call<GetSupplierDetailModel> getSupplierDetail(@Query("Supplier_id")int supplierID);
+
+    @GET("api/SalesOrder/Get_Delivery_Mode")
+    Call<List<DeliveryModeModel>> getDeliveryModeTypes(@Header("Authorization") String token, @Query("Country_Id")int Country_Id, @Query("Company_Id") int Company_Id);
+
+    @GET("api/SalesOrder/Get_LedgerBalance")
+    Call<GetLedgerBalanceModel> getLedgerBalance(@Header("Authorization") String token, @Query("Company_Id")int Company_Id,
+                                                 @Query("Country_Id") int Country_Id,
+                                                 @Query("Location_Id") int Location_Id,
+                                                 @Query("Project_Id") int Project_Id,
+                                                 @Query("Supplier_Id") int Supplier_Id);
 }
 

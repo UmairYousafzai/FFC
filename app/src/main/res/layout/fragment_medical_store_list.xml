@@ -23,7 +23,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/spinner_bg"
             android:elevation="5dp"
-            app:queryHint="Type customer name ...."
+            app:queryHint="Type name ...."
             app:iconifiedByDefault="false"
             />
 

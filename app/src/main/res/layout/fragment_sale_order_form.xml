@@ -29,72 +29,6 @@
             >
 
 
-            <LinearLayout
-                android:id="@+id/tv_ledger_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/delivery_address_layout"
-                android:background="@drawable/spinner_bg"
-                android:layout_marginVertical="10dp"
-
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:elevation="2dp"
-                    android:text="@string/ledger_balance"
-                    android:textColor="@color/APP_Theme_Color"
-                    android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/tv_ledger_balance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="ledger Balance"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:background="@drawable/spinner_bg"
-                    android:padding="10dp"
-                    android:drawablePadding="15dp"
-                    app:drawableStartCompat="@drawable/ic_dollar_blue_24" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tv_credit_limit_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_ledger_layout"
-                android:background="@drawable/spinner_bg"
-                android:layout_marginVertical="10dp"
-
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:elevation="2dp"
-                    android:text="@string/credit_limit"
-                    android:textColor="@color/APP_Theme_Color"
-                    android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/tv_credit_limit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="credit limit"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:background="@drawable/spinner_bg"
-                    android:padding="10dp"
-                    android:drawablePadding="15dp"
-
-                    app:drawableStartCompat="@drawable/ic_dollar_blue_24" />
-            </LinearLayout>
 
 
             <LinearLayout
@@ -195,18 +129,34 @@
                     android:textColorHint="@color/APP_Theme_Color" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/customer_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:elevation="2dp"
+                android:padding="5dp"
+                android:text="@string/ledger_balance"
+                android:textColor="@color/APP_Theme_Color"
+                android:textStyle="bold"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/delivery_address_layout"
+                app:layout_constraintBottom_toTopOf="@+id/customer_spinner_layout"/>
             <LinearLayout
                 android:id="@+id/customer_spinner_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/spinner_bg"
                 android:orientation="horizontal"
                 android:paddingVertical="10dp"
                 android:paddingStart="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_credit_limit_layout">
+                app:layout_constraintTop_toBottomOf="@id/customer_heading"
+                >
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -226,7 +176,6 @@
                     />
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/priority_spinner_layout"
@@ -313,6 +262,74 @@
                     android:background="@color/gray"
                     android:layout_marginBottom="5dp"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tv_ledger_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/delivery_mode_spinner_layout"
+                android:background="@drawable/spinner_bg"
+                android:layout_marginVertical="10dp"
+
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:elevation="2dp"
+                    android:text="@string/ledger_balance"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_ledger_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ledger Balance"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:background="@drawable/spinner_bg"
+                    android:padding="10dp"
+                    android:drawablePadding="15dp"
+                    app:drawableStartCompat="@drawable/ic_dollar_blue_24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tv_credit_limit_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_ledger_layout"
+                android:background="@drawable/spinner_bg"
+                android:layout_marginVertical="10dp"
+
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:elevation="2dp"
+                    android:text="@string/credit_limit"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_credit_limit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="credit limit"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:background="@drawable/spinner_bg"
+                    android:padding="10dp"
+                    android:drawablePadding="15dp"
+
+                    app:drawableStartCompat="@drawable/ic_dollar_blue_24" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/radio_heading"
                 android:layout_width="match_parent"
@@ -322,8 +339,9 @@
                 android:textColor="@color/APP_Theme_Color"
                 android:textStyle="bold"
                 android:background="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/delivery_mode_spinner_layout"
+                app:layout_constraintTop_toBottomOf="@id/tv_credit_limit_layout"
                 android:layout_marginTop="10dp"
+                android:padding="5dp"
                 />
 
             <RadioGroup

@@ -2,6 +2,7 @@ package com.example.ffccloud.Target;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -26,11 +27,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
 import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
+import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.ModelClasses.SaveNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
@@ -40,8 +43,11 @@ import com.example.ffccloud.databinding.FragmentAddworkPlanBinding;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.SyncDataToDB;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,7 +58,7 @@ import retrofit2.Response;
 
 public class AddworkPlanFragment extends Fragment {
 
-    private FragmentAddworkPlanBinding mbinding;
+    private FragmentAddworkPlanBinding mBinding;
     private View view;
     private int mDay, mMonth, mYear, key;
     private boolean isAreaDialogOpen = false, isDoctorDialogOpen = false;
@@ -63,12 +69,16 @@ public class AddworkPlanFragment extends Fragment {
     private NavController navController;
     private NavBackStackEntry navBackStackEntry;
     private String remarks = "";
+    private final HashMap<String, Integer> regionHashmap = new HashMap<>();
+    private final ArrayList<String> regionList = new ArrayList<>();
+    private List<String> clientList= new ArrayList<>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mbinding = FragmentAddworkPlanBinding.inflate(inflater, container, false);
-        view = mbinding.getRoot();
+        mBinding = FragmentAddworkPlanBinding.inflate(inflater, container, false);
+        view = mBinding.getRoot();
 //         dataIDs = AddworkPlanFragmentArgs.fromBundle(getArguments()).getAreaIds();
 //         dataTittles = AddworkPlanFragmentArgs.fromBundle(getArguments()).getAreaTittles();
 //         key = AddworkPlanFragmentArgs.fromBundle(getArguments()).getKey();
@@ -88,19 +98,18 @@ public class AddworkPlanFragment extends Fragment {
             @Override
             public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
 
-                if (event.equals(Lifecycle.Event.ON_RESUME) && navBackStackEntry.getSavedStateHandle().contains("Object") && key == 2) {
+                if (event.equals(Lifecycle.Event.ON_RESUME) && navBackStackEntry.getSavedStateHandle().contains("Object2") && key == 3) {
 
-
-                    areasModelList = navBackStackEntry.getSavedStateHandle().get("Object");
-                    getActivity();
-
-
-                    setuptextFields();
-
-                } else if (event.equals(Lifecycle.Event.ON_RESUME) && navBackStackEntry.getSavedStateHandle().contains("Object2") && key == 3) {
                     doctorModelList = navBackStackEntry.getSavedStateHandle().get("Object2");
                     setuptextFields();
+
+
                 }
+//                else if (event.equals(Lifecycle.Event.ON_RESUME) && navBackStackEntry.getSavedStateHandle().contains("Object2") && key == 3) {
+//                    areasModelList = navBackStackEntry.getSavedStateHandle().get("Object");
+//
+//                    setuptextFields();
+//                }
             }
         };
 
@@ -120,25 +129,26 @@ public class AddworkPlanFragment extends Fragment {
     }
 
     public void setuptextFields() {
-        if (key == 2 && areasModelList != null) {
-            dataTittles = "";
-            dataIDs = "";
-
-            for (AreasByEmpIdModel model : areasModelList) {
-                dataTittles = dataTittles + model.getAreaTittle() + ",";
-                dataIDs = dataIDs + model.getAreaId() + ",";
-            }
-            mbinding.Areas.setText(dataTittles);
-            mbinding.Doctors.setText("");
-
-        } else if (doctorModelList != null && key == 3) {
+//        if (key == 2 && areasModelList != null) {
+//            dataTittles = "";
+//            dataIDs = "";
+//
+//            for (AreasByEmpIdModel model : areasModelList) {
+//                dataTittles = dataTittles + model.getAreaTittle() + ",";
+//                dataIDs = dataIDs + model.getAreaId() + ",";
+//            }
+//            mbinding.Areas.setText(dataTittles);
+//            mbinding.Doctors.setText("");
+//
+//        } else
+            if (doctorModelList != null && key == 3) {
             dataTittles = "";
             dataIDs = "";
             for (DoctorsByAreaIdsModel model : doctorModelList) {
-                dataTittles = dataTittles + model.getName() + ",";
-                dataIDs = dataIDs + model.getId() + ",";
+                dataTittles = dataTittles + model.getName() + ", ";
+                dataIDs = dataIDs + model.getId() + ", ";
             }
-            mbinding.Doctors.setText(dataTittles);
+            mBinding.clients.setText(dataTittles);
 
         }
     }
@@ -147,10 +157,25 @@ public class AddworkPlanFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        getRegion();
+        setupClientSpinner();
+
+    }
+
+    private void setupClientSpinner() {
+
+        clientList.add("Hospitals");
+        clientList.add("Doctors");
+        clientList.add("Farms");
+        clientList.add("Medical Stores");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, clientList);
+        mBinding.clientTypeSpinner.setAdapter(adapter);
+
     }
 
     public void btnListener() {
-        mbinding.workPlanDate.setOnClickListener(new View.OnClickListener() {
+        mBinding.workPlanDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -181,7 +206,7 @@ public class AddworkPlanFragment extends Fragment {
                         }
                         mDate = mMonth + "/" + mDay + "/" + year;
 
-                        mbinding.workPlanDate.setText(mDate);
+                        mBinding.workPlanDate.setText(mDate);
                     }
                 }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -189,35 +214,55 @@ public class AddworkPlanFragment extends Fragment {
         });
 
 
-        mbinding.Areas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isAreaDialogOpen) {
-//                    dialogFragment.dismiss();
-                    isAreaDialogOpen = false;
-                } else {
-                    key = 2;
-                    AddworkPlanFragmentDirections.ActionAddworkPlanFragmentToAddWorkPlanDialogFragment action = AddworkPlanFragmentDirections.actionAddworkPlanFragmentToAddWorkPlanDialogFragment();
-                    action.setKey(key);
-
-                    navController.navigate(action);
-                    isAreaDialogOpen = true;
-                }
-
-
-            }
-        });
-        mbinding.Doctors.setOnClickListener(new View.OnClickListener() {
+//        mBinding.regionSpinner.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isAreaDialogOpen) {
+//                    isAreaDialogOpen = false;
+//                } else {
+//                    key = 2;
+//                    AddworkPlanFragmentDirections.ActionAddworkPlanFragmentToAddWorkPlanDialogFragment action = AddworkPlanFragmentDirections.actionAddworkPlanFragmentToAddWorkPlanDialogFragment();
+//                    action.setKey(key);
+//
+//                    navController.navigate(action);
+//                    isAreaDialogOpen = true;
+//                }
+//
+//
+//            }
+//        });
+        mBinding.clients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isDoctorDialogOpen) {
-                    //   dialogFragment.dismiss();
                     isDoctorDialogOpen = false;
                 } else {
                     key = 3;
                     AddworkPlanFragmentDirections.ActionAddworkPlanFragmentToAddWorkPlanDialogFragment action = AddworkPlanFragmentDirections.actionAddworkPlanFragmentToAddWorkPlanDialogFragment();
                     action.setKey(key);
-                    action.setDataIds(dataIDs);
+                    if (mBinding.clientTypeSpinner.getText().toString().equals("Hospitals"))
+                    {
+                        action.setClientType("H");
+
+                    }
+                    else if (mBinding.clientTypeSpinner.getText().toString().equals("Doctors"))
+                    {
+                        action.setClientType("Dr");
+
+                    }
+                    else if (mBinding.clientTypeSpinner.getText().toString().equals("Farms"))
+                    {
+                        action.setClientType("F");
+
+                    }
+                    else
+                    {
+
+                            action.setClientType("Str");
+
+
+                    }
+                    action.setRegionID(regionHashmap.get(mBinding.regionSpinner.getText().toString()));
                     navController.navigate(action);
                     isDoctorDialogOpen = true;
                 }
@@ -225,7 +270,7 @@ public class AddworkPlanFragment extends Fragment {
 
             }
         });
-        mbinding.micBtn.setOnClickListener(new View.OnClickListener() {
+        mBinding.micBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent
@@ -241,7 +286,7 @@ public class AddworkPlanFragment extends Fragment {
                 }
             }
         });
-        mbinding.remarks.addTextChangedListener(new TextWatcher() {
+        mBinding.remarks.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -258,11 +303,11 @@ public class AddworkPlanFragment extends Fragment {
             }
         });
 
-        mbinding.saveBtn.setOnClickListener(new View.OnClickListener() {
+        mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mbinding.saveBtn.setEnabled(false);
-                String remarks = mbinding.remarks.getText().toString().trim();
+                mBinding.saveBtn.setEnabled(false);
+                String remarks = mBinding.remarks.getText().toString().trim();
                 int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
                 if (!remarks.isEmpty() && !dataTittles.isEmpty() && !mDate.isEmpty()) {
 
@@ -273,15 +318,15 @@ public class AddworkPlanFragment extends Fragment {
                     model.setRemarks(remarks);
 
                     saveWorkPlan(model);
-                    mbinding.Areas.setText(R.string.select_areas);
-                    mbinding.Doctors.setText(R.string.select_doctors);
-                    mbinding.workPlanDate.setText("");
-                    mbinding.remarks.setText("");
+                    mBinding.regionSpinner.setText(R.string.select_areas);
+                    mBinding.clients.setText(R.string.select_doctors);
+                    mBinding.workPlanDate.setText("");
+                    mBinding.remarks.setText("");
                     dataTittles = "";
                     mDate = "";
                 } else {
                     Toast.makeText(requireContext(), "Please Enter The Remarks", Toast.LENGTH_SHORT).show();
-                    mbinding.saveBtn.setEnabled(true);
+                    mBinding.saveBtn.setEnabled(true);
 
                 }
             }
@@ -305,13 +350,13 @@ public class AddworkPlanFragment extends Fragment {
                 } else {
                     new SyncDataToDB(requireActivity().getApplication(), requireContext()).loginAgain(response.message());
                 }
-                mbinding.saveBtn.setEnabled(true);
+                mBinding.saveBtn.setEnabled(true);
 
             }
 
             @Override
             public void onFailure(Call<UpdateStatus> call, Throwable t) {
-                mbinding.saveBtn.setEnabled(true);
+                mBinding.saveBtn.setEnabled(true);
 
                 new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Add Work Plan")
@@ -332,11 +377,49 @@ public class AddworkPlanFragment extends Fragment {
                         if (data != null) {
                             ArrayList<String> resultString = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                             remarks = remarks + " " + resultString.get(0);
-                            mbinding.remarks.setText(remarks);
+                            mBinding.remarks.setText(remarks);
                         }
                     }
                 }
             });
 
+    public void getRegion() {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
+        int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
+        Call<List<RegionModel>> call = ApiClient.getInstance().getApi().getRegion(token, 1, 1, 1, id);
 
+        call.enqueue(new Callback<List<RegionModel>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
+                if (response.isSuccessful()) {
+                    progressDialog.dismiss();
+                    regionHashmap.clear();
+                    regionList.clear();
+                    List<RegionModel> regionModelList = new ArrayList<>();
+                    regionModelList = response.body();
+
+                    for (RegionModel model : regionModelList) {
+                        regionList.add(model.getName());
+                        regionHashmap.put(model.getName(), model.getRegionId());
+
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                    mBinding.regionSpinner.setAdapter(adapter);
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<List<RegionModel>> call, @NotNull Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(requireContext(), " " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

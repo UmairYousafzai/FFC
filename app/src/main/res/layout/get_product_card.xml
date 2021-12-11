@@ -87,13 +87,16 @@
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:textColor="@color/black"
                 android:background="@color/white"
                 android:text="@{ product.title}"
+                android:maxLines="2"
+                android:lines="2"
                 app:layout_constraintStart_toEndOf="@id/title_heading"
                 app:layout_constraintTop_toBottomOf="@id/view"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/view1"
                 android:padding="5dp"
                 android:textSize="16sp"/>
             <View
@@ -122,13 +125,15 @@
             <TextView
                 android:id="@+id/tv_unit"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:textColor="@color/black"
                 android:background="@color/white"
                 android:text="@{product.unit}"
                 app:layout_constraintStart_toEndOf="@id/Unit_heading"
                 app:layout_constraintTop_toBottomOf="@id/view1"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/view3"
+
                 android:padding="5dp"
                 android:textSize="16sp"
 
@@ -167,6 +172,8 @@
                 app:layout_constraintStart_toEndOf="@id/rate_heading"
                 app:layout_constraintTop_toBottomOf="@id/view3"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/view2"
+
                 android:padding="5dp"
                 android:textSize="16sp"
 

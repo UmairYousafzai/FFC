@@ -76,13 +76,16 @@
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:textColor="@color/black"
                 android:background="@color/white"
                 android:text="@{ medicine.itHead}"
+                android:lines="2"
+                android:maxLines="2"
                 app:layout_constraintStart_toEndOf="@id/title_heading"
                 app:layout_constraintTop_toBottomOf="@id/view"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/view1"
                 android:padding="5dp"
                 android:textSize="16sp"/>
             <View

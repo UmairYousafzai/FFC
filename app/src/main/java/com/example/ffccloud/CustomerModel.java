@@ -8,15 +8,16 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CustomerModel implements Parcelable {
+public class CustomerModel implements  Parcelable {
 
     private int Company_Id;
     private int Country_Id;
+
     private int Location_Id;
     private int Project_Id;
 
     @SerializedName("Supplier_Id")
-    private int partyID;
+    private int Supplier_Id;
     private long userID;
     private long salesManID;
     private String UserTypeName;
@@ -62,46 +63,14 @@ public class CustomerModel implements Parcelable {
     public CustomerModel() {
     }
 
-    public CustomerModel(int company_Id, int country_Id, int location_Id, int project_Id, int partyID, long userID, long salesManID, String userTypeName, String partyCode, String partyName, String partyAbbreviation, String focal_Person, String CNICNo, String sales_Tax_No, String NTN, double cr_Limit, double cr_Limit_Amount, boolean apply_Cr_Limit, String email, String EMail_CC, String EMail_BCC, String contacts, String fax_No, int city_Id, String payee, String address, String instruction, String comments, boolean is_Company, String prompt_Type, List<ContactPersons> contact_PersonsList) {
-        Company_Id = company_Id;
-        Country_Id = country_Id;
-        Location_Id = location_Id;
-        Project_Id = project_Id;
-        this.partyID = partyID;
-        this.userID = userID;
-        this.salesManID = salesManID;
-        UserTypeName = userTypeName;
-        this.partyCode = partyCode;
-        this.partyName = partyName;
-        this.partyAbbreviation = partyAbbreviation;
-        Focal_Person = focal_Person;
-        this.CNICNo = CNICNo;
-        Sales_Tax_No = sales_Tax_No;
-        this.NTN = NTN;
-        Cr_Limit = cr_Limit;
-        Cr_Limit_Amount = cr_Limit_Amount;
-        Apply_Cr_Limit = apply_Cr_Limit;
-        Email = email;
-        this.EMail_CC = EMail_CC;
-        this.EMail_BCC = EMail_BCC;
-        this.contacts = contacts;
-        Fax_No = fax_No;
-        City_Id = city_Id;
-        Payee = payee;
-        Address = address;
-        Instruction = instruction;
-        Comments = comments;
-        Is_Company = is_Company;
-        Prompt_Type = prompt_Type;
-        Contact_PersonsList = contact_PersonsList;
-    }
 
     protected CustomerModel(Parcel in) {
         Company_Id = in.readInt();
         Country_Id = in.readInt();
+
         Location_Id = in.readInt();
         Project_Id = in.readInt();
-        partyID = in.readInt();
+        Supplier_Id = in.readInt();
         userID = in.readLong();
         salesManID = in.readLong();
         UserTypeName = in.readString();
@@ -141,6 +110,8 @@ public class CustomerModel implements Parcelable {
             return new CustomerModel[size];
         }
     };
+
+
 
     public String getMobileNo() {
         return mobileNo;
@@ -198,12 +169,12 @@ public class CustomerModel implements Parcelable {
         Project_Id = project_Id;
     }
 
-    public int getPartyID() {
-        return partyID;
+    public int getSupplier_Id() {
+        return Supplier_Id;
     }
 
-    public void setPartyID(int partyID) {
-        this.partyID = partyID;
+    public void setSupplier_Id(int partyID) {
+        this.Supplier_Id = partyID;
     }
 
     public long getUserID() {
@@ -398,6 +369,7 @@ public class CustomerModel implements Parcelable {
         Is_Company = is_Company;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -409,7 +381,8 @@ public class CustomerModel implements Parcelable {
         dest.writeInt(Country_Id);
         dest.writeInt(Location_Id);
         dest.writeInt(Project_Id);
-        dest.writeInt(partyID);
+
+        dest.writeInt(Supplier_Id);
         dest.writeLong(userID);
         dest.writeLong(salesManID);
         dest.writeString(UserTypeName);
