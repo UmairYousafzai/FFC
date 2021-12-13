@@ -28,7 +28,8 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
     private LayoutInflater layoutInflater;
     private List<GetProductModel> productModelList,productModelListFull;
     private final Fragment fragment;
-    private int key=0;
+    private int key=0, supplierID=0;
+    private String date="";
 
     public GetProductRecyclerAdapter(Fragment fragment) {
         this.fragment = fragment;
@@ -75,7 +76,15 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
         this.key= key;
     }
 
+    public void setSupplierID(int supplierID)
+    {
+        this.supplierID= supplierID;
+    }
 
+    public void setDate(String date)
+    {
+        this.date= date;
+    }
     public  void setProductModelList(List<GetProductModel> list)
     {
         if (list!=null)
@@ -157,10 +166,11 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
 
                     int unitID= (int) productModelList.get(getAdapterPosition()).getUnitId();
 
-                    productModel.setRate(productModelList.get(getAdapterPosition()).getSaleRate());
+                    productModel.setRate((long)productModelList.get(getAdapterPosition()).getSaleRate());
                     productModel.setUnit_Id(unitID);
                     productModel.setTitleProduct(productModelList.get(getAdapterPosition()).getTitle());
                     productModel.setUnitProduct(productModelList.get(getAdapterPosition()).getUnit());
+                    productModel.setItem_Code((int)productModelList.get(getAdapterPosition()).getItCode());
                     NavController navController = NavHostFragment.findNavController(fragment);
 
                     if (key==1)
@@ -169,7 +179,10 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
                         navController.popBackStack();
                     }
                     else {
+                        mBinding.btnAdd.setEnabled(false);
                         AddProductFragmentDirections.ActionAddProductFragmentToProductInfoBottomSheetDialogFragment action = AddProductFragmentDirections.actionAddProductFragmentToProductInfoBottomSheetDialogFragment(productModel);
+                       action.setDate(date);
+                       action.setSupplierId(supplierID);
                         navController.navigate(action);
                     }
 

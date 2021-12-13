@@ -1,14 +1,19 @@
 package com.example.ffccloud.salesOrder.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.ffccloud.GetSaleOrderModel;
 import com.example.ffccloud.databinding.SaleOrderCardBinding;
+import com.example.ffccloud.salesOrder.SalesOrderListFragmentDirections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +23,11 @@ public class SaleOrderAdapter extends RecyclerView.Adapter<SaleOrderAdapter.sale
 
     private LayoutInflater layoutInflater;
     private List<GetSaleOrderModel> getSaleOrderModelList;
+    private Fragment fragment;
 
-    public SaleOrderAdapter() {
+    public SaleOrderAdapter(Fragment fragment) {
 
+        this.fragment = fragment;
         getSaleOrderModelList = new ArrayList<>();
     }
 
@@ -91,6 +98,16 @@ public class SaleOrderAdapter extends RecyclerView.Adapter<SaleOrderAdapter.sale
             super(binding.getRoot());
 
             mBinding = binding;
+            mBinding.btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NavController navController = NavHostFragment.findNavController(fragment);
+                    SalesOrderListFragmentDirections.ActionSalesOrderListFragmentToSaleOrderFormFragment action= SalesOrderListFragmentDirections.actionSalesOrderListFragmentToSaleOrderFormFragment();
+                    action.setSaleOrderId((int)getSaleOrderModelList.get(getAdapterPosition()).getSaleOrderId());
+
+                    navController.navigate(action);
+                }
+            });
 
         }
     }

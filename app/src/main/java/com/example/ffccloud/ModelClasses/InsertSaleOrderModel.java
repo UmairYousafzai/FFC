@@ -7,10 +7,10 @@ import java.util.List;
 
 public class InsertSaleOrderModel {
 
-    @SerializedName("lstSalesOrderDetail ")
+    @SerializedName("lstSalesOrderDetail")
     private List<InsertProductModel> productModelList;
 
-    @SerializedName("lsttermsandcond  ")
+    @SerializedName("lsttermsandcond")
     private List<TermAndConditionModel> termAndConditionModelList;
 
     private int Company_Id;

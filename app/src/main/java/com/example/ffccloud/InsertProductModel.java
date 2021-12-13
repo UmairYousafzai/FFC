@@ -4,7 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class InsertProductModel implements Parcelable{
+
     private int Item_Code;
+    private int Sale_Order_Id;
     private int Unit_Id;
     private double Qty;
     private double Rate;
@@ -26,6 +28,7 @@ public class InsertProductModel implements Parcelable{
 
     protected InsertProductModel(Parcel in) {
         Item_Code = in.readInt();
+        Sale_Order_Id = in.readInt();
         Unit_Id = in.readInt();
         Qty = in.readDouble();
         Rate = in.readDouble();
@@ -39,6 +42,30 @@ public class InsertProductModel implements Parcelable{
         Comments = in.readString();
         titleProduct = in.readString();
         unitProduct = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(Item_Code);
+        dest.writeInt(Sale_Order_Id);
+        dest.writeInt(Unit_Id);
+        dest.writeDouble(Qty);
+        dest.writeDouble(Rate);
+        dest.writeDouble(Amount);
+        dest.writeDouble(Disc_Percentage);
+        dest.writeDouble(Disc_Amount);
+        dest.writeDouble(Discounted_Value);
+        dest.writeDouble(ST_Percentage);
+        dest.writeDouble(ST_Amount);
+        dest.writeDouble(Net_Amount);
+        dest.writeString(Comments);
+        dest.writeString(titleProduct);
+        dest.writeString(unitProduct);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<InsertProductModel> CREATOR = new Creator<InsertProductModel>() {
@@ -165,24 +192,11 @@ public class InsertProductModel implements Parcelable{
         Comments = comments;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getSale_Order_Id() {
+        return Sale_Order_Id;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(Item_Code);
-        dest.writeInt(Unit_Id);
-        dest.writeDouble(Qty);
-        dest.writeDouble(Rate);
-        dest.writeDouble(Amount);
-        dest.writeDouble(Disc_Percentage);
-        dest.writeDouble(Disc_Amount);
-        dest.writeDouble(Discounted_Value);
-        dest.writeDouble(ST_Percentage);
-        dest.writeDouble(ST_Amount);
-        dest.writeDouble(Net_Amount);
-        dest.writeString(Comments);
+    public void setSale_Order_Id(int sale_Order_Id) {
+        Sale_Order_Id = sale_Order_Id;
     }
 }

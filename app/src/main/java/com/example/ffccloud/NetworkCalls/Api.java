@@ -18,10 +18,12 @@ import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.ModelClasses.GetLedgerBalanceModel;
+import com.example.ffccloud.ModelClasses.GetSaleOrderDetail;
 import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.ModelClasses.InsertSaleOrderModel;
 import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.ModelClasses.RateListModel;
 import com.example.ffccloud.ModelClasses.RegionModel;
 import com.example.ffccloud.GetSaleOrderModel;
 import com.example.ffccloud.ModelClasses.SupplierMainModel;
@@ -187,5 +189,22 @@ public interface Api {
                                                  @Query("Location_Id") int Location_Id,
                                                  @Query("Project_Id") int Project_Id,
                                                  @Query("Supplier_Id") int Supplier_Id);
+
+    @GET("api/SalesOrder/Get_RateList")
+    Call<List<RateListModel>> getRateList(@Header("Authorization") String token,
+                                         @Query("Country_Id") int Country_Id,
+                                         @Query("Location_Id") int Location_Id,
+                                         @Query("Project_Id") int Project_Id,
+                                         @Query("Sale_Order_Date") String Sale_Order_Date,
+                                         @Query("Sample_Id") int Sample_Id,
+                                         @Query("Supplier_Id") int Supplier_Id,
+                                         @Query("Item_id") int Item_id);
+
+    @GET("api/SalesOrder/GetByID")
+    Call<GetSaleOrderDetail> getSaleOrderDetail(@Query("Company_Id") int Company_Id,
+                                                      @Query("Location_Id") int Location_Id,
+                                                      @Query("Country_Id") int Country_Id,
+                                                      @Query("Project_Id") int Project_Id,
+                                                      @Query("Sale_Order_Id") int Sale_Order_Id);
 }
 

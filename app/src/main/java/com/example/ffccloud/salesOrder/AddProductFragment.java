@@ -43,7 +43,8 @@ public class AddProductFragment extends Fragment {
     private GetProductRecyclerAdapter adapter;
     private NavController navController;
     private List<InsertProductModel> productModelList=new ArrayList<>();
-    private int key =0;
+    private int key =0,supplierId=0;
+    private String date= "";
 
 
     @Override
@@ -61,6 +62,9 @@ public class AddProductFragment extends Fragment {
 
         assert getArguments() != null;
         key = AddProductFragmentArgs.fromBundle(getArguments()).getKey();
+        supplierId = AddProductFragmentArgs.fromBundle(getArguments()).getSupplierId();
+        date = AddProductFragmentArgs.fromBundle(getArguments()).getDate();
+
     }
 
     @Override
@@ -174,6 +178,8 @@ public class AddProductFragment extends Fragment {
         adapter= new GetProductRecyclerAdapter(this);
         mBinding.productRecyclerView.setAdapter(adapter);
         adapter.setKey(key);
+        adapter.setDate(date);
+        adapter.setSupplierID(supplierId);
     }
 
     public void setPullToFresh() {

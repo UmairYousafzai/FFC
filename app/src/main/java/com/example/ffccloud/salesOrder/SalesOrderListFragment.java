@@ -272,20 +272,18 @@ public class SalesOrderListFragment extends Fragment {
 
 
     public void setPullToFresh() {
-        mBinding.swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {   Calendar calendar = Calendar.getInstance();
-                String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        mBinding.swipeLayout.setOnRefreshListener(() -> {
+            Calendar calendar = Calendar.getInstance();
+            String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 
-                mBinding.swipeLayout.setRefreshing(false);
-                getSalesOrder(0,date,date,0,0,0);
-            }
+            mBinding.swipeLayout.setRefreshing(false);
+            getSalesOrder(0,date,date,0,0,0);
         });
     }
     private void setUpRecyclerView() {
 
         mBinding.salesOrderRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new SaleOrderAdapter();
+        adapter = new SaleOrderAdapter(this);
         mBinding.salesOrderRecyclerView.setAdapter(adapter);
 
 

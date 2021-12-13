@@ -8,11 +8,57 @@
     xmlns:xmnls="http://schemas.android.com/apk/res-auto"
     tools:context=".salesOrder.ProductInfoBottomSheetDialogFragment"
     android:elevation="10dp"
-    android:background="@color/white">
+    android:background="@color/background_color">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:id="@+id/price_type_spinner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/white"
+            android:layout_margin="10dp"
+            android:elevation="5dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:elevation="2dp"
+                android:text="@string/price_list_type"
+                android:textColor="@color/APP_Theme_Color"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+
+            <Spinner
+                android:id="@+id/price_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="5dp"
+                android:elevation="5dp"
+                android:popupElevation="3dp"
+
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                android:layout_marginBottom="5dp"/>
+        </LinearLayout>
+
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/order_quantity_layout"
             android:layout_width="match_parent"
@@ -21,7 +67,7 @@
             android:layout_margin="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/price_type_spinner_layout"
             app:startIconDrawable="@drawable/ic_purchase_order"
             app:startIconTint="@color/APP_Theme_Color"
             xmnls:boxBackgroundColor="@color/white"
@@ -40,6 +86,34 @@
                 android:textColorHint="@color/APP_Theme_Color" />
         </com.google.android.material.textfield.TextInputLayout>
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/rate_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/rate"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/order_quantity_layout"
+            app:startIconDrawable="@drawable/ic_dollar_blue_24"
+            app:startIconTint="@color/APP_Theme_Color"
+            xmnls:boxBackgroundColor="@color/white"
+            xmnls:hintTextColor="@color/APP_Theme_Color">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/APP_Theme_Color" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/amount_layout"
             android:layout_width="match_parent"
@@ -48,7 +122,7 @@
             android:layout_margin="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/order_quantity_layout"
+            app:layout_constraintTop_toBottomOf="@id/rate_layout"
             app:startIconDrawable="@drawable/ic_dollar_blue_24"
             app:startIconTint="@color/APP_Theme_Color"
             xmnls:boxBackgroundColor="@color/white"
@@ -86,7 +160,7 @@
                 android:id="@+id/et_discount_percentage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+
                 android:lines="1"
                 android:maxLines="1"
                 android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
@@ -113,7 +187,8 @@
                 android:id="@+id/et_discount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="none"
+                android:focusable="false"
                 android:lines="1"
                 android:maxLines="1"
                 android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
@@ -140,7 +215,8 @@
                 android:id="@+id/et_discounted_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="none"
+                android:focusable="false"
                 android:lines="1"
                 android:maxLines="1"
                 android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
@@ -167,7 +243,8 @@
                 android:id="@+id/et_gst"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="none"
+                android:focusable="false"
                 android:lines="1"
                 android:maxLines="1"
                 android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
@@ -197,7 +274,8 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:maxLines="1"
-                android:inputType="number"
+                android:inputType="none"
+                android:focusable="false"
                 android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
                 android:singleLine="true"
                 android:textColor="@color/black"
@@ -225,8 +303,8 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:maxLines="1"
-                android:inputType="number"
-                android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
+                android:inputType="none"
+                android:focusable="false"                android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textColorHint="@color/APP_Theme_Color" />
@@ -244,7 +322,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="10dp"
             android:inputType="textMultiLine"
-            android:maxLines="2"
+            android:lines="3"
+            android:maxLines="3"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:drawableStart="@drawable/ic_outline_comment_24"
+            android:drawablePadding="10dp"
              />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancel_btn"

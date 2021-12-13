@@ -595,6 +595,10 @@
         android:name="com.example.ffccloud.salesOrder.SaleOrderFormFragment"
         android:label="Sales Order Form"
         tools:layout="@layout/fragment_sale_order_form" >
+        <argument
+            android:name="saleOrderId"
+            app:argType="integer"
+            android:defaultValue="0" />
         <action
             android:id="@+id/action_saleOrderFormFragment_to_addProductFragment"
             app:destination="@id/addProductFragment"
@@ -623,6 +627,14 @@
             android:name="key"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="supplierId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="date"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
     <dialog
         android:id="@+id/productInfoBottomSheetDialogFragment"
@@ -633,6 +645,14 @@
             android:name="productModel"
             app:argType="com.example.ffccloud.InsertProductModel"
             app:nullable="true" />
+        <argument
+            android:name="date"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="supplierId"
+            app:argType="integer"
+            android:defaultValue="0" />
     </dialog>
     <fragment
         android:id="@+id/addFarmFormFragment"
