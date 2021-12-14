@@ -104,6 +104,7 @@ public class SalesOrderListFragment extends Fragment {
 
         progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
 
         Calendar calendar = Calendar.getInstance();
         String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
@@ -247,10 +248,10 @@ public class SalesOrderListFragment extends Fragment {
                 }
                 if (fromDate!=null&&toDate!=null)
                 {
-                    getSalesOrder(supplierId,fromDate,toDate,0,0,0);
+                    getSalesOrder(supplierId,fromDate,toDate,byStatusKey,byDateKey,byPriorityKey);
                 }else
                 {
-                    getSalesOrder(supplierId,date,date,0,0,0);
+                    getSalesOrder(supplierId,date,date,byStatusKey,byDateKey,byPriorityKey);
                 }
 
 
@@ -293,8 +294,8 @@ public class SalesOrderListFragment extends Fragment {
         progressDialog.show();
 
         Call<List<GetSaleOrderModel>> call = ApiClient.getInstance().getApi().getSalesOrder(1,1,1,1,
-                fromDate
-        ,toDate,supplierID,byStatusKey,byDateKey,byPriorityKey);
+                fromDate,
+                toDate,supplierID,byStatusKey,byDateKey,byPriorityKey);
 
         call.enqueue(new Callback<List<GetSaleOrderModel>>() {
             @Override
@@ -304,6 +305,7 @@ public class SalesOrderListFragment extends Fragment {
                 {
                     if (response.body().size()==0)
                     {
+                        adapter.setGetSaleOrderModelList(response.body());
                         mBinding.tvNothingFound.setVisibility(View.VISIBLE);
                         progressDialog.dismiss();
 

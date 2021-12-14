@@ -84,6 +84,8 @@ public class AddHospitalFragment extends Fragment {
     private String locationAddress;
     private int gradePosition=-1, regionPosition=-1;
     private boolean isLocationChecked=false;
+    private boolean isSpinnerUpdate=false;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,6 +101,16 @@ public class AddHospitalFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
         setUpRecyclerView();
+        getLiveData();
+
+        if (!isSpinnerUpdate)
+        {
+            isSpinnerUpdate=true;
+            getRegion();
+
+        }
+
+
         assert getArguments() != null;
         supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
         if (supplierID > 0&&callingAddBtn==null){
@@ -107,6 +119,9 @@ public class AddHospitalFragment extends Fragment {
             getSupplierByID(supplierID);
         }
 
+    }
+    public void getLiveData()
+    {
         MutableLiveData<GetSupplierModel> doctorsupplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.DOCTOR_SUPPLIER_KEY);
@@ -213,7 +228,6 @@ public class AddHospitalFragment extends Fragment {
 
         setUpGradeSpinner();
         btnListener();
-        getRegion();
 
     }
 

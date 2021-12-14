@@ -64,6 +64,8 @@ public class AddMedicalStoreFragment extends Fragment {
     private String locationAddress;
     private int supplierID;
     private String callingAddBtn;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

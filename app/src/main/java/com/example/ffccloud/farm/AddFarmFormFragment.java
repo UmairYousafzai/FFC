@@ -74,6 +74,7 @@ public class AddFarmFormFragment extends Fragment {
     private List<GetSupplierModel> supplierDetailModelList= new ArrayList<>();
     private SupplierRecyclerViewAdapter supplierRecyclerViewAdapter;
     private String callingAddBtn;
+    private boolean isSpinnerUpdate=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,10 +87,15 @@ public class AddFarmFormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = NavHostFragment.findNavController(this);
+        if (!isSpinnerUpdate)
+        {
+            isSpinnerUpdate=true;
+            setupAnimalSpinner();
+            getRegion();
+        }
 
-        getRegion();
         setUpRecyclerView();
-
+        getLiveData();
         assert getArguments() != null;
         supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
         if (supplierID > 0&&callingAddBtn==null){
@@ -97,6 +103,37 @@ public class AddFarmFormFragment extends Fragment {
             //setup fields if edit request has been made
             getSupplierByID(supplierID);
         }
+
+
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (callingAddBtn!=null)
+        {
+            medicineAdapter.setMedicineModalList(medicineModalList);
+            supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
+            contactRecyclerAdapter.setContactPersonsList(contactPersonsList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, animalArrayList);
+            mBinding.animalSpinner.setAdapter(adapter);
+            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+            mBinding.regionSpinner.setAdapter(adapter1);
+        }
+        btnListener();
+
+
+
+
+
+    }
+
+    public void getLiveData()
+    {
+
         MutableLiveData<GetSupplierModel> supplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.DOCTOR_SUPPLIER_KEY);
@@ -116,6 +153,7 @@ public class AddFarmFormFragment extends Fragment {
 
             }
         });
+
         MutableLiveData<InsertProductModel> productLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.PRODUCT_MODEL);
@@ -144,30 +182,6 @@ public class AddFarmFormFragment extends Fragment {
 
             }
         });
-    }
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (callingAddBtn!=null)
-        {
-            medicineAdapter.setMedicineModalList(medicineModalList);
-            supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
-            contactRecyclerAdapter.setContactPersonsList(contactPersonsList);
-
-
-        }
-        btnListener();
-
-        setupAnimalSpinner();
-        getRegion();
-
-
-
-
     }
 
     private void getSupplierByID(int supplierID) {

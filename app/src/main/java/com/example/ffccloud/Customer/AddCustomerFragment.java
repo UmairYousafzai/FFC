@@ -212,7 +212,7 @@ public class AddCustomerFragment extends Fragment {
                         customerModel.setPartyAbbreviation( Objects.requireNonNull(mBinding.etPartAbbreviation.getText()).toString());
 
 
-                        apiCallforsavingCustomer(customerModel);
+                        apiCallForSavingCustomer(customerModel);
                     }
                     else
                     {
@@ -235,20 +235,29 @@ public class AddCustomerFragment extends Fragment {
 
     }
 
-    private void apiCallforsavingCustomer(CustomerModel customerModel) {
+    private void apiCallForSavingCustomer(CustomerModel customerModel) {
+
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
         Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertCustomer(customerModel);
 
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response!=null)
+                if (response.body()!=null)
                 {
                     UpdateStatus updateStatus = response.body();
                     Toast.makeText(requireContext(), updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else
                 {
                     Toast.makeText(requireContext(), " " +response.errorBody(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+
                 }
 
             }
@@ -256,6 +265,7 @@ public class AddCustomerFragment extends Fragment {
             @Override
             public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
                 Toast.makeText(requireContext(), " on Failure" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
 
             }
         });

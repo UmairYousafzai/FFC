@@ -83,11 +83,12 @@ public class AddDoctorFragment extends Fragment {
     private final List<SupplierItemLinking> medicineModalList= new ArrayList<>();
     private int supplierID;
     private String callingAddBtn;
+    private boolean isSpinnerUpdate=false;
 
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
@@ -100,8 +101,19 @@ public class AddDoctorFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         navController = NavHostFragment.findNavController(this);
+
         setUpRecyclerView();
         getUserSyncData();
+        getLiveData();
+
+
+        if (!isSpinnerUpdate)
+        {
+            isSpinnerUpdate=true;
+            getRegion();
+        }
+
+
         assert getArguments() != null;
         supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
         if (supplierID > 0&&callingAddBtn==null){
@@ -109,6 +121,11 @@ public class AddDoctorFragment extends Fragment {
             //setup fields if edit request has been made
             getSupplierByID(supplierID);
         }
+
+    }
+
+    public void getLiveData()
+    {
         MutableLiveData<InsertProductModel> liveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.PRODUCT_MODEL);
@@ -126,7 +143,8 @@ public class AddDoctorFragment extends Fragment {
                     medicineModalList.add(medicineModal);
                     medicineAdapter.setMedicineModalList(medicineModalList);
 
-
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                    mBinding.spinnerRegion.setAdapter(adapter);
                 }
 
 
@@ -149,7 +167,6 @@ public class AddDoctorFragment extends Fragment {
         }
         btnListener();
 
-        getRegion();
     }
 
     private void setUpRecyclerView() {
@@ -336,7 +353,14 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
             if (phone.length() > 0) {
                 if (address.length() > 0) {
                     if (regionList.size()>0) {
-                        region = regionHashmap.get(mBinding.spinnerRegion.getSelectedItem().toString());
+                        try {
+                            region = regionHashmap.get(mBinding.spinnerRegion.getSelectedItem().toString());
+
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 

@@ -117,7 +117,9 @@ public class AddProductFragment extends Fragment {
 
          ProgressDialog progressDialog = new ProgressDialog(requireContext());
          progressDialog.setMessage("Loading...");
-         progressDialog.show();
+        progressDialog.setCancelable(false);
+
+        progressDialog.show();
 
 
         String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();

@@ -76,6 +76,7 @@ public class SaleOrderFormFragment extends Fragment {
     private int saleOrderID = 0,supplierID=0,ledgerBalance=0,creditLimit=0;
     private boolean flag= false;
     private List<TermAndConditionModel> termAndConditionModelList= new ArrayList<>();
+    private boolean isSpinnerUpdate=false;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -93,16 +94,37 @@ public class SaleOrderFormFragment extends Fragment {
 
 
         progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setCancelable(false);
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         bottomSheetBehavior = BottomSheetBehavior.from(mBinding.bottomSheet.getRoot());
         navController = NavHostFragment.findNavController(this);
 
+        if (!isSpinnerUpdate)
+        {
+            isSpinnerUpdate=true;
+            setUpSpinners();
+
+        }
+
         setUpRecyclerView();
         setUpBottomSheet();
         bottomSheetBtnListener();
-        setUpSpinners();
+        getLiveData();
 
+
+        saleOrderID = SaleOrderFormFragmentArgs.fromBundle(getArguments()).getSaleOrderId();
+        if (saleOrderID!=0 && !flag)
+        {
+            flag=true;
+            getSaleOrder();
+
+        }
+
+
+    }
+    public void getLiveData()
+    {
         MutableLiveData<CustomerModel> customerModelMutableLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.CUSTOMER_KEY);
@@ -114,6 +136,8 @@ public class SaleOrderFormFragment extends Fragment {
                     mBinding.tvSelectCustomer.setText(customerModel.getPartyName());
                     supplierID= customerModel.getSupplier_Id();
                     getLedgerBalance();
+                    setUpAgain();
+
                 }
 
 
@@ -127,18 +151,10 @@ public class SaleOrderFormFragment extends Fragment {
             public void onChanged(List<InsertProductModel> insertProductModels) {
                 productModelList.addAll(insertProductModels);
                 adapter.setProductModelList(productModelList);
+                setUpAgain();
+
             }
         });
-
-        saleOrderID = SaleOrderFormFragmentArgs.fromBundle(getArguments()).getSaleOrderId();
-        if (saleOrderID!=0 && !flag)
-        {
-            flag=true;
-            getSaleOrder();
-        }
-
-        setUpAgain();
-
     }
 
     private void setUpAgain() {
@@ -146,6 +162,11 @@ public class SaleOrderFormFragment extends Fragment {
         mBinding.tvCreditLimit.setText(String.valueOf(creditLimit));
         mBinding.tvSalesOrderDate.setText(saleOrderDate);
         mBinding.tvDeliveryDate.setText(saleOrderDate);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
+        mBinding.prioritySpinner.setAdapter(adapter2);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, deliverModeList);
+        mBinding.deliverModeSpinner.setAdapter(adapter);
 
         int i=0;
         for (TermAndConditionModel model: termAndConditionModelList)
@@ -328,6 +349,7 @@ public class SaleOrderFormFragment extends Fragment {
     public void getSaleOrder()
     {
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
         Call<GetSaleOrderDetail> call = ApiClient.getInstance().getApi().getSaleOrderDetail(1,1,1,1,saleOrderID);
 
@@ -406,6 +428,7 @@ public class SaleOrderFormFragment extends Fragment {
     private void saveSaleOrder() {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
 

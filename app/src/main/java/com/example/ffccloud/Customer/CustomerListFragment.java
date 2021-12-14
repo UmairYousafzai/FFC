@@ -52,6 +52,7 @@ public class CustomerListFragment extends Fragment {
 
         progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         navController = NavHostFragment.findNavController(this);
