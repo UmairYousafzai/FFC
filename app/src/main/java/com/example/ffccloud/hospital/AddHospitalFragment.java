@@ -88,7 +88,7 @@ public class AddHospitalFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = FragmentAddHospitalBinding.inflate(inflater,container,false);
@@ -204,6 +204,12 @@ public class AddHospitalFragment extends Fragment {
 
         if (callingAddBtn!=null)
         {
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+            mBinding.regionSpinner.setAdapter(adapter);
+
+            ArrayAdapter<String> gradingAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item,gradeArray);
+            mBinding.spinnerGrade.setAdapter(gradingAdapter);
             medicineAdapter.setMedicineModalList(medicineModalList);
             doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
             farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
@@ -263,7 +269,15 @@ public class AddHospitalFragment extends Fragment {
                 {
                     if (regionList.size()>0) {
 
-                        int region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
+                        int region=0;
+                        try {
+                             region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
+
+                        } catch (Exception e)
+                        {
+                            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
                         callingAddBtn= "";
                         callingAddBtn= "FarmAddBtn";
                         farmRecyclerViewAdapter.setCalledSupplier("Farm");

@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -204,18 +205,19 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
 
                 try {
-                    productModel.setAmount(Long.parseLong(mBinding.etAmount.getText().toString()));
+                    productModel.setAmount(Long.parseLong(Objects.requireNonNull(mBinding.etAmount.getText()).toString()));
                     productModel.setComments(mBinding.etComment.getText().toString());
-                    productModel.setDisc_Amount(Long.parseLong(mBinding.etDiscount.getText().toString()));
-                    productModel.setDisc_Percentage(Long.parseLong(mBinding.etDiscountPercentage.getText().toString()));
-                    productModel.setDiscounted_Value(Long.parseLong(mBinding.etDiscountedValue.getText().toString()));
-                    productModel.setNet_Amount(Long.parseLong(mBinding.etNetAmount.getText().toString()));
-                    productModel.setQty(Long.parseLong(mBinding.etOrderQuantity.getText().toString()));
-                    productModel.setST_Amount(Long.parseLong(mBinding.etGst.getText().toString()));
-                    productModel.setST_Percentage(Long.parseLong(mBinding.etGstPercentage.getText().toString()));
+                    productModel.setDisc_Amount(Long.parseLong(Objects.requireNonNull(mBinding.etDiscount.getText()).toString()));
+                    productModel.setDisc_Percentage(Long.parseLong(Objects.requireNonNull(mBinding.etDiscountPercentage.getText()).toString()));
+                    productModel.setDiscounted_Value(Long.parseLong(Objects.requireNonNull(mBinding.etDiscountedValue.getText()).toString()));
+                    productModel.setNet_Amount(Long.parseLong(Objects.requireNonNull(mBinding.etNetAmount.getText()).toString()));
+                    productModel.setQty(Long.parseLong(Objects.requireNonNull(mBinding.etOrderQuantity.getText()).toString()));
+                    productModel.setST_Amount(Long.parseLong(Objects.requireNonNull(mBinding.etGst.getText()).toString()));
+                    productModel.setST_Percentage(Long.parseLong(Objects.requireNonNull(mBinding.etGstPercentage.getText()).toString()));
                     productModel.setItem_Code(productModel.getItem_Code());
+                    productModel.setRate(Double.parseDouble(Objects.requireNonNull(mBinding.etRate.getText()).toString()));
 
-                    navController.getPreviousBackStackEntry().getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL,productModel);
+                    Objects.requireNonNull(navController.getPreviousBackStackEntry()).getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL,productModel);
 
                     navController.popBackStack();
                 }

@@ -148,43 +148,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 />
-            <TextView
-                android:id="@+id/rate_heading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rate"
-                android:textColor="@color/APP_Theme_Color"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:background="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view3"
-                android:padding="5dp"
 
-                />
-            <TextView
-                android:id="@+id/tv_rate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:background="@color/white"
-                android:text="@{String.valueOf(product.saleRate)}"
-                app:layout_constraintStart_toEndOf="@id/rate_heading"
-                app:layout_constraintTop_toBottomOf="@id/view3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/view2"
-
-                android:padding="5dp"
-                android:textSize="16sp"
-
-                />
 
             <View
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="@color/APP_Theme_Color"
-                app:layout_constraintTop_toBottomOf="@id/tv_rate"
+                app:layout_constraintTop_toBottomOf="@id/view3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 />
