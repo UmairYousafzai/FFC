@@ -25,21 +25,18 @@ import java.util.List;
 
 public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMorningRecyclerAdapter.DoctorMorningViewHolder> {
 
-    private Context mContext;
-    private List<DoctorModel> doctorModelList;
+    private final Context mContext;
+    private final List<DoctorModel> doctorModelList;
     private LayoutInflater layoutInflater;
     private int flag=0;
-    private RecyclerOnItemClickListener mListener;
-    private CustomLocation customLocation;
-    private Activity activity;
+    private final RecyclerOnItemClickListener mListener;
     private Location currrentLocation;
     private ProgressDialog progressDialog;
     public DoctorMorningRecyclerAdapter(Context mContext, RecyclerOnItemClickListener mListener, Activity activity) {
         this.mContext = mContext;
         doctorModelList= new ArrayList<>();
         this.mListener = mListener;
-        customLocation= new CustomLocation(mContext);
-        this.activity = activity;
+        CustomLocation customLocation = new CustomLocation(mContext);
         CustomLocation.CustomLocationResults results= new CustomLocation.CustomLocationResults() {
             @Override
             public void gotLocation(Location location) {
@@ -122,7 +119,7 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
         {
             return 1;
         }
-        else if (flag==0 && doctorModelList.size()==0)
+        else if (flag == 0)
         {
             return doctorModelList.size();
         }
@@ -167,9 +164,7 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
     }
     public void removeItem(DoctorModel doctorModel)
     {
-        if (doctorModelList.contains(doctorModel)) {
-            doctorModelList.remove(doctorModel);
-        }
+        doctorModelList.remove(doctorModel);
         notifyDataSetChanged();
     }
 

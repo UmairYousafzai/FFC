@@ -262,7 +262,9 @@ public class AddworkPlanFragment extends Fragment {
 
 
                     }
-                    action.setRegionID(regionHashmap.get(mBinding.regionSpinner.getText().toString()));
+
+                    int regionId =regionHashmap.get(mBinding.regionSpinner.getText().toString())==null?0 :regionHashmap.get(mBinding.regionSpinner.getText().toString());
+                    action.setRegionID(regionId);
                     navController.navigate(action);
                     isDoctorDialogOpen = true;
                 }

@@ -1,6 +1,6 @@
 package com.example.ffccloud.Target.utils;
 
-import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -16,34 +16,30 @@ import java.util.concurrent.Executors;
 
 public class TargetRepository {
 
-    private FfcDAO mDao;
-    Application application;
+    private final FfcDAO mDao;
+    Context mContext;
     private final LiveData<List<DoctorModel>> allMorningDoctors;
     private final LiveData<List<DoctorModel>> allEveningDoctors;
-    private  LiveData<List<DoctorModel>> allEveningDoctorsByDate;
-    private  LiveData<List<DoctorModel>> allMorningDoctorsByDate;
-    private  LiveData<List<DoctorModel>> allDoctors;
-    private Executor executor= Executors.newSingleThreadExecutor();
-    private Handler handler= new Handler(Looper.getMainLooper());
+    private final LiveData<List<DoctorModel>> allDoctors;
+    private final Executor executor= Executors.newSingleThreadExecutor();
+    private final Handler handler= new Handler(Looper.getMainLooper());
 
-    public TargetRepository(Application application) {
-        FfcDatabase database = FfcDatabase.getInstance(application);
+    public TargetRepository(Context context) {
+        FfcDatabase database = FfcDatabase.getInstance(context);
         mDao = database.dao();
-        this.application = application;
+        this.mContext = context;
         allMorningDoctors = mDao.getAllMorningDoctors();
         allEveningDoctors = mDao.getAllEveningDoctors();
-        allDoctors = mDao.getAllWorkPlanDocotors();
+        allDoctors = mDao.getAllWorkPlanDoctors();
 
     }
 
     public LiveData<List<DoctorModel>> getAllEveningDoctorsByDate(String date) {
-        allEveningDoctorsByDate= mDao.getEveninggDoctorByDate(date);
-        return allEveningDoctorsByDate;
+        return mDao.getEveningDoctorByDate(date);
     }
 
     public LiveData<List<DoctorModel>> getAllMorningDoctorsByDate(String date) {
-        allMorningDoctorsByDate = mDao.getMorningDoctorByDate(date);
-        return allMorningDoctorsByDate;
+        return mDao.getMorningDoctorByDate(date);
     }
 
     public void InsertDoctor(List<DoctorModel> list) {

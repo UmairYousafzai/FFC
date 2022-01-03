@@ -14,14 +14,14 @@ import com.google.gson.annotations.SerializedName;
 public class DoctorModel implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    int dotorId_pk;
+    private  int dotorId_pk;
 
     @SerializedName("Work_Id")
     @Expose
     private long workId;
     @SerializedName("Doctor_Id")
     @Expose
-    private long doctorId;
+    private int doctorId;
     @SerializedName("Name")
     @Expose
     private String name;
@@ -82,10 +82,11 @@ public class DoctorModel implements Parcelable {
     public DoctorModel() {
     }
 
+
     protected DoctorModel(Parcel in) {
         dotorId_pk = in.readInt();
         workId = in.readLong();
-        doctorId = in.readLong();
+        doctorId = in.readInt();
         name = in.readString();
         phone = in.readString();
         email = in.readString();
@@ -105,6 +106,36 @@ public class DoctorModel implements Parcelable {
         workDate = in.readString();
         WorkTime = in.readString();
         distance = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(dotorId_pk);
+        dest.writeLong(workId);
+        dest.writeInt(doctorId);
+        dest.writeString(name);
+        dest.writeString(phone);
+        dest.writeString(email);
+        dest.writeString(profileImage);
+        dest.writeString(qualification);
+        dest.writeString(classification);
+        dest.writeString(address);
+        dest.writeByte((byte) (marked == null ? 0 : marked ? 1 : 2));
+        dest.writeString(remarks);
+        dest.writeString(coordinates);
+        dest.writeString(shift);
+        dest.writeString(area);
+        dest.writeString(fromDate);
+        dest.writeString(toDate);
+        dest.writeString(status);
+        dest.writeString(workDate);
+        dest.writeString(WorkTime);
+        dest.writeString(distance);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<DoctorModel> CREATOR = new Creator<DoctorModel>() {
@@ -159,11 +190,11 @@ public class DoctorModel implements Parcelable {
         this.workId = workId;
     }
 
-    public long getDoctorId() {
+    public int getDoctorId() {
         return doctorId;
     }
 
-    public void setDoctorId(long doctorId) {
+    public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
     }
 
@@ -287,33 +318,5 @@ public class DoctorModel implements Parcelable {
         this.dotorId_pk = dotorId_pk;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(dotorId_pk);
-        dest.writeLong(workId);
-        dest.writeLong(doctorId);
-        dest.writeString(name);
-        dest.writeString(phone);
-        dest.writeString(email);
-        dest.writeString(profileImage);
-        dest.writeString(qualification);
-        dest.writeString(classification);
-        dest.writeString(address);
-        dest.writeByte((byte) (marked == null ? 0 : marked ? 1 : 2));
-        dest.writeString(remarks);
-        dest.writeString(coordinates);
-        dest.writeString(shift);
-        dest.writeString(area);
-        dest.writeString(fromDate);
-        dest.writeString(toDate);
-        dest.writeString(status);
-        dest.writeString(workDate);
-        dest.writeString(WorkTime);
-        dest.writeString(distance);
-    }
 }

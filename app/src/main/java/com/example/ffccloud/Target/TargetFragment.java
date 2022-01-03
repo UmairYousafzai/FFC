@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -23,6 +25,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
@@ -38,6 +46,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.ffccloud.DoctorModel;
+import com.example.ffccloud.MainActivity;
 import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
 import com.example.ffccloud.ModelClasses.UpdateWorkPlanStatus;
@@ -50,13 +59,18 @@ import com.example.ffccloud.databinding.CustomCancelDialogBinding;
 import com.example.ffccloud.databinding.CustomRescheduleDialogBinding;
 import com.example.ffccloud.databinding.FragmentTargetBinding;
 import com.example.ffccloud.utils.CONSTANTS;
+import com.example.ffccloud.utils.SaveData;
 import com.example.ffccloud.utils.SyncDataToDB;
 import com.example.ffccloud.Target.utils.TargetViewModel;
 
 import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.RecyclerOnItemClickListener;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
+import com.example.ffccloud.worker.UploadWorker;
+import com.example.ffccloud.worker.utils.UploadDataRepository;
 import com.vivekkaushik.datepicker.OnDateSelectedListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,13 +96,14 @@ public class TargetFragment extends Fragment {
     private Location location;
     private AlertDialog alertDialog;
     private int selectedDay, selectedMonth, selectedYear;
-    private String selectedDate = "",remarksForCancel="",remarksForReschedule="";
+    private String selectedDate = "", remarksForCancel = "", remarksForReschedule = "";
     private Calendar calendar;
     private final boolean mic_check = false;
     private CustomCancelDialogBinding dialogBinding;
     private CustomRescheduleDialogBinding rescheduleDialogBinding;
     private SweetAlertDialog sweetAlertDialog;
     private NavController navController;
+    private UploadDataRepository uploadDataRepository;
 
 
     @Override
@@ -103,7 +118,7 @@ public class TargetFragment extends Fragment {
 
         DoctorViewModel doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
         doctorViewModel.deleteAllSchedule();
-        navController= NavHostFragment.findNavController(this);
+        navController = NavHostFragment.findNavController(this);
         calendar = Calendar.getInstance();
 
         return viewRoot;
@@ -114,6 +129,7 @@ public class TargetFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(view);
         targetViewModel = new ViewModelProvider(requireActivity()).get(TargetViewModel.class);
+        uploadDataRepository = new UploadDataRepository(requireContext());
         Log.e("onviewCreated", "on view created me ha me ha ");
 
 //        try {
@@ -123,7 +139,6 @@ public class TargetFragment extends Fragment {
 //        {
 //            Toast.makeText(getActivity(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
 //        }
-
 
 
     }
@@ -173,7 +188,6 @@ public class TargetFragment extends Fragment {
     }
 
 
-
     public void setUpRecyclerView() {
 
         morningListAdapter = new DoctorMorningRecyclerAdapter(getContext(), new RecyclerOnItemClickListener() {
@@ -215,6 +229,18 @@ public class TargetFragment extends Fragment {
 
         mbinding.targetRecycler.docListmorningRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mbinding.targetRecycler.docListRecyclerEvening.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        DoctorModel doctorModel= new DoctorModel();
+//        doctorModel.setAddress("lahore");
+//        doctorModel.setClassification("Abc");
+//        doctorModel.setDistance("29");
+//        doctorModel.setEmail("abc@gmail.com");
+//        doctorModel.setName("khan");
+//        List<DoctorModel> doctorModels= new ArrayList<>();
+//        doctorModels.add(doctorModel);
+        mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
+        mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
+
+//        eveningListAdapter.setDoctorModelList(doctorModels);
         eveningListAdapter.notifyDataSetChanged();
         morningListAdapter.notifyDataSetChanged();
     }
@@ -231,7 +257,7 @@ public class TargetFragment extends Fragment {
 
         int checkmonth = (selectedMonth % 10);
         int checkday = (selectedDay % 10);
-        String mDay , mMonth , mYear = String.valueOf(selectedYear);
+        String mDay, mMonth, mYear = String.valueOf(selectedYear);
         if (checkmonth > 0 && selectedMonth < 9) {
             mMonth = "0" + (selectedMonth + 1);
             //          date = day + "-" + "0" + (month + 1) + "-" + (year);
@@ -253,8 +279,7 @@ public class TargetFragment extends Fragment {
 
         mbinding.datePickerTimeline.setSelected(true);
         mbinding.datePickerTimeline.requestFocus();
-        String date = mDay + "-" + mMonth + "-" + mYear;
-
+        String date = mDay + "/" + mMonth + "/" + mYear;
         Log.e("DateTag", "Date is:" + date);
         if (selectedDate.equals("")) {
             cldr.set(selectedYear, selectedMonth, selectedDay);
@@ -301,7 +326,7 @@ public class TargetFragment extends Fragment {
                     mDay = String.valueOf(day);
 
                 }
-                date = mDay + "-" + (mMonth) + "-" + (mYear);
+                date = mDay + "/" + mMonth + "/" + mYear;
 
                 selectedDate = date;
                 Log.d("date", "date select ho rai hai");
@@ -326,8 +351,7 @@ public class TargetFragment extends Fragment {
         targetViewModel.getAllEveningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                if (list.size()>0) {
-                    mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
+                if (list.size() > 0) {
 
                     eveningListAdapter.setDoctorModelList(list);
                 } else {
@@ -341,8 +365,7 @@ public class TargetFragment extends Fragment {
         targetViewModel.getAllMorningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                if (list.size()>0) {
-                    mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
+                if (list.size() > 0) {
                     morningListAdapter.setDoctorModelList(list);
                     morningListAdapter.notifyDataSetChanged();
                 } else {
@@ -351,7 +374,6 @@ public class TargetFragment extends Fragment {
 
             }
         });
-
 
 
     }
@@ -417,16 +439,53 @@ public class TargetFragment extends Fragment {
             @Override
             public void onRefresh() {
                 if (isLocationEnabled()) {
-                    mbinding.targetRecycler.swipeLayout.setRefreshing(false);
+                    List<UpdateWorkPlanStatus> updateWorkPlanStatusList = new ArrayList<>();
+                    updateWorkPlanStatusList = uploadDataRepository.getAllWorkPlanStatus();
+                    List<AddNewWorkPlanModel> addNewWorkPlanModelList = new ArrayList<>();
+                    addNewWorkPlanModelList = uploadDataRepository.getAllWorkPlan();
+                    if (isNetworkConnected())
+                    {
+                        if (updateWorkPlanStatusList.size()>0)
+                        {
+                            SaveData.getInstance(requireContext()).SaveWorkPlanStatus();
+                            mbinding.targetRecycler.swipeLayout.setRefreshing(false);
+                        }
+                        else
+                        {
+                            mbinding.targetRecycler.swipeLayout.setRefreshing(false);
 
-                    int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
+                            int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
-                    targetViewModel.DeleteAllDoctor();
-                    SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext());
-                    String errorMessage = syncDataToDB.saveDoctorsList(id);
-                    if (!errorMessage.equals("")) {
+                            targetViewModel.DeleteAllDoctor();
+                            SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext());
+                            syncDataToDB.saveDoctorsList(id);
+                        }
 
+                        if (addNewWorkPlanModelList.size()>0)
+                        {
+                            SaveData.getInstance(requireContext()).saveWorkPlan();
+                            mbinding.targetRecycler.swipeLayout.setRefreshing(false);
+                        }
+                        else
+                        {
+                            if (updateWorkPlanStatusList.size()>0)
+                            {
+                                mbinding.targetRecycler.swipeLayout.setRefreshing(false);
+
+                                int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
+
+                                targetViewModel.DeleteAllDoctor();
+                                SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext());
+                                syncDataToDB.saveDoctorsList(id);
+                            }
+                        }
                     }
+                    else
+                    {
+                        Toast.makeText(requireContext(), "Please Connect To Internet", Toast.LENGTH_SHORT).show();
+                    }
+
+
                 } else {
 
                     new SweetAlertDialog(requireContext())
@@ -488,7 +547,7 @@ public class TargetFragment extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    remarksForCancel=s.toString();
+                    remarksForCancel = s.toString();
 
                 }
             });
@@ -516,7 +575,7 @@ public class TargetFragment extends Fragment {
                 public void onClick(View v) {
                     dialogBinding.saveRemarksBtn.setEnabled(false);
                     String check = dialogBinding.remarksEdittext.getText().toString();
-                    sweetAlertDialog= new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
+                    sweetAlertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
                     sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
                     sweetAlertDialog.setTitleText("Loading");
                     sweetAlertDialog.setCancelable(false);
@@ -547,37 +606,49 @@ public class TargetFragment extends Fragment {
                             }
 
                             list.add(updateWorkPlanStatus);
-                            Call<UpdateStatus> call = ApiClient.getInstance().getApi().UpdateWorkPlanStatus(token, "application/json", list);
-                            call.enqueue(new Callback<UpdateStatus>() {
-                                @Override
-                                public void onResponse(Call<UpdateStatus> call, Response<UpdateStatus> response) {
+                            if (isNetworkConnected()) {
+                                Call<UpdateStatus> call = ApiClient.getInstance().getApi().UpdateWorkPlanStatus(token, "application/json", list);
+                                call.enqueue(new Callback<UpdateStatus>() {
+                                    @Override
+                                    public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
 
-                                    if (response.body() != null) {
+                                        if (response.body() != null) {
 
 
-                                        UpdateStatus updateStatus = response.body();
-                                        Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
-                                        eveningListAdapter.removeItem(doctorModel);
-                                        morningListAdapter.removeItem(doctorModel);
-                                        dialogBinding.saveRemarksBtn.setEnabled(true);
+                                            UpdateStatus updateStatus = response.body();
+                                            Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
+                                            eveningListAdapter.removeItem(doctorModel);
+                                            morningListAdapter.removeItem(doctorModel);
+                                            dialogBinding.saveRemarksBtn.setEnabled(true);
 
-                                        targetViewModel.DeleteDoctor(doctorModel);
-                                        sweetAlertDialog.dismiss();
-                                        alertDialog.dismiss();
+                                            targetViewModel.DeleteDoctor(doctorModel);
+                                            sweetAlertDialog.dismiss();
+                                            alertDialog.dismiss();
+                                        } else {
+                                            sweetAlertDialog.dismiss();
+                                        }
+
+
                                     }
-                                    else {
+
+                                    @Override
+                                    public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
                                         sweetAlertDialog.dismiss();
+                                        t.getMessage();
                                     }
+                                });
+                            } else {
+                                eveningListAdapter.removeItem(doctorModel);
+                                morningListAdapter.removeItem(doctorModel);
+                                dialogBinding.saveRemarksBtn.setEnabled(true);
 
+                                targetViewModel.DeleteDoctor(doctorModel);
+                                sweetAlertDialog.dismiss();
+                                alertDialog.dismiss();
+                                uploadDataRepository.insertWorkPlanStatus(updateWorkPlanStatus);
+                                generateWorkRequest(CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN);
+                            }
 
-                                }
-
-                                @Override
-                                public void onFailure(Call<UpdateStatus> call, Throwable t) {
-                                    sweetAlertDialog.dismiss();
-                                    t.getMessage();
-                                }
-                            });
                         } else {
                             Toast.makeText(getActivity(), "Please turn on location", Toast.LENGTH_LONG).show();
                         }
@@ -658,7 +729,7 @@ public class TargetFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                remarksForReschedule = remarksForReschedule+s.toString();
+                remarksForReschedule = remarksForReschedule + s.toString();
 
             }
         });
@@ -675,8 +746,7 @@ public class TargetFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        if ((dayOfMonth-mday)>=0 && (month-mmonth)>=0)
-                        {
+                        if ((dayOfMonth - mday) >= 0 && (month - mmonth) >= 0) {
 
                             int checkMonth = month % 10, checkday = (dayOfMonth % 10);
                             ;
@@ -698,12 +768,9 @@ public class TargetFragment extends Fragment {
                             String mDate = mMonth + "/" + mDay + "/" + year;
                             rescheduleDialogBinding.textDate.setText(mDate);
 
-                        }
-                        else
-                        {
+                        } else {
                             rescheduleDialogBinding.textDate.setError("Select date forward from current date");
                         }
-
 
 
                     }
@@ -732,61 +799,87 @@ public class TargetFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                rescheduleDialogBinding.saveBtn.setEnabled(false);
-                String remarkCheck = rescheduleDialogBinding.remarksEdittext.getText().toString();
-                String dateCheck = rescheduleDialogBinding.textDate.getText().toString();
-                String timeCheck = rescheduleDialogBinding.textTime.getText().toString();
-                sweetAlertDialog= new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-                sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-                sweetAlertDialog.setTitleText("Loading");
-                sweetAlertDialog.setCancelable(false);
-                sweetAlertDialog.show();
-                if (!remarkCheck.equals("") && !dateCheck.equals("") && !timeCheck.equals("")) {
-                    int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
-                    String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
-                    AddNewWorkPlanModel addNewWorkPlanModel = new AddNewWorkPlanModel();
-                    addNewWorkPlanModel.setDoctorId(doctorModel.getDoctorId());
-                    addNewWorkPlanModel.setEmpId(userId);
-                    addNewWorkPlanModel.setRemarks1(remarkCheck);
-                    String dateTime = dateCheck + " " + timeCheck;
-                    addNewWorkPlanModel.setWorkFromDate(dateTime);
-                    addNewWorkPlanModel.setWorkToDate(dateTime);
-                    addNewWorkPlanModel.setWorkPlan("Meeting");
-                    addNewWorkPlanModel.setWorkId(doctorModel.getWorkId());
+                try {
+                    rescheduleDialogBinding.saveBtn.setEnabled(false);
+                    String remarkCheck = rescheduleDialogBinding.remarksEdittext.getText().toString();
+                    String dateCheck = rescheduleDialogBinding.textDate.getText().toString();
+                    String timeCheck = rescheduleDialogBinding.textTime.getText().toString();
+                    sweetAlertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
+                    sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
+                    sweetAlertDialog.setTitleText("Loading");
+                    sweetAlertDialog.setCancelable(false);
+                    sweetAlertDialog.show();
+                    if (!remarkCheck.equals("") && !dateCheck.equals("") && !timeCheck.equals("")) {
+                        int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
+                        String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
+                        AddNewWorkPlanModel addNewWorkPlanModel = new AddNewWorkPlanModel();
+                        addNewWorkPlanModel.setDoctorId(doctorModel.getDoctorId());
+                        addNewWorkPlanModel.setEmpId(userId);
+                        addNewWorkPlanModel.setRemarks1(remarkCheck);
+                        String dateTime = dateCheck + " " + timeCheck;
+                        addNewWorkPlanModel.setWorkFromDate(dateTime);
+                        addNewWorkPlanModel.setWorkToDate(dateTime);
+                        addNewWorkPlanModel.setWorkPlan("Meeting");
+                        addNewWorkPlanModel.setWorkId(doctorModel.getWorkId());
+
+                        if (isNetworkConnected())
+                        {
+                            Call<UpdateStatus> call = ApiClient.getInstance().getApi().RescheduleWorkPlan(token, addNewWorkPlanModel);
+                            call.enqueue(new Callback<UpdateStatus>() {
+                                @Override
+                                public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+
+                                    if (response.body() != null) {
 
 
-                    Call<UpdateStatus> call = ApiClient.getInstance().getApi().RescheduleWorkPlan(token, addNewWorkPlanModel);
-                    call.enqueue(new Callback<UpdateStatus>() {
-                        @Override
-                        public void onResponse(Call<UpdateStatus> call, Response<UpdateStatus> response) {
-
-                            if (response.body() != null) {
-
-
-                                UpdateStatus updateStatus = response.body();
-                                Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
+                                        UpdateStatus updateStatus = response.body();
+                                        Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
 
 //
-                                targetViewModel.DeleteDoctor(doctorModel);
-                                morningListAdapter.removeItem(doctorModel);
-                                eveningListAdapter.removeItem(doctorModel);
-                                rescheduleDialogBinding.saveBtn.setEnabled(true);
-                                sweetAlertDialog.dismiss();
-                                alertDialog.dismiss();
-                            }
+                                        targetViewModel.DeleteDoctor(doctorModel);
+                                        morningListAdapter.removeItem(doctorModel);
+                                        eveningListAdapter.removeItem(doctorModel);
+                                        rescheduleDialogBinding.saveBtn.setEnabled(true);
+                                        sweetAlertDialog.dismiss();
+                                        alertDialog.dismiss();
+                                    }else
+                                    {
+                                        sweetAlertDialog.dismiss();
+
+                                    }
 
 
+                                }
+
+                                @Override
+                                public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+                                    sweetAlertDialog.dismiss();
+                                    t.getMessage();
+                                }
+                            });
+                        }
+                        else
+                        {
+                            targetViewModel.DeleteDoctor(doctorModel);
+                            morningListAdapter.removeItem(doctorModel);
+                            eveningListAdapter.removeItem(doctorModel);
+                            rescheduleDialogBinding.saveBtn.setEnabled(true);
+                            sweetAlertDialog.dismiss();
+                            alertDialog.dismiss();
+                            uploadDataRepository.insertWorkPlan(addNewWorkPlanModel);
+                            generateWorkRequest(CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN);
                         }
 
-                        @Override
-                        public void onFailure(Call<UpdateStatus> call, Throwable t) {
 
-                            t.getMessage();
-                        }
-                    });
-                } else {
-                    dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
+                    } else {
+                        dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
+                        sweetAlertDialog.dismiss();
+                    }
+                }catch (Exception e)
+                {
+                    Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
@@ -811,15 +904,65 @@ public class TargetFragment extends Fragment {
         if (requestCode == CONSTANTS.REQUEST_CODE_SPEECH_INPUT_FOR_CANCEL_DIALOG) {
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                remarksForCancel= remarksForCancel+" "+result.get(0);
+                remarksForCancel = remarksForCancel + " " + result.get(0);
                 dialogBinding.remarksEdittext.setText(remarksForCancel);
             }
         } else if (requestCode == CONSTANTS.REQUEST_CODE_SPEECH_INPUT_FOR_RESCHEDULE_DIALOG) {
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                remarksForReschedule = remarksForReschedule+" "+result.get(0);
+                remarksForReschedule = remarksForReschedule + " " + result.get(0);
                 rescheduleDialogBinding.remarksEdittext.setText(remarksForReschedule);
             }
         }
+    }
+
+
+    public boolean isNetworkConnected() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return connected = true;
+        } else {
+            return connected = false;
+        }
+
+    }
+
+    private void generateWorkRequest(String workRequest) {
+
+        Data mainData;
+        if (workRequest.equals(CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN))
+        {
+
+            mainData= new Data.Builder()
+                    .putString(CONSTANTS.WORK_REQUEST_TAG,CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN)
+
+                    .build();
+        }else
+        {
+            mainData= new Data.Builder()
+                    .putString(CONSTANTS.WORK_REQUEST_TAG,CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN)
+
+                    .build();
+
+        }
+
+        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(true).setRequiredNetworkType(NetworkType.CONNECTED).build();
+        OneTimeWorkRequest oneTimeWorkRequest= new OneTimeWorkRequest.Builder(UploadWorker.class)
+                .setInputData(mainData)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance().enqueue(oneTimeWorkRequest);
+
+        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        Toast.makeText(requireContext(), ""+workInfo.getState().name(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 }

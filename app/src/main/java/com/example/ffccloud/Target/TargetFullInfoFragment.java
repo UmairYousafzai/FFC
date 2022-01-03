@@ -2,11 +2,14 @@ package com.example.ffccloud.Target;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -20,6 +23,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
@@ -48,9 +57,13 @@ import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.Permission;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.SyncDataToDB;
+import com.example.ffccloud.worker.UploadWorker;
+import com.example.ffccloud.worker.utils.UploadDataRepository;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,7 +81,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class TargetFullInfoFragment extends Fragment {
 
-    private View view;
     private FragmentTargetFullInfoBinding mBinding;
     private DoctorModel doctorModel;
     private AlertDialog alertDialog;
@@ -78,21 +90,19 @@ public class TargetFullInfoFragment extends Fragment {
     private List<Activity> taskActivities;
     private NavController navController;
     private BottomSheetBehavior bottomSheetBehavior;
-    private ArrayAdapter<String> stageAdapter,statusAdapter;
     private String hostRemarks="",empRemarks="",productsRemarks="";
     private int interestLevel=0;
+    private UploadDataRepository uploadDataRepository;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         mBinding = FragmentTargetFullInfoBinding.inflate(inflater, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
 
-        view = mBinding.getRoot();
-
-        return view;
+        return mBinding.getRoot();
 
 
     }
@@ -104,6 +114,7 @@ public class TargetFullInfoFragment extends Fragment {
 
         targetViewModel = new ViewModelProvider(requireActivity()).get(TargetViewModel.class);
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+        uploadDataRepository = new UploadDataRepository(requireContext());
 
         bottomSheetBehavior= BottomSheetBehavior.from(mBinding.feedbackBottomSheet.getRoot());
 
@@ -148,8 +159,8 @@ public class TargetFullInfoFragment extends Fragment {
             }
         });
 
-        stageAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.stage));
-        statusAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item,getResources().getStringArray(R.array.status));
+        ArrayAdapter<String> stageAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.stage));
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.status));
         mBinding.feedbackBottomSheet.autoStage.setAdapter(stageAdapter);
         mBinding.feedbackBottomSheet.autoStatus.setAdapter(statusAdapter);
 
@@ -423,76 +434,84 @@ public class TargetFullInfoFragment extends Fragment {
     }
 // distance key for the user option , what type of distance filter he want to use
     private void completeAndDeleteWorkPlan(int key,int distanceKey) {
-        String[] locationString = doctorModel.getCoordinates().split(",");
+
+        try {
+            String[] locationString = doctorModel.getCoordinates().split(",");
 
 
-        Location workPlanLocation= new Location("");
-        workPlanLocation.setLatitude(Double.parseDouble(locationString[0]));
-        workPlanLocation.setLongitude(Double.parseDouble(locationString[1]));
-        CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
-            @Override
-            public void gotLocation(Location location1) {
-                location = location1;
+            Location workPlanLocation= new Location("");
+            workPlanLocation.setLatitude(Double.parseDouble(locationString[0]));
+            workPlanLocation.setLongitude(Double.parseDouble(locationString[1]));
+            CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
+                @Override
+                public void gotLocation(Location location1) {
+                    location = location1;
 
 
-                double distance= location.distanceTo(workPlanLocation);
+                    double distance= location.distanceTo(workPlanLocation);
 
-                if (distanceKey==1)
-                {
+                    if (distanceKey==1)
+                    {
 
-                    if (distance<=10)
+                        if (distance<=10)
+                        {
+                            saveWorkPlane(key);
+                        }
+                        else
+                        {
+                            new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
+                                    .setContentText("You Are Out Of WorkPlan Location Radius")
+                                    .show();
+                        }
+
+                    }
+                    else if (distanceKey==2)
+                    {
+                        if (distance<=10)
+                        {
+
+                            saveWorkPlane(key);
+                        }
+                        else
+                        {
+                            new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("You Are Out Of WorkPlan Radius")
+                                    .setContentText("Do you want to Proceed.")
+                                    .setConfirmText("Yes")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            sweetAlertDialog.dismiss();
+                                            saveWorkPlane(key);
+
+                                        }
+                                    })
+                                    .setCancelText("Cancel")
+                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            sweetAlertDialog.dismiss();
+
+                                        }
+                                    }).show();
+                        }
+                    }
+                    else if (distance==3)
                     {
                         saveWorkPlane(key);
-                    }
-                    else
-                    {
-                        new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
-                                .setContentText("You Are Out Of WorkPlan Location Radius")
-                                .show();
-                    }
 
-                }
-                else if (distanceKey==2)
-                {
-                    if (distance<=10)
-                    {
-
-                        saveWorkPlane(key);
-                    }
-                    else
-                    {
-                        new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("You Are Out Of WorkPlan Radius")
-                                .setContentText("Do you want to Proceed.")
-                                .setConfirmText("Yes")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        sweetAlertDialog.dismiss();
-                                        saveWorkPlane(key);
-
-                                    }
-                                })
-                                .setCancelText("Cancel")
-                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        sweetAlertDialog.dismiss();
-
-                                    }
-                                }).show();
                     }
                 }
-                else if (distance==3)
-                {
-                    saveWorkPlane(key);
+            };
 
-                }
-            }
-        };
+            CustomLocation customLocation = new CustomLocation(requireContext());
+            customLocation.getLastLocation(locationResults);
 
-        CustomLocation customLocation = new CustomLocation(requireContext());
-        customLocation.getLastLocation(locationResults);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
 
 
@@ -539,48 +558,61 @@ public class TargetFullInfoFragment extends Fragment {
                         }
 
                         list.add(updateWorkPlanStatus);
-                        Call<UpdateStatus> call = ApiClient.getInstance().getApi().UpdateWorkPlanStatus(token, "application/json", list);
-                        call.enqueue(new Callback<UpdateStatus>() {
-                            @Override
-                            public void onResponse(Call<UpdateStatus> call, Response<UpdateStatus> response) {
+                        if (isNetworkConnected())
+                        {
+                            Call<UpdateStatus> call = ApiClient.getInstance().getApi().UpdateWorkPlanStatus(token, "application/json", list);
+                            call.enqueue(new Callback<UpdateStatus>() {
+                                @Override
+                                public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
 
-                                if (response.body() != null) {
-                                    UpdateStatus updateStatus = response.body();
-                                    Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
-                                    targetViewModel.DeleteDoctor(doctorModel);
-                                    alertDialog.dismiss();
+                                    if (response.body() != null) {
+                                        UpdateStatus updateStatus = response.body();
+                                        Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
+                                        targetViewModel.DeleteDoctor(doctorModel);
+                                        alertDialog.dismiss();
+                                        progressDialog.dismiss();
+
+                                        openActivity(CONSTANTS.TARGET,CONSTANTS.COMPLETE,3);
+                                        activityViewModel.getTaskActivity().observe(getViewLifecycleOwner(), new Observer<List<Activity>>() {
+                                            @Override
+                                            public void onChanged(List<Activity> activities) {
+
+                                                taskActivities= activities;
+                                                closeActivity();
+                                            }
+                                        });
+
+
+
+
+                                    }
+                                    else
+                                    {
+                                        new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
+                                        alertDialog.dismiss();
+                                        progressDialog.dismiss();
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+
+                                    t.getMessage();
+                                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                                     progressDialog.dismiss();
-
-                                    openActivity(CONSTANTS.TARGET,CONSTANTS.COMPLETE,3);
-                                    activityViewModel.getTaskActivity().observe(getViewLifecycleOwner(), new Observer<List<Activity>>() {
-                                        @Override
-                                        public void onChanged(List<Activity> activities) {
-
-                                            taskActivities= activities;
-                                            closeActivity();
-                                        }
-                                    });
-
-
-
-
                                 }
-                                else
-                                {
-                                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
-                                }
+                            });
+                        }
+                        else
+                        {
+                            alertDialog.dismiss();
+                            progressDialog.dismiss();
+                            uploadDataRepository.insertWorkPlanStatus(updateWorkPlanStatus);
+                            generateWorkRequest();
+                        }
 
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<UpdateStatus> call, Throwable t) {
-
-                                t.getMessage();
-                                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                                progressDialog.dismiss();
-                            }
-                        });
                     } else {
                         Toast.makeText(getActivity(), "Please turn on location", Toast.LENGTH_LONG).show();
                     }
@@ -815,5 +847,43 @@ public class TargetFullInfoFragment extends Fragment {
                 mBinding.feedbackBottomSheet.remarksAboutProdactEdittext.setText(productsRemarks);
             }
         }
+    }
+
+    public boolean isNetworkConnected() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return connected = true;
+        } else {
+            return connected = false;
+        }
+
+    }
+
+    private void generateWorkRequest() {
+
+        Data mainData = new Data.Builder()
+                    .putString(CONSTANTS.WORK_REQUEST_TAG,CONSTANTS.WORK_REQUEST_COMPLETE_WORK_PLAN)
+
+                    .build();
+
+
+        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(true).setRequiredNetworkType(NetworkType.CONNECTED).build();
+        OneTimeWorkRequest oneTimeWorkRequest= new OneTimeWorkRequest.Builder(UploadWorker.class)
+                .setInputData(mainData)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance().enqueue(oneTimeWorkRequest);
+
+        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        Toast.makeText(requireContext(), ""+workInfo.getState().name(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 }

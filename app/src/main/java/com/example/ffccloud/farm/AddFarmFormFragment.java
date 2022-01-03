@@ -19,6 +19,7 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -61,23 +62,25 @@ public class AddFarmFormFragment extends Fragment {
 
     private FragmentAddFarmFormBinding mBinding;
     private NavController navController;
-    private List<ContactPersons> contactPersonsList = new ArrayList<>();
-    private List<SupplierItemLinking> medicineModalList = new ArrayList<>();
+    private final List<ContactPersons> contactPersonsList = new ArrayList<>();
+    private final List<SupplierItemLinking> medicineModalList = new ArrayList<>();
     private ContactRecyclerAdapter contactRecyclerAdapter;
     private MedicineAdapter medicineAdapter;
-    private ArrayList<String> animalArrayList = new ArrayList<>(), regionList = new ArrayList<>();
-    private HashMap<String, Integer> regionHashmapForID = new HashMap<>();
-    private HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
+    private final ArrayList<String> animalArrayList = new ArrayList<>();
+    private final ArrayList<String> regionList = new ArrayList<>();
+    private final HashMap<String, Integer> regionHashmapForID = new HashMap<>();
+    private final HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
     private String locationString;
     private String locationAddress;
-    private int supplierID=0;
-    private List<GetSupplierModel> supplierDetailModelList= new ArrayList<>();
+    private int supplierID = 0;
+    private final List<GetSupplierModel> supplierDetailModelList = new ArrayList<>();
     private SupplierRecyclerViewAdapter supplierRecyclerViewAdapter;
     private String callingAddBtn;
-    private boolean isSpinnerUpdate=false;
+    private boolean isSpinnerUpdate = false;
+    private int animalPosition = -1, regionPosition = -1;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = FragmentAddFarmFormBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
@@ -87,9 +90,8 @@ public class AddFarmFormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = NavHostFragment.findNavController(this);
-        if (!isSpinnerUpdate)
-        {
-            isSpinnerUpdate=true;
+        if (!isSpinnerUpdate) {
+            isSpinnerUpdate = true;
             setupAnimalSpinner();
             getRegion();
         }
@@ -98,7 +100,7 @@ public class AddFarmFormFragment extends Fragment {
         getLiveData();
         assert getArguments() != null;
         supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
-        if (supplierID > 0&&callingAddBtn==null){
+        if (supplierID > 0 && callingAddBtn == null) {
 
             //setup fields if edit request has been made
             getSupplierByID(supplierID);
@@ -108,13 +110,11 @@ public class AddFarmFormFragment extends Fragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
 
-        if (callingAddBtn!=null)
-        {
+        if (callingAddBtn != null) {
             medicineAdapter.setMedicineModalList(medicineModalList);
             supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
             contactRecyclerAdapter.setContactPersonsList(contactPersonsList);
@@ -122,17 +122,22 @@ public class AddFarmFormFragment extends Fragment {
             mBinding.animalSpinner.setAdapter(adapter);
             ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
             mBinding.regionSpinner.setAdapter(adapter1);
+            if (regionPosition != -1) {
+                mBinding.regionSpinner.setSelection(regionPosition);
+
+            }
+
+            if (animalPosition != -1) {
+                mBinding.animalSpinner.setSelection(animalPosition);
+
+            }
         }
         btnListener();
 
 
-
-
-
     }
 
-    public void getLiveData()
-    {
+    public void getLiveData() {
 
         MutableLiveData<GetSupplierModel> supplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
@@ -140,12 +145,22 @@ public class AddFarmFormFragment extends Fragment {
         supplierLiveData.observe(getViewLifecycleOwner(), new Observer<GetSupplierModel>() {
             @Override
             public void onChanged(GetSupplierModel model) {
-                if (model!=null)
-                {
-                    if(callingAddBtn.equals("DoctorAddBtn"))
-                    {
-                        supplierDetailModelList.add(model);
-                        supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
+                if (model != null) {
+                    if (callingAddBtn.equals("DoctorAddBtn")) {
+                        if (supplierDetailModelList.size()>0)
+                        {
+                            if (supplierDetailModelList.get(supplierDetailModelList.size()-1)!=model) {
+                                supplierDetailModelList.add(model);
+                                supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
+                            }
+                        }
+                        else
+                        {
+                            supplierDetailModelList.add(model);
+                        }
+
+
+
                     }
 
                 }
@@ -161,20 +176,28 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onChanged(InsertProductModel model) {
                 if (model != null) {
-                    if(callingAddBtn.equals("MedicineAddBtn"))
-                    {
+                    if (callingAddBtn.equals("MedicineAddBtn")) {
                         SupplierItemLinking medicineModal = new SupplierItemLinking();
+
+                        medicineModalList.size();
                         medicineModal.setItHead(model.getTitleProduct());
                         medicineModal.setIsRegistered(true);
                         medicineModal.setSupplierItemLinkIdDtl("0");
                         medicineModal.setItCode(model.getItem_Code());
+                        if (medicineModalList.size()>0)
+                        {
+                            if (medicineModalList.get(medicineModalList.size()-1).getItCode()!=medicineModal.getItCode()) {
+                                medicineModalList.add(medicineModal);
+                                medicineAdapter.setMedicineModalList(medicineModalList);
+                            }
+                        }else
+                        {
+                            medicineModalList.add(medicineModal);
+                        }
 
-                        medicineModalList.add(medicineModal);
-                        medicineAdapter.setMedicineModalList(medicineModalList);
+
+
                     }
-
-
-
 
 
                 }
@@ -195,26 +218,23 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body()!=null)
-                {
+                if (response.body() != null) {
                     progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel= response.body();
+                    GetSupplierDetailModel getSupplierDetailModel = response.body();
                     setUpFields(getSupplierDetailModel);
 
-                }
-                else {
-                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<GetSupplierDetailModel> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
-
 
 
     }
@@ -236,8 +256,7 @@ public class AddFarmFormFragment extends Fragment {
         contactRecyclerAdapter.setContactPersonsList(contactPersonsList);
 
         supplierDetailModelList.clear();
-        for (SupplierLinking model:getSupplierDetailModel.getSupplierLinkingList())
-        {
+        for (SupplierLinking model : getSupplierDetailModel.getSupplierLinkingList()) {
             GetSupplierModel supplierModel = new GetSupplierModel();
             supplierModel.setSupplier_Name(model.getSupplierName());
             supplierModel.setAddress(model.getAddress());
@@ -246,8 +265,8 @@ public class AddFarmFormFragment extends Fragment {
         }
         supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
 
-        String animalsMainType= getSupplierDetailModel.getSupplierModelNewList().get(0).getAnimalsMainType();
-        String animalsSUbType= getSupplierDetailModel.getSupplierModelNewList().get(0).getAnimalsSubType();
+        String animalsMainType = getSupplierDetailModel.getSupplierModelNewList().get(0).getAnimalsMainType();
+        String animalsSUbType = getSupplierDetailModel.getSupplierModelNewList().get(0).getAnimalsSubType();
 
         switch (animalsMainType) {
             case "Large animal":
@@ -268,8 +287,6 @@ public class AddFarmFormFragment extends Fragment {
 
                 break;
         }
-
-
 
 
     }
@@ -319,16 +336,15 @@ public class AddFarmFormFragment extends Fragment {
         mBinding.btnAddDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (regionList.size()>0) {
-                    callingAddBtn= "";
-                    callingAddBtn= "DoctorAddBtn";
+                if (regionList.size() > 0) {
+                    callingAddBtn = "";
+                    callingAddBtn = "DoctorAddBtn";
                     int region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
                     AddFarmFormFragmentDirections.ActionAddFarmFormFragmentToSearchDoctorFragment action = AddFarmFormFragmentDirections.actionAddFarmFormFragmentToSearchDoctorFragment();
                     action.setKey(1);
                     action.setRegionID(region);
                     navController.navigate(action);
-                }
-                else {
+                } else {
                     Toast.makeText(requireContext(), "Please select region", Toast.LENGTH_SHORT).show();
                 }
 
@@ -338,8 +354,8 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mBinding.companyMedicineRadioBtn.isChecked()) {
-                    callingAddBtn= "";
-                    callingAddBtn= "MedicineAddBtn";
+                    callingAddBtn = "";
+                    callingAddBtn = "MedicineAddBtn";
                     AddFarmFormFragmentDirections.ActionAddFarmFormFragmentToAddProductFragment action = AddFarmFormFragmentDirections.actionAddFarmFormFragmentToAddProductFragment();
                     action.setKey(1);
 
@@ -361,8 +377,8 @@ public class AddFarmFormFragment extends Fragment {
         mBinding.btnAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callingAddBtn= "";
-                callingAddBtn= "ContactAddBtn";
+                callingAddBtn = "";
+                callingAddBtn = "ContactAddBtn";
                 showDialog(2);
             }
         });
@@ -388,7 +404,7 @@ public class AddFarmFormFragment extends Fragment {
                             if (mBinding.locationCheckbox.isChecked()) {
                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.locationCheckbox.setText(locationAddress);
-                                 locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                                locationString = location.getLongitude() + "," + location.getLatitude();
                             } else {
 
                                 mBinding.locationCheckbox.setText("Enable Location");
@@ -412,6 +428,32 @@ public class AddFarmFormFragment extends Fragment {
                 setUpSupplierModelForSave();
             }
         });
+
+        mBinding.regionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                regionPosition = position;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mBinding.animalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                animalPosition = position;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void setUpSupplierModelForSave() {
@@ -424,11 +466,10 @@ public class AddFarmFormFragment extends Fragment {
         int userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
 
-
         if (name.length() > 0) {
             if (phone.length() > 0) {
                 if (address.length() > 0) {
-                    if (regionList.size()>0) {
+                    if (regionList.size() > 0) {
                         int region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
@@ -488,22 +529,19 @@ public class AddFarmFormFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body()!=null)
-                {
+                if (response.body() != null) {
                     UpdateStatus updateStatus = response.body();
-                    Toast.makeText(requireContext(), " "+updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
-                }
-                else
-                {
-                    Toast.makeText(requireContext(), " "+response.errorBody(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), " "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), " " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });

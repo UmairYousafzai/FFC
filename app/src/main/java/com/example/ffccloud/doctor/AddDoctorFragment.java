@@ -20,6 +20,7 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -84,6 +85,7 @@ public class AddDoctorFragment extends Fragment {
     private int supplierID;
     private String callingAddBtn;
     private boolean isSpinnerUpdate=false;
+    private int gradePosition=-1, regionPosition=-1, classificationPosition=-1,qualificationPosition;
 
 
 
@@ -134,17 +136,23 @@ public class AddDoctorFragment extends Fragment {
             public void onChanged(InsertProductModel model) {
                 if (model != null) {
                     SupplierItemLinking medicineModal = new SupplierItemLinking();
+
+                    medicineModalList.size();
                     medicineModal.setItHead(model.getTitleProduct());
                     medicineModal.setIsRegistered(true);
-                    medicineModal.setItCode(model.getItem_Code());
                     medicineModal.setSupplierItemLinkIdDtl("0");
+                    medicineModal.setItCode(model.getItem_Code());
+                    if (medicineModalList.size()>0)
+                    {
+                        if (medicineModalList.get(medicineModalList.size()-1).getItCode()!=medicineModal.getItCode()) {
+                            medicineModalList.add(medicineModal);
+                            medicineAdapter.setMedicineModalList(medicineModalList);
+                        }
+                    }else
+                    {
+                        medicineModalList.add(medicineModal);
+                    }
 
-
-                    medicineModalList.add(medicineModal);
-                    medicineAdapter.setMedicineModalList(medicineModalList);
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
-                    mBinding.spinnerRegion.setAdapter(adapter);
                 }
 
 
@@ -162,8 +170,23 @@ public class AddDoctorFragment extends Fragment {
         if (callingAddBtn!=null)
         {
             medicineAdapter.setMedicineModalList(medicineModalList);
+            if (regionPosition!=-1)
+            {
+                mBinding.spinnerRegion.setSelection(regionPosition);
 
-
+            }
+            if (gradePosition!=-1)
+            {
+                mBinding.spinnerGrade.setSelection(gradePosition);
+            }
+            if (classificationPosition!=-1)
+            {
+                mBinding.spinnerClassification.setSelection(classificationPosition);
+            }
+            if (qualificationPosition!=-1)
+            {
+                mBinding.spinnerQualification.setSelection(qualificationPosition);
+            }
         }
         btnListener();
 
@@ -231,6 +254,59 @@ public class AddDoctorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setUpSupplierModelForSave();
+            }
+        });
+
+
+        mBinding.spinnerGrade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                gradePosition = position;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mBinding.spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                regionPosition = position;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mBinding.spinnerQualification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                qualificationPosition = position;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mBinding.spinnerClassification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                classificationPosition = position;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

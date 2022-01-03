@@ -7,38 +7,41 @@
     tools:context=".salesOrder.AddProductFragment"
     android:id="@+id/swipe_layout"
   >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:orientation="vertical"
-        android:background="@color/background_color" >
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_view"
+
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:iconifiedByDefault="false"
-            android:background="@drawable/spinner_bg"
-            />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/product_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            tools:listitem="@layout/get_product_card"
-            />
-        <TextView
-            android:id="@+id/tv_nothing_found"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/nothing_found"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:background="@color/background_color" >
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:iconifiedByDefault="false"
+                android:background="@drawable/spinner_bg"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/product_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                tools:listitem="@layout/get_product_card"
+                />
+            <TextView
+                android:id="@+id/tv_nothing_found"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nothing_found"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
 
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

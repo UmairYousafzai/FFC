@@ -1,8 +1,15 @@
 package com.example.ffccloud.ModelClasses;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "workPlan")
 public class AddNewWorkPlanModel {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id ;
 
     @SerializedName("Work_Id")
     private long workId;
@@ -14,7 +21,7 @@ public class AddNewWorkPlanModel {
 
     private String workPlan;
     @SerializedName("Doctor_Id")
-    private long doctorId;
+    private int doctorId;
     @SerializedName("Remarks1")
     private String remarks1;
     @SerializedName("Emp_Id")
@@ -23,6 +30,14 @@ public class AddNewWorkPlanModel {
     public AddNewWorkPlanModel()
     {
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public long getWorkId() {
@@ -57,11 +72,11 @@ public class AddNewWorkPlanModel {
         this.workPlan = workPlan;
     }
 
-    public long getDoctorId() {
+    public int getDoctorId() {
         return doctorId;
     }
 
-    public void setDoctorId(long doctorId) {
+    public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
     }
 

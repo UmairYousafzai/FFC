@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -40,11 +42,15 @@ public class AddCustomerFragment extends Fragment {
     private FragmentAddCustomerBinding mBinding;
     private final ArrayList<String> cityList = new ArrayList<>();
     private final HashMap<String, Integer> cityHashMap = new HashMap<>();
-    private String creditLimitPromptType;
-    private boolean applyCredit = false,isCompany= false;
+    private String creditLimitPromptType="";
+    private boolean applyCredit = false,isCompany= false, isFromOnPause= false;
     private List<ContactPersons> contactPersonsList = new ArrayList<>();
     private ContactRecyclerAdapter adapter;
     private CustomerModel customerModel;
+    private int customerID=0,userID,cityId;
+    private String partyName="",email="",emailCC="",emailBCC="",comment="", instruction="",address="",payee="",fax="",contact=""
+            ,NTN="",saleTax="",focalPerson="",focalPeronCNIC="",partyAbbreviation="";
+    private double crLimit=0,crLimitAmount=0;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -53,39 +59,115 @@ public class AddCustomerFragment extends Fragment {
         return mBinding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getCity();
+
+    }
 
     @Override
     public void onResume() {
         super.onResume();
 
         btnListener();
-        getCity();
         setupRecyclerView();
 
-        customerModel = AddCustomerFragmentArgs.fromBundle(getArguments()).getCustomer();
+        if (getArguments() != null) {
+            customerModel = AddCustomerFragmentArgs.fromBundle(getArguments()).getCustomer();
+        }
 
-        if (customerModel!=null)
+        if (customerModel!=null && !isFromOnPause)
         {
+            customerID= customerModel.getSupplier_Id();
             setUpFields();
+        }
+        else
+        {
+            initializeViews();
         }
 
 
+
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        insertCustomer(2);
+        isFromOnPause= true;
+
+    }
+
+    public void initializeViews()
+    {
+
+        mBinding.etPartName.setText(partyName);
+        mBinding.etPartAbbreviation.setText(partyAbbreviation);
+        mBinding.etFocalPersonName.setText(focalPerson);
+        mBinding.etFocalPersonCNIC.setText(focalPeronCNIC);
+        mBinding.companyCheckBox.setChecked(isCompany);
+        mBinding.etSaleTax.setText(saleTax);
+        mBinding.etNtnNum.setText(NTN);
+        mBinding.etCreditDays.setText(String.valueOf(crLimit) );
+        mBinding.etCreditLimit.setText(String.valueOf(crLimitAmount));
+
+        if (creditLimitPromptType.equals("1"))
+        {
+            mBinding.creditLimitNaRadio.setChecked(true);
+        }
+        else if (creditLimitPromptType.equals("2"))
+        {
+            mBinding.creditLimitWarningRadio.setChecked(true);
+
+        }
+        else if (creditLimitPromptType.equals("3"))
+        {
+            mBinding.creditLimitCriticalRadio.setChecked(true);
+
+        }
+
+
+            mBinding.applyCreditLimitCheckBox.setChecked(applyCredit);
+
+
+        mBinding.etEmail.setText(email);
+        mBinding.etEmailCc.setText(emailCC);
+        mBinding.etBccEmail.setText(emailBCC);
+        mBinding.etContact.setText(contact);
+        mBinding.etFax.setText(fax);
+        mBinding.etAddress.setText(address);
+        mBinding.etPayee.setText(payee);
+        mBinding.etInstruction.setText(instruction);
+        mBinding.etComment.setText(comment);
+
+        adapter.setContactPersonsList(contactPersonsList);
     }
 
     private void setUpFields() {
 
         mBinding.etPartName.setText(customerModel.getPartyName());
+        partyName=customerModel.getPartyName();
         mBinding.etPartAbbreviation.setText(customerModel.getPartyAbbreviation());
+        partyAbbreviation=customerModel.getPartyAbbreviation();
         mBinding.etFocalPersonName.setText(customerModel.getFocal_Person());
+        focalPerson=customerModel.getFocal_Person();
         mBinding.etFocalPersonCNIC.setText(customerModel.getCNICNo());
+        focalPeronCNIC=customerModel.getCNICNo();
         if (customerModel.isIs_Company())
         {
             mBinding.companyCheckBox.setChecked(true);
         }
         mBinding.etSaleTax.setText(customerModel.getSales_Tax_No());
+        saleTax=customerModel.getSales_Tax_No();
         mBinding.etNtnNum.setText(customerModel.getNTN());
+        NTN=customerModel.getNTN();
         mBinding.etCreditDays.setText(String.valueOf(customerModel.getCr_Limit()) );
+        crLimit=customerModel.getCr_Limit();
         mBinding.etCreditLimit.setText(String.valueOf(customerModel.getCr_Limit_Amount()));
+        crLimitAmount=customerModel.getCr_Limit_Amount();
 
         if (customerModel.getPrompt_Type().equals("1"))
         {
@@ -108,14 +190,23 @@ public class AddCustomerFragment extends Fragment {
         }
 
         mBinding.etEmail.setText(customerModel.getEmail());
+        email=customerModel.getEmail();
         mBinding.etEmailCc.setText(customerModel.getEMail_CC());
+        emailCC=customerModel.getEMail_CC();
         mBinding.etBccEmail.setText(customerModel.getEMail_BCC());
+        emailBCC=customerModel.getEMail_BCC();
         mBinding.etContact.setText(customerModel.getContacts());
+        contact=customerModel.getContacts();
         mBinding.etFax.setText(customerModel.getFax_No());
+        fax=customerModel.getFax_No();
         mBinding.etAddress.setText(customerModel.getAddress());
+        address=customerModel.getAddress();
         mBinding.etPayee.setText(customerModel.getPayee());
+        payee=customerModel.getPayee();
         mBinding.etInstruction.setText(customerModel.getInstruction());
+        instruction=customerModel.getInstruction();
         mBinding.etComment.setText(customerModel.getComments());
+        comment=customerModel.getComments();
 
         adapter.setContactPersonsList(customerModel.getContact_PersonsList());
 
@@ -126,13 +217,12 @@ public class AddCustomerFragment extends Fragment {
         mBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new ContactRecyclerAdapter();
         mBinding.contactRecyclerView.setAdapter(adapter);
-
     }
 
     private void btnListener() {
 
         mBinding.addBtn.setOnClickListener(v -> showDialog());
-        mBinding.saveBtn.setOnClickListener(v -> insertCustomer());
+        mBinding.saveBtn.setOnClickListener(v -> insertCustomer(1));
 
         mBinding.applyCreditLimitCheckBox.setOnClickListener(v -> applyCredit = mBinding.applyCreditLimitCheckBox.isChecked());
         mBinding.companyCheckBox.setOnClickListener(v -> isCompany = mBinding.companyCheckBox.isChecked());
@@ -156,87 +246,102 @@ public class AddCustomerFragment extends Fragment {
         });
     }
 
-    private void insertCustomer() {
+    private void insertCustomer(int key) {
+        userID = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+        partyName = Objects.requireNonNull(mBinding.etPartName.getText()).toString().trim();
+        crLimit = Double.parseDouble(Objects.requireNonNull(mBinding.etCreditDays.getText()).toString());
+        crLimitAmount = Double.parseDouble(Objects.requireNonNull(mBinding.etCreditLimit.getText()).toString());
+        cityId = cityHashMap.get(mBinding.citySpinner.getSelectedItem().toString());
+        email = Objects.requireNonNull(mBinding.etEmail.getText()).toString().trim();
+        emailCC = Objects.requireNonNull(mBinding.etEmailCc.getText()).toString().trim();
+        emailBCC = Objects.requireNonNull(mBinding.etBccEmail.getText()).toString().trim();
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        comment= mBinding.etComment.getText()!=null?mBinding.etComment.getText().toString():"";
+        instruction= mBinding.etInstruction.getText()!=null?mBinding.etInstruction.getText().toString():"";
+        address= mBinding.etAddress.getText()!=null?mBinding.etAddress.getText().toString():"";
+        payee= mBinding.etPayee.getText()!=null?mBinding.etPayee.getText().toString():"";
+        fax= mBinding.etFax.getText()!=null?mBinding.etFax.getText().toString():"";
+        contact= mBinding.etContact.getText()!=null? mBinding.etContact.getText().toString():"";
+        NTN=mBinding.etNtnNum.getText()!=null? mBinding.etNtnNum.getText().toString():"";
+        saleTax=mBinding.etSaleTax.getText()!=null? mBinding.etSaleTax.getText().toString():"";
+        focalPeronCNIC=mBinding.etFocalPersonCNIC.getText() !=null? mBinding.etFocalPersonCNIC.getText().toString() :"";
+        focalPerson= mBinding.etFocalPersonName.getText() !=null? mBinding.etFocalPersonName.getText().toString()  :"";
+        partyAbbreviation= mBinding.etPartAbbreviation.getText() !=null? mBinding.etPartAbbreviation.getText().toString()  :"";
 
-        try{
-            int userID = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
-            String partyName = Objects.requireNonNull(mBinding.etPartName.getText()).toString().trim();
-            double crLimit = Double.parseDouble(Objects.requireNonNull(mBinding.etCreditDays.getText()).toString());
-            double crLimitAmount = Double.parseDouble(Objects.requireNonNull(mBinding.etCreditLimit.getText()).toString());
-            int cityId = cityHashMap.get(mBinding.citySpinner.getSelectedItem().toString());
-            String email = Objects.requireNonNull(mBinding.etEmail.getText()).toString().trim();
-            String emailCC = Objects.requireNonNull(mBinding.etEmailCc.getText()).toString().trim();
-            String emailBCC = Objects.requireNonNull(mBinding.etBccEmail.getText()).toString().trim();
-            String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        if (key==1)
+        {
+            try{
 
 
 
-            if (cityId > 0) {
+                if (cityId > 0) {
 
-                if (email.matches(emailPattern) )
-                {
-                    if (emailBCC.matches(emailPattern))
+                    if (email.matches(emailPattern) )
                     {
-                        if (emailCC.matches(emailPattern))
+                        if (emailBCC.matches(emailPattern))
                         {
-                            CustomerModel customerModel = new CustomerModel();
+                            if (emailCC.matches(emailPattern))
+                            {
+                                CustomerModel customerModel = new CustomerModel();
 
-                            customerModel.setCompany_Id(1);
-                            customerModel.setLocation_Id(1);
-                            customerModel.setProject_Id(1);
-                            customerModel.setCountry_Id(1);
-                            customerModel.setSupplier_Id(0);
-                            customerModel.setUserID(userID);
-                            customerModel.setSalesManID(0);
-                            customerModel.setUserTypeName("C");
-                            customerModel.setPartyName(partyName);
-                            customerModel.setCr_Limit(crLimit);
-                            customerModel.setCr_Limit_Amount(crLimitAmount);
-                            customerModel.setApply_Cr_Limit(applyCredit);
-                            customerModel.setEmail(email);
-                            customerModel.setEMail_BCC(emailBCC);
-                            customerModel.setEMail_CC(emailCC);
-                            customerModel.setCity_Id(cityId);
-                            customerModel.setIs_Company(isCompany);
-                            customerModel.setPrompt_Type(creditLimitPromptType);
-                            customerModel.setContact_PersonsList(contactPersonsList);
-                            customerModel.setComments(Objects.requireNonNull(mBinding.etComment.getText()).toString());
-                            customerModel.setInstruction(Objects.requireNonNull(mBinding.etInstruction.getText()).toString());
-                            customerModel.setAddress(Objects.requireNonNull(mBinding.etAddress.getText()).toString());
-                            customerModel.setPayee(Objects.requireNonNull(mBinding.etPayee.getText()).toString());
-                            customerModel.setFax_No(Objects.requireNonNull(mBinding.etFax.getText()).toString());
-                            customerModel.setContacts( Objects.requireNonNull(mBinding.etContact.getText()).toString());
-                            customerModel.setNTN(Objects.requireNonNull(mBinding.etNtnNum.getText()).toString());
-                            customerModel.setSales_Tax_No(Objects.requireNonNull(mBinding.etSaleTax.getText()).toString());
-                            customerModel.setCNICNo(Objects.requireNonNull(mBinding.etFocalPersonCNIC.getText()).toString());
-                            customerModel.setFocal_Person( Objects.requireNonNull(mBinding.etFocalPersonName.getText()).toString());
-                            customerModel.setPartyAbbreviation( Objects.requireNonNull(mBinding.etPartAbbreviation.getText()).toString());
+                                customerModel.setCompany_Id(1);
+                                customerModel.setLocation_Id(1);
+                                customerModel.setProject_Id(1);
+                                customerModel.setCountry_Id(1);
+                                customerModel.setSupplier_Id(customerID);
+                                customerModel.setUserID(userID);
+                                customerModel.setSalesManID(0);
+                                customerModel.setUserTypeName("C");
+                                customerModel.setPartyName(partyName);
+                                customerModel.setCr_Limit(crLimit);
+                                customerModel.setCr_Limit_Amount(crLimitAmount);
+                                customerModel.setApply_Cr_Limit(applyCredit);
+                                customerModel.setEmail(email);
+                                customerModel.setEMail_BCC(emailBCC);
+                                customerModel.setEMail_CC(emailCC);
+                                customerModel.setCity_Id(cityId);
+                                customerModel.setIs_Company(isCompany);
+                                customerModel.setPrompt_Type(creditLimitPromptType);
+                                customerModel.setContact_PersonsList(contactPersonsList);
+                                customerModel.setComments(comment);
+                                customerModel.setInstruction(instruction);
+                                customerModel.setAddress(address);
+                                customerModel.setPayee(payee);
+                                customerModel.setFax_No(fax);
+                                customerModel.setContacts( contact);
+                                customerModel.setNTN(NTN);
+                                customerModel.setSales_Tax_No(saleTax);
+                                customerModel.setCNICNo(focalPeronCNIC);
+                                customerModel.setFocal_Person( focalPerson);
+                                customerModel.setPartyAbbreviation( partyAbbreviation);
 
 
-                            apiCallForSavingCustomer(customerModel);
+                                apiCallForSavingCustomer(customerModel);
+                            }
+                            else
+                            {
+                                mBinding.etEmailCcLayout.setError("Enter Valid Email Format");
+
+                            }
+
                         }
-                        else
-                        {
-                            mBinding.etEmailCcLayout.setError("Enter Valid Email Format");
-
+                        else {
+                            mBinding.etEmailBccLayout.setError("Enter Valid Email Format");
                         }
 
                     }
                     else {
-                        mBinding.etEmailBccLayout.setError("Enter Valid Email Format");
+                        mBinding.etEmailLayout.setError("Enter Valid Email Format");
                     }
 
                 }
-                else {
-                    mBinding.etEmailLayout.setError("Enter Valid Email Format");
-                }
 
             }
+            catch (Exception e)
+            {
+                Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
 
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -289,12 +394,12 @@ public class AddCustomerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String name = binding.etName.getText().toString();
-                String phone = binding.etPhone.getText().toString();
+                String name = binding.etName.getText()!=null? binding.etName.getText().toString():" ";
+                String phone =  binding.etPhone.getText()!=null? binding.etPhone.getText().toString():" ";
 
-                if (name!=null)
+                if (!name.equals(""))
                 {
-                    if (phone!=null)
+                    if (!phone.equals(""))
                     {
                         ContactPersons contactPersons = new ContactPersons();
                         contactPersons.setContact_Person_ContactNo(phone);

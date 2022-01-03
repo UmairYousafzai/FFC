@@ -43,6 +43,8 @@ import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,13 +68,11 @@ public class AttendanceFragment extends Fragment {
     private ActivityViewModel activityViewModel;
 
 
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mBinding = FragmentAttendanceBinding.inflate(inflater,container,false);
+        mBinding = FragmentAttendanceBinding.inflate(inflater, container, false);
 
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 //        Toolbar toolbar=  (Toolbar)requireActivity().findViewById(R.id.custom_toolbar) ;
@@ -90,7 +90,7 @@ public class AttendanceFragment extends Fragment {
         ffcDatabase = FfcDatabase.getInstance(requireContext());
 
         attendanceViewModel = new ViewModelProvider(this).get(AttendanceViewModel.class);
-        activityViewModel =new ViewModelProvider(this).get(ActivityViewModel.class);
+        activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
         btnListener();
     }
@@ -103,32 +103,26 @@ public class AttendanceFragment extends Fragment {
                 captureImage();
 
 
-
             }
         });
         mBinding.doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (attendance!=null&&SharedPreferenceHelper.getInstance(requireContext()).getAttendanceConfiguration()) {
+                if (attendance != null && SharedPreferenceHelper.getInstance(requireContext()).getAttendanceConfiguration()) {
                     attendanceViewModel.insertAttendance(attendance);
-                    openActivity(CONSTANTS.START_DAY,CONSTANTS.START_DAY,0);
-                }
-                else
-                {
+                    openActivity(CONSTANTS.START_DAY, CONSTANTS.START_DAY, 0);
+                } else {
                     Toast.makeText(requireContext(), "Please Mark Attendance", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    public void saveAttendance(String IMEI)
-    {
-        Permission permission= new Permission(requireContext(),requireActivity());
+    public void saveAttendance(String IMEI) {
+        Permission permission = new Permission(requireContext(), requireActivity());
 
 
-
-        if (selectedImage!=null)
-        {
+        if (selectedImage != null) {
             SweetAlertDialog pDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
             pDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
             pDialog.setTitleText("Loading");
@@ -138,13 +132,11 @@ public class AttendanceFragment extends Fragment {
 
             SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
             String formattedDate = df.format(c);
-            CustomLocation customLocation= new CustomLocation(requireContext());
+            CustomLocation customLocation = new CustomLocation(requireContext());
 
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            {
-                if (permission.isLocationEnabled())
-                {
-                    CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (permission.isLocationEnabled()) {
+                    CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
                         @Override
                         public void gotLocation(Location location) {
 
@@ -158,7 +150,7 @@ public class AttendanceFragment extends Fragment {
                             attendanceModel.setDateTime(formattedDate);
                             attendanceModel.setEmpID(id);
                             attendanceModel.setImeiNumber(IMEI);
-                            attendance=attendanceModel;
+                            attendance = attendanceModel;
                             GetUserInfoModel loginUser = ffcDatabase.dao().getLoginUser();
                             mBinding.nameTextview.setText(loginUser.getUserName());
                             mBinding.imeiTextview.setText(IMEI);
@@ -168,9 +160,7 @@ public class AttendanceFragment extends Fragment {
                     };
 
                     customLocation.getLastLocation(locationResults);
-                }
-                else
-                {
+                } else {
                     pDialog.dismiss();
                     new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Please turn on  location for this action.")
@@ -192,24 +182,20 @@ public class AttendanceFragment extends Fragment {
                                 }
                             }).show();
 
-                    mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.doctor_icon,null));
-                    selectedImage= null;
+                    mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.doctor_icon, null));
+                    selectedImage = null;
                 }
 
-            }
-            else
-            {
+            } else {
                 pDialog.dismiss();
                 permission.getLocationPermission();
-                mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.doctor_icon,null));
+                mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.doctor_icon, null));
 
-                selectedImage= null;
+                selectedImage = null;
             }
 
 
-        }
-        else
-        {
+        } else {
             new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
                     .setContentText("Please Mark Attendance")
                     .show();
@@ -218,16 +204,15 @@ public class AttendanceFragment extends Fragment {
     }
 
     private void captureImage() {
-        Permission permission = new Permission(requireContext(),requireActivity());
+        Permission permission = new Permission(requireContext(), requireActivity());
 
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED&&ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permission.getCameraPermission();
         } else {
-            Intent cameraIntent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-            if (cameraIntent.resolveActivity(requireContext().getPackageManager())!=null)
-            {
-                startActivityForResult(cameraIntent,0);
+            if (cameraIntent.resolveActivity(requireContext().getPackageManager()) != null) {
+                startActivityForResult(cameraIntent, 0);
             }
 
         }
@@ -238,22 +223,16 @@ public class AttendanceFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode!=RESULT_CANCELED)
-        {
-            if (requestCode==0)
-            {
-                if (resultCode==RESULT_OK&&data!=null)
-                {
-                    selectedImage= (Bitmap) data.getExtras().get("data");
+        if (resultCode != RESULT_CANCELED) {
+            if (requestCode == 0) {
+                if (resultCode == RESULT_OK && data != null) {
+                    selectedImage = (Bitmap) data.getExtras().get("data");
                     mBinding.attendanceImage.setImageBitmap(selectedImage);
                     String uniqueID;
 
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                    {
-                         uniqueID = UUID.randomUUID().toString();
-                    }
-                    else
-                    {
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        uniqueID = UUID.randomUUID().toString();
+                    } else {
                         uniqueID = getDeviceIMEI();
 
                     }
@@ -265,16 +244,14 @@ public class AttendanceFragment extends Fragment {
     }
 
 
-    public  String getDeviceIMEI( ) {
-        Permission permission = new Permission(requireContext(),requireActivity());
+    public String getDeviceIMEI() {
+        Permission permission = new Permission(requireContext(), requireActivity());
         String deviceUniqueIdentifier = null;
         TelephonyManager tm = (TelephonyManager) requireActivity().getSystemService(Context.TELEPHONY_SERVICE);
         if (null != tm) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
-            {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 permission.getPhoneStatePermission();
-            }
-            else {
+            } else {
                 deviceUniqueIdentifier = tm.getDeviceId();
             }
             if (null == deviceUniqueIdentifier || 0 == deviceUniqueIdentifier.length()) {
@@ -283,20 +260,20 @@ public class AttendanceFragment extends Fragment {
         }
         return deviceUniqueIdentifier;
     }
+
     public String getBytesFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-        String imgString = Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP);
-        return imgString;
+        return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP);
     }
 
-    public void openActivity(String mainActivity, String subActivity, int taskID)
-    {   SweetAlertDialog progressDialog= new SweetAlertDialog(requireContext(),SweetAlertDialog.PROGRESS_TYPE);
+    public void openActivity(String mainActivity, String subActivity, int taskID) {
+        SweetAlertDialog progressDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
         progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
         progressDialog.setTitleText("Loading");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        CustomLocation customLocation= new CustomLocation(requireContext());
+        CustomLocation customLocation = new CustomLocation(requireContext());
 
         Activity activity = new Activity();
 
@@ -304,44 +281,39 @@ public class AttendanceFragment extends Fragment {
 
         SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
         String formattedDate = df.format(c);
-        Permission permission= new Permission(requireContext(),requireActivity());
+        Permission permission = new Permission(requireContext(), requireActivity());
 
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED&&
-                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            if (permission.isLocationEnabled())
-            {
-                CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (permission.isLocationEnabled()) {
+                CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
                     @Override
                     public void gotLocation(Location location) {
                         activity.setMainActivity(mainActivity);
                         activity.setSubActivity(subActivity);
                         activity.setStartDateTime(formattedDate);
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-                        String startAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                        String startAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                         activity.setStartAddress(startAddress);
                         activity.setStartCoordinates(locationString);
                         activityViewModel.insertActivity(activity);
                         progressDialog.dismiss();
 
-                        BottomNavigationView bottomNavigationView= requireActivity().findViewById(R.id.bottom_navigation);
+                        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
                         bottomNavigationView.getMenu().findItem(R.id.nav_start_day).setEnabled(false);
 
-                        NavigationView navigationView= requireActivity().findViewById(R.id.nav_view);
+                        NavigationView navigationView = requireActivity().findViewById(R.id.nav_view);
                         navigationView.getMenu().findItem(R.id.nav_start_day).setEnabled(false);
                         SharedPreferenceHelper.getInstance(requireContext()).setStart(true);
 
                         navController.navigate(AttendanceFragmentDirections.actionNavAttendanceToNavTargetMain());
 
 
-
                     }
                 };
 
                 customLocation.getLastLocation(locationResults);
-            }
-            else
-            {
+            } else {
                 progressDialog.dismiss();
                 new SweetAlertDialog(requireContext())
                         .setTitleText("Please turn on  location for this action.")
@@ -365,8 +337,7 @@ public class AttendanceFragment extends Fragment {
                         }).show();
             }
 
-        }
-        else {
+        } else {
             progressDialog.dismiss();
 
             permission.getLocationPermission();

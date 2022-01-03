@@ -57,8 +57,9 @@ public class SalesOrderListFragment extends Fragment {
     private HashMap<String, Integer>  byDateHashmap = new HashMap<>(), byStatusHashmap = new HashMap<>(), byPriorityHashMap = new HashMap<>();
     private int byDateKey = 0 , byStatusKey = 0 , byPriorityKey = 0;
     private String fromDate, toDate;
-
-
+    private ArrayAdapter<String> arrayAdapter;
+    private ArrayAdapter<String> adapter1;
+    private ArrayAdapter<String> adapter2;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +108,13 @@ public class SalesOrderListFragment extends Fragment {
         progressDialog.setCancelable(false);
 
         Calendar calendar = Calendar.getInstance();
-        String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+        int year =calendar.get(Calendar.YEAR);
+        int month =calendar.get(Calendar.MONTH);
+        int day =calendar.get(Calendar.DAY_OF_MONTH);
+
+
+        String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH)+1)+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
         setUpRecyclerView();
         getSalesOrder(0,date,date,0,0,0);
         btnListener();
@@ -128,8 +135,8 @@ public class SalesOrderListFragment extends Fragment {
         byDateHashmap.put("This Month",4);
         byDateList.add("This Year");
         byDateHashmap.put("This Year",4);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byDateList);
-        mBinding.dateSpinner.setAdapter(adapter);
+        arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byDateList);
+        mBinding.dateSpinner.setAdapter(arrayAdapter);
 
         //setting for by status spinner
         byStatusList.add("Show All");
@@ -142,7 +149,7 @@ public class SalesOrderListFragment extends Fragment {
         byStatusHashmap.put("Closed",3);
         byStatusList.add("Canceled");
         byStatusHashmap.put("Canceled",4);
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byStatusList);
+        adapter1 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byStatusList);
         mBinding.statusSpinner.setAdapter(adapter1);
 
         //setting for by priority spinner
@@ -154,7 +161,7 @@ public class SalesOrderListFragment extends Fragment {
         byPriorityHashMap.put("Normal",2);
         byPriorityList.add("Low");
         byPriorityHashMap.put("Low",3);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
+        adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
         mBinding.prioritySpinner.setAdapter(adapter2);
     }
 

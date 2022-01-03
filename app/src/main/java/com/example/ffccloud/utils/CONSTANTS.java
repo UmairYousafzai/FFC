@@ -23,11 +23,19 @@ public class CONSTANTS {
     public final static String FARM_SUPPLIER_KEY="Farm Supplier";
     public final static int ITEM_SENT = 1;
     public final static int ITEM_RECEIVE = 2;
+    public final static int NOTIFICATION_WORK_PLAN_STATUS_ID = 1;
+    public final static int NOTIFICATION_WORK_PLAN_ID = 2;
+    public final static int NOTIFICATION_ERROR_ID = 3;
     public final static String PRODUCT_MODEL="product model";
     public final static String USER_SUB_TYPE_FARM="Farm";
     public final static String USER_SUB_TYPE_HOSPITAL="Hospital";
     public final static String USER_SUB_TYPE_DOCTOR="Doctor";
     public final static String USER_SUB_TYPE_STORE="Store";
+    public final static String WORK_REQUEST_END_DAY="End Day";
+    public final static String WORK_REQUEST_TAG="WorkManager Tag";
+    public final static String WORK_REQUEST_CANCEL_WORK_PLAN="cancel work plan";
+    public final static String WORK_REQUEST_COMPLETE_WORK_PLAN="complete work plan";
+    public final static String WORK_REQUEST_RESCHEDULE_WORK_PLAN="reschedule work plan";
 
 
 

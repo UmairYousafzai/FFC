@@ -26,7 +26,44 @@ public class Permission {
         this.mContext = mContext;
         this.mActivity = mActivity;
     }
-    
+    public void getWriteStoragePermission() {
+
+        String[] permissionArray = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
+
+        alertDialog.setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        ActivityCompat.requestPermissions(mActivity,
+                                permissionArray,
+                                CONSTANTS.PERMISSION_REQUEST_CODE);
+                    }
+                })
+                .setCancelText("Cancel")
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                });
+
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            alertDialog.setTitle("Storage Permission Needed");
+            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+            alertDialog.show();
+
+
+        } else {
+            ActivityCompat.requestPermissions(mActivity, permissionArray, CONSTANTS.PERMISSION_REQUEST_CODE);
+
+        }
+
+
+    }
     public void getLocationPermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};

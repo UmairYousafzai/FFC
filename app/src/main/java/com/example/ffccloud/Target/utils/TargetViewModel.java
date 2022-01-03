@@ -16,8 +16,6 @@ public class TargetViewModel extends AndroidViewModel {
     private final LiveData<List<DoctorModel>> allMorningDoctors;
     private final LiveData<List<DoctorModel>> allEveningDoctors;
     private final LiveData<List<DoctorModel>> allDoctors;
-    private  LiveData<List<DoctorModel>> allEveningDoctorsByDate;
-    private  LiveData<List<DoctorModel>> allMorningDoctorsByDate;
 
 
     public TargetViewModel(@NonNull Application application) {
@@ -30,13 +28,11 @@ public class TargetViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<DoctorModel>> getAllEveningDoctorsByDate(String date) {
-        allEveningDoctorsByDate = repository.getAllEveningDoctorsByDate(date);
-        return allEveningDoctorsByDate;
+        return repository.getAllEveningDoctorsByDate(date);
     }
 
     public LiveData<List<DoctorModel>> getAllMorningDoctorsByDate(String date) {
-        allMorningDoctorsByDate= repository.getAllMorningDoctorsByDate(date);
-        return allMorningDoctorsByDate;
+        return repository.getAllMorningDoctorsByDate(date);
     }
 
     public void DeleteDoctor(DoctorModel doctorModel)

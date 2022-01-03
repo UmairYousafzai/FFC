@@ -13,12 +13,14 @@ import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.Login.GetUserMenuModel;
 import com.example.ffccloud.Login.GetUserSettingModel;
 import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.ModelClasses.DeliveryModeModel;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.ModelClasses.UpdateWorkPlanStatus;
 import com.example.ffccloud.RoueActivity.RouteActivityModel;
 import com.example.ffccloud.DoctorModel;
 import com.example.ffccloud.ScheduleModel;
@@ -182,16 +184,16 @@ public interface FfcDAO {
     @Query("Delete From Doctor")
     void deleteAllWorkPlanDoctor();
 
-    @Query("Select *From Doctor where (workDate=:date) " +
+    @Query("Select *From Doctor where (fromDate=:date) " +
             "and (shift = 'Morning')")
     LiveData<List<DoctorModel>> getMorningDoctorByDate(String date);
 
-    @Query("Select *From Doctor where (workDate = :date)" +
+    @Query("Select *From Doctor where (fromDate = :date)" +
             " and (shift = 'Evening')")
-    LiveData<List<DoctorModel>> getEveninggDoctorByDate(String date);
+    LiveData<List<DoctorModel>> getEveningDoctorByDate(String date);
 
     @Query("Select *From Doctor")
-    LiveData<List<DoctorModel>> getAllWorkPlanDocotors();
+    LiveData<List<DoctorModel>> getAllWorkPlanDoctors();
 
 
 
@@ -280,4 +282,38 @@ public interface FfcDAO {
     @Query("Select *From Attendance")
     LiveData<List<AttendanceModel>> getAllAttendance();
 
+                /*
+    //
+    // *******UploadData  Queries*******
+    //
+     */
+
+
+    @Insert
+    void insertWorkPlanStatus(UpdateWorkPlanStatus updateWorkPlanStatus);
+
+    @Delete
+    void deleteWorkPlanStatus(UpdateWorkPlanStatus updateWorkPlanStatus);
+
+    @Query("Delete from workPlanStatus")
+    void deleteAllWorkPlanStatus();
+
+    @Query("Select *From workPlanStatus")
+    List<UpdateWorkPlanStatus> getAllWorkPlanStatus();
+
+
+    @Insert
+    void insertWorkPlan(AddNewWorkPlanModel workPlanModel);
+
+    @Delete
+    void deleteWorkPlan(AddNewWorkPlanModel workPlanModel);
+
+    @Query("Delete from workPlan")
+    void deleteAllWorkPlan();
+
+    @Query("Select *From workPlan")
+    List<AddNewWorkPlanModel> getAllWorkPlan();
+
+    @Query("Select *From Doctor where doctorId= :workPlanID")
+    DoctorModel getWorkPlanByID(int workPlanID);
 }

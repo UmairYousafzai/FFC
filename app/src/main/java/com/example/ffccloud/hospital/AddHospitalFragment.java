@@ -133,8 +133,18 @@ public class AddHospitalFragment extends Fragment {
 
                     if (callingAddBtn.equals("DoctorAddBtn"))
                     {
-                        doctorModelList.add(model);
-                        doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
+                        if (doctorModelList.size()>0)
+                        {
+                            if (doctorModelList.get(doctorModelList.size()-1)!=model) {
+                                doctorModelList.add(model);
+                                doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
+                            }
+                        }
+                        else
+                        {
+                            doctorModelList.add(model);
+                        }
+
                     }
 
 
@@ -155,8 +165,18 @@ public class AddHospitalFragment extends Fragment {
                 {
                     if (callingAddBtn.equals("FarmAddBtn"))
                     {
-                        farmModelList.add(model);
-                        farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
+                        if (farmModelList.size()>0)
+                        {
+                            if (farmModelList.get(farmModelList.size()-1)!=model) {
+                                farmModelList.add(model);
+                                farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
+                            }
+                        }
+                        else
+                        {
+                            farmModelList.add(model);
+                        }
+
                     }
 
 
@@ -178,14 +198,23 @@ public class AddHospitalFragment extends Fragment {
                     if (callingAddBtn.equals("MedicineAddBtn"))
                     {
                         SupplierItemLinking medicineModal = new SupplierItemLinking();
+
+                        medicineModalList.size();
                         medicineModal.setItHead(model.getTitleProduct());
                         medicineModal.setIsRegistered(true);
                         medicineModal.setSupplierItemLinkIdDtl("0");
                         medicineModal.setItCode(model.getItem_Code());
+                        if (medicineModalList.size()>0)
+                        {
+                            if (medicineModalList.get(medicineModalList.size()-1).getItCode()!=medicineModal.getItCode()) {
+                                medicineModalList.add(medicineModal);
+                                medicineAdapter.setMedicineModalList(medicineModalList);
+                            }
+                        }else
+                        {
+                            medicineModalList.add(medicineModal);
+                        }
 
-
-                        medicineModalList.add(medicineModal);
-                        medicineAdapter.setMedicineModalList(medicineModalList);
                     }
 
 

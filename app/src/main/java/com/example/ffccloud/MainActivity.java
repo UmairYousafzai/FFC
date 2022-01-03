@@ -1,9 +1,13 @@
 package com.example.ffccloud;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,6 +15,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ffccloud.Database.FfcDatabase;
@@ -23,13 +28,16 @@ import com.example.ffccloud.Target.utils.TargetViewModel;
 import com.example.ffccloud.databinding.ActivityMainBinding;
 import com.example.ffccloud.databinding.NavigationDrawerHeaderBinding;
 import com.example.ffccloud.utils.ActivityViewModel;
+import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.Permission;
 import com.example.ffccloud.utils.SyncDataToDB;
 
 import com.example.ffccloud.utils.SharedPreferenceHelper;
+import com.example.ffccloud.worker.UploadWorker;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -43,6 +51,13 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.sqlite.db.SimpleSQLiteQuery;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,6 +67,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.Constants;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity {
@@ -76,13 +92,11 @@ public class MainActivity extends AppCompatActivity {
         View view = mbinding.getRoot();
         setContentView(view);
 
-        SendNoticationClass sendNoticationClass= new SendNoticationClass(this);
+        SendNoticationClass sendNoticationClass = new SendNoticationClass(this);
         sendNoticationClass.UpdateToken();
 
 
-
         ffcDatabase = FfcDatabase.getInstance(getApplicationContext());
-
 
 
         permission = new Permission(this, this);
@@ -93,9 +107,8 @@ public class MainActivity extends AppCompatActivity {
         activityViewModel.getQueryActivity().observe(this, new Observer<List<Activity>>() {
             @Override
             public void onChanged(List<Activity> activities) {
-                if ( activities!=null)
-                {
-                    runningActivity= activities;
+                if (activities != null) {
+                    runningActivity = activities;
                 }
 
             }
@@ -150,13 +163,19 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.end_day) {
                     if (SharedPreferenceHelper.getInstance(getBaseContext()).getStart()) {
 
-                        closeActivity();
-                        mbinding.drawerLayout.closeDrawer(GravityCompat.START);
+                        if (isNetworkConnected()) {
+                            closeActivity();
+                            mbinding.drawerLayout.closeDrawer(GravityCompat.START);
+                        } else {
+                            generateWorkRequest();
+                            mbinding.drawerLayout.closeDrawer(GravityCompat.START);
+
+                        }
+
 
                     }
-                }
-                else {
-                    NavigationUI.onNavDestinationSelected(item,navController);
+                } else {
+                    NavigationUI.onNavDestinationSelected(item, navController);
                     mbinding.drawerLayout.closeDrawer(GravityCompat.START);
 
                 }
@@ -167,30 +186,57 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void generateWorkRequest() {
+
+        Data data = new Data.Builder()
+                .putString(CONSTANTS.WORK_REQUEST_END_DAY, "Work in done")
+                .build();
+
+        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(true).setRequiredNetworkType(NetworkType.CONNECTED).build();
+        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class)
+                .setInputData(data)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance().enqueue(oneTimeWorkRequest);
+
+        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        Toast.makeText(MainActivity.this, "" + workInfo.getState().name(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("onResume:","onResume of main activity" );
+        Log.e("onResume:", "onResume of main activity");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-                            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                            {
-                                mbinding.bottomNavigation.setVisibility(View.VISIBLE);
+                            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-                                if (menuCheck) {
-                                    final Menu menu = mbinding.navView.getMenu();
-                                    setMenus(menu);
-                                    menuCheck= false;
+
+                                    mbinding.bottomNavigation.setVisibility(View.VISIBLE);
+
+                                    if (menuCheck) {
+                                        final Menu menu = mbinding.navView.getMenu();
+                                        setMenus(menu);
+                                        menuCheck = false;
+                                    }
+                                } else {
+                                    permission.getWriteStoragePermission();
                                 }
 
-                            }
-                            else
-                            {
+
+                            } else {
                                 permission.getCOARSELocationPermission();
                             }
 
@@ -232,11 +278,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
 
-         DoctorViewModel doctorViewModel;
-         TargetViewModel targetViewModel;
+        DoctorViewModel doctorViewModel;
+        TargetViewModel targetViewModel;
 
-        if (item.getItemId()==R.id.signOut)
-        {
+        if (item.getItemId() == R.id.signOut) {
             targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
             doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
 
@@ -290,19 +335,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setMenus(Menu menu) {
-        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
+        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+        menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
 
-        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_route_svgrepo_com,null));
-        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_meeting,null));
-        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_location,null));
-        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
-        menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_baseline_gps_fixed_24,null));
-        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_client_profile_svgrepo_com,null));
-        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_orders,null));
-        menu.add(1, R.id.farmListFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_farm_svgrepo_com,null));
-        menu.add(1, R.id.medicalStoreListFragment, 16, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_medical_pharmacy_store,null));
-        menu.add(1, R.id.hospitalListFragment, 17, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_hospital,null));
-        menu.add(1, R.id.SupplierDoctorFragment, 18, "Add Doctor").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_doctor,null));
+        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_route_svgrepo_com, null));
+        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
+        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, null));
+        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+        menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_gps_fixed_24, null));
+        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_client_profile_svgrepo_com, null));
+        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_orders, null));
+        menu.add(1, R.id.farmListFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_farm_svgrepo_com, null));
+        menu.add(1, R.id.medicalStoreListFragment, 16, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_medical_pharmacy_store, null));
+        menu.add(1, R.id.hospitalListFragment, 17, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_hospital, null));
+        menu.add(1, R.id.SupplierDoctorFragment, 18, "Add Doctor").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_doctor, null));
         ArrayList<String> menuIds = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menu_items_ids)));
         SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *from User_Menu Order By Menu_Order Asc");
         ffcDatabase.dao().sortMenus();
@@ -324,31 +370,30 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (filterList.get(ii)) {
                             case "Ac_Home":
-                                menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_home,null));
+                                menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_home, null));
                                 break;
 //                            case "Ac_Target":
 //                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
 //                                break;
                             case "Ac_Expense":
-                                menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_expense,null));
+                                menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
                                 break;
                             case "Ac_SOrder":
-                                menu.add(1, R.id.doctorListFragment, 4, "Doctor Profile").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_profile,null));
+                                menu.add(1, R.id.doctorListFragment, 4, "Doctor Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_profile, null));
                                 break;
                             case "Ac_MSetting":
-                                menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_settings,null));
+                                menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings, null));
                                 break;
-                            case "Ac_EndDay":
-                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
-                                break;
+//                            case "Ac_EndDay":
+//                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
+//                                break;
                             case "Ac_MyProfile":
-                                menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_account,null));
+                                menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null));
                                 break;
                         }
 
                     }
                 }
-
 
 
             }
@@ -364,45 +409,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void closeActivity()
-    {
+    public void closeActivity() {
 
-        CustomLocation customLocation= new CustomLocation(this);
+        CustomLocation customLocation = new CustomLocation(this);
 
         Date c = Calendar.getInstance().getTime();
 
         SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
         String formattedDate = df.format(c);
-        Permission permission= new Permission(this,this);
+        Permission permission = new Permission(this, this);
 
-        if (runningActivity!=null&&!runningActivity.isEmpty())
-        {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            {
-                if (permission.isLocationEnabled())
-                {
-                    CustomLocation.CustomLocationResults locationResults= new CustomLocation.CustomLocationResults() {
+        if (runningActivity != null && !runningActivity.isEmpty()) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (permission.isLocationEnabled()) {
+                    CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
                         @Override
                         public void gotLocation(Location location) {
                             String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
 
-                            for (Activity activity:runningActivity)
-                            {
+                            for (Activity activity : runningActivity) {
                                 String[] locationStringArray = activity.getStartCoordinates().split(",");
                                 Location startLocation = new Location("");
 
                                 startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
                                 startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
 
-                                String distance= String.valueOf(location.distanceTo(startLocation));
+                                String distance = String.valueOf(location.distanceTo(startLocation));
 
 
-                                String endAddress = customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
+                                String endAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 activity.setEndAddress(endAddress);
                                 activity.setDistance(distance);
                                 activity.setEndCoordinates(locationString);
                                 activity.setEndDateTime(formattedDate);
-                                String totalTime=calculateTotalTime(formattedDate,activity.getStartDateTime());
+                                String totalTime = calculateTotalTime(formattedDate, activity.getStartDateTime());
                                 activity.setTotalTime(totalTime);
                                 activityViewModel.updateActivity(activity);
                             }
@@ -419,14 +459,11 @@ public class MainActivity extends AppCompatActivity {
                     };
 
                     customLocation.getLastLocation(locationResults);
-                }
-                else
-                {
+                } else {
                     showDialog();
                 }
 
-            }
-            else {
+            } else {
                 permission.getLocationPermission();
             }
 
@@ -434,26 +471,25 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     private String calculateTotalTime(String formattedDate, String startDateTime) {
 
-        int endHours=0,endMinutes=0,endSeconds=0,startHours=0,startMinutes=0,startSeconds=0;
-        if (!startDateTime.isEmpty()&&!startDateTime.isEmpty())
-        {
-            endHours= Integer.parseInt(formattedDate.substring(11,13));
-            endMinutes= Integer.parseInt(formattedDate.substring(14,16));
-            endSeconds=Integer.parseInt(formattedDate.substring(17,19));
-            startHours= Integer.parseInt(startDateTime.substring(11,13));
-            startMinutes= Integer.parseInt(startDateTime.substring(14,16));
-            startSeconds=Integer.parseInt(startDateTime.substring(17,19));
+        int endHours = 0, endMinutes = 0, endSeconds = 0, startHours = 0, startMinutes = 0, startSeconds = 0;
+        if (!startDateTime.isEmpty() && !startDateTime.isEmpty()) {
+            endHours = Integer.parseInt(formattedDate.substring(10, 12));
+            endMinutes = Integer.parseInt(formattedDate.substring(14, 15));
+            endSeconds = Integer.parseInt(formattedDate.substring(17, 18));
+            startHours = Integer.parseInt(startDateTime.substring(10, 12));
+            startMinutes = Integer.parseInt(startDateTime.substring(14, 15));
+            startSeconds = Integer.parseInt(startDateTime.substring(17, 18));
         }
 
 
-        return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
+        return (Math.abs(endHours - startHours)) + ":" + (Math.abs(endMinutes - startMinutes)) + ":" + (Math.abs(endSeconds - startSeconds));
 
     }
 
-    public void showDialog()
-    {
+    public void showDialog() {
         new SweetAlertDialog(this)
                 .setTitleText("Please turn on  location for this action.")
                 .setContentText("Do you want to open location setting.")
@@ -464,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
 
                         sweetAlertDialog.dismiss();
                         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                      startActivity(intent);
+                        startActivity(intent);
                     }
                 })
                 .setCancelText("Cancel")
@@ -474,5 +510,19 @@ public class MainActivity extends AppCompatActivity {
                         sweetAlertDialog.dismiss();
                     }
                 }).show();
+    }
+
+
+    public boolean isNetworkConnected() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return connected = true;
+        } else {
+            return connected = false;
+        }
+
     }
 }

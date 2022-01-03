@@ -136,7 +136,7 @@
                 android:layout_marginTop="10dp"
                 android:elevation="2dp"
                 android:padding="5dp"
-                android:text="@string/ledger_balance"
+                android:text="@string/select_customer"
                 android:textColor="@color/APP_Theme_Color"
                 android:textStyle="bold"
                 android:background="@color/white"
