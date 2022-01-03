@@ -188,7 +188,7 @@ public class AddworkPlanFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         int checkMonth = month % 10, checkday = (dayOfMonth % 10);
-                        ;
+
                         String mMonth, mDay;
                         if (checkMonth > 0 && month < 9) {
                             mMonth = "0" + (month + 1);
