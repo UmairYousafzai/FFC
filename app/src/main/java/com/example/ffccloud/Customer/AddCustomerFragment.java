@@ -148,6 +148,9 @@ public class AddCustomerFragment extends Fragment {
 
     private void setUpFields() {
 
+        isCompany = customerModel.isIs_Company();
+        applyCredit= customerModel.isApply_Cr_Limit();
+
         mBinding.etPartName.setText(customerModel.getPartyName());
         partyName=customerModel.getPartyName();
         mBinding.etPartAbbreviation.setText(customerModel.getPartyAbbreviation());
@@ -156,38 +159,42 @@ public class AddCustomerFragment extends Fragment {
         focalPerson=customerModel.getFocal_Person();
         mBinding.etFocalPersonCNIC.setText(customerModel.getCNICNo());
         focalPeronCNIC=customerModel.getCNICNo();
-        if (customerModel.isIs_Company())
-        {
-            mBinding.companyCheckBox.setChecked(true);
-        }
+
+            mBinding.companyCheckBox.setChecked(customerModel.isIs_Company());
+
         mBinding.etSaleTax.setText(customerModel.getSales_Tax_No());
         saleTax=customerModel.getSales_Tax_No();
         mBinding.etNtnNum.setText(customerModel.getNTN());
         NTN=customerModel.getNTN();
-        mBinding.etCreditDays.setText(String.valueOf(customerModel.getCr_Limit()) );
         crLimit=customerModel.getCr_Limit();
+        mBinding.etCreditDays.setText(String.valueOf(customerModel.getCr_Limit()) );
+
         mBinding.etCreditLimit.setText(String.valueOf(customerModel.getCr_Limit_Amount()));
         crLimitAmount=customerModel.getCr_Limit_Amount();
 
         if (customerModel.getPrompt_Type().equals("1"))
         {
             mBinding.creditLimitNaRadio.setChecked(true);
+            creditLimitPromptType ="1";
         }
         else if (customerModel.getPrompt_Type().equals("2"))
         {
             mBinding.creditLimitWarningRadio.setChecked(true);
+            creditLimitPromptType ="2";
+
 
         }
         else if (customerModel.getPrompt_Type().equals("3"))
         {
             mBinding.creditLimitCriticalRadio.setChecked(true);
+            creditLimitPromptType ="2";
+
 
         }
 
-        if (customerModel.isApply_Cr_Limit())
-        {
-            mBinding.applyCreditLimitCheckBox.setChecked(true);
-        }
+
+            mBinding.applyCreditLimitCheckBox.setChecked(customerModel.isApply_Cr_Limit());
+
 
         mBinding.etEmail.setText(customerModel.getEmail());
         email=customerModel.getEmail();

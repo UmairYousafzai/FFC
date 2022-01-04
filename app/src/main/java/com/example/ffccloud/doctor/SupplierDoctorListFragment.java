@@ -148,6 +148,7 @@ public class SupplierDoctorListFragment extends Fragment {
                     else {
                         mBinding.tvNothingFound.setVisibility(View.GONE);
                         List<GetSupplierModel> getSupplierModelList = response.body();
+                        adapter.clearList();
                         adapter.setGetSupplierModelList(getSupplierModelList);
                         adapter.setCalledSupplier("Doctor");
                     }

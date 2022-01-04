@@ -294,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
             ffcDatabase.dao().deleteAllGrade();
             ffcDatabase.dao().deleteAllQualification();
             ffcDatabase.dao().deleteAllClassification();
+            ffcDatabase.dao().deleteAllDeliveryModes();
 
 
             SharedPreferenceHelper.getInstance(this).setFlterDocListState(false);

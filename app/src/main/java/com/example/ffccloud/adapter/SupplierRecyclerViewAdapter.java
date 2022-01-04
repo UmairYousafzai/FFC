@@ -98,6 +98,7 @@ public class SupplierRecyclerViewAdapter extends RecyclerView.Adapter<SupplierRe
     {
         if (list!=null)
         {
+
             getSupplierModelList = list;
             getSupplierModelListFull.addAll(getSupplierModelList);
         }
@@ -106,6 +107,10 @@ public class SupplierRecyclerViewAdapter extends RecyclerView.Adapter<SupplierRe
             getSupplierModelList.clear();
         }
         notifyDataSetChanged();
+    }
+    public void clearList()
+    {
+        getSupplierModelListFull.clear();
     }
 
     public void setCalledSupplier(String calledSupplier)

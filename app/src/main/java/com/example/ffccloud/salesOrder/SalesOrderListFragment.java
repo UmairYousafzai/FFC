@@ -60,6 +60,7 @@ public class SalesOrderListFragment extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private ArrayAdapter<String> adapter1;
     private ArrayAdapter<String> adapter2;
+    private  boolean isSpinnerSet = false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +96,15 @@ public class SalesOrderListFragment extends Fragment {
 
             }
         });
-        setUpFilterSpinners();
+        if (!isSpinnerSet)
+        {
+            setUpFilterSpinners();
+            isSpinnerSet=true;
+        }
+        else
+        {
+            setSpinnerAdapter();
+        }
 
     }
 
@@ -110,15 +119,39 @@ public class SalesOrderListFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
 
         int year =calendar.get(Calendar.YEAR);
-        int month =calendar.get(Calendar.MONTH);
+        int month =calendar.get(Calendar.MONTH)+1;
         int day =calendar.get(Calendar.DAY_OF_MONTH);
 
 
-        String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH)+1)+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        String date =String.valueOf(calendar.get(Calendar.YEAR))+getDate(month,day);
         setUpRecyclerView();
         getSalesOrder(0,date,date,0,0,0);
         btnListener();
         setPullToFresh();
+    }
+
+    public String getDate(int month,int day)
+    {
+        int checkmonth = (month % 10);
+        int checkday = (day % 10);
+        String mMonth;
+        if (checkmonth > 0 && month < 9) {
+            mMonth = "0" + (month);
+
+        } else {
+            mMonth = String.valueOf(month + 1);
+
+        }
+
+        String mDay;
+        if (checkday > 0 && day < 10) {
+            mDay = "0" + (day);
+
+        } else {
+            mDay = String.valueOf(day);
+
+        }
+        return mMonth+mDay;
     }
 
     private void setUpFilterSpinners() {
@@ -135,8 +168,7 @@ public class SalesOrderListFragment extends Fragment {
         byDateHashmap.put("This Month",4);
         byDateList.add("This Year");
         byDateHashmap.put("This Year",4);
-        arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byDateList);
-        mBinding.dateSpinner.setAdapter(arrayAdapter);
+
 
         //setting for by status spinner
         byStatusList.add("Show All");
@@ -149,8 +181,7 @@ public class SalesOrderListFragment extends Fragment {
         byStatusHashmap.put("Closed",3);
         byStatusList.add("Canceled");
         byStatusHashmap.put("Canceled",4);
-        adapter1 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byStatusList);
-        mBinding.statusSpinner.setAdapter(adapter1);
+
 
         //setting for by priority spinner
         byPriorityList.add("Show All");
@@ -161,6 +192,18 @@ public class SalesOrderListFragment extends Fragment {
         byPriorityHashMap.put("Normal",2);
         byPriorityList.add("Low");
         byPriorityHashMap.put("Low",3);
+
+        setSpinnerAdapter();
+
+    }
+
+    private void setSpinnerAdapter() {
+        arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byDateList);
+        mBinding.dateSpinner.setAdapter(arrayAdapter);
+
+        adapter1 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byStatusList);
+        mBinding.statusSpinner.setAdapter(adapter1);
+
         adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
         mBinding.prioritySpinner.setAdapter(adapter2);
     }
@@ -175,8 +218,8 @@ public class SalesOrderListFragment extends Fragment {
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
                 String mDate;
-                mDate=month+"/"+dayOfMonth+"/"+year;
-                fromDate =String.valueOf(year)+ month + dayOfMonth;
+                mDate=month+1+"/"+dayOfMonth+"/"+year;
+                fromDate = year +getDate(month+1,dayOfMonth);
                 mBinding.tvFromDate.setText(mDate);
             },mYear,mMonth,mDay);
             datePickerDialog.show();
@@ -190,8 +233,8 @@ public class SalesOrderListFragment extends Fragment {
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
                 String mDate;
-                mDate=month+"/"+dayOfMonth+"/"+year;
-                toDate =String.valueOf(year)+String.valueOf(month)+String.valueOf(dayOfMonth);
+                mDate=month+1+"/"+dayOfMonth+"/"+year;
+                toDate =year +getDate(month+1,dayOfMonth);
 
                 mBinding.tvToDate.setText(mDate);
             },mYear,mMonth,mDay);
@@ -282,7 +325,7 @@ public class SalesOrderListFragment extends Fragment {
     public void setPullToFresh() {
         mBinding.swipeLayout.setOnRefreshListener(() -> {
             Calendar calendar = Calendar.getInstance();
-            String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            String date =String.valueOf(calendar.get(Calendar.YEAR))+getDate(calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DAY_OF_MONTH));
 
             mBinding.swipeLayout.setRefreshing(false);
             getSalesOrder(0,date,date,0,0,0);
@@ -362,6 +405,7 @@ public class SalesOrderListFragment extends Fragment {
                 Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down);
                 mBinding.salesOrderFilterLayout.setAnimation(animation);
                 mBinding.salesOrderFilterLayout.setVisibility(View.VISIBLE);
+
 
             }
             else

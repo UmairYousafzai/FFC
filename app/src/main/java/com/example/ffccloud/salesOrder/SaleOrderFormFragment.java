@@ -139,7 +139,9 @@ public class SaleOrderFormFragment extends Fragment {
         getLiveData();
 
 
-        saleOrderID = SaleOrderFormFragmentArgs.fromBundle(getArguments()).getSaleOrderId();
+        if (getArguments() != null) {
+            saleOrderID = SaleOrderFormFragmentArgs.fromBundle(getArguments()).getSaleOrderId();
+        }
         if (saleOrderID != 0 && !flag) {
             flag = true;
             getSaleOrder();
@@ -189,7 +191,7 @@ public class SaleOrderFormFragment extends Fragment {
         mBinding.tvLedgerBalance.setText(String.valueOf(ledgerBalance));
         mBinding.tvCreditLimit.setText(String.valueOf(creditLimit));
         mBinding.tvSalesOrderDate.setText(saleOrderDate);
-        mBinding.tvDeliveryDate.setText(saleOrderDate);
+        mBinding.tvDeliveryDate.setText(deliveryDate);
         adapter.setProductModelList(productModelList);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, byPriorityList);
         mBinding.prioritySpinner.setAdapter(adapter2);
@@ -352,7 +354,6 @@ public class SaleOrderFormFragment extends Fragment {
 
                     saveSaleOrder();
                 }
-
 
 
             }
@@ -1020,7 +1021,11 @@ public class SaleOrderFormFragment extends Fragment {
         if (!isSaved) {
             deletePdf(file);
         }
-        pdfDocument.close();
+        if
+        (pdfDocument != null) {
+            pdfDocument.close();
+
+        }
     }
 
     public void setupSettingIntent() {

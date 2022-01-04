@@ -151,6 +151,8 @@ public class MedicalStoreListFragment extends Fragment {
                     else {
                         mBinding.tvNothingFound.setVisibility(View.GONE);
                         List<GetSupplierModel> getSupplierModelList = response.body();
+                        adapter.clearList();
+
                         adapter.setGetSupplierModelList(getSupplierModelList);
                     }
                     progressDialog.dismiss();

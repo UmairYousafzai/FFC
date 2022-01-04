@@ -126,6 +126,7 @@
                     android:nextFocusDown="@+id/edit_text_person_in_contact_phone"
                     android:singleLine="true"
                     android:textColor="@color/black"
+                    android:imeOptions="actionDone"
                     android:textColorHint="@color/APP_Theme_Color" />
             </com.google.android.material.textfield.TextInputLayout>
 

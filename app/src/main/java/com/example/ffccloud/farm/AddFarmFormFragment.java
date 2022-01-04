@@ -244,9 +244,21 @@ public class AddFarmFormFragment extends Fragment {
         mBinding.etOwnerName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
         mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
+        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty())
+        {
+            mBinding.locationCheckbox.setChecked(true);
+        }
         mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
 
         mBinding.etNumberOfAnimal.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
+
+        int regionId= (int) getSupplierDetailModel.getSupplierModelNewList().get(0).getRegionId();
+
+        String regionTitle= regionHashmapForTitle.get(regionId);
+
+        mBinding.regionSpinner.setSelection(regionList.indexOf(regionTitle));
+
+
 
         medicineModalList.clear();
         medicineModalList.addAll(getSupplierDetailModel.getSupplierItemLinkingList());
