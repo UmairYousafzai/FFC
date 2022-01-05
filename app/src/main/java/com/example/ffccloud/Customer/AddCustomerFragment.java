@@ -86,6 +86,7 @@ public class AddCustomerFragment extends Fragment {
         else
         {
             initializeViews();
+            int check=3;
         }
 
 
