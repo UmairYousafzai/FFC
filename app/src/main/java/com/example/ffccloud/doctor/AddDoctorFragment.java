@@ -362,7 +362,7 @@ public class AddDoctorFragment extends Fragment {
 
         int classificationId= getSupplierDetailModel.getSupplierModelNewList().get(0).getClassificationId();
         int qualificationID= getSupplierDetailModel.getSupplierModelNewList().get(0).getQualificationId();
-        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGradeId();
+        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
 
 
         String classification = classificationHashMapForTitle.get(classificationId);

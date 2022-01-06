@@ -48,12 +48,14 @@ import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
 import com.example.ffccloud.Target.utils.TargetViewModel;
 
+import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.CustomCompeleteDialogBinding;
 import com.example.ffccloud.databinding.CustomSelectActivityDialogBinding;
 import com.example.ffccloud.databinding.FragmentTargetFullInfoBinding;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.Permission;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.SyncDataToDB;
@@ -72,7 +74,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -222,25 +223,28 @@ public class TargetFullInfoFragment extends Fragment {
         mBinding.feedbackBottomSheet.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SweetAlertDialog(requireContext(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Save Successfully. ")
-                        .setContentText("You want to create another activity")
-                        .setConfirmText("Yes")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                showSelectActivityDialog();
-                                sDialog.dismissWithAnimation();
-                            }
-                        })
-                        .setCancelText("NO")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismissWithAnimation();
-                            }
-                        })
-                        .show();
+
+                CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
+                AlertDialog alertDialog = new AlertDialog.Builder( requireActivity().getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+                dialogBinding.title.setText("Save Successfully.");
+                dialogBinding.body.setText("You want to create another activity");
+                alertDialog.show();
+                dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSelectActivityDialog();
+                        alertDialog.dismiss();
+                    }
+                });
+
+                dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        alertDialog.dismiss();
+                    }
+                });
+
             }
         });
 
@@ -459,9 +463,7 @@ public class TargetFullInfoFragment extends Fragment {
                         }
                         else
                         {
-                            new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
-                                    .setContentText("You Are Out Of WorkPlan Location Radius")
-                                    .show();
+                            CustomsDialog.getInstance().showDialog("You Are Out Of WorkPlan Location Radius"," ",requireActivity(),requireContext());
                         }
 
                     }
@@ -474,26 +476,29 @@ public class TargetFullInfoFragment extends Fragment {
                         }
                         else
                         {
-                            new SweetAlertDialog(requireContext(),SweetAlertDialog.WARNING_TYPE)
-                                    .setTitleText("You Are Out Of WorkPlan Radius")
-                                    .setContentText("Do you want to Proceed.")
-                                    .setConfirmText("Yes")
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.dismiss();
-                                            saveWorkPlane(key);
 
-                                        }
-                                    })
-                                    .setCancelText("Cancel")
-                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.dismiss();
+                            CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
+                            AlertDialog alertDialog = new AlertDialog.Builder( requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+                            dialogBinding.title.setText("You Are Out Of WorkPlan Radius");
+                            dialogBinding.body.setText("Do you want to Proceed.");
+                            alertDialog.show();
+                            dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                    saveWorkPlane(key);
 
-                                        }
-                                    }).show();
+                                }
+                            });
+                            dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+
+
+                                }
+                            });
+
                         }
                     }
                     else if (distance==3)
@@ -542,8 +547,8 @@ public class TargetFullInfoFragment extends Fragment {
                         String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
                         String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
                         Date date = Calendar.getInstance().getTime();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
-                        String dateString = dateFormat.format(date);
+                        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
+                        String dateString = df.format(date);
                         UpdateWorkPlanStatus updateWorkPlanStatus = new UpdateWorkPlanStatus();
 
                         updateWorkPlanStatus.setDoctor_Id(doctorModel.getDoctorId());
@@ -588,7 +593,7 @@ public class TargetFullInfoFragment extends Fragment {
                                     }
                                     else
                                     {
-                                        new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
+                                        new SyncDataToDB(requireActivity().getApplication(),requireContext(),requireActivity()).loginAgain(response.message());
                                         alertDialog.dismiss();
                                         progressDialog.dismiss();
                                     }
@@ -643,7 +648,7 @@ public class TargetFullInfoFragment extends Fragment {
                 CustomLocation customLocation= new CustomLocation(requireContext());
 
                 Date c = Calendar.getInstance().getTime();
-                SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
                 String formattedDate = df.format(c);
                 Permission permission= new Permission(requireContext(),requireActivity());
 
@@ -706,7 +711,7 @@ public class TargetFullInfoFragment extends Fragment {
                     }
                     else
                     {
-                        showDialog();
+                        CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
                     }
 
                 }
@@ -739,9 +744,9 @@ public class TargetFullInfoFragment extends Fragment {
     }
 
     public void openActivity(String mainActivity,String subActivity,int taskID)
-    {   SweetAlertDialog progressDialog= new SweetAlertDialog(requireContext(),SweetAlertDialog.PROGRESS_TYPE);
-        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-        progressDialog.setTitleText("Loading");
+    {
+        ProgressDialog progressDialog= new ProgressDialog(requireContext());
+        progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
         progressDialog.show();
         CustomLocation customLocation= new CustomLocation(requireContext());
@@ -750,7 +755,7 @@ public class TargetFullInfoFragment extends Fragment {
 
         Date c = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
         String formattedDate = df.format(c);
         Permission permission= new Permission(requireContext(),requireActivity());
 
@@ -785,7 +790,7 @@ public class TargetFullInfoFragment extends Fragment {
             else
             {
                 progressDialog.dismiss();
-                showDialog();
+                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
             }
 
         }
@@ -799,29 +804,7 @@ public class TargetFullInfoFragment extends Fragment {
 
     }
 
-    public void showDialog()
-    {
-        new SweetAlertDialog(requireContext())
-                .setTitleText("Please turn on  location for this action.")
-                .setContentText("Do you want to open location setting.")
-                .setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                        sweetAlertDialog.dismiss();
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        requireContext().startActivity(intent);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                }).show();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

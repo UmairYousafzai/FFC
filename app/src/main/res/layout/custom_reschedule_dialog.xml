@@ -100,7 +100,7 @@
                 android:id="@+id/line_view"
                 android:layout_width="200dp"
                 android:layout_height="2dp"
-                android:background="@color/gray"
+                android:background="@color/grey"
                 android:layout_below="@id/text_date"
                 android:layout_centerHorizontal="true"
                 android:layout_marginVertical="4dp"

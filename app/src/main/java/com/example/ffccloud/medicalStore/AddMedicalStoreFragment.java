@@ -51,15 +51,15 @@ import retrofit2.Response;
 
 public class AddMedicalStoreFragment extends Fragment {
     private FragmentAddMedicalStoreBinding mBinding;
-    private ArrayList<String>  regionList = new ArrayList<>(),gradeArray=new ArrayList<>();
-    private HashMap<String, Integer> regionHashmap = new HashMap<>();
+    private ArrayList<String> regionList = new ArrayList<>(), gradeArray = new ArrayList<>();
     private final HashMap<String, Integer> gradingHashMapForId = new HashMap<>();
     private HashMap<Integer, String> gradingHashMapForTitle = new HashMap<>();
-
+    private final HashMap<String, Integer> regionHashmapForID = new HashMap<>();
+    private final HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
     private UserViewModel userViewModel;
     private List<GradingModel> gradingModelList;
     private CompanyRecyclerViewAdapter adapter;
-    private List<SupplierCompDetail> companyModelList =  new ArrayList<>();
+    private List<SupplierCompDetail> companyModelList = new ArrayList<>();
     private String locationString;
     private String locationAddress;
     private int supplierID;
@@ -71,7 +71,7 @@ public class AddMedicalStoreFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        mBinding = FragmentAddMedicalStoreBinding.inflate(inflater,container,false);
+        mBinding = FragmentAddMedicalStoreBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
 
     }
@@ -79,14 +79,7 @@ public class AddMedicalStoreFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        assert getArguments() != null;
-        supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
-        if (supplierID > 0&&callingAddBtn==null){
 
-            //setup fields if edit request has been made
-            getSupplierByID(supplierID);
-        }
-        setUpCompanyRecyclerView();
 
     }
 
@@ -98,6 +91,15 @@ public class AddMedicalStoreFragment extends Fragment {
 
         btnListener();
         setUpGradeSpinner();
+        if (getArguments() != null) {
+            supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
+        }
+        if (supplierID > 0 && callingAddBtn == null) {
+
+            //setup fields if edit request has been made
+            getSupplierByID(supplierID);
+        }
+        setUpCompanyRecyclerView();
     }
 
     private void setUpCompanyRecyclerView() {
@@ -119,19 +121,16 @@ public class AddMedicalStoreFragment extends Fragment {
                         progressDialog.dismiss();
 
 
-                        for (GradingModel model:gradingModels)
-                        {
+                        for (GradingModel model : gradingModels) {
                             gradeArray.add(model.getGrade_Title());
                             gradingHashMapForId.put(model.getGrade_Title(), model.getGrade_Id());
-                            gradingHashMapForTitle.put(model.getGrade_Id(),model.getGrade_Title());
+                            gradingHashMapForTitle.put(model.getGrade_Id(), model.getGrade_Title());
 
                         }
 
 
-                       ArrayAdapter<String> gradingAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item,gradeArray);
+                        ArrayAdapter<String> gradingAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, gradeArray);
                         mBinding.spinnerGrade.setAdapter(gradingAdapter);
-
-
 
 
                     }
@@ -152,9 +151,9 @@ public class AddMedicalStoreFragment extends Fragment {
 
 
                             if (mBinding.locationCheckBox.isChecked()) {
-                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.locationCheckBox.setText(locationAddress);
-                                 locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                                locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
                             } else {
 
                                 mBinding.locationCheckBox.setText("Enable Location");
@@ -164,8 +163,7 @@ public class AddMedicalStoreFragment extends Fragment {
                         }
                     };
                     customLocation.getLastLocation(results);
-                }
-                else {
+                } else {
                     showOpenLocationSettingDialog();
 
                 }
@@ -175,8 +173,8 @@ public class AddMedicalStoreFragment extends Fragment {
         mBinding.btnAddCompanies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callingAddBtn= "";
-                callingAddBtn= "CompanyAddBtn";
+                callingAddBtn = "";
+                callingAddBtn = "CompanyAddBtn";
                 showAddCompanyDialog();
             }
         });
@@ -201,26 +199,23 @@ public class AddMedicalStoreFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body()!=null)
-                {
+                if (response.body() != null) {
                     progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel= response.body();
+                    GetSupplierDetailModel getSupplierDetailModel = response.body();
                     setUpFields(getSupplierDetailModel);
 
-                }
-                else {
-                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<GetSupplierDetailModel> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
-
 
 
     }
@@ -230,24 +225,29 @@ public class AddMedicalStoreFragment extends Fragment {
         mBinding.etName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
         mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
+        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
+            mBinding.locationCheckBox.setChecked(true);
+        }
         mBinding.locationCheckBox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
         mBinding.etMonthlySale.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getMonthlySale()));
 
 
+        int gradeID = getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
 
-        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGradeId();
-
-        String grade =  gradingHashMapForTitle.get(gradeID);
+        String grade = gradingHashMapForTitle.get(gradeID);
 
 
         mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
 
+        int regionId = (int) getSupplierDetailModel.getSupplierModelNewList().get(0).getRegionId();
+
+        String regionTitle = regionHashmapForTitle.get(regionId);
+
+        mBinding.spinnerRegion.setSelection(regionList.indexOf(regionTitle));
+
         companyModelList.clear();
         companyModelList.addAll(getSupplierDetailModel.getSupplierCompDetailList());
         adapter.setCompanyModelList(companyModelList);
-
-
-
 
 
     }
@@ -259,21 +259,18 @@ public class AddMedicalStoreFragment extends Fragment {
         String name = Objects.requireNonNull(mBinding.etName.getText()).toString();
         String phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
         String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
-        int gradeID=0;
-        if (gradeArray.size()>0)
-        {
-            gradeID= gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
+        int gradeID = 0;
+        if (gradeArray.size() > 0) {
+            gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
 
         }
-
-
 
 
         if (name.length() > 0) {
             if (phone.length() > 0) {
                 if (address.length() > 0) {
-                    if (regionList.size()>0) {
-                        int region = regionHashmap.get(mBinding.spinnerRegion.getSelectedItem().toString());
+                    if (regionList.size() > 0) {
+                        int region = regionHashmapForID.get(mBinding.spinnerRegion.getSelectedItem().toString());
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
@@ -331,22 +328,19 @@ public class AddMedicalStoreFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body()!=null)
-                {
+                if (response.body() != null) {
                     UpdateStatus updateStatus = response.body();
-                    Toast.makeText(requireContext(), " "+updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
-                }
-                else
-                {
-                    Toast.makeText(requireContext(), " "+response.errorBody(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), " "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), " " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
@@ -365,17 +359,13 @@ public class AddMedicalStoreFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String name= Objects.requireNonNull(binding.etCompanyName.getText()).toString();
-                if (name.length()>0)
-                {
+                String name = Objects.requireNonNull(binding.etCompanyName.getText()).toString();
+                if (name.length() > 0) {
                     String type;
-                    if (binding.radioButtonDistributer.isChecked())
-                    {
-                        type="Distributor";
-                    }
-                    else
-                    {
-                        type="Stockist";
+                    if (binding.radioButtonDistributer.isChecked()) {
+                        type = "Distributor";
+                    } else {
+                        type = "Stockist";
                     }
 
                     SupplierCompDetail model = new SupplierCompDetail();
@@ -386,14 +376,11 @@ public class AddMedicalStoreFragment extends Fragment {
                     adapter.setCompanyModelList(companyModelList);
                     Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show();
                     alertDialog.dismiss();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(requireContext(), "Add company name", Toast.LENGTH_SHORT).show();
                     alertDialog.dismiss();
 
                 }
-
 
 
             }
@@ -422,29 +409,28 @@ public class AddMedicalStoreFragment extends Fragment {
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
                     progressDialog.dismiss();
-                    regionHashmap.clear();
+                    regionHashmapForTitle.clear();
+                    regionHashmapForID.clear();
                     regionList.clear();
                     List<RegionModel> regionModelList = new ArrayList<>();
                     regionModelList = response.body();
                     for (RegionModel model : regionModelList) {
                         regionList.add(model.getName());
-                        regionHashmap.put(model.getName(), model.getRegionId());
-
+                        regionHashmapForID.put(model.getName(), model.getRegionId());
+                        regionHashmapForTitle.put(model.getRegionId(), model.getName());
                     }
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
                     mBinding.spinnerRegion.setAdapter(adapter);
-                }
-                else
-                {
+                } else {
                     progressDialog.dismiss();
-                    Toast.makeText(requireContext(), " "+response.errorBody(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<List<RegionModel>> call, @NotNull Throwable t) {
                 progressDialog.dismiss();
-                Toast.makeText(requireContext(), " "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), " " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

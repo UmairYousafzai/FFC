@@ -33,13 +33,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MapsFragment extends Fragment {
 
@@ -117,220 +115,220 @@ public class MapsFragment extends Fragment {
 
 
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            if (permission.isLocationEnabled())
-            {
-                SupportMapFragment mapFragment =
-                        (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-                if (mapFragment != null) {
-                    mapFragment.getMapAsync(callback);
-                }
-            }
-            else
-            {
-                showDialog();
-            }
-
-
-        }
-        else
-        {
-            permission.getLocationPermission();
-        }
-
-        addDummyData();
-        dateListener();
-    }
-
-    public void dateListener()
-    {
-        Calendar cldr = Calendar.getInstance();
-
-
-        selectedDay = (cldr.get(Calendar.DAY_OF_MONTH));
-        selectedMonth = cldr.get(Calendar.MONTH);
-        selectedYear = cldr.get(Calendar.YEAR);
-
-        int checkmonth = (selectedMonth % 10);
-        int checkday = (selectedDay % 10);
-        String mDay = null, mMonth = null, mYear = String.valueOf(selectedYear);
-        if (checkmonth > 0 && selectedMonth < 10) {
-            mMonth = "0" + (selectedMonth + 1);
-            //          date = day + "-" + "0" + (month + 1) + "-" + (year);
-        } else {
-            mMonth = String.valueOf(selectedMonth + 1);
-
-        }
-
-        if (checkday > 0 && selectedDay < 10) {
-            mDay = "0" + (selectedDay);
-
-        } else {
-            mDay = String.valueOf(selectedDay);
-
-        }
-
-        mBinding.datePickerTimeline.setInitialDate(selectedYear, selectedMonth - 1, selectedDay - 1);
-
-
-        mBinding.datePickerTimeline.setSelected(true);
-        mBinding.datePickerTimeline.requestFocus();
-        mBinding.datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(int year, int month, int day, int dayOfWeek) {
-                String date;
-                selectedDay = day;
-                selectedMonth = month;
-                selectedYear = year;
-                int checkmonth = (month % 10);
-                int checkday = (day % 10);
-                String mDay = null, mMonth = null, mYear = String.valueOf(year);
-                if (checkmonth > 0 && month < 10) {
-                    mMonth = "0" + (month + 1);
-                    //          date = day + "-" + "0" + (month + 1) + "-" + (year);
-                } else {
-                    mMonth = String.valueOf(month + 1);
-
-                }
-
-                if (checkday > 0 && day < 10) {
-                    mDay = "0" + (day);
-
-                } else {
-                    mDay = String.valueOf(day);
-
-                }
-                date = mDay + "-" + (mMonth) + "-" + (mYear);
-
-                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                {
-                    if (permission.isLocationEnabled())
-                    {
-                        checkTrack(date);
-                    }
-                    else
-                    {
-                        showDialog();
-                    }
-
-
-                }
-                else
-                {
-                    permission.getLocationPermission();
-                }
-                selectedDate = date;
-                Log.d("date", "date select ho rai hai");
-
-
-            }
-
-            @Override
-            public void onDisabledDateSelected(int year, int month, int day, int dayOfWeek, boolean isDisabled) {
-
-            }
-        });
-    }
-
-    public void checkTrack(String date) {
-
-
-        if (mMap!=null)
-        {
-            mMap.clear();
-            Drawable drawable = getResources().getDrawable(R.drawable.ic_baseline_location_on_24);
-            Canvas canvas = new Canvas();
-            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-
-            for (int i =0;i<trackerModelList.size();i++)
-            {
-                TrackerModel trackerModel = trackerModelList.get(i);
-                if (trackerModel.getDate().equals(date))
-                {
-                    String[] locationString = trackerModel.getCoordinates().split(",");
-                    LatLng marker = new LatLng(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
-                    latLngList.add(marker);
-                    String dateTime= trackerModel.getTime()+"\n"+trackerModel.getDate();
-
-                    mMap.addMarker(new MarkerOptions().position(marker).title(dateTime));
-
-                }
-
-
-            }
-
-            if (latLngList!=null&&latLngList.size()>0)
-            {
-                Polyline polyline1 = mMap.addPolyline(new PolylineOptions()
-                        .clickable(true)
-                        .addAll(latLngList).color(getResources().getColor(R.color.blue)));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngList.get(2),12.0f));
-                latLngList= new ArrayList<>() ;
-            }
-            else
-            {
-                mMap.clear();
-
-            }
-
-        }
-        else
-        {
-            Toast.makeText(requireContext(), "Reselect Date", Toast.LENGTH_SHORT).show();
-        }
-
-
-
-    }
-
-    public void addDummyData()
-    {
-        trackerModelList.add(new TrackerModel(1,"03:10","31.4752825, 74.2545129","16-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"04:10","31.464473, 74.260460","16-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"05:10","31.441021, 74.275934","16-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"06:10","31.485343, 74.318541","16-09-2021"));
-
-
-        trackerModelList.add(new TrackerModel(1,"03:10","31.4752825, 74.2545129","17-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"04:10","31.464473, 74.260460","17-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"05:10","31.441021, 74.275934","17-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"06:10","31.485343, 74.318541","17-09-2021"));
-
-        trackerModelList.add(new TrackerModel(1,"03:10","31.4752825, 74.2545129","20-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"04:10","31.464473, 74.260460","20-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"05:10","31.441021, 74.275934","20-09-2021"));
-        trackerModelList.add(new TrackerModel(1,"06:10","31.485343, 74.318541","20-09-2021"));
-    }
-
-    public void showDialog()
-    {
-
-        new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Please turn on  location for this action.")
-                .setContentText("Do you want to open location setting.")
-                .setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        requireContext().startActivity(intent);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                }).show();
-    }
-
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+//        {
+//            if (permission.isLocationEnabled())
+//            {
+//                SupportMapFragment mapFragment =
+//                        (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+//                if (mapFragment != null) {
+//                    mapFragment.getMapAsync(callback);
+//                }
+//            }
+//            else
+//            {
+//                showDialog();
+//            }
+//
+//
+//        }
+//        else
+//        {
+//            permission.getLocationPermission();
+//        }
+//
+//        addDummyData();
+//        dateListener();
+//    }
+//
+//    public void dateListener()
+//    {
+//        Calendar cldr = Calendar.getInstance();
+//
+//
+//        selectedDay = (cldr.get(Calendar.DAY_OF_MONTH));
+//        selectedMonth = cldr.get(Calendar.MONTH);
+//        selectedYear = cldr.get(Calendar.YEAR);
+//
+//        int checkmonth = (selectedMonth % 10);
+//        int checkday = (selectedDay % 10);
+//        String mDay = null, mMonth = null, mYear = String.valueOf(selectedYear);
+//        if (checkmonth > 0 && selectedMonth < 10) {
+//            mMonth = "0" + (selectedMonth + 1);
+//            //          date = day + "-" + "0" + (month + 1) + "-" + (year);
+//        } else {
+//            mMonth = String.valueOf(selectedMonth + 1);
+//
+//        }
+//
+//        if (checkday > 0 && selectedDay < 10) {
+//            mDay = "0" + (selectedDay);
+//
+//        } else {
+//            mDay = String.valueOf(selectedDay);
+//
+//        }
+//
+//        mBinding.datePickerTimeline.setInitialDate(selectedYear, selectedMonth - 1, selectedDay - 1);
+//
+//
+//        mBinding.datePickerTimeline.setSelected(true);
+//        mBinding.datePickerTimeline.requestFocus();
+//        mBinding.datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
+//            @Override
+//            public void onDateSelected(int year, int month, int day, int dayOfWeek) {
+//                String date;
+//                selectedDay = day;
+//                selectedMonth = month;
+//                selectedYear = year;
+//                int checkmonth = (month % 10);
+//                int checkday = (day % 10);
+//                String mDay = null, mMonth = null, mYear = String.valueOf(year);
+//                if (checkmonth > 0 && month < 10) {
+//                    mMonth = "0" + (month + 1);
+//                    //          date = day + "-" + "0" + (month + 1) + "-" + (year);
+//                } else {
+//                    mMonth = String.valueOf(month + 1);
+//
+//                }
+//
+//                if (checkday > 0 && day < 10) {
+//                    mDay = "0" + (day);
+//
+//                } else {
+//                    mDay = String.valueOf(day);
+//
+//                }
+//                date = mDay + "-" + (mMonth) + "-" + (mYear);
+//
+//                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+//                {
+//                    if (permission.isLocationEnabled())
+//                    {
+//                        checkTrack(date);
+//                    }
+//                    else
+//                    {
+//                        showDialog();
+//                    }
+//
+//
+//                }
+//                else
+//                {
+//                    permission.getLocationPermission();
+//                }
+//                selectedDate = date;
+//                Log.d("date", "date select ho rai hai");
+//
+//
+//            }
+//
+//            @Override
+//            public void onDisabledDateSelected(int year, int month, int day, int dayOfWeek, boolean isDisabled) {
+//
+//            }
+//        });
+//    }
+//
+//    public void checkTrack(String date) {
+//
+//
+//        if (mMap!=null)
+//        {
+//            mMap.clear();
+//            Drawable drawable = getResources().getDrawable(R.drawable.ic_baseline_location_on_24);
+//            Canvas canvas = new Canvas();
+//            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//
+//            for (int i =0;i<trackerModelList.size();i++)
+//            {
+//                TrackerModel trackerModel = trackerModelList.get(i);
+//                if (trackerModel.getDate().equals(date))
+//                {
+//                    String[] locationString = trackerModel.getCoordinates().split(",");
+//                    LatLng marker = new LatLng(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
+//                    latLngList.add(marker);
+//                    String dateTime= trackerModel.getTime()+"\n"+trackerModel.getDate();
+//
+//                    mMap.addMarker(new MarkerOptions().position(marker).title(dateTime));
+//
+//                }
+//
+//
+//            }
+//
+//            if (latLngList!=null&&latLngList.size()>0)
+//            {
+//                Polyline polyline1 = mMap.addPolyline(new PolylineOptions()
+//                        .clickable(true)
+//                        .addAll(latLngList).color(getResources().getColor(R.color.blue)));
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngList.get(2),12.0f));
+//                latLngList= new ArrayList<>() ;
+//            }
+//            else
+//            {
+//                mMap.clear();
+//
+//            }
+//
+//        }
+//        else
+//        {
+//            Toast.makeText(requireContext(), "Reselect Date", Toast.LENGTH_SHORT).show();
+//        }
+//
+//
+//
+//    }
+//
+//    public void addDummyData()
+//    {
+//        trackerModelList.add(new TrackerModel(1,"03:10","31.4752825, 74.2545129","16-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"04:10","31.464473, 74.260460","16-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"05:10","31.441021, 74.275934","16-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"06:10","31.485343, 74.318541","16-09-2021"));
+//
+//
+//        trackerModelList.add(new TrackerModel(1,"03:10","31.4752825, 74.2545129","17-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"04:10","31.464473, 74.260460","17-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"05:10","31.441021, 74.275934","17-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"06:10","31.485343, 74.318541","17-09-2021"));
+//
+//        trackerModelList.add(new TrackerModel(1,"03:10","31.4752825, 74.2545129","20-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"04:10","31.464473, 74.260460","20-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"05:10","31.441021, 74.275934","20-09-2021"));
+//        trackerModelList.add(new TrackerModel(1,"06:10","31.485343, 74.318541","20-09-2021"));
+//    }
+//
+//    public void showDialog()
+//    {
+//
+////        new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
+////                .setTitleText("Please turn on  location for this action.")
+////                .setContentText("Do you want to open location setting.")
+////                .setConfirmText("Yes")
+////                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+////                    @Override
+////                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+////                        sweetAlertDialog.dismiss();
+////                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+////                        requireContext().startActivity(intent);
+////                    }
+////                })
+////                .setCancelText("Cancel")
+////                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+////                    @Override
+////                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+////                        sweetAlertDialog.dismiss();
+////                    }
+////                }).show();
+//    }
+//
 
 }

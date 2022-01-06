@@ -37,9 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
-import com.nex3z.notificationbadge.NotificationBadge;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -73,7 +71,6 @@ public class SampleFragment extends Fragment {
     int click_count = 0;
     int badge_count = 0;
 
-    NotificationBadge badge;
     private BottomSheetBehavior bottomSheetBehavior;
     LinearLayout linear_call,linear_message,linear_product_details,linear_historyy,linear_find,linear_about;
 
@@ -273,28 +270,28 @@ public class SampleFragment extends Fragment {
                 }
 
                 if(!series_num.isEmpty()){
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-                    //pDialog[0].getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Saving...");
-                    pDialog.setCanceledOnTouchOutside(false);
-                    pDialog.setCancelable(false);
-                    pDialog.show();
+//                    final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+//                    //pDialog[0].getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//                    pDialog.setTitleText("Saving...");
+//                    pDialog.setCanceledOnTouchOutside(false);
+//                    pDialog.setCancelable(false);
+//                    pDialog.show();
 
                     final Handler[] handler = {new Handler(Looper.getMainLooper())};
                     handler[0].postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            pDialog.cancel();
-                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
-                                    .setTitleText("Series saved successfully")
-                                    .setConfirmText("OK")
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.cancel();
-                                        }
-                                    })
-                                    .show();
+//                            pDialog.cancel();
+//                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+//                                    .setTitleText("Series saved successfully")
+//                                    .setConfirmText("OK")
+//                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                        @Override
+//                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                            sweetAlertDialog.cancel();
+//                                        }
+//                                    })
+//                                    .show();
                         }
                     }, 3000);
 
@@ -362,14 +359,13 @@ public class SampleFragment extends Fragment {
                     edit_quantity.setCompoundDrawables(null, null, img12, null);
                 }
                 if(!classes.isEmpty() && !subjects.isEmpty() && ! quantity.isEmpty()){
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-                    //pDialog[0].getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Saving...");
-                    pDialog.setCanceledOnTouchOutside(false);
-                    pDialog.setCancelable(false);
-                    pDialog.show();
+//                    final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+//                    //pDialog[0].getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//                    pDialog.setTitleText("Saving...");
+//                    pDialog.setCanceledOnTouchOutside(false);
+//                    pDialog.setCancelable(false);
+//                    pDialog.show();
 
-                    badge.setNumber(++badge_count);
 
                     click_count = click_count+1;
                     if(click_count==1){
@@ -407,17 +403,17 @@ public class SampleFragment extends Fragment {
                     handler[0].postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            pDialog.cancel();
-                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
-                                    .setTitleText("Data saved successfully")
-                                    .setConfirmText("OK")
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.cancel();
-                                        }
-                                    })
-                                    .show();
+//                            pDialog.cancel();
+//                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+//                                    .setTitleText("Data saved successfully")
+//                                    .setConfirmText("OK")
+//                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                        @Override
+//                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                            sweetAlertDialog.cancel();
+//                                        }
+//                                    })
+//                                    .show();
                         }
                     }, 3000);
 
@@ -444,38 +440,38 @@ public class SampleFragment extends Fragment {
         visit_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-                //pDialog[0].getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                pDialog.setTitleText("Saving...");
-                pDialog.setCanceledOnTouchOutside(false);
-                pDialog.setCancelable(false);
-                pDialog.show();
+//                final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+//                //pDialog[0].getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//                pDialog.setTitleText("Saving...");
+//                pDialog.setCanceledOnTouchOutside(false);
+//                pDialog.setCancelable(false);
+//                pDialog.show();
 
                 final Handler[] handler = {new Handler(Looper.getMainLooper())};
                 handler[0].postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        pDialog.cancel();
-                        new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
-                                .setTitleText("Data saved Successfully")
-                                .setContentText("Do you want to schedule next activity?")
-                                .setCancelText("No")
-                                .setConfirmText("Yes")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        sweetAlertDialog.cancel();
-                                        //navController.navigate(R.id.FormFragment);
-                                    }
-                                })
-                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        sweetAlertDialog.dismiss();
-                                        navController.navigate(R.id.target_fragment);
-                                    }
-                                })
-                                .show();
+//                        pDialog.cancel();
+//                        new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+//                                .setTitleText("Data saved Successfully")
+//                                .setContentText("Do you want to schedule next activity?")
+//                                .setCancelText("No")
+//                                .setConfirmText("Yes")
+//                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                    @Override
+//                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                        sweetAlertDialog.cancel();
+//                                        //navController.navigate(R.id.FormFragment);
+//                                    }
+//                                })
+//                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                    @Override
+//                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                        sweetAlertDialog.dismiss();
+//                                        navController.navigate(R.id.target_fragment);
+//                                    }
+//                                })
+//                                .show();
                     }
                 }, 3000);
             }
@@ -641,7 +637,6 @@ public class SampleFragment extends Fragment {
         subject_class8 = root.findViewById(R.id.subject_class8);
         quantity_class8 = root.findViewById(R.id.quantity_class8);
 
-        badge = root.findViewById(R.id.badge);
 
         linear_call = root.findViewById(R.id.linear_call);
         linear_message = root.findViewById(R.id.linear_message);

@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,6 +39,7 @@ import com.example.ffccloud.databinding.ActivityLoginBinding;
 import com.example.ffccloud.databinding.CustomDialogBiometricBinding;
 import com.example.ffccloud.databinding.DialogCustomImeiNumberBinding;
 import com.example.ffccloud.databinding.DialogCustomResetUrlBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
@@ -49,7 +51,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,7 +58,7 @@ import retrofit2.Response;
 import static android.view.View.GONE;
 
 public class LoginActivity extends AppCompatActivity {
-    SweetAlertDialog pDialog;
+    ProgressDialog pDialog;
     public LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
     String a, b, emailPattern, email_dialog;
@@ -133,11 +134,11 @@ public class LoginActivity extends AppCompatActivity {
                     String email = a;
                     String password = b;
                     String grant_type = "password";
-                    pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-                    pDialog.setTitleText("Loading");
+                    pDialog = new ProgressDialog(LoginActivity.this);
                     //pDialog.setCancelable(false);
-                    pDialog.setCanceledOnTouchOutside(false);
+                    pDialog.setTitle("Please Wait");
+                    pDialog.setMessage("Loading....");
+
                     pDialog.show();
                     login(email, password, grant_type);
                 }
@@ -217,10 +218,10 @@ public class LoginActivity extends AppCompatActivity {
                             Text_Input_Email_Dialog.setError("Please enter a valid e-mail");
                         }
                         if (!email_dialog.isEmpty() && email_dialog.matches(emailPattern)) {
-                            pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                            pDialog.setTitleText("Loading");
+                            pDialog  = new ProgressDialog(LoginActivity.this);
                             //pDialog.setCancelable(false);
+                            pDialog.setTitle("Please Wait");
+                            pDialog.setMessage("Loading....");
                             pDialog.setCanceledOnTouchOutside(false);
                             pDialog.show();
                             forgot_password(email_dialog);
@@ -242,11 +243,10 @@ public class LoginActivity extends AppCompatActivity {
                             Text_Input_New_Password_Dialog.setError("Password field should not be empty");
                         }
                         if (!code_dialog.isEmpty() && !new_password_dialog.isEmpty()) {
-                            pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                            pDialog.setTitleText("Loading");
+                            pDialog = new ProgressDialog(LoginActivity.this);
                             //pDialog.setCancelable(false);
-                            pDialog.setCanceledOnTouchOutside(false);
+                            pDialog.setTitle("Please Wait");
+                            pDialog.setMessage("Loading....");
                             pDialog.show();
                             SetNewPassword(email_dialog, code_dialog, new_password_dialog);
                         }
@@ -304,6 +304,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void forgot_password(String email_dialog) {
 
+
+
         Call<ForgotPasswordModel> call = ApiClient.getInstance().getApi().forgot_password(email_dialog);
         call.enqueue(new Callback<ForgotPasswordModel>() {
             @Override
@@ -316,18 +318,15 @@ public class LoginActivity extends AppCompatActivity {
                     int status = response.body().getStatus();
 
                     if (status == 0) {
-                        new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                                .setTitleText("Try Again")
-                                .setContentText("Something went wrong.")
-                                .show();
-                        pDialog.cancel();
+
+                        CustomsDialog.getInstance().showDialog("Something went wrong.","Try Again",LoginActivity.this,LoginActivity.this);
+
                     }
                     if (msg.equals("Code is Successfully Sent to your Email Please Check Your Email to Get the Security Code!!") && status == 1) {
-                        new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                .setTitleText("Success")
-                                .setContentText("Code successfully sent to your given email address.")
-                                .show();
-                        pDialog.cancel();
+
+                        CustomsDialog.getInstance().showDialog("Code successfully sent to your given email address.","Success",LoginActivity.this,LoginActivity.this);
+
+
                         Text_Input_Email_Dialog.setVisibility(GONE);
                         set_button.setVisibility(GONE);
 
@@ -344,12 +343,8 @@ public class LoginActivity extends AppCompatActivity {
                     int code = response.code();
                     switch (code) {
                         case 400: {
-                            pDialog.cancel();
-                            new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText("Bad Request")
-                                    .setContentText("Provided username or password is incorrect.")
-                                    .show();
-                            pDialog.cancel();
+                            CustomsDialog.getInstance().showDialog("Provided username or password is incorrect.","Bad Request",LoginActivity.this,LoginActivity.this);
+
                         }
                     }
 
@@ -361,11 +356,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<ForgotPasswordModel> call, Throwable t) {
                 pDialog.cancel();
                 String error = t.getMessage();
+                CustomsDialog.getInstance().showDialog(" ","Try Again",LoginActivity.this,LoginActivity.this);
 
-                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setConfirmText("OK")
-                        .setTitleText("Try Again")
-                        .show();
+
             }
         });
 
@@ -396,10 +389,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
 
 
-                    new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Error")
-                            .setContentText(response.message())
-                            .show();
+                    CustomsDialog.getInstance().showDialog(" ","Error",LoginActivity.this,LoginActivity.this);
 
                 }
 
@@ -414,10 +404,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("url", "" + urll);
 
                 Log.e("error login", "" + error);
-                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setConfirmText("OK")
-                        .setTitleText("Try Again")
-                        .show();
+                CustomsDialog.getInstance().showDialog(" ","Try Again",LoginActivity.this,LoginActivity.this);
+
             }
         });
 
@@ -535,7 +523,7 @@ public class LoginActivity extends AppCompatActivity {
         Call<List<GetUserMenuModel>> call = ApiClient.getInstance().getApi().get_user_menu(token, id);
         call.enqueue(new Callback<List<GetUserMenuModel>>() {
             @Override
-            public void onResponse(Call<List<GetUserMenuModel>> call, Response<List<GetUserMenuModel>> response) {
+            public void onResponse(@NotNull Call<List<GetUserMenuModel>> call, @NotNull Response<List<GetUserMenuModel>> response) {
                 GetUserMenuModel getUserMenuModels = new GetUserMenuModel();
 
                 if (response.isSuccessful()) {
@@ -562,14 +550,12 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<GetUserMenuModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<GetUserMenuModel>> call, @NotNull Throwable t) {
                 pDialog.cancel();
                 String error = t.getMessage();
+                CustomsDialog.getInstance().showDialog(t.getMessage(),"Try Again",LoginActivity.this,LoginActivity.this);
 
-                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setConfirmText("OK")
-                        .setTitleText(t.getMessage().toString())
-                        .show();
+
             }
         });
 
@@ -579,7 +565,7 @@ public class LoginActivity extends AppCompatActivity {
         Call<List<GetUserSettingModel>> call = ApiClient.getInstance().getApi().get_user_setting(token, id);
         call.enqueue(new Callback<List<GetUserSettingModel>>() {
             @Override
-            public void onResponse(Call<List<GetUserSettingModel>> call, Response<List<GetUserSettingModel>> response) {
+            public void onResponse(@NotNull Call<List<GetUserSettingModel>> call, @NotNull Response<List<GetUserSettingModel>> response) {
                 GetUserSettingModel getUserSettingModel = new GetUserSettingModel();
 
                 if (response.isSuccessful()) {
@@ -598,14 +584,12 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<GetUserSettingModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<GetUserSettingModel>> call, @NotNull Throwable t) {
                 pDialog.cancel();
                 String error = t.getMessage();
 
-                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setConfirmText("OK")
-                        .setTitleText(t.getMessage().toString())
-                        .show();
+                CustomsDialog.getInstance().showDialog(t.getMessage(),"Try Again",LoginActivity.this,LoginActivity.this);
+
             }
         });
 
@@ -616,22 +600,20 @@ public class LoginActivity extends AppCompatActivity {
         Call<String> call = ApiClient.getInstance().getApi().new_password(email, code, new_password);
         call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(@NotNull Call<String> call, @NotNull Response<String> response) {
                 String new_password_model = response.body();
                 if (response.isSuccessful()) {
                     if (new_password_model.equals("Password Update Successfully.")) {
-                        new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                .setConfirmText("Success")
-                                .setTitleText("Password has been changed successfully.")
-                                .show();
-                        mydialog.dismiss();
+
+                        CustomsDialog.getInstance().showDialog("Password has been changed successfully.","Success",LoginActivity.this,LoginActivity.this);
+
+
                     }
 
                     if (new_password_model.equals("Please Enter a Valid Code.")) {
-                        new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.WARNING_TYPE)
-                                .setConfirmText("Try Again")
-                                .setTitleText("Please enter correct code.")
-                                .show();
+                        CustomsDialog.getInstance().showDialog("Please enter correct code.","Try Again",LoginActivity.this,LoginActivity.this);
+
+
                     }
 
                     pDialog.cancel();
@@ -639,14 +621,12 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(@NotNull Call<String> call, @NotNull Throwable t) {
                 pDialog.cancel();
                 String error = t.getMessage();
 
-                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setConfirmText("OK")
-                        .setTitleText("Try Again")
-                        .show();
+                CustomsDialog.getInstance().showDialog(" ","Try Again",LoginActivity.this,LoginActivity.this);
+
             }
         });
 
@@ -757,11 +737,10 @@ public class LoginActivity extends AppCompatActivity {
                     String password = SharedPreferenceHelper.getInstance(LoginActivity.this).getUserPassword();
 
                     if (email != null && !email.isEmpty() && password != null && !password.isEmpty()) {
-                        pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                        pDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-                        pDialog.setTitleText("Loading");
+                        pDialog = new ProgressDialog(LoginActivity.this);
                         //pDialog.setCancelable(false);
-                        pDialog.setCanceledOnTouchOutside(false);
+                        pDialog.setTitle("Please Wait");
+                        pDialog.setMessage("Loading....");
                         pDialog.show();
                         login(email, password, "password");
                     } else {

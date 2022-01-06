@@ -219,6 +219,7 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
                     Objects.requireNonNull(navController.getPreviousBackStackEntry()).getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL,productModel);
 
+
                     navController.popBackStack();
                 }
                 catch (Exception e)

@@ -113,7 +113,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/region_spinner"
@@ -128,7 +128,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray"
+                    android:background="@color/grey"
                     android:layout_marginBottom="5dp"/>
 
             </LinearLayout>
@@ -174,7 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/spinner_grade"
@@ -189,7 +189,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
             </LinearLayout>
 
 

@@ -184,13 +184,14 @@ public interface FfcDAO {
     @Query("Delete From Doctor")
     void deleteAllWorkPlanDoctor();
 
-    @Query("Select *From Doctor where (fromDate=:date) " +
-            "and (shift = 'Morning')")
+    @Query("Select *From Doctor where (fromDate=:date) ")
     LiveData<List<DoctorModel>> getMorningDoctorByDate(String date);
 
-    @Query("Select *From Doctor where (fromDate = :date)" +
-            " and (shift = 'Evening')")
+//     +"and (shift = 'Morning')"
+    @Query("Select *From Doctor where (fromDate = :date)")
     LiveData<List<DoctorModel>> getEveningDoctorByDate(String date);
+
+    // + " and (shift = 'Evening')"
 
     @Query("Select *From Doctor")
     LiveData<List<DoctorModel>> getAllWorkPlanDoctors();

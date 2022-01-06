@@ -284,7 +284,7 @@ public class SalesOrderListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
-                String date =String.valueOf(calendar.get(Calendar.YEAR))+String.valueOf(calendar.get(Calendar.MONTH))+String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+                String date = calendar.get(Calendar.YEAR) +getDate(calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DAY_OF_MONTH));
                 byDateKey = byDateHashmap.get(mBinding.dateSpinner.getSelectedItem());
                 byStatusKey = byStatusHashmap.get(mBinding.statusSpinner.getSelectedItem());
                 byPriorityKey = byPriorityHashMap.get(mBinding.prioritySpinner.getSelectedItem());
@@ -303,7 +303,10 @@ public class SalesOrderListFragment extends Fragment {
                 {
                     getSalesOrder(supplierId,date,date,byStatusKey,byDateKey,byPriorityKey);
                 }
-
+                mBinding.fromDateLayout.setVisibility(View.VISIBLE);
+                mBinding.toDateLayout.setVisibility(View.VISIBLE);
+                mBinding.tvSelectCustomer.setVisibility(View.VISIBLE);
+                mBinding.searchBtn.setVisibility(View.VISIBLE);
 
 
             }
@@ -405,6 +408,10 @@ public class SalesOrderListFragment extends Fragment {
                 Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down);
                 mBinding.salesOrderFilterLayout.setAnimation(animation);
                 mBinding.salesOrderFilterLayout.setVisibility(View.VISIBLE);
+                mBinding.fromDateLayout.setVisibility(View.GONE);
+                mBinding.toDateLayout.setVisibility(View.GONE);
+                mBinding.tvSelectCustomer.setVisibility(View.GONE);
+                mBinding.searchBtn.setVisibility(View.GONE);
 
 
             }
@@ -413,6 +420,12 @@ public class SalesOrderListFragment extends Fragment {
                 Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
                 mBinding.salesOrderFilterLayout.setAnimation(animation);
                 mBinding.salesOrderFilterLayout.setVisibility(View.GONE);
+                mBinding.fromDateLayout.setVisibility(View.VISIBLE);
+                mBinding.toDateLayout.setVisibility(View.VISIBLE);
+                mBinding.tvSelectCustomer.setVisibility(View.VISIBLE);
+                mBinding.searchBtn.setVisibility(View.VISIBLE);
+
+
             }
         }
 

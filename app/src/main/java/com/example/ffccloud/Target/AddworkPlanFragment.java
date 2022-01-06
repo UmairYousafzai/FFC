@@ -40,6 +40,7 @@ import com.example.ffccloud.NetworkCalls.ApiClient;
 
 import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentAddworkPlanBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.SyncDataToDB;
 
@@ -51,7 +52,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -187,7 +187,7 @@ public class AddworkPlanFragment extends Fragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        int checkMonth = month % 10, checkday = (dayOfMonth % 10);
+                        int checkMonth = (month+1) % 10, checkday = (dayOfMonth % 10);
 
                         String mMonth, mDay;
                         if (checkMonth > 0 && month < 9) {
@@ -341,29 +341,24 @@ public class AddworkPlanFragment extends Fragment {
         Call<UpdateStatus> call = ApiClient.getInstance().getApi().AddNewWorkPlan(token, model);
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
-            public void onResponse(Call<UpdateStatus> call, Response<UpdateStatus> response) {
+            public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
                 if (response.body() != null) {
                     UpdateStatus updateStatus = response.body();
 
-                    new SweetAlertDialog(requireContext(), SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("Add Work Plan")
-                            .setContentText(updateStatus.getStrMessage())
-                            .show();
+                    CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(),"Add work plan",requireActivity(),requireContext());
                 } else {
-                    new SyncDataToDB(requireActivity().getApplication(), requireContext()).loginAgain(response.message());
+                    new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity()).loginAgain(response.message());
                 }
                 mBinding.saveBtn.setEnabled(true);
 
             }
 
             @Override
-            public void onFailure(Call<UpdateStatus> call, Throwable t) {
+            public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
                 mBinding.saveBtn.setEnabled(true);
+                CustomsDialog.getInstance().showDialog(t.getMessage(),"Add work plan",requireActivity(),requireContext());
 
-                new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Add Work Plan")
-                        .setContentText(t.getMessage())
-                        .show();
+
             }
         });
     }

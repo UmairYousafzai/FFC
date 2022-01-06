@@ -169,7 +169,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/spinner_Region"
@@ -184,7 +184,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
             </LinearLayout>
 
 
@@ -214,7 +214,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/spinner_gender"
@@ -229,7 +229,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
             </LinearLayout>
 
             <TextView
@@ -274,7 +274,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/spinner_classification"
@@ -289,7 +289,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
             </LinearLayout>
 
 
@@ -318,7 +318,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/spinner_qualification"
@@ -333,7 +333,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
             </LinearLayout>
 
             <LinearLayout
@@ -361,7 +361,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/spinner_grade"
@@ -376,7 +376,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
             </LinearLayout>
 
 

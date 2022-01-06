@@ -1,6 +1,7 @@
 package com.example.ffccloud.Target;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -46,7 +47,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.ffccloud.DoctorModel;
-import com.example.ffccloud.MainActivity;
 import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.UpdateStatus;
 import com.example.ffccloud.ModelClasses.UpdateWorkPlanStatus;
@@ -59,6 +59,7 @@ import com.example.ffccloud.databinding.CustomCancelDialogBinding;
 import com.example.ffccloud.databinding.CustomRescheduleDialogBinding;
 import com.example.ffccloud.databinding.FragmentTargetBinding;
 import com.example.ffccloud.utils.CONSTANTS;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SaveData;
 import com.example.ffccloud.utils.SyncDataToDB;
 import com.example.ffccloud.Target.utils.TargetViewModel;
@@ -69,6 +70,7 @@ import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.worker.UploadWorker;
 import com.example.ffccloud.worker.utils.UploadDataRepository;
 import com.vivekkaushik.datepicker.OnDateSelectedListener;
+//import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -80,7 +82,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,7 +102,7 @@ public class TargetFragment extends Fragment {
     private final boolean mic_check = false;
     private CustomCancelDialogBinding dialogBinding;
     private CustomRescheduleDialogBinding rescheduleDialogBinding;
-    private SweetAlertDialog sweetAlertDialog;
+    private ProgressDialog progressDialog;
     private NavController navController;
     private UploadDataRepository uploadDataRepository;
 
@@ -163,25 +164,7 @@ public class TargetFragment extends Fragment {
         } else {
 
 
-            new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Please turn on  location for this action.")
-                    .setContentText("Do you want to open location setting.")
-                    .setConfirmText("Yes")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            requireContext().startActivity(intent);
-                        }
-                    })
-                    .setCancelText("Cancel")
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-                        }
-                    }).show();
+            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
 
 
         }
@@ -253,16 +236,17 @@ public class TargetFragment extends Fragment {
 
         selectedDay = (cldr.get(Calendar.DAY_OF_MONTH));
         selectedMonth = cldr.get(Calendar.MONTH);
+        int month = selectedMonth+1;
         selectedYear = cldr.get(Calendar.YEAR);
 
-        int checkmonth = (selectedMonth % 10);
+        int checkmonth = (month % 10);
         int checkday = (selectedDay % 10);
         String mDay, mMonth, mYear = String.valueOf(selectedYear);
         if (checkmonth > 0 && selectedMonth < 9) {
-            mMonth = "0" + (selectedMonth + 1);
+            mMonth = "0" + (month );
             //          date = day + "-" + "0" + (month + 1) + "-" + (year);
         } else {
-            mMonth = String.valueOf(selectedMonth + 1);
+            mMonth = String.valueOf(selectedMonth );
 
         }
 
@@ -306,9 +290,9 @@ public class TargetFragment extends Fragment {
             public void onDateSelected(int year, int month, int day, int dayOfWeek) {
                 String date;
                 selectedDay = day;
-                selectedMonth = month;
+                selectedMonth = month+1;
                 selectedYear = year;
-                int checkmonth = (month % 10);
+                int checkmonth = (month+1 % 10);
                 int checkday = (day % 10);
                 String mDay = null, mMonth = null, mYear = String.valueOf(year);
                 if (checkmonth > 0 && month < 9) {
@@ -348,18 +332,18 @@ public class TargetFragment extends Fragment {
 
     public void getTargetViewModelData(String date) {
 
-        targetViewModel.getAllEveningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
-            @Override
-            public void onChanged(List<DoctorModel> list) {
-                if (list.size() > 0) {
-
-                    eveningListAdapter.setDoctorModelList(list);
-                } else {
-                    eveningListAdapter.clearData();
-
-                }
-            }
-        });
+//        targetViewModel.getAllEveningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
+//            @Override
+//            public void onChanged(List<DoctorModel> list) {
+//                if (list.size() > 0) {
+//
+//                    eveningListAdapter.setDoctorModelList(list);
+//                } else {
+//                    eveningListAdapter.clearData();
+//
+//                }
+//            }
+//        });
 
 
         targetViewModel.getAllMorningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
@@ -457,7 +441,7 @@ public class TargetFragment extends Fragment {
                             int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
                             targetViewModel.DeleteAllDoctor();
-                            SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext());
+                            SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity());
                             syncDataToDB.saveDoctorsList(id);
                         }
 
@@ -475,7 +459,7 @@ public class TargetFragment extends Fragment {
                                 int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
                                 targetViewModel.DeleteAllDoctor();
-                                SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext());
+                                SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity());
                                 syncDataToDB.saveDoctorsList(id);
                             }
                         }
@@ -488,29 +472,7 @@ public class TargetFragment extends Fragment {
 
                 } else {
 
-                    new SweetAlertDialog(requireContext())
-                            .setTitleText("Please turn on  location for this action.")
-                            .setContentText("Do you want to open location setting.")
-                            .setConfirmText("Yes")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-
-                                    sweetAlertDialog.dismiss();
-                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                    requireContext().startActivity(intent);
-                                }
-                            })
-                            .setCancelText("Cancel")
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                    mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-
-                                }
-                            }).show();
+                   CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
                 }
 
             }
@@ -575,11 +537,10 @@ public class TargetFragment extends Fragment {
                 public void onClick(View v) {
                     dialogBinding.saveRemarksBtn.setEnabled(false);
                     String check = dialogBinding.remarksEdittext.getText().toString();
-                    sweetAlertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-                    sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-                    sweetAlertDialog.setTitleText("Loading");
-                    sweetAlertDialog.setCancelable(false);
-                    sweetAlertDialog.show();
+                    progressDialog = new ProgressDialog(requireContext());
+                    progressDialog.setMessage("Loading....");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
 
                     if (!check.equals("")) {
                         if (location != null) {
@@ -622,10 +583,10 @@ public class TargetFragment extends Fragment {
                                             dialogBinding.saveRemarksBtn.setEnabled(true);
 
                                             targetViewModel.DeleteDoctor(doctorModel);
-                                            sweetAlertDialog.dismiss();
+                                            progressDialog.dismiss();
                                             alertDialog.dismiss();
                                         } else {
-                                            sweetAlertDialog.dismiss();
+                                            progressDialog.dismiss();
                                         }
 
 
@@ -633,7 +594,7 @@ public class TargetFragment extends Fragment {
 
                                     @Override
                                     public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
-                                        sweetAlertDialog.dismiss();
+                                        progressDialog.dismiss();
                                         t.getMessage();
                                     }
                                 });
@@ -643,7 +604,7 @@ public class TargetFragment extends Fragment {
                                 dialogBinding.saveRemarksBtn.setEnabled(true);
 
                                 targetViewModel.DeleteDoctor(doctorModel);
-                                sweetAlertDialog.dismiss();
+                                progressDialog.dismiss();
                                 alertDialog.dismiss();
                                 uploadDataRepository.insertWorkPlanStatus(updateWorkPlanStatus);
                                 generateWorkRequest(CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN);
@@ -665,29 +626,8 @@ public class TargetFragment extends Fragment {
                 }
             });
         } else {
-            new SweetAlertDialog(requireContext())
-                    .setTitleText("Please turn on  location for this action.")
-                    .setContentText("Do you want to open location setting.")
-                    .setConfirmText("Yes")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            mbinding.targetRecycler.swipeLayout.setRefreshing(false);
 
-                            sweetAlertDialog.dismiss();
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            requireContext().startActivity(intent);
-                        }
-                    })
-                    .setCancelText("Cancel")
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-                            mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-
-                        }
-                    }).show();
+            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
         }
 
 
@@ -804,11 +744,10 @@ public class TargetFragment extends Fragment {
                     String remarkCheck = rescheduleDialogBinding.remarksEdittext.getText().toString();
                     String dateCheck = rescheduleDialogBinding.textDate.getText().toString();
                     String timeCheck = rescheduleDialogBinding.textTime.getText().toString();
-                    sweetAlertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-                    sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-                    sweetAlertDialog.setTitleText("Loading");
-                    sweetAlertDialog.setCancelable(false);
-                    sweetAlertDialog.show();
+                    progressDialog = new ProgressDialog(requireContext());
+                    progressDialog.setMessage("Loading....");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
                     if (!remarkCheck.equals("") && !dateCheck.equals("") && !timeCheck.equals("")) {
                         int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
                         String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
@@ -840,11 +779,11 @@ public class TargetFragment extends Fragment {
                                         morningListAdapter.removeItem(doctorModel);
                                         eveningListAdapter.removeItem(doctorModel);
                                         rescheduleDialogBinding.saveBtn.setEnabled(true);
-                                        sweetAlertDialog.dismiss();
+                                        progressDialog.dismiss();
                                         alertDialog.dismiss();
                                     }else
                                     {
-                                        sweetAlertDialog.dismiss();
+                                        progressDialog.dismiss();
 
                                     }
 
@@ -853,7 +792,7 @@ public class TargetFragment extends Fragment {
 
                                 @Override
                                 public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
-                                    sweetAlertDialog.dismiss();
+                                    progressDialog.dismiss();
                                     t.getMessage();
                                 }
                             });
@@ -864,7 +803,7 @@ public class TargetFragment extends Fragment {
                             morningListAdapter.removeItem(doctorModel);
                             eveningListAdapter.removeItem(doctorModel);
                             rescheduleDialogBinding.saveBtn.setEnabled(true);
-                            sweetAlertDialog.dismiss();
+                            progressDialog.dismiss();
                             alertDialog.dismiss();
                             uploadDataRepository.insertWorkPlan(addNewWorkPlanModel);
                             generateWorkRequest(CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN);
@@ -873,7 +812,7 @@ public class TargetFragment extends Fragment {
 
                     } else {
                         dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
-                        sweetAlertDialog.dismiss();
+                        progressDialog.dismiss();
                     }
                 }catch (Exception e)
                 {

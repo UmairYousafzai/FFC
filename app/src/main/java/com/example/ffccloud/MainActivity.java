@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -30,6 +28,7 @@ import com.example.ffccloud.databinding.NavigationDrawerHeaderBinding;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.Permission;
 import com.example.ffccloud.utils.SyncDataToDB;
 
@@ -67,8 +66,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.Constants;
-import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (SharedPreferenceHelper.getInstance(getApplication()).getGetDocListState()) {
             int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
-            SyncDataToDB syncDataToDB = new SyncDataToDB(getApplication(), this);
+            SyncDataToDB syncDataToDB = new SyncDataToDB(getApplication(), this,this);
             syncDataToDB.saveDoctorsList(id);
             syncDataToDB.SyncData(id);
             SharedPreferenceHelper.getInstance(getApplication()).setGetDocListState(false);
@@ -416,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
 
         Date c = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
         String formattedDate = df.format(c);
         Permission permission = new Permission(this, this);
 
@@ -477,12 +475,12 @@ public class MainActivity extends AppCompatActivity {
 
         int endHours = 0, endMinutes = 0, endSeconds = 0, startHours = 0, startMinutes = 0, startSeconds = 0;
         if (!startDateTime.isEmpty() && !startDateTime.isEmpty()) {
-            endHours = Integer.parseInt(formattedDate.substring(10, 12));
-            endMinutes = Integer.parseInt(formattedDate.substring(14, 15));
-            endSeconds = Integer.parseInt(formattedDate.substring(17, 18));
-            startHours = Integer.parseInt(startDateTime.substring(10, 12));
-            startMinutes = Integer.parseInt(startDateTime.substring(14, 15));
-            startSeconds = Integer.parseInt(startDateTime.substring(17, 18));
+            endHours= Integer.parseInt(formattedDate.substring(11,13));
+            endMinutes= Integer.parseInt(formattedDate.substring(14,16));
+            endSeconds=Integer.parseInt(formattedDate.substring(17,19));
+            startHours= Integer.parseInt(startDateTime.substring(11,13));
+            startMinutes= Integer.parseInt(startDateTime.substring(14,16));
+            startSeconds=Integer.parseInt(startDateTime.substring(17,19));
         }
 
 
@@ -491,26 +489,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showDialog() {
-        new SweetAlertDialog(this)
-                .setTitleText("Please turn on  location for this action.")
-                .setContentText("Do you want to open location setting.")
-                .setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                        sweetAlertDialog.dismiss();
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                }).show();
+        CustomsDialog.getInstance().loginAgain(this);
     }
 
 

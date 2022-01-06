@@ -27,6 +27,10 @@ public class AddWorkPlanDialogAdapter extends RecyclerView.Adapter<AddWorkPlanDi
     public AddWorkPlanDialogAdapter(int key, DialogRecyclerItemListener listener) {
         this.key = key;
         this.mListener = listener;
+        doctorList = new ArrayList<>();
+        doctorsListFull = new ArrayList<>();
+        areaModelList = new ArrayList<>();
+        areaListFull = new ArrayList<>();
     }
 
     @NonNull

@@ -19,9 +19,8 @@ import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
 import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
-import com.example.ffccloud.SplashScreen.SplashActivity;
+
 import com.example.ffccloud.Target.Adapters.AddWorkPlanDialogAdapter;
-import com.example.ffccloud.Target.AddWorkPlanDialogFragmentArgs;
 import com.example.ffccloud.databinding.CustomAddWorkplanDialogBinding;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
@@ -30,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

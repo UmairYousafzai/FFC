@@ -1,40 +1,46 @@
 package com.example.ffccloud.utils;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.example.ffccloud.Database.FfcDatabase;
+import com.example.ffccloud.DoctorModel;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
 import com.example.ffccloud.ModelClasses.DeliveryModeModel;
+
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.ModelClasses.QualificationModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
-import com.example.ffccloud.DoctorModel;
 import com.example.ffccloud.SplashScreen.SplashActivity;
 import com.example.ffccloud.Target.utils.TargetRepository;
+import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SyncDataToDB {
 
-    Application application;
-    Context mContext;
-    String errorMessage = "";
+    private Application application;
+    private Context mContext;
+    private  Activity activity;
 
-
-    public SyncDataToDB(Application application, Context context) {
+    public SyncDataToDB(Application application, Context context, Activity activity) {
         this.application = application;
         mContext = context;
+        this.activity = activity;
     }
 
     public void saveDoctorsList(int empId) {
@@ -60,7 +66,7 @@ public class SyncDataToDB {
 
             @Override
             public void onFailure(@NotNull Call<List<DoctorModel>> call, @NotNull Throwable t) {
-                errorMessage = t.getMessage();
+
 
             }
         });
@@ -169,23 +175,26 @@ public class SyncDataToDB {
     }
 
     public void loginAgain(String message) {
-        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
-
-        sweetAlertDialog.setTitleText("Error")
-                .setContentText(message + "\nSession Expire Please Login Again")
-                .setConfirmText("Cancel")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        SharedPreferenceHelper.getInstance(mContext).setLogin_State(false);
-                        Intent intent = new Intent(mContext, SplashActivity.class);
-                        mContext.startActivity(intent);
+         FfcDatabase ffcDatabase;
+        ffcDatabase = FfcDatabase.getInstance(mContext);
 
 
-                    }
-                }).setCanceledOnTouchOutside(false);
-        sweetAlertDialog.setCancelable(false);
-        sweetAlertDialog.show();
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(activity.getLayoutInflater());
+       AlertDialog alertDialog = new AlertDialog.Builder(mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        dialogBinding.title.setText("Error");
+        dialogBinding.body.setText("Session Expire Please Login Again");
+        alertDialog.show();
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ffcDatabase.dao().deleteAllDeliveryModes();
+
+                SharedPreferenceHelper.getInstance(mContext).setLogin_State(false);
+                Intent intent = new Intent(mContext, SplashActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
+
 
     }
 }

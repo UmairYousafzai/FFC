@@ -47,10 +47,10 @@ public class AddCustomerFragment extends Fragment {
     private List<ContactPersons> contactPersonsList = new ArrayList<>();
     private ContactRecyclerAdapter adapter;
     private CustomerModel customerModel;
-    private int customerID=0,userID,cityId;
+    private int customerID=0,userID,cityId , crLimitDays =0;
     private String partyName="",email="",emailCC="",emailBCC="",comment="", instruction="",address="",payee="",fax="",contact=""
             ,NTN="",saleTax="",focalPerson="",focalPeronCNIC="",partyAbbreviation="";
-    private double crLimit=0,crLimitAmount=0;
+    private double  crLimitAmount=0;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -111,7 +111,7 @@ public class AddCustomerFragment extends Fragment {
         mBinding.companyCheckBox.setChecked(isCompany);
         mBinding.etSaleTax.setText(saleTax);
         mBinding.etNtnNum.setText(NTN);
-        mBinding.etCreditDays.setText(String.valueOf(crLimit) );
+        mBinding.etCreditDays.setText(String.valueOf(crLimitDays) );
         mBinding.etCreditLimit.setText(String.valueOf(crLimitAmount));
 
         if (creditLimitPromptType.equals("1"))
@@ -166,7 +166,7 @@ public class AddCustomerFragment extends Fragment {
         saleTax=customerModel.getSales_Tax_No();
         mBinding.etNtnNum.setText(customerModel.getNTN());
         NTN=customerModel.getNTN();
-        crLimit=customerModel.getCr_Limit();
+        crLimitDays =(int) customerModel.getCr_Limit();
         mBinding.etCreditDays.setText(String.valueOf(customerModel.getCr_Limit()) );
 
         mBinding.etCreditLimit.setText(String.valueOf(customerModel.getCr_Limit_Amount()));
@@ -256,8 +256,8 @@ public class AddCustomerFragment extends Fragment {
     private void insertCustomer(int key) {
         userID = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
         partyName = Objects.requireNonNull(mBinding.etPartName.getText()).toString().trim();
-        crLimit = Double.parseDouble(Objects.requireNonNull(mBinding.etCreditDays.getText()).toString());
-        crLimitAmount = Double.parseDouble(Objects.requireNonNull(mBinding.etCreditLimit.getText()).toString());
+        crLimitDays = !mBinding.etCreditDays.getText().toString().equals("") ?  Integer.parseInt(mBinding.etCreditDays.getText().toString()):0;
+        crLimitAmount = !mBinding.etCreditLimit.getText().toString().equals("") ?  Double.parseDouble((mBinding.etCreditLimit.getText()).toString()):0.0;
         cityId = cityHashMap.get(mBinding.citySpinner.getSelectedItem().toString());
         email = Objects.requireNonNull(mBinding.etEmail.getText()).toString().trim();
         emailCC = Objects.requireNonNull(mBinding.etEmailCc.getText()).toString().trim();
@@ -300,7 +300,7 @@ public class AddCustomerFragment extends Fragment {
                                 customerModel.setSalesManID(0);
                                 customerModel.setUserTypeName("C");
                                 customerModel.setPartyName(partyName);
-                                customerModel.setCr_Limit(crLimit);
+                                customerModel.setCr_Limit(crLimitDays);
                                 customerModel.setCr_Limit_Amount(crLimitAmount);
                                 customerModel.setApply_Cr_Limit(applyCredit);
                                 customerModel.setEmail(email);
@@ -403,18 +403,28 @@ public class AddCustomerFragment extends Fragment {
 
                 String name = binding.etName.getText()!=null? binding.etName.getText().toString():" ";
                 String phone =  binding.etPhone.getText()!=null? binding.etPhone.getText().toString():" ";
+                String email =binding.etEmail.getText()!=null ? binding.etEmail.getText().toString(): " ";
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
                 if (!name.equals(""))
                 {
                     if (!phone.equals(""))
                     {
-                        ContactPersons contactPersons = new ContactPersons();
-                        contactPersons.setContact_Person_ContactNo(phone);
-                        contactPersons.setContact_Person_Design(binding.etDesignation.getText().toString());
-                        contactPersons.setContact_Person_Email(binding.etEmail.getText().toString());
-                        contactPersons.setContact_Person_Name(name);
-                        contactPersonsList.add(contactPersons);
-                        adapter.setContactPersonsList(contactPersonsList);
+                        if (email.matches(emailPattern))
+                        {
+                            ContactPersons contactPersons = new ContactPersons();
+                            contactPersons.setContact_Person_ContactNo(phone);
+                            contactPersons.setContact_Person_Design(binding.etDesignation.getText().toString());
+                            contactPersons.setContact_Person_Email(binding.etEmail.getText().toString());
+                            contactPersons.setContact_Person_Name(name);
+                            contactPersonsList.add(contactPersons);
+                            adapter.setContactPersonsList(contactPersonsList);
+                        }
+                        else
+                        {
+                            binding.emailLayout.setError("please enter valid email ");
+                        }
+
                     }
                     else
                     {

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +33,6 @@ import retrofit2.Response;
 public class TableLayout extends Fragment {
     private FragmentTableLayoutBinding mBinding;
     private List<FilteredDoctoredModel> filteredDoctoredModelList = new ArrayList<>();
-    private SweetAlertDialog dialog;
     private final List<TextView> idTextViewList = new ArrayList<>();
     private final List<TextView> nameTextViewList = new ArrayList<>();
     private final List<TextView> phoneTextViewList = new ArrayList<>();
@@ -59,11 +57,7 @@ public class TableLayout extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        dialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
 
-        dialog.getProgressHelper().setBarColor(ResourcesCompat.getColor(getResources(), R.color.APP_Theme_Color, null));
-        dialog.setTitleText("Loading");
-        dialog.setCancelable(false);
         setUpTextViewsLists();
         setUpTable();
     }
@@ -296,7 +290,6 @@ public class TableLayout extends Fragment {
 
     private void getDoctorList() {
 
-        dialog.show();
 
         int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
         String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
@@ -368,11 +361,10 @@ public class TableLayout extends Fragment {
                         }
 
                     }
-                    dialog.dismiss();
+
 
                 } else {
-                    new SyncDataToDB(requireActivity().getApplication(), requireContext()).loginAgain(response.message());
-                    dialog.dismiss();
+                    new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity()).loginAgain(response.message());
 
                 }
             }
@@ -381,7 +373,6 @@ public class TableLayout extends Fragment {
             public void onFailure(Call<List<FilteredDoctoredModel>> call, Throwable t) {
 
                 Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_LONG).show();
-                dialog.dismiss();
 
             }
         });

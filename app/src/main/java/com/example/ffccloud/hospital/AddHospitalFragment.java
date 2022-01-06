@@ -107,6 +107,7 @@ public class AddHospitalFragment extends Fragment {
         {
             isSpinnerUpdate=true;
             getRegion();
+            setUpGradeSpinner();
 
         }
 
@@ -261,7 +262,7 @@ public class AddHospitalFragment extends Fragment {
 
         }
 
-        setUpGradeSpinner();
+
         btnListener();
 
     }
@@ -492,6 +493,24 @@ public class AddHospitalFragment extends Fragment {
         mBinding.etGasDays.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getGasDays());
         mBinding.etSizeOfHospital.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getSize()));
 
+        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
+            mBinding.locationCheckbox.setChecked(true);
+        }
+        mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+
+        int gradeID = getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
+
+        String grade = gradingHashMapForTitle.get(gradeID);
+
+        mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
+       gradePosition= mBinding.spinnerGrade.getSelectedItemPosition();
+
+        int regionId = (int) getSupplierDetailModel.getSupplierModelNewList().get(0).getRegionId();
+
+        String regionTitle = regionHashmapForTitle.get(regionId);
+
+        mBinding.regionSpinner.setSelection(regionList.indexOf(regionTitle));
+        regionPosition=mBinding.regionSpinner.getSelectedItemPosition();
 
         medicineModalList.clear();
         medicineModalList.addAll(getSupplierDetailModel.getSupplierItemLinkingList());
@@ -522,11 +541,7 @@ public class AddHospitalFragment extends Fragment {
         farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
         doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
 
-        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGradeId();
 
-        String grade =  gradingHashMapForTitle.get(gradeID);
-
-        mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
 
 
 

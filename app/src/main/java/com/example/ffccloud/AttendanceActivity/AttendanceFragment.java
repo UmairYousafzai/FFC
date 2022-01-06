@@ -1,6 +1,7 @@
 package com.example.ffccloud.AttendanceActivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,6 +36,7 @@ import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.ModelClasses.Activity;
 import com.example.ffccloud.R;
+import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAttendanceBinding;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
@@ -53,7 +56,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -120,17 +122,17 @@ public class AttendanceFragment extends Fragment {
 
     public void saveAttendance(String IMEI) {
         Permission permission = new Permission(requireContext(), requireActivity());
-
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle("Please Wait");
+        progressDialog.setMessage("Loading....");
+        progressDialog.show();
 
         if (selectedImage != null) {
-            SweetAlertDialog pDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-            pDialog.setTitleText("Loading");
-            pDialog.setCancelable(false);
-            pDialog.show();
+
             Date c = Calendar.getInstance().getTime();
 
-            SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
             String formattedDate = df.format(c);
             CustomLocation customLocation = new CustomLocation(requireContext());
 
@@ -140,7 +142,7 @@ public class AttendanceFragment extends Fragment {
                         @Override
                         public void gotLocation(Location location) {
 
-                            pDialog.dismiss();
+                            progressDialog.dismiss();
                             String image = getBytesFromBitmap(selectedImage);
                             String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
                             int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
@@ -161,33 +163,16 @@ public class AttendanceFragment extends Fragment {
 
                     customLocation.getLastLocation(locationResults);
                 } else {
-                    pDialog.dismiss();
-                    new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Please turn on  location for this action.")
-                            .setContentText("Do you want to open location setting.")
-                            .setConfirmText("Yes")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                    requireContext().startActivity(intent);
-                                }
-                            })
-                            .setCancelText("Cancel")
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                }
-                            }).show();
+                    progressDialog.dismiss();
+
+                    showOpenLocationSettingDialog();
 
                     mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.doctor_icon, null));
                     selectedImage = null;
                 }
 
             } else {
-                pDialog.dismiss();
+                progressDialog.dismiss();
                 permission.getLocationPermission();
                 mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.doctor_icon, null));
 
@@ -196,9 +181,7 @@ public class AttendanceFragment extends Fragment {
 
 
         } else {
-            new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
-                    .setContentText("Please Mark Attendance")
-                    .show();
+            Toast.makeText(requireContext(), "Please Mark Attendance", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -232,12 +215,14 @@ public class AttendanceFragment extends Fragment {
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         uniqueID = UUID.randomUUID().toString();
+                        saveAttendance(uniqueID);
                     } else {
                         uniqueID = getDeviceIMEI();
+                        saveAttendance(uniqueID);
 
                     }
 
-                    saveAttendance(uniqueID);
+
                 }
             }
         }
@@ -268,9 +253,9 @@ public class AttendanceFragment extends Fragment {
     }
 
     public void openActivity(String mainActivity, String subActivity, int taskID) {
-        SweetAlertDialog progressDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-        progressDialog.setTitleText("Loading");
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Loading.....");
         progressDialog.setCancelable(false);
         progressDialog.show();
         CustomLocation customLocation = new CustomLocation(requireContext());
@@ -279,8 +264,7 @@ public class AttendanceFragment extends Fragment {
 
         Date c = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
-        String formattedDate = df.format(c);
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());        String formattedDate = df.format(c);
         Permission permission = new Permission(requireContext(), requireActivity());
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -315,26 +299,7 @@ public class AttendanceFragment extends Fragment {
                 customLocation.getLastLocation(locationResults);
             } else {
                 progressDialog.dismiss();
-                new SweetAlertDialog(requireContext())
-                        .setTitleText("Please turn on  location for this action.")
-                        .setContentText("Do you want to open location setting.")
-                        .setConfirmText("Yes")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                                sweetAlertDialog.dismiss();
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                requireContext().startActivity(intent);
-                            }
-                        })
-                        .setCancelText("Cancel")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
-                        }).show();
+               showOpenLocationSettingDialog();
             }
 
         } else {
@@ -345,6 +310,33 @@ public class AttendanceFragment extends Fragment {
         }
 
 
+    }
+
+
+    public void showOpenLocationSettingDialog() {
+
+
+        AlertDialog alertDialog;
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
+        alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        dialogBinding.title.setText("Please turn on  location for this action.");
+        dialogBinding.body.setText("Do you want to open location setting.");
+        alertDialog.show();
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                requireContext().startActivity(intent);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
     }
 
 }

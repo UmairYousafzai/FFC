@@ -47,7 +47,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"/>
+                android:background="@color/grey"/>
             <TextView
                 android:id="@+id/tv_designation"
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"/>
+                android:background="@color/grey"/>
             <TextView
                 android:id="@+id/tv_phone_numer"
                 android:layout_width="match_parent"
@@ -75,7 +75,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"/>
+                android:background="@color/grey"/>
             <TextView
                 android:id="@+id/tv_email"
                 android:layout_width="match_parent"

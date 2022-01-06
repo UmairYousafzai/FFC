@@ -50,7 +50,7 @@ public class FarmListFragment extends Fragment {
     private int regionID=0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = FragmentFarmListBinding.inflate(inflater,container,false);
         return mBinding.getRoot();

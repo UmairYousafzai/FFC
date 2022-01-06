@@ -1,6 +1,7 @@
 package com.example.ffccloud.TargetMenu;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -25,9 +26,11 @@ import com.example.ffccloud.ModelClasses.Activity;
 
 import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentStartDayBinding;
+import com.example.ffccloud.salesOrder.ProductInfoBottomSheetDialogFragment;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.Permission;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,7 +41,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class StartDayFragment extends Fragment {
     private NavController navController;
@@ -96,10 +98,8 @@ public class StartDayFragment extends Fragment {
     }
 
     public void openActivity(String mainActivity, String subActivity, int taskID)
-    {   SweetAlertDialog progressDialog= new SweetAlertDialog(requireContext(),SweetAlertDialog.PROGRESS_TYPE);
-        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-        progressDialog.setTitleText("Loading");
-        progressDialog.setCancelable(false);
+    {   ProgressDialog progressDialog= new ProgressDialog(requireContext());
+    progressDialog.setMessage("Loading...");
         progressDialog.show();
         CustomLocation customLocation= new CustomLocation(requireContext());
 
@@ -147,26 +147,7 @@ public class StartDayFragment extends Fragment {
             else
             {
                 progressDialog.dismiss();
-                new SweetAlertDialog(requireContext())
-                        .setTitleText("Please turn on  location for this action.")
-                        .setContentText("Do you want to open location setting.")
-                        .setConfirmText("Yes")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                                sweetAlertDialog.dismiss();
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                requireContext().startActivity(intent);
-                            }
-                        })
-                        .setCancelText("Cancel")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
-                        }).show();
+                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
             }
 
         }

@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.ffccloud.GetProductModel;
 import com.example.ffccloud.InsertProductModel;
@@ -80,8 +81,9 @@ public class AddProductFragment extends Fragment {
         final LifecycleEventObserver observer = (source, event) -> {
             if (event.equals(Lifecycle.Event.ON_RESUME) && navBackStackEntry.getSavedStateHandle().contains(CONSTANTS.PRODUCT_MODEL)) {
                 InsertProductModel productModel = navBackStackEntry.getSavedStateHandle().get(CONSTANTS.PRODUCT_MODEL);
-
                 productModelList.add(productModel);
+                Toast.makeText(requireContext(), "Number Of Product Added :"+productModelList.size(), Toast.LENGTH_SHORT).show();
+
                 navController.getPreviousBackStackEntry().getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL, productModelList);
 
             }

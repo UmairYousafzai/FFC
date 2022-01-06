@@ -142,7 +142,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/region_spinner"
@@ -157,7 +157,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray"
+                    android:background="@color/grey"
                     android:layout_marginBottom="5dp"/>
 
             </LinearLayout>
@@ -316,7 +316,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/animal_spinner"
@@ -331,7 +331,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray"
+                    android:background="@color/grey"
                     android:layout_marginBottom="5dp"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/et_number_of_animal_layout"

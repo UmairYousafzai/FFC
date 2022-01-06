@@ -120,6 +120,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_alignParentRight="true"
                     android:textColor="@color/black"
+                    android:visibility="gone"
                     />
                 <TextView
                     android:id="@+id/getImeiNumber"
@@ -130,6 +131,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="20dp"
                     android:textColor="@color/black"
+                    android:visibility="gone"
                     />
 
 

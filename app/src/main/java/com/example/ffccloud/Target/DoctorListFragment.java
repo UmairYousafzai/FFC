@@ -1,5 +1,6 @@
 package com.example.ffccloud.Target;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -27,6 +28,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -49,7 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +66,7 @@ public class DoctorListFragment extends Fragment {
     private DoctorViewModel doctorViewModel;
     private FilterDoctorRecyclerAdapter adapter;
     private List<FilteredDoctoredModel> filteredDoctoredModelList = new ArrayList<>();
-    private SweetAlertDialog progressDialog;
+    private ProgressDialog progressDialog;
     private UserViewModel userViewModel;
 
     @Override
@@ -91,11 +92,10 @@ public class DoctorListFragment extends Fragment {
         Log.e("onViewCreated", "on view created me ha");
         // styling searchView
 
-        progressDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-        progressDialog.setTitleText("Loading");
-        //pDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog = new ProgressDialog(requireContext());
+
+        progressDialog.setMessage("Loading");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -201,7 +201,7 @@ public class DoctorListFragment extends Fragment {
 
                     }
                 } else {
-                    new SyncDataToDB(requireActivity().getApplication(), requireContext()).loginAgain(response.message());
+                    new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity()).loginAgain(response.message());
                 }
             }
 

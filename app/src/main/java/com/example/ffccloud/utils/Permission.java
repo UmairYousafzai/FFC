@@ -11,10 +11,10 @@ import android.view.View;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
+import com.example.ffccloud.Login.LoginActivity;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.CustomDialogBinding;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class Permission {
     
@@ -29,31 +29,34 @@ public class Permission {
     public void getWriteStoragePermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(mActivity,
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(mActivity,
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+            }
+        });
+
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-            alertDialog.setTitle("Storage Permission Needed");
-            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
 
 
@@ -67,31 +70,31 @@ public class Permission {
     public void getLocationPermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(mActivity,
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
 
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(mActivity,
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+            }
+        });
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            alertDialog.setTitle("Location Permission Needed");
-            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
 
 
@@ -106,31 +109,32 @@ public class Permission {
     public void getCOARSELocationPermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(mActivity,
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(mActivity,
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+            }
+        });
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
-            alertDialog.setTitle("Location Permission Needed");
-            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
 
 
@@ -144,33 +148,33 @@ public class Permission {
     public void getCameraPermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.CAMERA};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(mActivity,
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(mActivity,
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+            }
+        });
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.CAMERA)) {
 
-            alertDialog.setTitle("Camera Permission Needed");
-            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
-
 
         } else {
             ActivityCompat.requestPermissions(mActivity, permissionArray, CONSTANTS.PERMISSION_REQUEST_CODE);
@@ -183,31 +187,32 @@ public class Permission {
     public void getStoragePermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(mActivity,
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(mActivity,
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+            }
+        });
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-            alertDialog.setTitle("Storage Permission Needed");
-            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
 
 
@@ -222,32 +227,35 @@ public class Permission {
     public void getCallPermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.CALL_PHONE};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(mActivity,
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(mActivity,
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+            }
+        });
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.CALL_PHONE)) {
 
-            alertDialog.setTitle("CAll Permission Needed");
-            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
+
 
 
         } else {
@@ -262,32 +270,33 @@ public class Permission {
     public void getSMSPermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.SEND_SMS};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(mActivity,
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
 
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(mActivity,
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+            }
+        });
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.SEND_SMS)) {
 
-            alertDialog.setTitle("SMS Permission Needed");
-            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
+
 
 
         } else {
@@ -301,31 +310,31 @@ public class Permission {
     public void getPhoneStatePermission() {
 
         String[] permissionArray = new String[]{Manifest.permission.READ_PHONE_STATE};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE);
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(mActivity,
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
 
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(mActivity,
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE);
+            }
+        });
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.dismiss();
+            }
+        });
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.READ_PHONE_STATE)) {
 
-            alertDialog.setTitle("SMS Permission Needed");
-            alertDialog.setContentText("This Permission Needed For The Better Experience Of The App. ");
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
 
 

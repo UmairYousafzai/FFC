@@ -1,5 +1,6 @@
 package com.example.ffccloud.Target.Schedule;
 
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,8 +39,10 @@ import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.ScheduleModel;
 import com.example.ffccloud.Target.Adapters.ScheduleAdapter;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
+import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddScheduleBinding;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,7 +73,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
     private ScheduleAdapter adapter;
     private String locationString = "";
     private DoctorViewModel doctorViewModel;
-    private SweetAlertDialog progressDialog;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -206,27 +210,10 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                     };
                     customLocation.getLastLocation(results);
                 } else {
-                    new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Please turn on  location for this action.")
-                            .setContentText("Do you want to open location setting.")
-                            .setConfirmText("Yes")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                    requireContext().startActivity(intent);
-                                    sweetAlertDialog.dismiss();
-                                }
-                            })
-                            .setCancelText("Cancel")
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                    mBinding.locationBtn.setChecked(false);
-                                }
-                            }).show();
+
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+
+                    mBinding.locationBtn.setChecked(false);
                 }
 
             }
@@ -236,91 +223,26 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
             @Override
             public void onClick(View v) {
 
+                CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
+                AlertDialog alertDialog = new AlertDialog.Builder( requireActivity().getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+                dialogBinding.title.setText("Adding Schedule.");
+                dialogBinding.body.setText("Do you want to Save schedule?");
+                alertDialog.show();
+                dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                new SweetAlertDialog(requireContext(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Adding Schedule.")
-                        .setContentText("Do you want to Save schedule?")
-                        .setConfirmText("Yes")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        addSchedule();
+                        alertDialog.dismiss();
+                    }
+                });
+                dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                                if (mBinding.primaryLocationBtn.isChecked() || checkPrimaryLoation) {
-                                    //this can prevent user from selecting different primary location
-                                    primaryLocationLock = true;
-                                    mBinding.primaryLocationBtn.setChecked(false);
-                                    mBinding.primaryLocationBtn.setEnabled(false);
-                                }
-
-                                ScheduleModel model = new ScheduleModel();
-                                int regionId, areaId, dayId;
-                                String region= mBinding.regionSpinner.getSelectedItem().toString();
-                                String area= mBinding.areaSpinner.getSelectedItem().toString();
-
-                                if (!region.equals("")) {
-                                    mBinding.regionSpinner.requestFocus();
-                                    Toast.makeText(requireContext(), "Please Select region for adding schedule", Toast.LENGTH_SHORT).show();
-                                } else if (!area.equals("")) {
-                                    mBinding.areaSpinner.requestFocus();
-                                    Toast.makeText(requireContext(), "Please Select area for adding schedule", Toast.LENGTH_SHORT).show();
-                                } else if (mBinding.daySpinner.getSelectedItem() != null) {
-                                    mBinding.daySpinner.requestFocus();
-                                    Toast.makeText(requireContext(), "Please Select day for adding schedule", Toast.LENGTH_SHORT).show();
-                                } else if (openingTime.isEmpty()) {
-                                    mBinding.openingTimeText.requestFocus();
-                                    mBinding.openingTimeText.setError("Please Select open timing for adding schedule");
-                                    Toast.makeText(requireContext(), "Please Select open timing for adding schedule", Toast.LENGTH_SHORT).show();
-                                } else if (closingTime != null) {
-                                    mBinding.closingTimeText.requestFocus();
-                                    mBinding.closingTimeText.setError("Please Select close timing for adding schedule");
-                                    Toast.makeText(requireContext(), "Please Select close timing for adding schedule", Toast.LENGTH_SHORT).show();
-                                } else if (locationString != null) {
-                                    mBinding.locationBtn.requestFocus();
-                                    mBinding.textLocation.setError("Please Select turn on location for adding schedule");
-                                    Toast.makeText(requireContext(), "Please turn on location for adding schedule", Toast.LENGTH_SHORT).show();
-                                } else {
-
-                                    regionId = regionHashmap.get(mBinding.regionSpinner.getSelectedItem().toString());
-                                    areaId = areaHashmap.get(mBinding.areaSpinner.getSelectedItem().toString());
-                                    dayId = dayhashMap.get(mBinding.daySpinner.getSelectedItem().toString());
-
-                                    model.setAreaTittle(mBinding.areaSpinner.getSelectedItem().toString());
-                                    model.setSubHeadCode(areaId);
-                                    model.setRegionTittle(mBinding.regionSpinner.getSelectedItem().toString());
-                                    model.setAcNo(regionId);
-                                    model.setOpeningTime(openingTime);
-                                    model.setClosingTime(closingTime);
-                                    model.setCoordinates(locationString);
-                                    model.setDayId(dayId);
-                                    model.setPrimaryLoc(primaryLocation);
-
-                                    if (!scheduleModelList.contains(model)) {
-                                        scheduleModelList.add(model);
-                                        getRegion();
-                                        mBinding.textLocation.setText("");
-                                        mBinding.closingTimeText.setText("");
-                                        mBinding.openingTimeText.setText("");
-                                        mBinding.locationBtn.setChecked(false);
-                                        openingTime = "";
-                                        closingTime = "";
-                                        Toast.makeText(requireContext(), "Schedule Added", Toast.LENGTH_SHORT).show();
-                                        adapter.setScheduleModelList(scheduleModelList);
-                                    } else {
-                                        Toast.makeText(requireContext(), "Schedule Already Exist", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-                                sweetAlertDialog.dismiss();
-                            }
-                        })
-                        .setCancelText("Cancel")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                                sweetAlertDialog.dismiss();
-                            }
-                        }).show();
+                        alertDialog.dismiss();
+                    }
+                });
 
 
             }
@@ -332,27 +254,30 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
                 if (!primaryLocationLock) {
                     if (mBinding.primaryLocationBtn.isChecked()) {
+                        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
+                        AlertDialog alertDialog = new AlertDialog.Builder( requireActivity().getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+                        dialogBinding.title.setText("Adding Schedule.");
+                        dialogBinding.body.setText("Do you want to Save schedule?");
+                        alertDialog.show();
+                        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                        new SweetAlertDialog(requireContext(), SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Primary Location Alert")
-                                .setContentText("Do you want set Primary Location for this schedule?")
-                                .setConfirmText("Yes")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        primaryLocation = true;
-                                        sweetAlertDialog.dismiss();
-                                    }
-                                })
-                                .setCancelText("Cancel")
-                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        primaryLocation = false;
-                                        mBinding.primaryLocationBtn.setChecked(false);
-                                        sweetAlertDialog.dismiss();
-                                    }
-                                }).show();
+                                primaryLocation = true;
+
+                                alertDialog.dismiss();
+                            }
+                        });
+                        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                primaryLocation = false;
+                                mBinding.primaryLocationBtn.setChecked(false);
+                                alertDialog.dismiss();
+                            }
+                        });
+
+
 
                     }
                 }
@@ -363,64 +288,134 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
         mBinding.btnSaveDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 mBinding.btnSaveDoctor.setEnabled(false);
-                new SweetAlertDialog(requireContext(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Adding Doctor.")
-                        .setContentText("Do you want to Save Doctor?")
-                        .setConfirmText("Yes")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
-                                String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
-                                saveDoctorModel.setSchedules(getSchedule());
-                                saveDoctorModel.setSuggested_UserId(id);
-                                progressDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-                                progressDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                                progressDialog.setTitleText("Loading");
-                                //pDialog.setCancelable(false);
-                                progressDialog.setCanceledOnTouchOutside(false);
-                                progressDialog.show();
-                                Call<UpdateStatus> call = ApiClient.getInstance().getApi().SendSaveDoctor(token, "application/json", saveDoctorModel);
-                                call.enqueue(new Callback<UpdateStatus>() {
-                                    @Override
-                                    public void onResponse(Call<UpdateStatus> call, Response<UpdateStatus> response) {
+                CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
+                AlertDialog alertDialog = new AlertDialog.Builder( requireActivity().getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+                dialogBinding.title.setText("Adding Doctor.");
+                dialogBinding.body.setText("Do you want to Save doctor?");
+                alertDialog.show();
+                dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                                        UpdateStatus updateStatus = response.body();
-                                        mBinding.primaryLocationBtn.setEnabled(false);
-                                        progressDialog.dismiss();
-                                        new SweetAlertDialog(requireContext())
-                                                .setTitleText(updateStatus.getStrMessage())
-                                                .show();
+                        saveDoctor();
+                        alertDialog.dismiss();
+                    }
+                });
+                dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                                    }
+                        alertDialog.dismiss();
+                    }
+                });
 
-                                    @Override
-                                    public void onFailure(Call<UpdateStatus> call, Throwable t) {
 
-                                        Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_LONG).show();
 
-                                    }
-                                });
-
-                                mBinding.btnSaveDoctor.setEnabled(true);
-                                sweetAlertDialog.dismiss();
-                            }
-                        })
-                        .setCancelText("Cancel")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                                mBinding.btnSaveDoctor.setEnabled(true);
-
-                            }
-                        }).show();
 
 
             }
         });
+    }
+    public void saveDoctor()
+    {
+        int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
+        String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
+        saveDoctorModel.setSchedules(getSchedule());
+        saveDoctorModel.setSuggested_UserId(id);
+        progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading....");
+        progressDialog.show();
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().SendSaveDoctor(token, "application/json", saveDoctorModel);
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+
+                UpdateStatus updateStatus = response.body();
+                mBinding.primaryLocationBtn.setEnabled(false);
+                progressDialog.dismiss();
+                CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage()," ",requireActivity(),requireContext());
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+
+                Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        mBinding.btnSaveDoctor.setEnabled(true);
+    }
+
+    public void addSchedule()
+    {
+        if (mBinding.primaryLocationBtn.isChecked() || checkPrimaryLoation) {
+            //this can prevent user from selecting different primary location
+            primaryLocationLock = true;
+            mBinding.primaryLocationBtn.setChecked(false);
+            mBinding.primaryLocationBtn.setEnabled(false);
+        }
+
+        ScheduleModel model = new ScheduleModel();
+        int regionId, areaId, dayId;
+        String region= mBinding.regionSpinner.getSelectedItem().toString();
+        String area= mBinding.areaSpinner.getSelectedItem().toString();
+
+        if (!region.equals("")) {
+            mBinding.regionSpinner.requestFocus();
+            Toast.makeText(requireContext(), "Please Select region for adding schedule", Toast.LENGTH_SHORT).show();
+        } else if (!area.equals("")) {
+            mBinding.areaSpinner.requestFocus();
+            Toast.makeText(requireContext(), "Please Select area for adding schedule", Toast.LENGTH_SHORT).show();
+        } else if (mBinding.daySpinner.getSelectedItem() != null) {
+            mBinding.daySpinner.requestFocus();
+            Toast.makeText(requireContext(), "Please Select day for adding schedule", Toast.LENGTH_SHORT).show();
+        } else if (openingTime.isEmpty()) {
+            mBinding.openingTimeText.requestFocus();
+            mBinding.openingTimeText.setError("Please Select open timing for adding schedule");
+            Toast.makeText(requireContext(), "Please Select open timing for adding schedule", Toast.LENGTH_SHORT).show();
+        } else if (closingTime != null) {
+            mBinding.closingTimeText.requestFocus();
+            mBinding.closingTimeText.setError("Please Select close timing for adding schedule");
+            Toast.makeText(requireContext(), "Please Select close timing for adding schedule", Toast.LENGTH_SHORT).show();
+        } else if (locationString != null) {
+            mBinding.locationBtn.requestFocus();
+            mBinding.textLocation.setError("Please Select turn on location for adding schedule");
+            Toast.makeText(requireContext(), "Please turn on location for adding schedule", Toast.LENGTH_SHORT).show();
+        } else {
+
+            regionId = regionHashmap.get(mBinding.regionSpinner.getSelectedItem().toString());
+            areaId = areaHashmap.get(mBinding.areaSpinner.getSelectedItem().toString());
+            dayId = dayhashMap.get(mBinding.daySpinner.getSelectedItem().toString());
+
+            model.setAreaTittle(mBinding.areaSpinner.getSelectedItem().toString());
+            model.setSubHeadCode(areaId);
+            model.setRegionTittle(mBinding.regionSpinner.getSelectedItem().toString());
+            model.setAcNo(regionId);
+            model.setOpeningTime(openingTime);
+            model.setClosingTime(closingTime);
+            model.setCoordinates(locationString);
+            model.setDayId(dayId);
+            model.setPrimaryLoc(primaryLocation);
+
+            if (!scheduleModelList.contains(model)) {
+                scheduleModelList.add(model);
+                getRegion();
+                mBinding.textLocation.setText("");
+                mBinding.closingTimeText.setText("");
+                mBinding.openingTimeText.setText("");
+                mBinding.locationBtn.setChecked(false);
+                openingTime = "";
+                closingTime = "";
+                Toast.makeText(requireContext(), "Schedule Added", Toast.LENGTH_SHORT).show();
+                adapter.setScheduleModelList(scheduleModelList);
+            } else {
+                Toast.makeText(requireContext(), "Schedule Already Exist", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
     public void setDaySpinner() {
