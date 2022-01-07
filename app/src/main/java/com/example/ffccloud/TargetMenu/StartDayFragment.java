@@ -147,7 +147,7 @@ public class StartDayFragment extends Fragment {
             else
             {
                 progressDialog.dismiss();
-                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
             }
 
         }

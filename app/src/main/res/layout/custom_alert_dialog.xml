@@ -35,6 +35,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="5dp"
+                android:elevation="5dp"
                 />
             <TextView
                 android:id="@+id/title"
@@ -51,6 +52,8 @@
                 android:layout_marginTop="10dp"
                 android:paddingHorizontal="20dp"
                 android:gravity="center"
+                android:elevation="5dp"
+
                 />
 
             <TextView
@@ -58,6 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="xyzzzzzzzzzz"
+                android:lines="3"
+                android:maxLines="3"
                 android:textSize="18sp"
                 android:paddingHorizontal="20dp"
                 android:textColor="@color/APP_Theme_Color"
@@ -68,6 +73,7 @@
                 android:layout_marginHorizontal="20dp"
                 app:layout_constraintBottom_toTopOf="@id/btn_yes"
                 android:gravity="center"
+                android:elevation="5dp"
 
                 />
 
@@ -87,6 +93,8 @@
                 app:layout_constraintTop_toTopOf="@id/btn_yes"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_yes"
+                android:elevation="5dp"
+
                 />
 
             <com.google.android.material.button.MaterialButton
@@ -105,6 +113,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_cancel"
                 android:layout_marginBottom="20dp"
+                android:elevation="5dp"
 
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,6 +41,7 @@ import com.example.ffccloud.Target.Adapters.FilterDoctorRecyclerAdapter;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
 import com.example.ffccloud.databinding.FragmentDoctorListBinding;
 import com.example.ffccloud.databinding.FragmentSalesOrderListBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.SyncDataToDB;
 import com.example.ffccloud.utils.UserViewModel;
@@ -190,8 +191,8 @@ public class DoctorListFragment extends Fragment {
 
         call.enqueue(new Callback<List<FilteredDoctoredModel>>() {
             @Override
-            public void onResponse(Call<List<FilteredDoctoredModel>> call, Response<List<FilteredDoctoredModel>> response) {
-                if (response.body() != null) {
+            public void onResponse(@NotNull Call<List<FilteredDoctoredModel>> call, @NotNull Response<List<FilteredDoctoredModel>> response) {
+                if (response.isSuccessful()) {
                     List<FilteredDoctoredModel> list = response.body();
                     if (list.size() > 0) {
                         doctorViewModel.insertFilterDoctors(list);
@@ -201,12 +202,12 @@ public class DoctorListFragment extends Fragment {
 
                     }
                 } else {
-                    new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity()).loginAgain(response.message());
+                    CustomsDialog.getInstance().loginAgain(response.message(),requireActivity(),requireContext());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<FilteredDoctoredModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<FilteredDoctoredModel>> call, @NotNull Throwable t) {
 
                 Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_LONG).show();
 

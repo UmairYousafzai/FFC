@@ -108,7 +108,7 @@ public class TargetFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mbinding = FragmentTargetBinding.inflate(inflater, container, false);
@@ -164,7 +164,7 @@ public class TargetFragment extends Fragment {
         } else {
 
 
-            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
 
 
         }
@@ -441,8 +441,7 @@ public class TargetFragment extends Fragment {
                             int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
                             targetViewModel.DeleteAllDoctor();
-                            SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity());
-                            syncDataToDB.saveDoctorsList(id);
+//                           SyncDataToDB.getInstance().saveDoctorsList(id,requireContext(),requireActivity());
                         }
 
                         if (addNewWorkPlanModelList.size()>0)
@@ -459,8 +458,8 @@ public class TargetFragment extends Fragment {
                                 int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
                                 targetViewModel.DeleteAllDoctor();
-                                SyncDataToDB syncDataToDB = new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity());
-                                syncDataToDB.saveDoctorsList(id);
+
+//                                SyncDataToDB.getInstance().saveDoctorsList(id,requireContext(),requireActivity());
                             }
                         }
                     }
@@ -472,7 +471,7 @@ public class TargetFragment extends Fragment {
 
                 } else {
 
-                   CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+                   CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
                 }
 
             }
@@ -627,7 +626,7 @@ public class TargetFragment extends Fragment {
             });
         } else {
 
-            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
         }
 
 

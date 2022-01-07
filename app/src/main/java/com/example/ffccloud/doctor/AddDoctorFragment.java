@@ -43,6 +43,7 @@ import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.farm.adapter.MedicineAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.UserViewModel;
 
@@ -236,6 +237,7 @@ public class AddDoctorFragment extends Fragment {
                             } else {
 
                                 mBinding.location.setText("Enable Location");
+                                mBinding.location.setChecked(false);
                             }
 
 
@@ -243,7 +245,8 @@ public class AddDoctorFragment extends Fragment {
                     };
                     customLocation.getLastLocation(results);
                 } else {
-                    showOpenLocationSettingDialog();
+                    mBinding.location.setChecked(false);
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
 
                 }
             }
@@ -410,33 +413,34 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
 
     private void setUpSupplierModelForSave() {
 
-        String name = Objects.requireNonNull(mBinding.idDocName.getText()).toString();
-        String phone = Objects.requireNonNull(mBinding.idDocPhone.getText()).toString();
-        String address = Objects.requireNonNull(mBinding.idDocAdress.getText()).toString();
-        String email = Objects.requireNonNull(mBinding.idDocEmail.getText()).toString();
-        int userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
-        int region = 0;
-        int gradeID=0;
-        if (gradingModelList.size()>0)
+        String name=" ",phone=" ",address=" ",email=" ",shitType =" ";
+        int userId=0,region=0,gradeID=0;
+        try {
+             name = Objects.requireNonNull(mBinding.idDocName.getText()).toString();
+             phone = Objects.requireNonNull(mBinding.idDocPhone.getText()).toString();
+             address = Objects.requireNonNull(mBinding.idDocAdress.getText()).toString();
+             email = Objects.requireNonNull(mBinding.idDocEmail.getText()).toString();
+             userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+
+            if (gradingModelList.size()>0)
+            {
+                gradeID= gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
+
+            }        RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.docTimingRadioGroup.getCheckedRadioButtonId());
+             shitType = radioButton.getText().toString();
+            region = regionHashmap.get(mBinding.spinnerRegion.getSelectedItem().toString());
+
+        }
+        catch (Exception e)
         {
-            gradeID= gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
-
-        }        RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.docTimingRadioGroup.getCheckedRadioButtonId());
-        String shitType = radioButton.getText().toString();
-
+            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         if (name.length() > 0) {
             if (phone.length() > 0) {
                 if (address.length() > 0) {
                     if (regionList.size()>0) {
-                        try {
-                            region = regionHashmap.get(mBinding.spinnerRegion.getSelectedItem().toString());
 
-                        }
-                        catch (Exception e)
-                        {
-                            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
@@ -705,29 +709,5 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
             }
         });
     }
-    public void showOpenLocationSettingDialog() {
 
-
-        AlertDialog alertDialog;
-        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
-        alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
-        dialogBinding.title.setText("Please turn on  location for this action.");
-        dialogBinding.body.setText("Do you want to open location setting.");
-        alertDialog.show();
-
-        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                requireContext().startActivity(intent);
-            }
-        });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-    }
 }

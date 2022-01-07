@@ -41,6 +41,7 @@ import com.example.ffccloud.databinding.FragmentAttendanceBinding;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.Permission;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -165,7 +166,7 @@ public class AttendanceFragment extends Fragment {
                 } else {
                     progressDialog.dismiss();
 
-                    showOpenLocationSettingDialog();
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
 
                     mBinding.attendanceImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.doctor_icon, null));
                     selectedImage = null;
@@ -299,7 +300,7 @@ public class AttendanceFragment extends Fragment {
                 customLocation.getLastLocation(locationResults);
             } else {
                 progressDialog.dismiss();
-               showOpenLocationSettingDialog();
+               CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
             }
 
         } else {
@@ -313,30 +314,6 @@ public class AttendanceFragment extends Fragment {
     }
 
 
-    public void showOpenLocationSettingDialog() {
 
-
-        AlertDialog alertDialog;
-        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
-        alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
-        dialogBinding.title.setText("Please turn on  location for this action.");
-        dialogBinding.body.setText("Do you want to open location setting.");
-        alertDialog.show();
-
-        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                requireContext().startActivity(intent);
-            }
-        });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-    }
 
 }

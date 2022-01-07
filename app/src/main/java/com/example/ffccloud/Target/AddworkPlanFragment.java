@@ -342,12 +342,12 @@ public class AddworkPlanFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body() != null) {
+                if (response.isSuccessful()) {
                     UpdateStatus updateStatus = response.body();
 
                     CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(),"Add work plan",requireActivity(),requireContext());
                 } else {
-                    new SyncDataToDB(requireActivity().getApplication(), requireContext(),requireActivity()).loginAgain(response.message());
+                    CustomsDialog.getInstance().loginAgain(response.message(),requireActivity(),requireContext());
                 }
                 mBinding.saveBtn.setEnabled(true);
 

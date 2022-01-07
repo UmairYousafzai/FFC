@@ -47,10 +47,10 @@ public class AddCustomerFragment extends Fragment {
     private List<ContactPersons> contactPersonsList = new ArrayList<>();
     private ContactRecyclerAdapter adapter;
     private CustomerModel customerModel;
-    private int customerID=0,userID,cityId , crLimitDays =0;
+    private int customerID=0,userID,cityId ;
     private String partyName="",email="",emailCC="",emailBCC="",comment="", instruction="",address="",payee="",fax="",contact=""
             ,NTN="",saleTax="",focalPerson="",focalPeronCNIC="",partyAbbreviation="";
-    private double  crLimitAmount=0;
+    private double  crLimitAmount=0.0, crLimitDays =0.0;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -254,33 +254,33 @@ public class AddCustomerFragment extends Fragment {
     }
 
     private void insertCustomer(int key) {
-        userID = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
-        partyName = Objects.requireNonNull(mBinding.etPartName.getText()).toString().trim();
-        crLimitDays = !mBinding.etCreditDays.getText().toString().equals("") ?  Integer.parseInt(mBinding.etCreditDays.getText().toString()):0;
-        crLimitAmount = !mBinding.etCreditLimit.getText().toString().equals("") ?  Double.parseDouble((mBinding.etCreditLimit.getText()).toString()):0.0;
-        cityId = cityHashMap.get(mBinding.citySpinner.getSelectedItem().toString());
-        email = Objects.requireNonNull(mBinding.etEmail.getText()).toString().trim();
-        emailCC = Objects.requireNonNull(mBinding.etEmailCc.getText()).toString().trim();
-        emailBCC = Objects.requireNonNull(mBinding.etBccEmail.getText()).toString().trim();
-        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-        comment= mBinding.etComment.getText()!=null?mBinding.etComment.getText().toString():"";
-        instruction= mBinding.etInstruction.getText()!=null?mBinding.etInstruction.getText().toString():"";
-        address= mBinding.etAddress.getText()!=null?mBinding.etAddress.getText().toString():"";
-        payee= mBinding.etPayee.getText()!=null?mBinding.etPayee.getText().toString():"";
-        fax= mBinding.etFax.getText()!=null?mBinding.etFax.getText().toString():"";
-        contact= mBinding.etContact.getText()!=null? mBinding.etContact.getText().toString():"";
-        NTN=mBinding.etNtnNum.getText()!=null? mBinding.etNtnNum.getText().toString():"";
-        saleTax=mBinding.etSaleTax.getText()!=null? mBinding.etSaleTax.getText().toString():"";
-        focalPeronCNIC=mBinding.etFocalPersonCNIC.getText() !=null? mBinding.etFocalPersonCNIC.getText().toString() :"";
-        focalPerson= mBinding.etFocalPersonName.getText() !=null? mBinding.etFocalPersonName.getText().toString()  :"";
-        partyAbbreviation= mBinding.etPartAbbreviation.getText() !=null? mBinding.etPartAbbreviation.getText().toString()  :"";
+
 
         if (key==1)
         {
             try{
 
 
-
+                userID = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+                partyName = Objects.requireNonNull(mBinding.etPartName.getText()).toString().trim();
+                crLimitDays = !mBinding.etCreditDays.getText().toString().equals("") ?  Double.parseDouble(mBinding.etCreditDays.getText().toString()):0.0;
+                crLimitAmount = !mBinding.etCreditLimit.getText().toString().equals("") ?  Double.parseDouble((mBinding.etCreditLimit.getText()).toString()):0.0;
+                cityId = cityHashMap.get(mBinding.citySpinner.getSelectedItem().toString());
+                email = Objects.requireNonNull(mBinding.etEmail.getText()).toString().trim();
+                emailCC = Objects.requireNonNull(mBinding.etEmailCc.getText()).toString().trim();
+                emailBCC = Objects.requireNonNull(mBinding.etBccEmail.getText()).toString().trim();
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+                comment= mBinding.etComment.getText()!=null?mBinding.etComment.getText().toString():"";
+                instruction= mBinding.etInstruction.getText()!=null?mBinding.etInstruction.getText().toString():"";
+                address= mBinding.etAddress.getText()!=null?mBinding.etAddress.getText().toString():"";
+                payee= mBinding.etPayee.getText()!=null?mBinding.etPayee.getText().toString():"";
+                fax= mBinding.etFax.getText()!=null?mBinding.etFax.getText().toString():"";
+                contact= mBinding.etContact.getText()!=null? mBinding.etContact.getText().toString():"";
+                NTN=mBinding.etNtnNum.getText()!=null? mBinding.etNtnNum.getText().toString():"";
+                saleTax=mBinding.etSaleTax.getText()!=null? mBinding.etSaleTax.getText().toString():"";
+                focalPeronCNIC=mBinding.etFocalPersonCNIC.getText() !=null? mBinding.etFocalPersonCNIC.getText().toString() :"";
+                focalPerson= mBinding.etFocalPersonName.getText() !=null? mBinding.etFocalPersonName.getText().toString()  :"";
+                partyAbbreviation= mBinding.etPartAbbreviation.getText() !=null? mBinding.etPartAbbreviation.getText().toString()  :"";
                 if (cityId > 0) {
 
                     if (email.matches(emailPattern) )

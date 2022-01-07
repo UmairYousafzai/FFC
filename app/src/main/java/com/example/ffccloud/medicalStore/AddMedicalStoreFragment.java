@@ -35,6 +35,7 @@ import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.medicalStore.adapter.CompanyRecyclerViewAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.UserViewModel;
 
@@ -153,10 +154,12 @@ public class AddMedicalStoreFragment extends Fragment {
                             if (mBinding.locationCheckBox.isChecked()) {
                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.locationCheckBox.setText(locationAddress);
-                                locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                                locationString = location.getLongitude() + "," + location.getLatitude();
                             } else {
 
                                 mBinding.locationCheckBox.setText("Enable Location");
+                                mBinding.locationCheckBox.setChecked(false);
+
                             }
 
 
@@ -164,7 +167,8 @@ public class AddMedicalStoreFragment extends Fragment {
                     };
                     customLocation.getLastLocation(results);
                 } else {
-                    showOpenLocationSettingDialog();
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
+                    mBinding.locationCheckBox.setChecked(false);
 
                 }
             }
@@ -255,14 +259,24 @@ public class AddMedicalStoreFragment extends Fragment {
 
     private void setUpSupplierModelForSave() {
 
-        int userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
-        String name = Objects.requireNonNull(mBinding.etName.getText()).toString();
-        String phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
-        String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
-        int gradeID = 0;
-        if (gradeArray.size() > 0) {
-            gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
 
+        String name = " ", phone = " ", address = " ",monthlySale= " ";
+        int gradeID = 0,region =0,userId = 0;
+
+
+
+        try {
+            userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+            name = Objects.requireNonNull(mBinding.etName.getText()).toString();
+            phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
+            address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
+            gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
+            region = regionHashmapForID.get(mBinding.spinnerRegion.getSelectedItem().toString());
+           monthlySale = mBinding.etMonthlySale.getText().toString();
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -270,7 +284,6 @@ public class AddMedicalStoreFragment extends Fragment {
             if (phone.length() > 0) {
                 if (address.length() > 0) {
                     if (regionList.size() > 0) {
-                        int region = regionHashmapForID.get(mBinding.spinnerRegion.getSelectedItem().toString());
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
@@ -288,7 +301,7 @@ public class AddMedicalStoreFragment extends Fragment {
                         supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_STORE);
                         supplierModelNew.setUserTypeName("Str");
                         supplierModelNew.setGrade_id(gradeID);
-                        supplierModelNew.setMonthly_Sale(mBinding.etMonthlySale.getText().toString());
+                        supplierModelNew.setMonthly_Sale(monthlySale);
                         supplierModelNew.setSupplierCompDetailList(companyModelList);
                         supplierModelNew.setLoc_Cord(locationString);
                         supplierModelNew.setLoc_Cord_Address(locationAddress);
@@ -435,29 +448,5 @@ public class AddMedicalStoreFragment extends Fragment {
         });
     }
 
-    public void showOpenLocationSettingDialog() {
 
-
-        AlertDialog alertDialog;
-        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
-        alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
-        dialogBinding.title.setText("Please turn on  location for this action.");
-        dialogBinding.body.setText("Do you want to open location setting.");
-        alertDialog.show();
-
-        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                requireContext().startActivity(intent);
-            }
-        });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-    }
 }

@@ -28,8 +28,11 @@ import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.Target.Adapters.ScheduleAdapter;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentFilteredDocFullInfoBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.SyncDataToDB;
+
+import org.jetbrains.annotations.NotNull;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -138,8 +141,8 @@ public class FilteredDocFullInfoFragment extends Fragment {
         Call<FilteredDoctorInfomationModel> call = ApiClient.getInstance().getApi().GetFullFilteredDoctor(token,doc_id);
         call.enqueue(new Callback<FilteredDoctorInfomationModel>() {
             @Override
-            public void onResponse(Call<FilteredDoctorInfomationModel> call, Response<FilteredDoctorInfomationModel> response) {
-                if(response.body()!=null)
+            public void onResponse(@NotNull Call<FilteredDoctorInfomationModel> call, @NotNull Response<FilteredDoctorInfomationModel> response) {
+                if(response.isSuccessful())
                 {
                     doctoredFullInfoModel = response.body();
                     doctoredFullInfoModel.setFormattedDate(dateTimeFormat(doctoredFullInfoModel.getDOB()));
@@ -172,12 +175,12 @@ public class FilteredDocFullInfoFragment extends Fragment {
                 }
                 else
                 {
-                    new SyncDataToDB(requireActivity().getApplication(),requireContext(),requireActivity()).loginAgain(response.message());
+                    CustomsDialog.getInstance().loginAgain(response.message(),requireActivity(),requireContext());
                 }
             }
 
             @Override
-            public void onFailure(Call<FilteredDoctorInfomationModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<FilteredDoctorInfomationModel> call, @NotNull Throwable t) {
                 Toast.makeText(requireContext(),""+t.getMessage(),Toast.LENGTH_LONG).show();
 
 

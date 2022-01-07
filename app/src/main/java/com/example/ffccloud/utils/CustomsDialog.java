@@ -37,35 +37,35 @@ public class CustomsDialog {
         dialogBinding.title.setText(title);
         dialogBinding.body.setText(message);
         alertDialog.show();
-        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 alertDialog.dismiss();
             }
         });
-        dialogBinding.btnCancel.setVisibility(View.GONE);
+        dialogBinding.btnYes.setVisibility(View.GONE);
 
 
     }
 
-    public void loginAgain(Activity activity) {
+    public void loginAgain(String message,Activity activity,Context context) {
         FfcDatabase ffcDatabase;
         ffcDatabase = FfcDatabase.getInstance(activity.getBaseContext());
 
 
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(activity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder(activity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(context).setView(dialogBinding.getRoot()).setCancelable(false).create();
         dialogBinding.title.setText("Error");
-        dialogBinding.body.setText("Session Expire Please Login Again");
+        dialogBinding.body.setText(message);
         alertDialog.show();
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ffcDatabase.dao().deleteAllDeliveryModes();
 
-                SharedPreferenceHelper.getInstance(activity.getBaseContext()).setLogin_State(false);
-                Intent intent = new Intent(activity.getBaseContext(), SplashActivity.class);
+                SharedPreferenceHelper.getInstance(context).setLogin_State(false);
+                Intent intent = new Intent(context, SplashActivity.class);
                 activity.startActivity(intent);
             }
         });
@@ -74,11 +74,12 @@ public class CustomsDialog {
     }
 
 
-    public void showOpenLocationSettingDialog(Activity activity) {
+    public void showOpenLocationSettingDialog(Activity activity,Context context) {
+
 
 
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(activity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder(activity.getApplicationContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(context).setView(dialogBinding.getRoot()).setCancelable(false).create();
         dialogBinding.title.setText("Please turn on  location for this action.");
         dialogBinding.body.setText("Do you want to open location setting.");
         alertDialog.show();

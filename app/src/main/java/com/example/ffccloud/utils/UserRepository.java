@@ -1,6 +1,7 @@
 package com.example.ffccloud.utils;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -21,7 +22,7 @@ import java.util.concurrent.Executors;
 public class UserRepository {
 
     private FfcDAO mDao;
-    Application application;
+    private Context context;
     private final LiveData<List<QualificationModel>> allQualification;
     private final LiveData<List<ClassificationModel>> allClassification;
     private  LiveData<List<GradingModel>> allGrades;
@@ -32,10 +33,11 @@ public class UserRepository {
     private Handler handler= new Handler(Looper.getMainLooper());
 
 
-    public UserRepository(Application application) {
-        FfcDatabase database = FfcDatabase.getInstance(application);
+    public UserRepository(Context context) {
+        this.context = context;
+
+        FfcDatabase database = FfcDatabase.getInstance(context);
         mDao = database.dao();
-        this.application = application;
         allClassification = mDao.getAllClassification();
         allGrades = mDao.getAllGrades();
         allQualification = mDao.getAllQualification();

@@ -243,7 +243,8 @@ public class TargetMainFragment extends Fragment {
     }
     public void showDialog()
     {
-        CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+        CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
     }
+
 
 }

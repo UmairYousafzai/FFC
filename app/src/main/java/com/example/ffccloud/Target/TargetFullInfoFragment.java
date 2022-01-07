@@ -570,7 +570,7 @@ public class TargetFullInfoFragment extends Fragment {
                                 @Override
                                 public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
 
-                                    if (response.body() != null) {
+                                    if (response.isSuccessful()) {
                                         UpdateStatus updateStatus = response.body();
                                         Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
                                         targetViewModel.DeleteDoctor(doctorModel);
@@ -593,7 +593,7 @@ public class TargetFullInfoFragment extends Fragment {
                                     }
                                     else
                                     {
-                                        new SyncDataToDB(requireActivity().getApplication(),requireContext(),requireActivity()).loginAgain(response.message());
+                                        CustomsDialog.getInstance().loginAgain(response.message(),requireActivity(),requireContext());
                                         alertDialog.dismiss();
                                         progressDialog.dismiss();
                                     }
@@ -604,7 +604,7 @@ public class TargetFullInfoFragment extends Fragment {
                                 @Override
                                 public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
 
-                                    t.getMessage();
+
                                     Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                                     progressDialog.dismiss();
                                 }
@@ -711,7 +711,7 @@ public class TargetFullInfoFragment extends Fragment {
                     }
                     else
                     {
-                        CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+                        CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
                     }
 
                 }
@@ -790,7 +790,7 @@ public class TargetFullInfoFragment extends Fragment {
             else
             {
                 progressDialog.dismiss();
-                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
             }
 
         }

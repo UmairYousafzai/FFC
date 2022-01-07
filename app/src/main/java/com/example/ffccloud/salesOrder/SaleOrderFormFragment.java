@@ -1,8 +1,10 @@
 package com.example.ffccloud.salesOrder;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,6 +21,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -59,6 +62,7 @@ import com.example.ffccloud.databinding.FragmentSaleOrderFormBinding;
 import com.example.ffccloud.databinding.PdfViewDialogBinding;
 import com.example.ffccloud.salesOrder.adapter.InsertProductRecyclerAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
+import com.example.ffccloud.utils.Permission;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.UserViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -351,8 +355,24 @@ public class SaleOrderFormFragment extends Fragment {
                         showNotification();
                     }
                 } else {
+                    Permission permission = new Permission(requireContext(),requireActivity());
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                    {
+                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                        {
+                            saveSaleOrder();
+                        }else
+                        {
+                            permission.getWriteStoragePermission();
+                        }
 
-                    saveSaleOrder();
+
+                        }
+                    else
+                    {
+                        permission.getStoragePermission();
+                    }
+
                 }
 
 
@@ -868,7 +888,7 @@ public class SaleOrderFormFragment extends Fragment {
         alertDialog.show();
 
         binding.title.setText("Permission Needed");
-        binding.body.setText("Please allow to manage storage in this device.");
+        binding.body.setText("Please allow to manage storage in this device for the better experience of app.");
         binding.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -985,6 +1005,7 @@ public class SaleOrderFormFragment extends Fragment {
     }
 
     private void savePdf(File file) {
+
 
         try {
             pdfDocument.writeTo(new FileOutputStream(file));

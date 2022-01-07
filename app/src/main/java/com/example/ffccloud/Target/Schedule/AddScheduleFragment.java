@@ -211,7 +211,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                     customLocation.getLastLocation(results);
                 } else {
 
-                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
 
                     mBinding.locationBtn.setChecked(false);
                 }

@@ -16,7 +16,7 @@ public class SharedPreferenceHelper {
 
 
     public static final String ATTENDANCE_CONFIGURATION = "Attendance Configuration";
-    public static final String BASE_URL = "http://192.168.100.238/E-ERP/";
+    public static final String BASE_URL = "http://88.99.49.132/prixapi/";
     public static final Integer ID = null;
     public static final String emp_ID = "Emp ID";
     public static final String  userID = "User ID";

@@ -31,7 +31,7 @@ public class Permission {
         String[] permissionArray = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +71,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +110,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +149,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.CAMERA};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -188,7 +188,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -228,7 +228,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.CALL_PHONE};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -271,7 +271,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.SEND_SMS};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -311,7 +311,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.READ_PHONE_STATE};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mActivity.getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {

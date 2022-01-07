@@ -260,7 +260,7 @@ public class TargetMenuFragment extends Fragment {
             }
             else
             {
-                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
             }
 
         }
@@ -344,7 +344,7 @@ public class TargetMenuFragment extends Fragment {
             else
             {
                 progressDialog.dismiss();
-                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity());
+                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
 
             }
 
