@@ -69,7 +69,7 @@ public class SyncDataToDB {
                     progressDialog.dismiss();
                     Toast.makeText(context, "Work Plan Added.\n Number Of Work Plan Added Is : " + (doctorModelList != null ? doctorModelList.size() : 0), Toast.LENGTH_LONG).show();
                 } else {
-                    CustomsDialog.getInstance().loginAgain(response.message(),activity,context);
+                    CustomsDialog.getInstance().loginAgain(activity,context);
                     progressDialog.dismiss();
 
                 }
@@ -106,7 +106,7 @@ public class SyncDataToDB {
                     repository.InsertClassifications(classificationModelList);
                                       progressDialog.dismiss();
                 } else {
-                    CustomsDialog.getInstance().loginAgain(response.message(),activity,context);
+                    CustomsDialog.getInstance().loginAgain(activity,context);
                     progressDialog.dismiss();
                 }
 
@@ -131,7 +131,7 @@ public class SyncDataToDB {
                     repository.InsertGrades(gradingModelList);
                     progressDialog.dismiss();
                 } else {
-                    CustomsDialog.getInstance().loginAgain(response.message(),activity,context);
+                    CustomsDialog.getInstance().loginAgain(activity,context);
                     progressDialog.dismiss();
                 }
 
@@ -156,7 +156,7 @@ public class SyncDataToDB {
                     repository.InsertQualifications(qualificationModelList);
                     progressDialog.dismiss();
                 } else {
-                    CustomsDialog.getInstance().loginAgain(response.message(),activity,context);
+                    CustomsDialog.getInstance().loginAgain(activity,context);
                     progressDialog.dismiss();
                 }
 
@@ -179,7 +179,7 @@ public class SyncDataToDB {
                     repository.InsertDeliveryModes(list);
                     progressDialog.dismiss();
                 } else {
-                    CustomsDialog.getInstance().loginAgain(response.message(),activity,context);
+                    CustomsDialog.getInstance().loginAgain(activity,context);
                     progressDialog.dismiss();
                 }
             }

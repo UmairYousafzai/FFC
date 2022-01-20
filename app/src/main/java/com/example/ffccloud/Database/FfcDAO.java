@@ -17,6 +17,7 @@ import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
 import com.example.ffccloud.ModelClasses.ClassificationModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.ModelClasses.DeliveryModeModel;
+import com.example.ffccloud.ModelClasses.Expense;
 import com.example.ffccloud.ModelClasses.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.ModelClasses.QualificationModel;
@@ -317,4 +318,20 @@ public interface FfcDAO {
 
     @Query("Select *From Doctor where doctorId= :workPlanID")
     DoctorModel getWorkPlanByID(int workPlanID);
+
+
+                  /*
+    //
+    // *******Expense  Queries*******
+    //
+     */
+
+    @Insert
+    void insertExpense(Expense expense);
+
+    @Query("Delete from Expense")
+    void deleteAllExpense();
+
+    @Query("Select *From Expense")
+    LiveData<List<Expense>> getAllExpenses();
 }

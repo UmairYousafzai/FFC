@@ -89,4 +89,7 @@ dependencies {
 
     // (Java only)
     implementation "androidx.work:work-runtime:$work_version"
+
+    implementation 'com.github.jhonnyx2012:horizontal-picker:1.0.6'
+
 }

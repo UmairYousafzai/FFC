@@ -107,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:text="@string/here_you_can_find_the_work_plan_that_you_set_for_a_specified_date_and_time_this_work_plan_would_not_be_system_suggested"
+            android:text="@string/long_text"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="italic" />

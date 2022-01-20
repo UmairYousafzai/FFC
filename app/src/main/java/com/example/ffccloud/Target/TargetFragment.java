@@ -441,7 +441,7 @@ public class TargetFragment extends Fragment {
                             int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
                             targetViewModel.DeleteAllDoctor();
-//                           SyncDataToDB.getInstance().saveDoctorsList(id,requireContext(),requireActivity());
+                           SyncDataToDB.getInstance().saveDoctorsList(id,requireContext(),requireActivity());
                         }
 
                         if (addNewWorkPlanModelList.size()>0)
@@ -459,7 +459,7 @@ public class TargetFragment extends Fragment {
 
                                 targetViewModel.DeleteAllDoctor();
 
-//                                SyncDataToDB.getInstance().saveDoctorsList(id,requireContext(),requireActivity());
+                                SyncDataToDB.getInstance().saveDoctorsList(id,requireContext(),requireActivity());
                             }
                         }
                     }

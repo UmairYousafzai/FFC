@@ -28,6 +28,7 @@ import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentAddProductBinding;
 import com.example.ffccloud.salesOrder.adapter.GetProductRecyclerAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import org.jetbrains.annotations.NotNull;
@@ -117,8 +118,8 @@ public class AddProductFragment extends Fragment {
 
     private void getData(String productTitle) {
 
-         ProgressDialog progressDialog = new ProgressDialog(requireContext());
-         progressDialog.setMessage("Loading...");
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
 
         progressDialog.show();
@@ -131,27 +132,40 @@ public class AddProductFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<GetProductModel>> call, @NotNull Response<List<GetProductModel>> response) {
 
-                if(response.body()!=null)
+
+                if(response.isSuccessful())
                 {
-                    if (response.body().size()==0)
+                    if(response.body()!=null)
                     {
+                        if (response.body().size()==0)
+                        {
+                            mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+
+                        }
+                        else {
+                            mBinding.tvNothingFound.setVisibility(View.GONE);
+                            adapter.setProductModelList(response.body());
+                        }
+                        progressDialog.dismiss();
+
+                    }
+                    else
+                    {
+                        progressDialog.dismiss();
                         mBinding.tvNothingFound.setVisibility(View.VISIBLE);
-                        progressDialog.dismiss();
 
                     }
-                    else {
-                        mBinding.tvNothingFound.setVisibility(View.GONE);
-                        adapter.setProductModelList(response.body());
-                        progressDialog.dismiss();
-                    }
-
                 }
-                else
-                {
+                else {
                     progressDialog.dismiss();
-                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+                    Toast.makeText(requireContext(), ""+response.message(), Toast.LENGTH_SHORT).show();
 
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
                 }
+
 
             }
 

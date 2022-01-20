@@ -82,12 +82,11 @@ public class AddDoctorFragment extends Fragment {
     private MedicineAdapter medicineAdapter;
     private String locationString;
     private String locationAddress;
-    private final List<SupplierItemLinking> medicineModalList= new ArrayList<>();
+    private final List<SupplierItemLinking> medicineModalList = new ArrayList<>();
     private int supplierID;
     private String callingAddBtn;
-    private boolean isSpinnerUpdate=false;
-    private int gradePosition=-1, regionPosition=-1, classificationPosition=-1,qualificationPosition;
-
+    private boolean isSpinnerUpdate = false;
+    private int gradePosition = -1, regionPosition = -1, classificationPosition = -1, qualificationPosition = -1, genderPosition = -1;
 
 
     @Override
@@ -106,20 +105,19 @@ public class AddDoctorFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
         setUpRecyclerView();
-        getUserSyncData();
         getLiveData();
 
 
-        if (!isSpinnerUpdate)
-        {
-            isSpinnerUpdate=true;
+        if (!isSpinnerUpdate) {
+            isSpinnerUpdate = true;
             getRegion();
+            getUserSyncData();
         }
 
 
         assert getArguments() != null;
         supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
-        if (supplierID > 0&&callingAddBtn==null){
+        if (supplierID > 0 && callingAddBtn == null) {
 
             //setup fields if edit request has been made
             getSupplierByID(supplierID);
@@ -127,8 +125,7 @@ public class AddDoctorFragment extends Fragment {
 
     }
 
-    public void getLiveData()
-    {
+    public void getLiveData() {
         MutableLiveData<InsertProductModel> liveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.PRODUCT_MODEL);
@@ -143,14 +140,12 @@ public class AddDoctorFragment extends Fragment {
                     medicineModal.setIsRegistered(true);
                     medicineModal.setSupplierItemLinkIdDtl("0");
                     medicineModal.setItCode(model.getItem_Code());
-                    if (medicineModalList.size()>0)
-                    {
-                        if (medicineModalList.get(medicineModalList.size()-1).getItCode()!=medicineModal.getItCode()) {
+                    if (medicineModalList.size() > 0) {
+                        if (medicineModalList.get(medicineModalList.size() - 1).getItCode() != medicineModal.getItCode()) {
                             medicineModalList.add(medicineModal);
                             medicineAdapter.setMedicineModalList(medicineModalList);
                         }
-                    }else
-                    {
+                    } else {
                         medicineModalList.add(medicineModal);
                     }
 
@@ -162,32 +157,43 @@ public class AddDoctorFragment extends Fragment {
     }
 
 
-
-
     @Override
     public void onResume() {
         super.onResume();
 
-        if (callingAddBtn!=null)
-        {
+        if (callingAddBtn != null) {
+            ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, genderArray);
+            ArrayAdapter<String> classificationAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, classificationArray);
+            mBinding.spinnerClassification.setAdapter(classificationAdapter);
+            mBinding.spinnerGender.setAdapter(genderAdapter);
+
+            ArrayAdapter<String> qualificationAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, qualificationArray);
+            mBinding.spinnerQualification.setAdapter(qualificationAdapter);
+
+            ArrayAdapter<String> gradingAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, gradeArray);
+            mBinding.spinnerGrade.setAdapter(gradingAdapter);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+            mBinding.spinnerRegion.setAdapter(adapter);
+
             medicineAdapter.setMedicineModalList(medicineModalList);
-            if (regionPosition!=-1)
-            {
+            if (regionPosition != -1) {
                 mBinding.spinnerRegion.setSelection(regionPosition);
 
             }
-            if (gradePosition!=-1)
-            {
+            if (gradePosition != -1) {
                 mBinding.spinnerGrade.setSelection(gradePosition);
             }
-            if (classificationPosition!=-1)
-            {
+            if (classificationPosition != -1) {
                 mBinding.spinnerClassification.setSelection(classificationPosition);
             }
-            if (qualificationPosition!=-1)
-            {
+            if (qualificationPosition != -1) {
                 mBinding.spinnerQualification.setSelection(qualificationPosition);
             }
+            if (genderPosition != -1) {
+                mBinding.spinnerGender.setSelection(genderPosition);
+            }
+
         }
         btnListener();
 
@@ -199,20 +205,19 @@ public class AddDoctorFragment extends Fragment {
         medicineAdapter = new MedicineAdapter();
         mBinding.medicineRecycler.setAdapter(medicineAdapter);
     }
+
     private void btnListener() {
 
         mBinding.btnAddMedicine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBinding.companyMedicineRadioBtn.isChecked())
-                {
-                    callingAddBtn= "";
-                    callingAddBtn= "MedicineAddBtn";
+                if (mBinding.companyMedicineRadioBtn.isChecked()) {
+                    callingAddBtn = "";
+                    callingAddBtn = "MedicineAddBtn";
                     AddDoctorFragmentDirections.ActionAddDoctorFragmentToAddProductFragment action = AddDoctorFragmentDirections.actionAddDoctorFragmentToAddProductFragment();
                     action.setKey(1);
                     navController.navigate(action);
-                }
-                else {
+                } else {
 
                     showDialog();
                 }
@@ -231,9 +236,9 @@ public class AddDoctorFragment extends Fragment {
 
 
                             if (mBinding.location.isChecked()) {
-                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.location.setText(locationAddress);
-                                 locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                                locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
                             } else {
 
                                 mBinding.location.setText("Enable Location");
@@ -246,7 +251,7 @@ public class AddDoctorFragment extends Fragment {
                     customLocation.getLastLocation(results);
                 } else {
                     mBinding.location.setChecked(false);
-                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(), requireContext());
 
                 }
             }
@@ -312,6 +317,19 @@ public class AddDoctorFragment extends Fragment {
 
             }
         });
+
+        mBinding.spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                genderPosition = position;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void getSupplierByID(int supplierID) {
@@ -326,26 +344,23 @@ public class AddDoctorFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body()!=null)
-                {
+                if (response.body() != null) {
                     progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel= response.body();
+                    GetSupplierDetailModel getSupplierDetailModel = response.body();
                     setUpFields(getSupplierDetailModel);
 
-                }
-                else {
-                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<GetSupplierDetailModel> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
-
 
 
     }
@@ -360,25 +375,27 @@ public class AddDoctorFragment extends Fragment {
 
 
         medicineModalList.clear();
-        medicineModalList.addAll(getSupplierDetailModel.getSupplierItemLinkingList());
-        medicineAdapter.setMedicineModalList(medicineModalList);
+        if (getSupplierDetailModel.getSupplierItemLinkingList() != null) {
+            medicineModalList.addAll(getSupplierDetailModel.getSupplierItemLinkingList());
+            medicineAdapter.setMedicineModalList(medicineModalList);
+        }
 
-        int classificationId= getSupplierDetailModel.getSupplierModelNewList().get(0).getClassificationId();
-        int qualificationID= getSupplierDetailModel.getSupplierModelNewList().get(0).getQualificationId();
-        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
+
+        int classificationId = getSupplierDetailModel.getSupplierModelNewList().get(0).getClassificationId();
+        int qualificationID = getSupplierDetailModel.getSupplierModelNewList().get(0).getQualificationId();
+        int gradeID = getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
 
 
         String classification = classificationHashMapForTitle.get(classificationId);
-        String qualification =  qualificationHashMapForTitle.get(qualificationID);
-        String grade =  gradingHashMapForTitle.get(gradeID);
+        String qualification = qualificationHashMapForTitle.get(qualificationID);
+        String grade = gradingHashMapForTitle.get(gradeID);
 
         mBinding.spinnerClassification.setSelection(classificationArray.indexOf(classification));
         mBinding.spinnerQualification.setSelection(qualificationArray.indexOf(qualification));
         mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
 
-        String gender=getSupplierDetailModel.getSupplierModelNewList().get(0).getGender();
-        if (gender!=null)
-        {
+        String gender = getSupplierDetailModel.getSupplierModelNewList().get(0).getGender();
+        if (gender != null) {
             switch (gender) {
                 case "Male":
                     mBinding.spinnerGender.setSelection(genderArray.indexOf("Male"));
@@ -392,20 +409,14 @@ public class AddDoctorFragment extends Fragment {
             }
         }
 
-String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
-        if (shift!=null)
-        {
-            if (shift.equals("Morning"))
-            {
+        String shift = getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
+        if (shift != null) {
+            if (shift.equals("Morning")) {
                 mBinding.morningRadioBtn.setChecked(true);
-            }
-            else if (shift.equals("Evening"))
-            {
+            } else if (shift.equals("Evening")) {
                 mBinding.eveningRadioBtn.setChecked(true);
             }
         }
-
-
 
 
     }
@@ -413,33 +424,31 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
 
     private void setUpSupplierModelForSave() {
 
-        String name=" ",phone=" ",address=" ",email=" ",shitType =" ";
-        int userId=0,region=0,gradeID=0;
+        String name = " ", phone = " ", address = " ", email = " ", shitType = " ";
+        int userId = 0, region = 0, gradeID = 0;
         try {
-             name = Objects.requireNonNull(mBinding.idDocName.getText()).toString();
-             phone = Objects.requireNonNull(mBinding.idDocPhone.getText()).toString();
-             address = Objects.requireNonNull(mBinding.idDocAdress.getText()).toString();
-             email = Objects.requireNonNull(mBinding.idDocEmail.getText()).toString();
-             userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+            name = Objects.requireNonNull(mBinding.idDocName.getText()).toString();
+            phone = Objects.requireNonNull(mBinding.idDocPhone.getText()).toString();
+            address = Objects.requireNonNull(mBinding.idDocAdress.getText()).toString();
+            email = Objects.requireNonNull(mBinding.idDocEmail.getText()).toString();
+            userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
-            if (gradingModelList.size()>0)
-            {
-                gradeID= gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
+            if (gradingModelList.size() > 0) {
+                gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
 
-            }        RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.docTimingRadioGroup.getCheckedRadioButtonId());
-             shitType = radioButton.getText().toString();
+            }
+            RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.docTimingRadioGroup.getCheckedRadioButtonId());
+            shitType = radioButton.getText().toString();
             region = regionHashmap.get(mBinding.spinnerRegion.getSelectedItem().toString());
 
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         if (name.length() > 0) {
             if (phone.length() > 0) {
                 if (address.length() > 0) {
-                    if (regionList.size()>0) {
+                    if (regionList.size() > 0) {
 
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
@@ -503,27 +512,25 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body()!=null)
-                {
+                if (response.body() != null) {
                     UpdateStatus updateStatus = response.body();
-                    Toast.makeText(requireContext(), " "+updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
-                }
-                else
-                {
-                    Toast.makeText(requireContext(), " "+response.errorBody(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), " "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), " " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
 
     }
+
     public void getUserSyncData() {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setCancelable(false);
@@ -640,7 +647,6 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
             @Override
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
-                    progressDialog.dismiss();
                     regionHashmap.clear();
                     regionList.clear();
                     List<RegionModel> regionModelList = new ArrayList<>();
@@ -653,9 +659,14 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
                     mBinding.spinnerRegion.setAdapter(adapter);
                 } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), " " + response.message(), Toast.LENGTH_SHORT).show();
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
                 }
+                progressDialog.dismiss();
+
             }
 
             @Override
@@ -665,25 +676,24 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
             }
         });
     }
+
     private void showDialog() {
 
 
         AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
 
 
-        AddMedicineDialogBinding binding= AddMedicineDialogBinding.inflate(getLayoutInflater());
+        AddMedicineDialogBinding binding = AddMedicineDialogBinding.inflate(getLayoutInflater());
         alertDialog.setView(binding.getRoot());
         alertDialog.show();
 
         binding.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String companyName=Objects.requireNonNull(binding.etCompany.getText()).toString();
-                String medicineName=Objects.requireNonNull(binding.etName.getText()).toString();
-                if (companyName.length()>0)
-                {
-                    if (medicineName.length()>0)
-                    {
+                String companyName = Objects.requireNonNull(binding.etCompany.getText()).toString();
+                String medicineName = Objects.requireNonNull(binding.etName.getText()).toString();
+                if (companyName.length() > 0) {
+                    if (medicineName.length() > 0) {
                         SupplierItemLinking medicineModal = new SupplierItemLinking();
                         medicineModal.setCompName(companyName);
                         medicineModal.setIsRegistered(false);
@@ -691,16 +701,13 @@ String shift=getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftTyp
                         medicineModal.setSupplierItemLinkIdDtl("0");
                         medicineModalList.add(medicineModal);
                         medicineAdapter.setMedicineModalList(medicineModalList);
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(requireContext(), "Please enter medicine name", Toast.LENGTH_SHORT).show();
 
                     }
 
 
-                }else
-                {
+                } else {
                     Toast.makeText(requireContext(), "Please enter company", Toast.LENGTH_SHORT).show();
 
                 }

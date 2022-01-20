@@ -736,23 +736,30 @@ public class AddHospitalFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
-                    progressDialog.dismiss();
-                    regionHashmapForID.clear();
-                    regionList.clear();
-                    List<RegionModel> regionModelList = new ArrayList<>();
-                    regionModelList = response.body();
-                    for (RegionModel model : regionModelList) {
-                        regionList.add(model.getName());
-                        regionHashmapForID.put(model.getName(), model.getRegionId());
-                        regionHashmapForTitle.put(model.getRegionId(), model.getName());
+                    if (response.body()!=null)
+                    {
+                        regionHashmapForID.clear();
+                        regionList.clear();
+                        List<RegionModel> regionModelList = new ArrayList<>();
+                        regionModelList = response.body();
+                        for (RegionModel model : regionModelList) {
+                            regionList.add(model.getName());
+                            regionHashmapForID.put(model.getName(), model.getRegionId());
+                            regionHashmapForTitle.put(model.getRegionId(), model.getName());
 
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                        mBinding.regionSpinner.setAdapter(adapter);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
-                    mBinding.regionSpinner.setAdapter(adapter);
+
                 } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(requireContext(), " " + response.message(), Toast.LENGTH_SHORT).show();
+                    if (response.message().equals("Unauthorized")) {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(), requireContext());
+                    }
                 }
+                progressDialog.dismiss();
             }
 
             @Override

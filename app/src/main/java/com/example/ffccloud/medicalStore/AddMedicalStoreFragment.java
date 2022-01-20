@@ -52,15 +52,16 @@ import retrofit2.Response;
 
 public class AddMedicalStoreFragment extends Fragment {
     private FragmentAddMedicalStoreBinding mBinding;
-    private ArrayList<String> regionList = new ArrayList<>(), gradeArray = new ArrayList<>();
+    private final ArrayList<String> regionList = new ArrayList<>();
+    private final ArrayList<String> gradeArray = new ArrayList<>();
     private final HashMap<String, Integer> gradingHashMapForId = new HashMap<>();
-    private HashMap<Integer, String> gradingHashMapForTitle = new HashMap<>();
+    private final HashMap<Integer, String> gradingHashMapForTitle = new HashMap<>();
     private final HashMap<String, Integer> regionHashmapForID = new HashMap<>();
     private final HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
     private UserViewModel userViewModel;
     private List<GradingModel> gradingModelList;
     private CompanyRecyclerViewAdapter adapter;
-    private List<SupplierCompDetail> companyModelList = new ArrayList<>();
+    private final List<SupplierCompDetail> companyModelList = new ArrayList<>();
     private String locationString;
     private String locationAddress;
     private int supplierID;
@@ -68,7 +69,7 @@ public class AddMedicalStoreFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -421,23 +422,31 @@ public class AddMedicalStoreFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
-                    progressDialog.dismiss();
-                    regionHashmapForTitle.clear();
-                    regionHashmapForID.clear();
-                    regionList.clear();
-                    List<RegionModel> regionModelList = new ArrayList<>();
-                    regionModelList = response.body();
-                    for (RegionModel model : regionModelList) {
-                        regionList.add(model.getName());
-                        regionHashmapForID.put(model.getName(), model.getRegionId());
-                        regionHashmapForTitle.put(model.getRegionId(), model.getName());
+                    if (response.body()!=null)
+                    {
+
+                        regionHashmapForTitle.clear();
+                        regionHashmapForID.clear();
+                        regionList.clear();
+                        List<RegionModel> regionModelList = new ArrayList<>();
+                        regionModelList = response.body();
+                        for (RegionModel model : regionModelList) {
+                            regionList.add(model.getName());
+                            regionHashmapForID.put(model.getName(), model.getRegionId());
+                            regionHashmapForTitle.put(model.getRegionId(), model.getName());
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                        mBinding.spinnerRegion.setAdapter(adapter);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
-                    mBinding.spinnerRegion.setAdapter(adapter);
+
                 } else {
-                    progressDialog.dismiss();
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
                     Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
+                progressDialog.dismiss();
             }
 
             @Override

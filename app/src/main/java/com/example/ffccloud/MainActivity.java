@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         if (SharedPreferenceHelper.getInstance(getApplication()).getGetDocListState()) {
             int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
 
-//            SyncDataToDB.getInstance().saveDoctorsList(id,this,this);
+            SyncDataToDB.getInstance().saveDoctorsList(id,this,this);
             SyncDataToDB.getInstance().SyncData(id,this,this);
             SharedPreferenceHelper.getInstance(getApplication()).setGetDocListState(false);
         }
@@ -275,20 +275,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-//
-//        DoctorViewModel doctorViewModel;
-//        TargetViewModel targetViewModel;
+
+        DoctorViewModel doctorViewModel;
+        TargetViewModel targetViewModel;
 
         if (item.getItemId() == R.id.signOut) {
-//            targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
-//            doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
-//
-//            targetViewModel.DeleteAllDoctor();
-//
-//            doctorViewModel.deleteAllSchedule();
-//            doctorViewModel.deleteAllFilterDoctor();
-//
-//            ffcDatabase.dao().delete_all_menu();
+            targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
+            doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
+
+            targetViewModel.DeleteAllDoctor();
+
+            doctorViewModel.deleteAllSchedule();
+            doctorViewModel.deleteAllFilterDoctor();
+
+            ffcDatabase.dao().delete_all_menu();
             ffcDatabase.dao().deleteAllGrade();
             ffcDatabase.dao().deleteAllQualification();
             ffcDatabase.dao().deleteAllClassification();
@@ -334,75 +334,75 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setMenus(Menu menu) {
-//        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
-//        menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
-//
-//        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_route_svgrepo_com, null));
-//        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
-//        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, null));
-//        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
-//        menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_gps_fixed_24, null));
-//        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_client_profile_svgrepo_com, null));
-//        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_orders, null));
+        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+        menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
+
+        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_route_svgrepo_com, null));
+        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
+        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, null));
+        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+        menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_gps_fixed_24, null));
+        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_client_profile_svgrepo_com, null));
+        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_orders, null));
         menu.add(1, R.id.farmListFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_farm_svgrepo_com, null));
         menu.add(1, R.id.medicalStoreListFragment, 16, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_medical_pharmacy_store, null));
         menu.add(1, R.id.hospitalListFragment, 17, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_hospital, null));
         menu.add(1, R.id.SupplierDoctorFragment, 18, "Doctor").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_doctor, null));
-//        ArrayList<String> menuIds = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menu_items_ids)));
-//        SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *from User_Menu Order By Menu_Order Asc");
-////        ffcDatabase.dao().sortMenus();
-//        List<String> menuStateList = ffcDatabase.dao().get_menu_State();
-//
-//        if (menuStateList != null && !menuStateList.isEmpty()) {
-//            List<String> filterList = new ArrayList<>();
-//
-//            for (String m : menuStateList) {
-//                if (!filterList.contains(m)) {
-//                    filterList.add(m);
-//                }
-//            }
-//
-//
-//            if (!filterList.isEmpty()) {
-//                for (int ii = 0; ii < filterList.size(); ii++) {
-//                    if (menuIds.contains(filterList.get(ii))) {
-//
-//                        switch (filterList.get(ii)) {
-//                            case "Ac_Home":
-//                                menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_home, null));
+        ArrayList<String> menuIds = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menu_items_ids)));
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *from User_Menu Order By Menu_Order Asc");
+//        ffcDatabase.dao().sortMenus();
+        List<String> menuStateList = ffcDatabase.dao().get_menu_State();
+
+        if (menuStateList != null && !menuStateList.isEmpty()) {
+            List<String> filterList = new ArrayList<>();
+
+            for (String m : menuStateList) {
+                if (!filterList.contains(m)) {
+                    filterList.add(m);
+                }
+            }
+
+
+            if (!filterList.isEmpty()) {
+                for (int ii = 0; ii < filterList.size(); ii++) {
+                    if (menuIds.contains(filterList.get(ii))) {
+
+                        switch (filterList.get(ii)) {
+                            case "Ac_Home":
+                                menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_home, null));
+                                break;
+//                            case "Ac_Target":
+//                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
 //                                break;
-////                            case "Ac_Target":
-////                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
-////                                break;
-//                            case "Ac_Expense":
-//                                menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
+                            case "Ac_Expense":
+                                menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
+                                break;
+                            case "Ac_SOrder":
+                                menu.add(1, R.id.doctorListFragment, 4, "Doctor Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_profile, null));
+                                break;
+                            case "Ac_MSetting":
+                                menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings, null));
+                                break;
+//                            case "Ac_EndDay":
+//                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
 //                                break;
-//                            case "Ac_SOrder":
-//                                menu.add(1, R.id.doctorListFragment, 4, "Doctor Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_profile, null));
-//                                break;
-//                            case "Ac_MSetting":
-//                                menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings, null));
-//                                break;
-////                            case "Ac_EndDay":
-////                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
-////                                break;
-//                            case "Ac_MyProfile":
-//                                menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null));
-//                                break;
-//                        }
-//
-//                    }
-//                }
-//
-//
-//            }
-//        } else {
-//            mAppBarConfiguration = new AppBarConfiguration.Builder(
-//                    R.id.nav_home, R.id.nav_expense_list)
-//                    .setOpenableLayout(mbinding.drawerLayout)
-//                    .build();
-//            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-//        }
+                            case "Ac_MyProfile":
+                                menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null));
+                                break;
+                        }
+
+                    }
+                }
+
+
+            }
+        } else {
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_home, R.id.nav_expense_list)
+                    .setOpenableLayout(mbinding.drawerLayout)
+                    .build();
+            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        }
 
 
     }

@@ -49,7 +49,7 @@ public class CustomsDialog {
 
     }
 
-    public void loginAgain(String message,Activity activity,Context context) {
+    public void loginAgain(Activity activity,Context context) {
         FfcDatabase ffcDatabase;
         ffcDatabase = FfcDatabase.getInstance(activity.getBaseContext());
 
@@ -57,7 +57,7 @@ public class CustomsDialog {
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(activity.getLayoutInflater());
         AlertDialog alertDialog = new AlertDialog.Builder(context).setView(dialogBinding.getRoot()).setCancelable(false).create();
         dialogBinding.title.setText("Error");
-        dialogBinding.body.setText(message);
+        dialogBinding.body.setText("Session Expire Please Login Again");
         alertDialog.show();
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
             @Override

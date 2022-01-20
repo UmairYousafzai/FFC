@@ -23,6 +23,7 @@ import com.example.ffccloud.ModelClasses.RateListModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.FragmentProductInfoBottomSheetDialogBinding;
 import com.example.ffccloud.utils.CONSTANTS;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -158,29 +159,29 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
             public void afterTextChanged(Editable s) {
 
 
-                    String amoutString = mBinding.etAmount.getText().toString();
-                    if (!amoutString.equals(""))
+                String amoutString = mBinding.etAmount.getText().toString();
+                if (!amoutString.equals(""))
+                {
+                    if (!s.toString().isEmpty())
                     {
-                        if (!s.toString().isEmpty())
-                        {
-                            long amount = Long.parseLong(amoutString);
-                            long percentage = Long.parseLong(s.toString());
+                        long amount = Long.parseLong(amoutString);
+                        long percentage = Long.parseLong(s.toString());
 
-                            long discount= getPercentageAmount(amount,percentage);
-                            mBinding.etDiscount.setText(String.valueOf(discount));
+                        long discount= getPercentageAmount(amount,percentage);
+                        mBinding.etDiscount.setText(String.valueOf(discount));
 
-                            long discountedValue = amount - discount;
-                            mBinding.etDiscountedValue.setText(String.valueOf(discountedValue));
+                        long discountedValue = amount - discount;
+                        mBinding.etDiscountedValue.setText(String.valueOf(discountedValue));
 
-                            long gstPercentage = (long)rateListModel.getsTPercnt();
+                        long gstPercentage = (long)rateListModel.getsTPercnt();
 
-                            long gst = (discountedValue *gstPercentage)/100;
-                            mBinding.etGst.setText(String.valueOf(gst));
-                            
-                            long netAmount = discountedValue+gst;
+                        long gst = (discountedValue *gstPercentage)/100;
+                        mBinding.etGst.setText(String.valueOf(gst));
 
-                            mBinding.etNetAmount.setText(String.valueOf(netAmount));
-                        }
+                        long netAmount = discountedValue+gst;
+
+                        mBinding.etNetAmount.setText(String.valueOf(netAmount));
+                    }
 
 
                 }
@@ -280,12 +281,17 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
                         setUpFields(rateListModel);
                     }
-              progressDialog.dismiss();
                 }
                 else {
                     Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
+
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
                 }
+                progressDialog.dismiss();
 
             }
 

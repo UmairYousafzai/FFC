@@ -593,7 +593,7 @@ public class TargetFullInfoFragment extends Fragment {
                                     }
                                     else
                                     {
-                                        CustomsDialog.getInstance().loginAgain(response.message(),requireActivity(),requireContext());
+                                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
                                         alertDialog.dismiss();
                                         progressDialog.dismiss();
                                     }

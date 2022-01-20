@@ -175,7 +175,7 @@ public class FilteredDocFullInfoFragment extends Fragment {
                 }
                 else
                 {
-                    CustomsDialog.getInstance().loginAgain(response.message(),requireActivity(),requireContext());
+                    CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
                 }
             }
 

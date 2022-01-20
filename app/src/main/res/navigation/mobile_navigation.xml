@@ -54,9 +54,7 @@
             android:id="@+id/action_nav_home_to_mapsFragment"
             app:destination="@id/mapsFragment" />
 
-        <action
-            android:id="@+id/action_nav_home_to_nav_expense_list"
-            app:destination="@id/nav_expense_list" />
+
         <action
             android:id="@+id/action_nav_home_to_tableLayout"
             app:destination="@id/tableLayout" />
@@ -462,26 +460,8 @@
         android:name="com.example.ffccloud.MapsFragment"
         android:label="Tracker"
         tools:layout="@layout/fragment_maps2" />
-    <fragment
-        android:id="@+id/expenseFormFragment"
-        android:name="com.example.ffccloud.Expense.ExpenseFormFragment"
-        android:label="ExpenseFormFragment"
-        tools:layout="@layout/fragment_expense_form"
-        />
-    <fragment
-        android:id="@+id/nav_expense_list"
-        android:name="com.example.ffccloud.Expense.ExpenseWalletFragment"
-        android:label="Expense Wallet"
-        tools:layout="@layout/fragment_expense_wallet"
-        >
-        <action
-            android:id="@+id/action_expenseWalletFragment_to_expenseFormFragment"
-            app:destination="@id/expenseFormFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-    </fragment>
+
+
     <fragment
         android:id="@+id/tableLayout"
         android:name="com.example.ffccloud.TableLayout"
@@ -809,4 +789,22 @@
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>
+    <fragment
+        android:id="@+id/expenseListFragment"
+        android:name="com.example.ffccloud.Expense.ExpenseListFragment"
+        android:label="Expense List"
+        >
+        <action
+            android:id="@+id/action_expenseListFragment_to_expenseFormFragment"
+            app:destination="@id/expenseFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/expenseFormFragment"
+        android:name="com.example.ffccloud.Expense.ExpenseFormOldFragment"
+        android:label="Expense Form"
+        />
 </navigation>

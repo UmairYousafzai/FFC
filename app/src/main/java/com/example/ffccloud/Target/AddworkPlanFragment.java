@@ -347,7 +347,7 @@ public class AddworkPlanFragment extends Fragment {
 
                     CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(),"Add work plan",requireActivity(),requireContext());
                 } else {
-                    CustomsDialog.getInstance().loginAgain(response.message(),requireActivity(),requireContext());
+                    CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
                 }
                 mBinding.saveBtn.setEnabled(true);
 

@@ -17,6 +17,7 @@ import com.example.ffccloud.ModelClasses.DeliveryModeModel;
 import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
+import com.example.ffccloud.ModelClasses.ExpenseType;
 import com.example.ffccloud.ModelClasses.GetLedgerBalanceModel;
 import com.example.ffccloud.ModelClasses.GetSaleOrderDetail;
 import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
@@ -206,5 +207,11 @@ public interface Api {
                                                       @Query("Country_Id") int Country_Id,
                                                       @Query("Project_Id") int Project_Id,
                                                       @Query("Sale_Order_Id") int Sale_Order_Id);
+
+    @POST("api/FFCAppApi/GetALLExpenses")
+    Call<List<ExpenseType>> getExpenseType(@Header("Authorization") String token,
+                                           @Query("Company_ID") int companyId,
+                                           @Query("Country_ID") int countryId,
+                                           @Query("Loction_ID") int locationId);
 }
 
