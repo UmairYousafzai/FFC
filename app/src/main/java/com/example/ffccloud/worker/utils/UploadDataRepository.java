@@ -1,19 +1,14 @@
 package com.example.ffccloud.worker.utils;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.lifecycle.LiveData;
-
 import com.example.ffccloud.Database.FfcDAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.DoctorModel;
-import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.QualificationModel;
-import com.example.ffccloud.ModelClasses.UpdateWorkPlanStatus;
+import com.example.ffccloud.model.AddNewWorkPlanModel;
+import com.example.ffccloud.model.UpdateWorkPlanStatus;
 
 import java.util.List;
 import java.util.concurrent.Executor;

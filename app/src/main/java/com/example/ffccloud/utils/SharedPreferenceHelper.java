@@ -16,7 +16,7 @@ public class SharedPreferenceHelper {
 
 
     public static final String ATTENDANCE_CONFIGURATION = "Attendance Configuration";
-    public static final String BASE_URL = "http://88.99.49.132/prixapi/";
+    public static final String BASE_URL = "http://192.168.100.238/E-ERP/";
     public static final Integer ID = null;
     public static final String emp_ID = "Emp ID";
     public static final String  userID = "User ID";
@@ -28,6 +28,9 @@ public class SharedPreferenceHelper {
     public boolean startDay = false;
     private final String DocListState = "DocListState";
     private final String FilterDocListState ="FilterDocListState";
+    private final String previousUserID ="previous user id";
+    private final String Message_Notification_ID ="message notification id";
+    private final String USER_EMAIL ="user email";
 
 
 
@@ -44,6 +47,13 @@ public class SharedPreferenceHelper {
     public void setFlterDocListState(boolean flterDocListState) {
         sharedPreferences.edit().putBoolean(FilterDocListState, flterDocListState).apply();    }
 
+    public boolean getLocationDoneButtonState(String userID) {
+        return sharedPreferences.getBoolean(userID,false);
+    }
+
+    public void setLocationDoneButtonState(String userID,boolean state) {
+        sharedPreferences.edit().putBoolean(userID, state).apply();    }
+
     public void setEmpID(int id)
     {
         sharedPreferences.edit().putInt(emp_ID, id).apply();;
@@ -52,6 +62,15 @@ public class SharedPreferenceHelper {
     public int getEmpID() {
         return sharedPreferences.getInt(emp_ID,0);
     }
+
+    public void setMessage_Notification_ID(int id)
+    {
+        sharedPreferences.edit().putInt(Message_Notification_ID, id).apply();;
+
+    }
+    public int getMessageNotificationID() {
+        return sharedPreferences.getInt(Message_Notification_ID,0);
+    }
     public void setUserPassword(String password)
     {
         sharedPreferences.edit().putString(userPassword, password).apply();;
@@ -59,6 +78,15 @@ public class SharedPreferenceHelper {
     }
     public String getUserPassword() {
         return sharedPreferences.getString(userPassword," ");
+    }
+
+    public void setPreviousUserID(String userID)
+    {
+        sharedPreferences.edit().putString(previousUserID, userID).apply();;
+
+    }
+    public String getPreviousUserID() {
+        return sharedPreferences.getString(previousUserID," ");
     }
     public void setUserID(int id)
     {
@@ -136,6 +164,14 @@ public class SharedPreferenceHelper {
     }
     public void setStart(Boolean start) {
         sharedPreferences.edit().putBoolean(String.valueOf(startDay), start).apply();
+    }
+
+    public void deleteSharedPreference()
+    {
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
 }

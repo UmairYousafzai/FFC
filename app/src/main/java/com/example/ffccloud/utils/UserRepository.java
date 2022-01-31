@@ -1,6 +1,5 @@
 package com.example.ffccloud.utils;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,11 +8,11 @@ import androidx.lifecycle.LiveData;
 
 import com.example.ffccloud.Database.FfcDAO;
 import com.example.ffccloud.Database.FfcDatabase;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.DeliveryModeModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.model.ClassificationModel;
+import com.example.ffccloud.model.DeliveryModeModel;
+import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
-import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.model.QualificationModel;
 
 import java.util.List;
 import java.util.concurrent.Executor;

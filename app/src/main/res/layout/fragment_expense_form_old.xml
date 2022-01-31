@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="5dp"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginHorizontal="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
         />
@@ -23,9 +23,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
             android:elevation="2dp"
-            android:text="Select Expense Type"
+            android:text="Select ExpenseModel Type"
             android:textSize="20sp"
             android:padding="5dp"
             android:background="@color/white"
@@ -39,8 +40,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/white"
-        android:layout_margin="10dp"
-        >
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="10dp"        >
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -67,12 +68,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/amount"
-            app:startIconDrawable="@drawable/ic_dollar_blue_24"
+            app:startIconDrawable="@drawable/ic_pakistan_rupee"
             xmnls:boxBackgroundColor="@color/white"
             xmnls:hintTextColor="@color/APP_Theme_Color"
             app:startIconTint="@color/APP_Theme_Color"
+            android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"
-            android:layout_marginHorizontal="10dp"
 
             >
 
@@ -98,8 +99,8 @@
             xmnls:boxBackgroundColor="@color/white"
             xmnls:hintTextColor="@color/APP_Theme_Color"
             app:startIconTint="@color/APP_Theme_Color"
-            android:layout_marginVertical="10dp"
-            android:layout_marginHorizontal="10dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="10dp"
 
             >
 

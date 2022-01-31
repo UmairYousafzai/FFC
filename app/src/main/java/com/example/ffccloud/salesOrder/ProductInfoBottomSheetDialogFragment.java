@@ -19,7 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.ModelClasses.RateListModel;
+import com.example.ffccloud.model.RateListModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.FragmentProductInfoBottomSheetDialogBinding;
 import com.example.ffccloud.utils.CONSTANTS;

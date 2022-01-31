@@ -5,8 +5,9 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,8 +21,6 @@ import com.example.ffccloud.Messages.ChatUserListFragmentDirections;
 import com.example.ffccloud.R;
 import com.example.ffccloud.UserModel;
 import com.example.ffccloud.databinding.ChatUserCardBinding;
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,10 +30,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatUserListAdapter extends RecyclerView.Adapter<ChatUserListAdapter.ChatUserListViewHolder> {
+public class ChatUserListAdapter extends RecyclerView.Adapter<ChatUserListAdapter.ChatUserListViewHolder> implements Filterable {
 
     private LayoutInflater layoutInflater;
-    private List<UserModel> userModelList;
+    private List<UserModel> userList;
+    private List<UserModel> userListFull;
     private Fragment fragment;
     private FirebaseDatabase firebaseDatabase;
     private Context context;
@@ -42,7 +42,9 @@ public class ChatUserListAdapter extends RecyclerView.Adapter<ChatUserListAdapte
 
     public ChatUserListAdapter(Fragment fragment,Context context) {
 
-        userModelList = new ArrayList<>();
+        userList = new ArrayList<>();
+        userListFull = new ArrayList<>();
+
         this.fragment = fragment;
         firebaseDatabase= FirebaseDatabase.getInstance();
         this.context = context;
@@ -69,7 +71,7 @@ public class ChatUserListAdapter extends RecyclerView.Adapter<ChatUserListAdapte
     @Override
     public void onBindViewHolder(@NonNull ChatUserListViewHolder holder, int position) {
         UserModel user;
-        user = userModelList.get(position);
+        user = userList.get(position);
 
         holder.mBinding.setUser(user);
         holder.mBinding.executePendingBindings();
@@ -78,19 +80,77 @@ public class ChatUserListAdapter extends RecyclerView.Adapter<ChatUserListAdapte
 
     @Override
     public int getItemCount() {
-        return userModelList == null ? 0 : userModelList.size();
+        return userList == null ? 0 : userList.size();
     }
+
+
+
 
     public void setUserList(List<UserModel> list) {
 
-        if (list!=null) {
-            userModelList = list;
-            notifyDataSetChanged();
+        if (list!=null && list.size()>0) {
+
+            userList.addAll(list);
+            userListFull.addAll(list);
         } else {
-            userModelList.clear();
-            notifyDataSetChanged();
+            userList.clear();
         }
+        notifyDataSetChanged();
     }
+
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+    private Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<UserModel> filterList = new ArrayList<>();
+
+            if (constraint!=null&&constraint.length()>0)
+            {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                if (userListFull!=null&& userListFull.size()>0)
+                {
+                    for (UserModel model :userListFull)
+                    {
+                        if (model.getUserName().toLowerCase().trim().contains(filterPattern))
+                        {
+                            filterList.add(model);
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                if (userListFull != null) {
+                    filterList.addAll(userListFull);
+                }
+            }
+
+            FilterResults filterResults= new FilterResults();
+            filterResults.values= filterList;
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            userList.clear();
+            if (results.values!=null)
+            {
+                userList.addAll((List) results.values);
+            }
+            notifyDataSetChanged();
+
+        }
+    };
+
 
     public class ChatUserListViewHolder extends RecyclerView.ViewHolder {
         ChatUserCardBinding mBinding;
@@ -103,7 +163,7 @@ public class ChatUserListAdapter extends RecyclerView.Adapter<ChatUserListAdapte
 
                 if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                     progressDialog.show();
-                    UserModel user = userModelList.get(getAdapterPosition());
+                    UserModel user = userList.get(getAdapterPosition());
                     String email = user.getEmail();
 
                     Query query = firebaseDatabase.getReference("Users").orderByChild("email").equalTo(email);
@@ -123,22 +183,25 @@ public class ChatUserListAdapter extends RecyclerView.Adapter<ChatUserListAdapte
 
                             } else {
                                 progressDialog.dismiss();
-                                Toast.makeText(context, "User Not add for tracking ", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "User Not add for Messages ", Toast.LENGTH_SHORT).show();
                                 progressDialog.setMessage("Adding...");
                                 progressDialog.show();
 
                                 String userId = user.getId();
                                 firebaseDatabase.getReference("Users").child(userId).setValue(user).addOnSuccessListener(aVoid -> {
                                     progressDialog.dismiss();
-                                    Toast.makeText(context, "User Added, now you can track user. ", Toast.LENGTH_SHORT).show();
-                                }).addOnCanceledListener(() -> Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show());
+                                    Toast.makeText(context, "User Added, now you can message user. ", Toast.LENGTH_SHORT).show();
+                                }).addOnCanceledListener(() -> {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                });
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                             Log.e("Add User: ", " " + error.getMessage());
-
+                            progressDialog.dismiss();
                         }
                     });
 

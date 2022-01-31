@@ -14,7 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 
 import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentShowRouteBinding;

@@ -9,14 +9,13 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
 import com.example.ffccloud.DoctorModel;
-import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
-import com.example.ffccloud.ModelClasses.UpdateWorkPlanStatus;
+import com.example.ffccloud.model.AddNewWorkPlanModel;
+import com.example.ffccloud.model.UpdateStatus;
+import com.example.ffccloud.model.UpdateWorkPlanStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
 import com.example.ffccloud.worker.utils.UploadDataRepository;
@@ -24,7 +23,6 @@ import com.example.ffccloud.worker.utils.UploadDataRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;

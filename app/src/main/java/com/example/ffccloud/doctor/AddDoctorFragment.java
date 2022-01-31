@@ -1,7 +1,6 @@
 package com.example.ffccloud.doctor;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -16,7 +15,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,18 +24,17 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
-import com.example.ffccloud.ModelClasses.SupplierMainModel;
-import com.example.ffccloud.ModelClasses.SupplierModelNew;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.SupplierMainModel;
+import com.example.ffccloud.model.SupplierModelNew;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.SupplierItemLinking;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
-import com.example.ffccloud.ModelClasses.QualificationModel;
-import com.example.ffccloud.ModelClasses.RegionModel;
+import com.example.ffccloud.model.ClassificationModel;
+import com.example.ffccloud.model.GradingModel;
+import com.example.ffccloud.model.QualificationModel;
+import com.example.ffccloud.model.RegionModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
-import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddDoctorBinding;
 import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.farm.adapter.MedicineAdapter;
@@ -72,20 +69,21 @@ public class AddDoctorFragment extends Fragment {
     private final HashMap<String, Integer> classificatoinHashMapForId = new HashMap<>();
     private final HashMap<String, Integer> gradingHashMapForId = new HashMap<>();
     private final HashMap<String, Integer> qualificationHashMapForId = new HashMap<>();
-    private final HashMap<String, Integer> regionHashmap = new HashMap<>();
+    private final HashMap<String, Integer> regionHashmapID = new HashMap<>();
 
     private final HashMap<Integer, String> qualificationHashMapForTitle = new HashMap<>();
     private final HashMap<Integer, String> classificationHashMapForTitle = new HashMap<>();
     private final HashMap<Integer, String> gradingHashMapForTitle = new HashMap<>();
+    private final HashMap<Integer, String> regionHashmapTitle = new HashMap<>();
     private UserViewModel userViewModel;
     private NavController navController;
     private MedicineAdapter medicineAdapter;
-    private String locationString;
+    private String locationString,supplierCode="0";
     private String locationAddress;
     private final List<SupplierItemLinking> medicineModalList = new ArrayList<>();
-    private int supplierID;
+    private int supplierID=0;
     private String callingAddBtn;
-    private boolean isSpinnerUpdate = false;
+    private boolean isSpinnerUpdate = false,isLocationUpdate=false;
     private int gradePosition = -1, regionPosition = -1, classificationPosition = -1, qualificationPosition = -1, genderPosition = -1;
 
 
@@ -150,7 +148,6 @@ public class AddDoctorFragment extends Fragment {
                     }
 
                 }
-
 
             }
         });
@@ -236,9 +233,13 @@ public class AddDoctorFragment extends Fragment {
 
 
                             if (mBinding.location.isChecked()) {
+                                if (supplierID!=0)
+                                {
+                                    isLocationUpdate=true;
+                                }
                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.location.setText(locationAddress);
-                                locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                                locationString = location.getLongitude() + "," + location.getLatitude();
                             } else {
 
                                 mBinding.location.setText("Enable Location");
@@ -366,13 +367,26 @@ public class AddDoctorFragment extends Fragment {
     }
 
     private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
-
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode()!=null)
+        {
+            supplierCode =getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode();
+        }
         mBinding.idDocName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
         mBinding.idDocPhone.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.idDocAdress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
         mBinding.idDocEmail.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getEmail());
-        mBinding.location.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
 
+        if(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length()>0)
+        {
+            mBinding.location.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+            mBinding.location.setChecked(true);
+            locationAddress=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
+        }
+
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length()>0)
+        {
+            locationString=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+        }
 
         medicineModalList.clear();
         if (getSupplierDetailModel.getSupplierItemLinkingList() != null) {
@@ -384,15 +398,18 @@ public class AddDoctorFragment extends Fragment {
         int classificationId = getSupplierDetailModel.getSupplierModelNewList().get(0).getClassificationId();
         int qualificationID = getSupplierDetailModel.getSupplierModelNewList().get(0).getQualificationId();
         int gradeID = getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
+        int regionID = (int)getSupplierDetailModel.getSupplierModelNewList().get(0).getRegionId();
 
 
         String classification = classificationHashMapForTitle.get(classificationId);
         String qualification = qualificationHashMapForTitle.get(qualificationID);
         String grade = gradingHashMapForTitle.get(gradeID);
+        String region = regionHashmapTitle.get(regionID);
 
         mBinding.spinnerClassification.setSelection(classificationArray.indexOf(classification));
         mBinding.spinnerQualification.setSelection(qualificationArray.indexOf(qualification));
         mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
+        mBinding.spinnerRegion.setSelection(regionList.indexOf(region));
 
         String gender = getSupplierDetailModel.getSupplierModelNewList().get(0).getGender();
         if (gender != null) {
@@ -424,14 +441,32 @@ public class AddDoctorFragment extends Fragment {
 
     private void setUpSupplierModelForSave() {
 
-        String name = " ", phone = " ", address = " ", email = " ", shitType = " ";
-        int userId = 0, region = 0, gradeID = 0;
-        try {
-            name = Objects.requireNonNull(mBinding.idDocName.getText()).toString();
+        String name = "", phone = "", address = "", email = "", shitType = "";
+        int userId, region = 0, gradeID = 0;
+
+        if (mBinding.idDocName.getText()!=null && mBinding.idDocName.getText().toString().length()>0)
+        {
+            name = mBinding.idDocName.getText().toString();
+        }
+
+        if (mBinding.idDocPhone.getText()!=null && mBinding.idDocPhone.getText().toString().length()>0)
+        {
             phone = Objects.requireNonNull(mBinding.idDocPhone.getText()).toString();
-            address = Objects.requireNonNull(mBinding.idDocAdress.getText()).toString();
-            email = Objects.requireNonNull(mBinding.idDocEmail.getText()).toString();
-            userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+
+        }
+
+        if (mBinding.idDocAdress.getText()!=null && mBinding.idDocAdress.getText().toString().length()>0)
+        {
+            address = mBinding.idDocAdress.getText().toString();
+        }
+        if (mBinding.idDocEmail.getText()!=null && mBinding.idDocEmail.getText().toString().length()>0)
+        {
+            email = mBinding.idDocEmail.getText().toString();
+        }
+
+        userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+
+        try {
 
             if (gradingModelList.size() > 0) {
                 gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
@@ -439,15 +474,15 @@ public class AddDoctorFragment extends Fragment {
             }
             RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.docTimingRadioGroup.getCheckedRadioButtonId());
             shitType = radioButton.getText().toString();
-            region = regionHashmap.get(mBinding.spinnerRegion.getSelectedItem().toString());
+            region = regionHashmapID.get(mBinding.spinnerRegion.getSelectedItem().toString());
 
         } catch (Exception e) {
             Toast.makeText(requireContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        if (name.length() > 0) {
-            if (phone.length() > 0) {
-                if (address.length() > 0) {
+        if (!name.isEmpty() ) {
+            if (!phone.isEmpty()) {
+                if (!address.isEmpty()) {
                     if (regionList.size() > 0) {
 
 
@@ -458,7 +493,7 @@ public class AddDoctorFragment extends Fragment {
                         supplierModelNew.setCountry_Id(1);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
-                        supplierModelNew.setSupplier_Code("0");
+                        supplierModelNew.setSupplier_Code(supplierCode);
                         supplierModelNew.setSupplier_Id(supplierID);
                         supplierModelNew.setAddress(address);
                         supplierModelNew.setPhone_No(phone);
@@ -469,6 +504,7 @@ public class AddDoctorFragment extends Fragment {
                         supplierModelNew.setGrade_id(gradeID);
                         supplierModelNew.setEmail(email);
                         supplierModelNew.setSupplierItemLinkingList(medicineModalList);
+                        supplierModelNew.setIs_update_Loc_Cord(isLocationUpdate);
                         supplierModelNew.setLoc_Cord(locationString);
                         supplierModelNew.setLoc_Cord_Address(locationAddress);
                         supplierModelNew.setQualification_Id(qualificationHashMapForId.get(mBinding.spinnerQualification.getSelectedItem().toString()));
@@ -647,17 +683,22 @@ public class AddDoctorFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
-                    regionHashmap.clear();
-                    regionList.clear();
-                    List<RegionModel> regionModelList = new ArrayList<>();
-                    regionModelList = response.body();
-                    for (RegionModel model : regionModelList) {
-                        regionList.add(model.getName());
-                        regionHashmap.put(model.getName(), model.getRegionId());
+                    if (response.body()!=null)
+                    {
+                        regionHashmapID.clear();
+                        regionList.clear();
+                        List<RegionModel> regionModelList = new ArrayList<>();
+                        regionModelList = response.body();
+                        for (RegionModel model : regionModelList) {
+                            regionList.add(model.getName());
+                            regionHashmapID.put(model.getName(), model.getRegionId());
+                            regionHashmapTitle.put(model.getRegionId(), model.getName());
 
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                        mBinding.spinnerRegion.setAdapter(adapter);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
-                    mBinding.spinnerRegion.setAdapter(adapter);
+
                 } else {
                     Toast.makeText(requireContext(), " " + response.message(), Toast.LENGTH_SHORT).show();
                     if (response.message().equals("Unauthorized"))

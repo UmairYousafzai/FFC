@@ -7,13 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
@@ -21,22 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.GetSupplierModel;
-import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
-import com.example.ffccloud.ModelClasses.SupplierModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
-import com.example.ffccloud.R;
 import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.FragmentFarmListBinding;
-import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

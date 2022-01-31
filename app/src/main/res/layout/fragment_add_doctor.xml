@@ -403,7 +403,7 @@
 
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_10sdp"
-                android:checkedButton="@+id/radio_button_1"
+                android:checkedButton="@+id/morning_radio_btn"
                 android:background="@color/white"
                 android:orientation="horizontal">
 

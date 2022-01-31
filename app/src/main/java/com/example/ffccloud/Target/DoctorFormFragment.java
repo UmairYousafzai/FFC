@@ -37,9 +37,9 @@ import android.widget.Toast;
 
 import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.MainActivity;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
-import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.model.ClassificationModel;
+import com.example.ffccloud.model.GradingModel;
+import com.example.ffccloud.model.QualificationModel;
 import com.example.ffccloud.SaveDoctorModel;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
 

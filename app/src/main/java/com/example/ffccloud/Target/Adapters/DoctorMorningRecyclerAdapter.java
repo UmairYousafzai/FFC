@@ -130,35 +130,19 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
 
     }
 
-    //    public double getDistanceFromCurrentLocation(String location) {
-//        CustomLocation.CustomLocationResults results= new CustomLocation.CustomLocationResults() {
-//            @Override
-//            public void gotLocation(Location location) {
-//                currrentLocation=location;
-//            }
-//        };
-//        customLocation.getLastLocation(mContext,activity,results);
-//        String[] locationString = location.split(",");
-//        Location givenLocation = new Location("");
-//        givenLocation.setLatitude(Double.parseDouble(locationString[0]));
-//        givenLocation.setLongitude(Double.parseDouble(locationString[1]));
-//        if (currrentLocation != null && givenLocation != null)
-//        {
-//            return currrentLocation.distanceTo(givenLocation);
-//        }
-//        else
-//        {
-//            return 0;
-//        }
-//
-//
-//
-//    }
+
     public void setDoctorModelList(List<DoctorModel> list)
     {
 
-        doctorModelList.clear();
-        doctorModelList.addAll(list);
+        if (list!=null&&list.size()>0)
+        {
+            doctorModelList.clear();
+            doctorModelList.addAll(list);
+        }else
+        {
+            doctorModelList.clear();
+        }
+
 
         notifyDataSetChanged();
     }

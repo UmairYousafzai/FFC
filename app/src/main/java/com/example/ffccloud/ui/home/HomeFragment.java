@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 import com.example.ffccloud.R;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
 

@@ -22,8 +22,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.speech.RecognizerIntent;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +29,17 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
-import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
-import com.example.ffccloud.ModelClasses.RegionModel;
-import com.example.ffccloud.ModelClasses.SaveNewWorkPlanModel;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.model.AreasByEmpIdModel;
+import com.example.ffccloud.model.DoctorsByAreaIdsModel;
+import com.example.ffccloud.model.RegionModel;
+import com.example.ffccloud.model.SaveNewWorkPlanModel;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 
 import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentAddworkPlanBinding;
 import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
-import com.example.ffccloud.utils.SyncDataToDB;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,24 +62,26 @@ public class AddworkPlanFragment extends Fragment {
     private AddWorkPlanDialogFragment dialogFragment;
     private List<DoctorsByAreaIdsModel> doctorModelList;
     private List<AreasByEmpIdModel> areasModelList;
-    private String dataIDs = "", dataTittles = "", mDate = "";
+    private String dataIDs = "", dataTittles = "", mDate = "", remarks = "";
     private NavController navController;
     private NavBackStackEntry navBackStackEntry;
-    private String remarks = "";
     private final HashMap<String, Integer> regionHashmap = new HashMap<>();
     private final ArrayList<String> regionList = new ArrayList<>();
-    private List<String> clientList= new ArrayList<>();
+    private List<String> clientList = new ArrayList<>();
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding = FragmentAddworkPlanBinding.inflate(inflater, container, false);
         view = mBinding.getRoot();
 //         dataIDs = AddworkPlanFragmentArgs.fromBundle(getArguments()).getAreaIds();
 //         dataTittles = AddworkPlanFragmentArgs.fromBundle(getArguments()).getAreaTittles();
 //         key = AddworkPlanFragmentArgs.fromBundle(getArguments()).getKey();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        if (((AppCompatActivity) requireActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
+
+        }
 
 
         return view;
@@ -125,7 +124,8 @@ public class AddworkPlanFragment extends Fragment {
 
 
         btnListener();
-
+        getRegion();
+        setupClientSpinner();
     }
 
     public void setuptextFields() {
@@ -141,7 +141,7 @@ public class AddworkPlanFragment extends Fragment {
 //            mbinding.Doctors.setText("");
 //
 //        } else
-            if (doctorModelList != null && key == 3) {
+        if (doctorModelList != null && key == 3) {
             dataTittles = "";
             dataIDs = "";
             for (DoctorsByAreaIdsModel model : doctorModelList) {
@@ -157,8 +157,7 @@ public class AddworkPlanFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        getRegion();
-        setupClientSpinner();
+
 
     }
 
@@ -187,7 +186,7 @@ public class AddworkPlanFragment extends Fragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        int checkMonth = (month+1) % 10, checkday = (dayOfMonth % 10);
+                        int checkMonth = (month + 1) % 10, checkday = (dayOfMonth % 10);
 
                         String mMonth, mDay;
                         if (checkMonth > 0 && month < 9) {
@@ -240,30 +239,23 @@ public class AddworkPlanFragment extends Fragment {
                     key = 3;
                     AddworkPlanFragmentDirections.ActionAddworkPlanFragmentToAddWorkPlanDialogFragment action = AddworkPlanFragmentDirections.actionAddworkPlanFragmentToAddWorkPlanDialogFragment();
                     action.setKey(key);
-                    if (mBinding.clientTypeSpinner.getText().toString().equals("Hospitals"))
-                    {
+                    if (mBinding.clientTypeSpinner.getText().toString().equals("Hospitals")) {
                         action.setClientType("H");
 
-                    }
-                    else if (mBinding.clientTypeSpinner.getText().toString().equals("Doctors"))
-                    {
+                    } else if (mBinding.clientTypeSpinner.getText().toString().equals("Doctors")) {
                         action.setClientType("Dr");
 
-                    }
-                    else if (mBinding.clientTypeSpinner.getText().toString().equals("Farms"))
-                    {
+                    } else if (mBinding.clientTypeSpinner.getText().toString().equals("Farms")) {
                         action.setClientType("F");
 
-                    }
-                    else
-                    {
+                    } else {
 
-                            action.setClientType("Str");
+                        action.setClientType("Str");
 
 
                     }
 
-                    int regionId =regionHashmap.get(mBinding.regionSpinner.getText().toString())==null?0 :regionHashmap.get(mBinding.regionSpinner.getText().toString());
+                    int regionId = regionHashmap.get(mBinding.regionSpinner.getText().toString()) == null ? 0 : regionHashmap.get(mBinding.regionSpinner.getText().toString());
                     action.setRegionID(regionId);
                     navController.navigate(action);
                     isDoctorDialogOpen = true;
@@ -288,76 +280,100 @@ public class AddworkPlanFragment extends Fragment {
                 }
             }
         });
-        mBinding.remarks.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                remarks = s.toString();
-            }
-        });
 
         mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBinding.saveBtn.setEnabled(false);
-                String remarks = mBinding.remarks.getText().toString().trim();
                 int id = SharedPreferenceHelper.getInstance(requireContext()).getEmpID();
+                mBinding.saveBtn.setEnabled(false);
+                if (mBinding.remarks.getText() != null && mBinding.remarks.getText().toString().length() > 0) {
+                    remarks = mBinding.remarks.getText().toString().trim();
+                }
+
+
+                if (remarks != null && remarks.length() > 0) {
+                    mBinding.remarks.setError(null);
+                    if (mDate != null && mDate.length() > 0) {
+                        mBinding.workPlanDateLayout.setError(null);
+                        if (dataIDs != null && dataIDs.length() > 0) {
+                            mBinding.clientsLayout.setError(null);
+
+                            SaveNewWorkPlanModel model = new SaveNewWorkPlanModel();
+                            model.setDate(mDate);
+                            model.setDoctorIds(dataIDs);
+                            model.setEmpId(id);
+                            model.setRemarks(remarks);
+
+                            saveWorkPlan(model);
+                        } else {
+                            mBinding.clientsLayout.setError("Please select clients");
+                            mBinding.clientsLayout.requestFocus();
+                            mBinding.saveBtn.setEnabled(true);
+
+                        }
+
+                    } else {
+                        mBinding.workPlanDateLayout.setError("Please select date");
+                        mBinding.workPlanDateLayout.requestFocus();
+                        mBinding.saveBtn.setEnabled(true);
+                    }
+                } else {
+                    mBinding.remarks.setError("Please enter remarks");
+                    mBinding.remarks.requestFocus();
+                    mBinding.saveBtn.setEnabled(true);
+                }
+
+
                 if (!remarks.isEmpty() && !dataTittles.isEmpty() && !mDate.isEmpty()) {
 
-                    SaveNewWorkPlanModel model = new SaveNewWorkPlanModel();
-                    model.setDate(mDate);
-                    model.setDoctorIds(dataIDs);
-                    model.setEmpId(id);
-                    model.setRemarks(remarks);
 
-                    saveWorkPlan(model);
                     mBinding.regionSpinner.setText(R.string.select_areas);
                     mBinding.clients.setText(R.string.select_doctors);
                     mBinding.workPlanDate.setText("");
                     mBinding.remarks.setText("");
                     dataTittles = "";
                     mDate = "";
-                } else {
-                    Toast.makeText(requireContext(), "Please Enter The Remarks", Toast.LENGTH_SHORT).show();
-                    mBinding.saveBtn.setEnabled(true);
-
                 }
             }
         });
     }
 
     private void saveWorkPlan(SaveNewWorkPlanModel model) {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Saving...");
+        progressDialog.setTitle("Work Plan");
+        progressDialog.show();
 
         String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
+
         Call<UpdateStatus> call = ApiClient.getInstance().getApi().AddNewWorkPlan(token, model);
+
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
                 if (response.isSuccessful()) {
-                    UpdateStatus updateStatus = response.body();
+                    if (response.body() != null) {
 
-                    CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(),"Add work plan",requireActivity(),requireContext());
+                        UpdateStatus updateStatus = response.body();
+
+                        CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(), "Add work plan", requireActivity(), requireContext());
+
+                    }
+
                 } else {
-                    CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    CustomsDialog.getInstance().loginAgain(requireActivity(), requireContext());
                 }
                 mBinding.saveBtn.setEnabled(true);
-
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
                 mBinding.saveBtn.setEnabled(true);
-                CustomsDialog.getInstance().showDialog(t.getMessage(),"Add work plan",requireActivity(),requireContext());
-
+                CustomsDialog.getInstance().showDialog(t.getMessage(), "Add work plan", requireActivity(), requireContext());
+                progressDialog.dismiss();
 
             }
         });
@@ -393,23 +409,31 @@ public class AddworkPlanFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
-                    progressDialog.dismiss();
-                    regionHashmap.clear();
-                    regionList.clear();
-                    List<RegionModel> regionModelList = new ArrayList<>();
-                    regionModelList = response.body();
+                    if (response.body()!=null && response.body().size()>0)
+                    {
+                        regionHashmap.clear();
+                        regionList.clear();
+                        List<RegionModel> regionModelList = new ArrayList<>();
+                        regionModelList = response.body();
 
-                    for (RegionModel model : regionModelList) {
-                        regionList.add(model.getName());
-                        regionHashmap.put(model.getName(), model.getRegionId());
+                        for (RegionModel model : regionModelList) {
+                            regionList.add(model.getName());
+                            regionHashmap.put(model.getName(), model.getRegionId());
 
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                        mBinding.regionSpinner.setAdapter(adapter);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
-                    mBinding.regionSpinner.setAdapter(adapter);
+
+
                 } else {
-                    progressDialog.dismiss();
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
                     Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
+                progressDialog.dismiss();
             }
 
             @Override

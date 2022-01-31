@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 import com.example.ffccloud.databinding.RouteCardBinding;
 
 import java.util.List;

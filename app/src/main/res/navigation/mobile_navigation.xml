@@ -806,5 +806,18 @@
         android:id="@+id/expenseFormFragment"
         android:name="com.example.ffccloud.Expense.ExpenseFormOldFragment"
         android:label="Expense Form"
-        />
+        >
+        <argument
+            android:name="expense"
+            app:argType="com.example.ffccloud.ExpenseModelClass"
+            app:nullable="true"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationList"
+        android:name="com.example.ffccloud.notification.NotificationFragment"
+        android:label="Notifications"
+        >
+
+    </fragment>
 </navigation>

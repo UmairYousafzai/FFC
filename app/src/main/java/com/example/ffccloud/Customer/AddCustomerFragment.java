@@ -19,11 +19,12 @@ import android.widget.Toast;
 import com.example.ffccloud.ContactPersons;
 import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
 import com.example.ffccloud.CustomerModel;
-import com.example.ffccloud.ModelClasses.RegionModel;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.model.RegionModel;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.AddContactDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddCustomerBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import org.jetbrains.annotations.NotNull;
@@ -458,17 +459,25 @@ public class AddCustomerFragment extends Fragment {
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    cityHashMap.clear();
-                    cityList.clear();
-                    List<RegionModel> regionModelList = new ArrayList<>();
-                    regionModelList = response.body();
-                    for (RegionModel model : regionModelList) {
-                        cityList.add(model.getName());
-                        cityHashMap.put(model.getName(), model.getRegionId());
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, cityList);
-                        mBinding.citySpinner.setAdapter(adapter);
+                    if (response.body()!=null && response.body().size()>0)
+                    {
+                        cityHashMap.clear();
+                        cityList.clear();
+                        List<RegionModel> regionModelList = new ArrayList<>();
+                        regionModelList = response.body();
+                        for (RegionModel model : regionModelList) {
+                            cityList.add(model.getName());
+                            cityHashMap.put(model.getName(), model.getRegionId());
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, cityList);
+                            mBinding.citySpinner.setAdapter(adapter);
+                        }
                     }
+
                 } else {
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
                     Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
             }

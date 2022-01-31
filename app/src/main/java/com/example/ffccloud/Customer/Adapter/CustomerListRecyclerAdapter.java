@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ffccloud.Customer.CustomerListFragmentDirections;
 import com.example.ffccloud.CustomerModel;
-import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
 import com.example.ffccloud.databinding.CustomerCardBinding;
 import com.example.ffccloud.utils.CONSTANTS;
 

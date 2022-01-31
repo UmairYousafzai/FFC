@@ -36,12 +36,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="9"
-            android:background="@drawable/sender_chat_tv_bg"
+            android:background="@drawable/recevier_chat_tv_bg"
             android:hint="@string/type_message_here"
             android:inputType="textMultiLine"
             android:maxLines="3"
             android:padding="5dp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
+            android:elevation="5dp"
+            android:layout_marginVertical="10dp"
           />
 
         <ImageButton
@@ -50,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
+            android:elevation="5dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_baseline_send_24"
             android:contentDescription="@string/send" />

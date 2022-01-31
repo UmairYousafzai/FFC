@@ -1,5 +1,7 @@
 package com.example.ffccloud.Tracking.Services;
 
+import static com.example.ffccloud.utils.CONSTANTS.LOCATION_NOTIFICATION_CHANNEL_ID;
+
 import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -105,14 +107,10 @@ public class LocationService extends Service {
 
 
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channelId");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, LOCATION_NOTIFICATION_CHANNEL_ID);
 
-        ;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setSmallIcon(R.drawable.img_erp_cloud_logo);
-        } else {
-            builder.setSmallIcon(R.drawable.img_erp_cloud_logo);
-        }
+
+        builder.setSmallIcon(R.drawable.img_erp_cloud_logo);
 
 
         builder.setSmallIcon(R.drawable.img_erp_cloud_logo)
@@ -120,14 +118,7 @@ public class LocationService extends Service {
                 .setContentTitle("Location");
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelId = "Your_channel_id";
-            NotificationChannel channel = new NotificationChannel(
-                    channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_HIGH);
-            builder.setChannelId(channelId);
-        }
+
 
 
 // notificationId is a unique int for each notification that you must define

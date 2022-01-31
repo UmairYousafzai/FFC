@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.Login.GetUserInfoModel;
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 import com.example.ffccloud.PushNotification.SendNoticationClass;
 import com.example.ffccloud.SplashScreen.SplashActivity;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
@@ -36,7 +36,6 @@ import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.worker.UploadWorker;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -56,7 +55,6 @@ import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -268,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
 //
         menu.findItem(R.id.filter).setVisible(false);
         menu.findItem(R.id.search).setVisible(false);
+        menu.findItem(R.id.upload).setVisible(false);
 
         return true;
     }
@@ -294,11 +293,10 @@ public class MainActivity extends AppCompatActivity {
             ffcDatabase.dao().deleteAllClassification();
             ffcDatabase.dao().deleteAllDeliveryModes();
 
+            String password= SharedPreferenceHelper.getInstance(this).getUserPassword();
+            SharedPreferenceHelper.getInstance(this).deleteSharedPreference();
+            SharedPreferenceHelper.getInstance(this).setUserPassword(password);
 
-            SharedPreferenceHelper.getInstance(this).setFlterDocListState(false);
-            SharedPreferenceHelper.getInstance(this).setGetDocListState(true);
-            SharedPreferenceHelper.getInstance(this).setLogin_State(false);
-            SharedPreferenceHelper.getInstance(this).setStart(false);
             Intent intent = new Intent(this, SplashActivity.class);
             startActivity(intent);
             finish();
@@ -334,16 +332,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setMenus(Menu menu) {
-        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
-        menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
+//        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+//        menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
+//        menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
 
-        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_route_svgrepo_com, null));
-        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
-        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, null));
-        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+//        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_route_svgrepo_com, null));
+//        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
+//        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, null));
+//        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
         menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_gps_fixed_24, null));
-        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_client_profile_svgrepo_com, null));
-        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_orders, null));
+//        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_client_profile_svgrepo_com, null));
+//        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_orders, null));
         menu.add(1, R.id.farmListFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_farm_svgrepo_com, null));
         menu.add(1, R.id.medicalStoreListFragment, 16, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_medical_pharmacy_store, null));
         menu.add(1, R.id.hospitalListFragment, 17, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_hospital, null));
@@ -371,11 +370,11 @@ public class MainActivity extends AppCompatActivity {
                             case "Ac_Home":
                                 menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_home, null));
                                 break;
-//                            case "Ac_Target":
-//                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
-//                                break;
+                            case "Ac_Target":
+                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
+                                break;
                             case "Ac_Expense":
-                                menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
+                                menu.add(1, R.id.expenseListFragment, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
                                 break;
                             case "Ac_SOrder":
                                 menu.add(1, R.id.doctorListFragment, 4, "Doctor Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_profile, null));
@@ -383,9 +382,9 @@ public class MainActivity extends AppCompatActivity {
                             case "Ac_MSetting":
                                 menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings, null));
                                 break;
-//                            case "Ac_EndDay":
-//                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
-//                                break;
+                            case "Ac_EndDay":
+                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
+                                break;
                             case "Ac_MyProfile":
                                 menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null));
                                 break;

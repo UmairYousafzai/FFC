@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.ffccloud.Database.FfcDAO;
 import com.example.ffccloud.Database.FfcDatabase;
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 
 
 import java.util.List;

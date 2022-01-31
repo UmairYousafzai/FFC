@@ -8,12 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.ffccloud.ModelClasses.Message;
+import com.example.ffccloud.model.Message;
 import com.example.ffccloud.databinding.RecevingChatCardBinding;
 import com.example.ffccloud.databinding.SendingChatCardBinding;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,10 +52,12 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter {
         if (holder.getClass() == SentViewHolder.class) {
             SentViewHolder viewHolder = (SentViewHolder) holder;
             viewHolder.mBinding.tvMessage.setText(messageList.get(position).getMessage());
+            viewHolder.mBinding.tvTimeMessage.setText(messageList.get(position).getTime());
             viewHolder.mBinding.tvMessage.requestFocus();
         } else {
             ReceiverViewHolder viewHolder = (ReceiverViewHolder) holder;
             viewHolder.mBinding.tvMessage.setText(messageList.get(position).getMessage());
+            viewHolder.mBinding.tvTimeMessage.setText(messageList.get(position).getTime());
             viewHolder.mBinding.tvMessage.requestFocus();
 
         }
@@ -81,16 +82,18 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     public void setMessageList(List<Message> list) {
-        if (list != null) {
+        if (list != null&& list.size()>0) {
+
             messageList = list;
-            notifyDataSetChanged();
+
         } else {
             messageList.clear();
-            notifyDataSetChanged();
+
         }
+        notifyDataSetChanged();
     }
 
-    public class SentViewHolder extends RecyclerView.ViewHolder {
+    public static class SentViewHolder extends RecyclerView.ViewHolder {
 
         SendingChatCardBinding mBinding;
 
@@ -100,7 +103,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public class ReceiverViewHolder extends RecyclerView.ViewHolder {
+    public static class ReceiverViewHolder extends RecyclerView.ViewHolder {
 
         RecevingChatCardBinding mBinding;
 

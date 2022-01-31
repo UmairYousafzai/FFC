@@ -1,7 +1,6 @@
 package com.example.ffccloud.farm;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -15,7 +14,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,18 +27,17 @@ import com.example.ffccloud.ContactPersons;
 import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
 import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
-import com.example.ffccloud.ModelClasses.SupplierLinking;
-import com.example.ffccloud.ModelClasses.SupplierMainModel;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.SupplierLinking;
+import com.example.ffccloud.model.SupplierMainModel;
 import com.example.ffccloud.SupplierItemLinking;
-import com.example.ffccloud.ModelClasses.RegionModel;
-import com.example.ffccloud.ModelClasses.SupplierModelNew;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.model.RegionModel;
+import com.example.ffccloud.model.SupplierModelNew;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.AddContactDialogBinding;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
-import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddFarmFormBinding;
 import com.example.ffccloud.farm.adapter.MedicineAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
@@ -71,7 +68,7 @@ public class AddFarmFormFragment extends Fragment {
     private final ArrayList<String> regionList = new ArrayList<>();
     private final HashMap<String, Integer> regionHashmapForID = new HashMap<>();
     private final HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
-    private String locationString;
+    private String locationString,supplierCode="0";
     private String locationAddress;
     private int supplierID = 0;
     private final List<GetSupplierModel> supplierDetailModelList = new ArrayList<>();
@@ -234,14 +231,18 @@ public class AddFarmFormFragment extends Fragment {
     }
 
     private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
-
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode()!=null)
+        {
+            supplierCode =getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode();
+        }
         mBinding.etOwnerName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
         mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
         if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
             mBinding.locationCheckbox.setChecked(true);
+            mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
         }
-        mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+
 
         mBinding.etNumberOfAnimal.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
 
@@ -265,6 +266,7 @@ public class AddFarmFormFragment extends Fragment {
             supplierModel.setSupplier_Name(model.getSupplierName());
             supplierModel.setAddress(model.getAddress());
             supplierModel.setSupplier_Id(model.getSupplierId());
+            supplierModel.setSupplierLinkId(model.getSupplierLinkId());
             supplierDetailModelList.add(supplierModel);
         }
         supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
@@ -336,6 +338,14 @@ public class AddFarmFormFragment extends Fragment {
     }
 
     private void btnListener() {
+        supplierRecyclerViewAdapter.SetOnClickListener(new SupplierRecyclerViewAdapter.SetOnClickListener() {
+            @Override
+            public void onClick(GetSupplierModel supplierModel) {
+
+
+                supplierDetailModelList.remove(supplierModel);
+            }
+        });
 
         mBinding.btnAddDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -498,7 +508,7 @@ public class AddFarmFormFragment extends Fragment {
                         supplierModelNew.setCountry_Id(1);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
-                        supplierModelNew.setSupplier_Code("0");
+                        supplierModelNew.setSupplier_Code(supplierCode);
                         supplierModelNew.setSupplier_Id(supplierID);
                         supplierModelNew.setAddress(address);
                         supplierModelNew.setPhone_No(phone);
@@ -518,8 +528,13 @@ public class AddFarmFormFragment extends Fragment {
                             SupplierLinking supplierLinking = new SupplierLinking();
                             supplierLinking.setAddress(model.getAddress());
                             supplierLinking.setIsRegistered(true);
+                            if (model.getSupplierLinkId() != null && model.getSupplierLinkId().length() > 0) {
+                                supplierLinking.setSupplierLinkId(model.getSupplierLinkId());
+                            } else {
+                                supplierLinking.setSupplierLinkId("0");
+                            }
                             supplierLinking.setSupplierId(model.getSupplier_Id());
-                            supplierLinking.setSupplierLinkIdDtl("0");
+                            supplierLinking.setSupplierLinkId("0");
                             supplierLinking.setSupplierName(model.getSupplier_Name());
                             supplierLinkingList.add(supplierLinking);
                         }
@@ -561,11 +576,10 @@ public class AddFarmFormFragment extends Fragment {
                 if (response.body() != null) {
                     UpdateStatus updateStatus = response.body();
                     Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
                 } else {
                     Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
                 }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -629,7 +643,7 @@ public class AddFarmFormFragment extends Fragment {
                     String phone = Objects.requireNonNull(binding.etPhone.getText()).toString();
 
                     if (name.length() > 0) {
-                        if (phone.length() > 11) {
+                        if (phone.length() == 11) {
                             ContactPersons contactPersons = new ContactPersons();
                             contactPersons.setContact_Person_ContactNo(phone);
                             contactPersons.setContact_Person_Design(binding.etDesignation.getText().toString());

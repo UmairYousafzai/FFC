@@ -1,7 +1,6 @@
 package com.example.ffccloud.hospital;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -16,7 +15,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,18 +24,17 @@ import android.widget.Toast;
 
 import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
-import com.example.ffccloud.ModelClasses.RegionModel;
-import com.example.ffccloud.ModelClasses.SupplierLinking;
-import com.example.ffccloud.ModelClasses.SupplierMainModel;
-import com.example.ffccloud.ModelClasses.SupplierModelNew;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.RegionModel;
+import com.example.ffccloud.model.SupplierLinking;
+import com.example.ffccloud.model.SupplierMainModel;
+import com.example.ffccloud.model.SupplierModelNew;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.SupplierItemLinking;
-import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
-import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddHospitalBinding;
 import com.example.ffccloud.databinding.OtherFarmDialogBinding;
 import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
@@ -71,7 +68,7 @@ public class AddHospitalFragment extends Fragment {
 //    private List<String> gasDaysList = new ArrayList<>();
     private NavController navController;
     private MedicineAdapter medicineAdapter;
-    private int supplierID;
+    private int supplierID = 0;
     private List<GetSupplierModel> doctorModelList = new ArrayList<>();
     private List<GetSupplierModel> farmModelList = new ArrayList<>();
     private SupplierRecyclerViewAdapter doctorRecyclerViewAdapter;
@@ -81,10 +78,10 @@ public class AddHospitalFragment extends Fragment {
     private HashMap<String, Integer> regionHashmapForID = new HashMap<>();
     private HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
     private ArrayList<String> regionList = new ArrayList<>();
-    private String locationString;
+    private String locationString, numberOfCases = "",supplierCode="0";
     private String locationAddress;
     private int gradePosition = -1, regionPosition = -1;
-    private boolean isLocationChecked = false;
+    private boolean isLocationChecked = false, isLocationUpdate = false;
     private boolean isSpinnerUpdate = false;
 
 
@@ -112,8 +109,10 @@ public class AddHospitalFragment extends Fragment {
         }
 
 
-        assert getArguments() != null;
-        supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
+        if (getArguments() != null) {
+            supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
+
+        }
         if (supplierID > 0 && callingAddBtn == null) {
 
             //  setup fields if edit request has been made
@@ -134,11 +133,14 @@ public class AddHospitalFragment extends Fragment {
                     if (callingAddBtn.equals("DoctorAddBtn")) {
                         if (doctorModelList.size() > 0) {
                             if (doctorModelList.get(doctorModelList.size() - 1) != model) {
+                                model.setRegister(true);
                                 doctorModelList.add(model);
                                 doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
                             }
                         } else {
+                            model.setRegister(true);
                             doctorModelList.add(model);
+
                         }
 
                     }
@@ -160,10 +162,12 @@ public class AddHospitalFragment extends Fragment {
                     if (callingAddBtn.equals("FarmAddBtn")) {
                         if (farmModelList.size() > 0) {
                             if (farmModelList.get(farmModelList.size() - 1) != model) {
+                                model.setRegister(true);
                                 farmModelList.add(model);
                                 farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
                             }
                         } else {
+                            model.setRegister(true);
                             farmModelList.add(model);
                         }
 
@@ -271,6 +275,29 @@ public class AddHospitalFragment extends Fragment {
 
     private void btnListener() {
 
+        doctorRecyclerViewAdapter.SetOnClickListener(new SupplierRecyclerViewAdapter.SetOnClickListener() {
+            @Override
+            public void onClick(GetSupplierModel supplierModel) {
+
+                if (supplierModel != null) {
+
+                    doctorModelList.remove(supplierModel);
+
+                }
+            }
+        });
+        farmRecyclerViewAdapter.SetOnClickListener(new SupplierRecyclerViewAdapter.SetOnClickListener() {
+            @Override
+            public void onClick(GetSupplierModel supplierModel) {
+
+                if (supplierModel != null) {
+
+                    farmModelList.remove(supplierModel);
+
+                }
+            }
+        });
+
         mBinding.btnAddFarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -375,10 +402,14 @@ public class AddHospitalFragment extends Fragment {
 
 
                             if (mBinding.locationCheckbox.isChecked()) {
+
+                                if (supplierID > 0) {
+                                    isLocationUpdate = true;
+                                }
                                 isLocationChecked = true;
                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.locationCheckbox.setText(locationAddress);
-                                locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
+                                locationString = location.getLongitude() + "," + location.getLatitude();
                             } else {
                                 isLocationChecked = false;
 
@@ -391,7 +422,7 @@ public class AddHospitalFragment extends Fragment {
                     };
                     customLocation.getLastLocation(results);
                 } else {
-                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(), requireContext());
                     mBinding.locationCheckbox.setChecked(false);
 
                 }
@@ -459,12 +490,31 @@ public class AddHospitalFragment extends Fragment {
     }
 
     private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode()!=null)
+        {
+            supplierCode =getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode();
+        }
 
         mBinding.etName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
-        mBinding.etNoOfCases.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()!=0)
+        {
+            mBinding.etNoOfCases.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
+            numberOfCases =String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals());
+        }
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
         mBinding.etGasDays.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getGasDays());
         mBinding.etSizeOfHospital.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getSize()));
+
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord() != null) {
+            if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length() > 0) {
+                locationString = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+            }
+        }
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress() != null) {
+            if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length() > 0) {
+                locationString = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
+            }
+        }
 
         if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
             mBinding.locationCheckbox.setChecked(true);
@@ -495,12 +545,15 @@ public class AddHospitalFragment extends Fragment {
             supplierModel.setSupplier_Name(model.getSupplierName());
             supplierModel.setAddress(model.getAddress());
             supplierModel.setSupplier_Id(model.getSupplierId());
+            supplierModel.setSupplierLinkId(model.getSupplierLinkId());
             String userType = model.getUser_Type();
             if (userType != null) {
                 if (userType.equals("Dr")) {
                     doctorModelList.add(supplierModel);
 
                 } else if (userType.equals("F")) {
+                    farmModelList.add(supplierModel);
+                } else {
                     farmModelList.add(supplierModel);
                 }
             }
@@ -515,20 +568,39 @@ public class AddHospitalFragment extends Fragment {
     private void setUpSupplierModelForSave() {
 
 
-        String name = " ", address = " ", gasDays = " ", hospitalSize = " ", numberOfCases = " ";
-        int gradeID = 0, userId = 0;
-
-        try {
+        String name = "", address = "", gasDays = "", hospitalSize = "";
+        int gradeID = 0, userId, regionID = 0;
+        if (mBinding.etName.getText() != null && mBinding.etName.getText().toString().length() > 0) {
             name = mBinding.etName.getText().toString();
-            address = mBinding.etAddress.getText().toString();
-            gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
-            userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
-            gasDays = mBinding.etGasDays.getText().toString();
-            hospitalSize = mBinding.etSizeOfHospital.getText().toString();
-            numberOfCases = mBinding.etNoOfCases.getText().toString();
-        } catch (Exception e) {
-            Toast.makeText(requireContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        if (mBinding.etAddress.getText() != null && mBinding.etAddress.getText().toString().length() > 0) {
+            address = mBinding.etAddress.getText().toString();
+        }
+        if (mBinding.etName.getText() != null && mBinding.etName.getText().toString().length() > 0) {
+            name = mBinding.etName.getText().toString();
+        }
+
+        if (mBinding.spinnerGrade.getSelectedItem() != null) {
+            gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
+        }
+        if (mBinding.regionSpinner.getSelectedItem() != null) {
+            regionID = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
+        }
+
+        if (mBinding.etGasDays.getText() != null && mBinding.etGasDays.getText().toString().length() > 0) {
+            gasDays = mBinding.etGasDays.getText().toString();
+
+        }
+
+        if (mBinding.etSizeOfHospital.getText() != null && mBinding.etSizeOfHospital.getText().toString().length() > 0) {
+            hospitalSize = mBinding.etSizeOfHospital.getText().toString();
+        }
+
+        if (mBinding.etNoOfCases.getText() != null && mBinding.etNoOfCases.getText().toString().length() > 0) {
+            numberOfCases = mBinding.etNoOfCases.getText().toString();
+        }
+
+        userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
 
         if (name.length() > 0) {
@@ -543,8 +615,9 @@ public class AddHospitalFragment extends Fragment {
                 supplierModelNew.setCountry_Id(1);
                 supplierModelNew.setLocation_Id(1);
                 supplierModelNew.setProject_Id(1);
-                supplierModelNew.setSupplier_Code("0");
+                supplierModelNew.setSupplier_Code(supplierCode);
                 supplierModelNew.setSupplier_Id(supplierID);
+                supplierModelNew.setRegion_Id(String.valueOf(regionID));
                 supplierModelNew.setAddress(address);
                 supplierModelNew.setGrade_id(gradeID);
                 supplierModelNew.setGas_Days(gasDays);
@@ -552,8 +625,14 @@ public class AddHospitalFragment extends Fragment {
                 supplierModelNew.setSupplier_Name(name);
                 supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_HOSPITAL);
                 supplierModelNew.setUserTypeName("H");
+                supplierModelNew.setLoc_Cord(locationString);
+                supplierModelNew.setLoc_Cord_Address(locationAddress);
+                supplierModelNew.setIs_update_Loc_Cord(isLocationUpdate);
                 supplierModelNew.setNo_Of_Animals(numberOfCases);
                 supplierModelNew.setSupplierItemLinkingList(medicineModalList);
+                supplierModelNew.setCell_No("0");
+                supplierModelNew.setMobile_No("0");
+                supplierModelNew.setPhone_No("0");
 
                 List<SupplierLinking> supplierLinkingList = new ArrayList<>();
                 for (GetSupplierModel model : doctorModelList) {
@@ -561,16 +640,27 @@ public class AddHospitalFragment extends Fragment {
                     supplierLinking.setAddress(model.getAddress());
                     supplierLinking.setIsRegistered(true);
                     supplierLinking.setSupplierId(model.getSupplier_Id());
-                    supplierLinking.setSupplierLinkIdDtl("0");
+                    if (model.getSupplierLinkId() != null && model.getSupplierLinkId().length() > 0) {
+                        supplierLinking.setSupplierLinkId(model.getSupplierLinkId());
+                    } else {
+                        supplierLinking.setSupplierLinkId("0");
+                    }
+                    supplierLinking.setType("Dr");
                     supplierLinking.setSupplierName(model.getSupplier_Name());
                     supplierLinkingList.add(supplierLinking);
                 }
                 for (GetSupplierModel model : farmModelList) {
                     SupplierLinking supplierLinking = new SupplierLinking();
                     supplierLinking.setAddress(model.getAddress());
-                    supplierLinking.setIsRegistered(true);
+                    supplierLinking.setIsRegistered(model.isRegister());
                     supplierLinking.setSupplierId(model.getSupplier_Id());
-                    supplierLinking.setSupplierLinkIdDtl("0");
+                    if (model.getSupplierLinkId() != null && model.getSupplierLinkId().length() > 0) {
+                        supplierLinking.setSupplierLinkId(model.getSupplierLinkId());
+                    } else {
+                        supplierLinking.setSupplierLinkId("0");
+                    }
+
+                    supplierLinking.setType("F");
                     supplierLinking.setSupplierName(model.getSupplier_Name());
                     supplierLinkingList.add(supplierLinking);
                 }
@@ -608,12 +698,15 @@ public class AddHospitalFragment extends Fragment {
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
                 if (response.body() != null) {
                     UpdateStatus updateStatus = response.body();
+                    if (updateStatus.getStatus()==1)
+                    {
+                        refreshFields();
+                    }
                     Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
                 } else {
                     Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
                 }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -623,6 +716,29 @@ public class AddHospitalFragment extends Fragment {
             }
         });
 
+    }
+
+    private void refreshFields() {
+
+        mBinding.etName.setText("");
+        mBinding.etAddress.setText("");
+        mBinding.locationCheckbox.setText("");
+        mBinding.locationCheckbox.setText("");
+        mBinding.locationCheckbox.setChecked(false);
+        mBinding.etSizeOfHospital.setText("");
+        mBinding.etNoOfCases.setText("");
+        doctorModelList.clear();
+        doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
+        farmModelList.clear();
+        farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
+        mBinding.etGasDays.setText("");
+        medicineModalList.clear();
+        medicineAdapter.setMedicineModalList(medicineModalList);
+        locationAddress="";
+        locationString="";
+        isLocationUpdate=false;
+        isLocationChecked=false;
+        supplierID=0;
     }
 
     private void showAddFarmDialog() {
@@ -641,8 +757,12 @@ public class AddHospitalFragment extends Fragment {
                 if (name.length() > 0) {
 
                     GetSupplierModel farmSupplierModel = new GetSupplierModel();
-                    farmSupplierModel.setAddress(binding.etFarmAddress.getText().toString());
+                    if (binding.etFarmAddress.getText() != null && binding.etFarmAddress.getText().toString().length() > 0) {
+                        farmSupplierModel.setAddress(binding.etFarmAddress.getText().toString());
+                    }
+
                     farmSupplierModel.setSupplier_Name(name);
+                    farmSupplierModel.setRegister(false);
                     farmModelList.add(farmSupplierModel);
                     farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
                 } else {
@@ -736,8 +856,7 @@ public class AddHospitalFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
-                    if (response.body()!=null)
-                    {
+                    if (response.body() != null) {
                         regionHashmapForID.clear();
                         regionList.clear();
                         List<RegionModel> regionModelList = new ArrayList<>();
@@ -769,8 +888,6 @@ public class AddHospitalFragment extends Fragment {
             }
         });
     }
-
-
 
 
 }

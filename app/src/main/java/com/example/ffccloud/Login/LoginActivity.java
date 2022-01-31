@@ -416,7 +416,7 @@ public class LoginActivity extends AppCompatActivity {
         Call<GetUserInfoModel> call = ApiClient.getInstance().getApi().get_user(email, password);
         call.enqueue(new Callback<GetUserInfoModel>() {
             @Override
-            public void onResponse(Call<GetUserInfoModel> call, Response<GetUserInfoModel> response) {
+            public void onResponse(@NonNull Call<GetUserInfoModel> call, @NonNull Response<GetUserInfoModel> response) {
                 GetUserInfoModel getUserInfoModel = new GetUserInfoModel();
                 if (response.isSuccessful()) {
                     getUserInfoModel = response.body();

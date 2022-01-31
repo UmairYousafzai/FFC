@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.Permission;

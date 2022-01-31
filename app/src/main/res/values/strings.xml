@@ -17,7 +17,7 @@
     <string name="Target">Target</string>
     <string name="Office">Office</string>
     <string name="PrivateTravel">Private Travel</string>
-    <string name="Expense">Expense</string>
+    <string name="ExpenseModel">ExpenseModel</string>
 
     <string-array name="menu_items_ids">
         <item>Ac_Home</item>
@@ -256,6 +256,8 @@
     <string name="client">Client</string>
     <string name="select_client">Select Client</string>
     <string name="price_list_type">Price List Type</string>
+    <string name="rs">Rs</string>
+    <string name="upload">Upload</string>
 
 
 </resources>

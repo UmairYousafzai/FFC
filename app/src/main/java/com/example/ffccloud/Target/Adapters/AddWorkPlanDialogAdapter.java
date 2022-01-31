@@ -9,8 +9,8 @@ import android.widget.Filterable;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
-import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
+import com.example.ffccloud.model.AreasByEmpIdModel;
+import com.example.ffccloud.model.DoctorsByAreaIdsModel;
 import com.example.ffccloud.databinding.CustomAddWorkplanDialogCardBinding;
 
 import java.util.ArrayList;
@@ -86,8 +86,13 @@ public class AddWorkPlanDialogAdapter extends RecyclerView.Adapter<AddWorkPlanDi
 
     public void setDoctorModelList(List<DoctorsByAreaIdsModel> list)
     {
-        doctorList= list;
-        doctorsListFull = new ArrayList<>(doctorList);
+        if (list!=null&& list.size()>0)
+        {
+            doctorList.clear();
+            doctorList.addAll(list);
+            doctorsListFull = new ArrayList<>(doctorList);
+        }
+
         notifyDataSetChanged();
     }
 
@@ -155,13 +160,21 @@ public class AddWorkPlanDialogAdapter extends RecyclerView.Adapter<AddWorkPlanDi
             if (key == 2)
             {
                 areaModelList.clear();
-                areaModelList.addAll((List)results.values);
+                if (results.values!=null)
+                {
+                    areaModelList.addAll((List)results.values);
+                }
+
                 notifyDataSetChanged();
             }
             else
             {
                 doctorList.clear();
-                doctorList.addAll((List) results.values);
+                if (results.values!=null)
+                {
+                    doctorList.addAll((List) results.values);
+                }
+
                 notifyDataSetChanged();
             }
 

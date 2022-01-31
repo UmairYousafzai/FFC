@@ -33,10 +33,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
-import android.provider.Settings;
 import android.speech.RecognizerIntent;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,9 +44,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.ffccloud.DoctorModel;
-import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
-import com.example.ffccloud.ModelClasses.UpdateWorkPlanStatus;
+import com.example.ffccloud.model.AddNewWorkPlanModel;
+import com.example.ffccloud.model.UpdateStatus;
+import com.example.ffccloud.model.UpdateWorkPlanStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
 import com.example.ffccloud.Target.Adapters.DoctorMorningRecyclerAdapter;
@@ -69,10 +66,11 @@ import com.example.ffccloud.utils.RecyclerOnItemClickListener;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.worker.UploadWorker;
 import com.example.ffccloud.worker.utils.UploadDataRepository;
-import com.vivekkaushik.datepicker.OnDateSelectedListener;
+import com.github.jhonnyx2012.horizontalpicker.DatePickerListener;
 //import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,7 +99,7 @@ public class TargetFragment extends Fragment {
     private Calendar calendar;
     private final boolean mic_check = false;
     private CustomCancelDialogBinding dialogBinding;
-    private CustomRescheduleDialogBinding rescheduleDialogBinding;
+    private CustomRescheduleDialogBinding rescheduleBinding;
     private ProgressDialog progressDialog;
     private NavController navController;
     private UploadDataRepository uploadDataRepository;
@@ -112,7 +110,6 @@ public class TargetFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mbinding = FragmentTargetBinding.inflate(inflater, container, false);
-        Log.e("onCreateView", "on create View Me ha ");
 
         View viewRoot = mbinding.getRoot();
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
@@ -131,16 +128,25 @@ public class TargetFragment extends Fragment {
         NavController navController = Navigation.findNavController(view);
         targetViewModel = new ViewModelProvider(requireActivity()).get(TargetViewModel.class);
         uploadDataRepository = new UploadDataRepository(requireContext());
-        Log.e("onviewCreated", "on view created me ha me ha ");
 
-//        try {
-//            SettingUpDatePicker();
-//        }
-//        catch (Exception e)
-//        {
-//            Toast.makeText(getActivity(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
-//        }
+        if (isLocationEnabled()) {
 
+            BtnListener();
+
+            setUpRecyclerView();
+
+            SettingUpDatePicker();
+            dateClickListener();
+            setPullToFresh();
+
+
+        } else {
+
+
+            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(), requireContext());
+
+
+        }
 
     }
 
@@ -150,24 +156,6 @@ public class TargetFragment extends Fragment {
 
         Log.e("onResume", "on resume me ha ");
 
-        if (isLocationEnabled()) {
-
-            BtnListener();
-
-            setUpRecyclerView();
-
-            SettingUpDatePicker();
-            getDataFromViewModel();
-            setPullToFresh();
-
-
-        } else {
-
-
-            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
-
-
-        }
     }
 
 
@@ -212,41 +200,31 @@ public class TargetFragment extends Fragment {
 
         mbinding.targetRecycler.docListmorningRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mbinding.targetRecycler.docListRecyclerEvening.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        DoctorModel doctorModel= new DoctorModel();
-//        doctorModel.setAddress("lahore");
-//        doctorModel.setClassification("Abc");
-//        doctorModel.setDistance("29");
-//        doctorModel.setEmail("abc@gmail.com");
-//        doctorModel.setName("khan");
-//        List<DoctorModel> doctorModels= new ArrayList<>();
-//        doctorModels.add(doctorModel);
+
         mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
         mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
 
-//        eveningListAdapter.setDoctorModelList(doctorModels);
         eveningListAdapter.notifyDataSetChanged();
         morningListAdapter.notifyDataSetChanged();
     }
 
     private void SettingUpDatePicker() {
+        DateTime dateTime = new DateTime();
 
 
-        Calendar cldr = Calendar.getInstance();
+        selectedDay = dateTime.getDayOfMonth();
+        selectedMonth = dateTime.getMonthOfYear();
 
+        selectedYear = dateTime.getYear();
 
-        selectedDay = (cldr.get(Calendar.DAY_OF_MONTH));
-        selectedMonth = cldr.get(Calendar.MONTH);
-        int month = selectedMonth+1;
-        selectedYear = cldr.get(Calendar.YEAR);
-
-        int checkmonth = (month % 10);
+        int checkmonth = (selectedMonth % 10);
         int checkday = (selectedDay % 10);
         String mDay, mMonth, mYear = String.valueOf(selectedYear);
         if (checkmonth > 0 && selectedMonth < 9) {
-            mMonth = "0" + (month );
+            mMonth = "0" + (selectedMonth);
             //          date = day + "-" + "0" + (month + 1) + "-" + (year);
         } else {
-            mMonth = String.valueOf(selectedMonth );
+            mMonth = String.valueOf(selectedMonth);
 
         }
 
@@ -258,56 +236,62 @@ public class TargetFragment extends Fragment {
 
         }
 
-        mbinding.datePickerTimeline.setInitialDate(selectedYear, selectedMonth - 1, selectedDay - 1);
+        mbinding.datePickerTimeline
+                .setOffset(30)
+                .setDateSelectedColor(getResources().getColor(R.color.APP_Theme_Color))
+                .setDateSelectedTextColor(Color.WHITE)
+                .setMonthAndYearTextColor(getResources().getColor(R.color.APP_Theme_Color))
+                .setTodayDateTextColor(getResources().getColor(R.color.white))
+                .setTodayDateBackgroundColor(Color.GRAY)
+                .setUnselectedDayTextColor(getResources().getColor(R.color.APP_Theme_Color))
+                .setDayOfWeekTextColor(getResources().getColor(R.color.APP_Theme_Color))
+                .setUnselectedDayTextColor(getResources().getColor(R.color.black))
+                .showTodayButton(false)
+                .init();
 
 
         mbinding.datePickerTimeline.setSelected(true);
-        mbinding.datePickerTimeline.requestFocus();
         String date = mDay + "/" + mMonth + "/" + mYear;
         Log.e("DateTag", "Date is:" + date);
-        if (selectedDate.equals("")) {
-            cldr.set(selectedYear, selectedMonth, selectedDay);
+        if (selectedDate.equals("")  || selectedDate.equals(date) ) {
 
-            mbinding.datePickerTimeline.setActiveDate(cldr);
+            mbinding.datePickerTimeline.setDate(new DateTime());
             getTargetViewModelData(date);
 
         } else {
             getTargetViewModelData(selectedDate);
-            calendar.set(selectedYear, selectedMonth, selectedDay);
-            mbinding.datePickerTimeline.setActiveDate(calendar);
 
+            mbinding.datePickerTimeline.setDate(new DateTime().minusDays(selectedDay-dateTime.getDayOfMonth()));
 
         }
 
     }
 
 
-    public void getDataFromViewModel() {
-
-
-        mbinding.datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
+    public void dateClickListener() {
+        mbinding.datePickerTimeline.setListener(new DatePickerListener() {
             @Override
-            public void onDateSelected(int year, int month, int day, int dayOfWeek) {
+            public void onDateSelected(DateTime dateSelected) {
                 String date;
-                selectedDay = day;
-                selectedMonth = month+1;
-                selectedYear = year;
-                int checkmonth = (month+1 % 10);
-                int checkday = (day % 10);
-                String mDay = null, mMonth = null, mYear = String.valueOf(year);
-                if (checkmonth > 0 && month < 9) {
-                    mMonth = "0" + (month + 1);
+                selectedDay = dateSelected.getDayOfMonth();
+                selectedMonth = dateSelected.getMonthOfYear();
+                selectedYear = dateSelected.getYear();
+                int checkmonth = (selectedMonth % 10);
+                int checkday = (selectedDay % 10);
+                String mDay = null, mMonth = null, mYear = String.valueOf(selectedYear);
+                if (checkmonth > 0 && selectedMonth < 9) {
+                    mMonth = "0" + (selectedMonth);
                     //          date = day + "-" + "0" + (month + 1) + "-" + (year);
                 } else {
-                    mMonth = String.valueOf(month + 1);
+                    mMonth = String.valueOf(selectedMonth);
 
                 }
 
-                if (checkday > 0 && day < 9) {
-                    mDay = "0" + (day);
+                if (checkday > 0 && selectedDay < 9) {
+                    mDay = "0" + (selectedDay);
 
                 } else {
-                    mDay = String.valueOf(day);
+                    mDay = String.valueOf(selectedDay);
 
                 }
                 date = mDay + "/" + mMonth + "/" + mYear;
@@ -315,14 +299,8 @@ public class TargetFragment extends Fragment {
                 selectedDate = date;
                 Log.d("date", "date select ho rai hai");
 
-                calendar.set(year, month, day);
-                mbinding.datePickerTimeline.setActiveDate(calendar);
+
                 getTargetViewModelData(date);
-
-            }
-
-            @Override
-            public void onDisabledDateSelected(int year, int month, int day, int dayOfWeek, boolean isDisabled) {
 
             }
         });
@@ -349,9 +327,9 @@ public class TargetFragment extends Fragment {
         targetViewModel.getAllMorningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
             @Override
             public void onChanged(List<DoctorModel> list) {
-                if (list.size() > 0) {
+                if (list != null && list.size() > 0) {
                     morningListAdapter.setDoctorModelList(list);
-                    morningListAdapter.notifyDataSetChanged();
+
                 } else {
                     morningListAdapter.clearData();
                 }
@@ -427,51 +405,41 @@ public class TargetFragment extends Fragment {
                     updateWorkPlanStatusList = uploadDataRepository.getAllWorkPlanStatus();
                     List<AddNewWorkPlanModel> addNewWorkPlanModelList = new ArrayList<>();
                     addNewWorkPlanModelList = uploadDataRepository.getAllWorkPlan();
-                    if (isNetworkConnected())
-                    {
-                        if (updateWorkPlanStatusList.size()>0)
-                        {
+                    if (isNetworkConnected()) {
+                        if (updateWorkPlanStatusList.size() > 0) {
                             SaveData.getInstance(requireContext()).SaveWorkPlanStatus();
                             mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-                        }
-                        else
-                        {
+                        } else {
                             mbinding.targetRecycler.swipeLayout.setRefreshing(false);
 
                             int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
                             targetViewModel.DeleteAllDoctor();
-                           SyncDataToDB.getInstance().saveDoctorsList(id,requireContext(),requireActivity());
+                            SyncDataToDB.getInstance().saveDoctorsList(id, requireContext(), requireActivity());
                         }
 
-                        if (addNewWorkPlanModelList.size()>0)
-                        {
+                        if (addNewWorkPlanModelList.size() > 0) {
                             SaveData.getInstance(requireContext()).saveWorkPlan();
                             mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-                        }
-                        else
-                        {
-                            if (updateWorkPlanStatusList.size()>0)
-                            {
+                        } else {
+                            if (updateWorkPlanStatusList.size() > 0) {
                                 mbinding.targetRecycler.swipeLayout.setRefreshing(false);
 
                                 int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
 
                                 targetViewModel.DeleteAllDoctor();
 
-                                SyncDataToDB.getInstance().saveDoctorsList(id,requireContext(),requireActivity());
+                                SyncDataToDB.getInstance().saveDoctorsList(id, requireContext(), requireActivity());
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(requireContext(), "Please Connect To Internet", Toast.LENGTH_SHORT).show();
                     }
 
 
                 } else {
 
-                   CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(), requireContext());
                 }
 
             }
@@ -490,28 +458,14 @@ public class TargetFragment extends Fragment {
             CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
                 @Override
                 public void gotLocation(Location location1) {
-                    location = location1;
+                    if (location1 != null) {
+                        location = location1;
+                    }
+
                 }
             };
 
 
-            dialogBinding.remarksEdittext.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    remarksForCancel = s.toString();
-
-                }
-            });
             dialogBinding.speechToTextBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -534,31 +488,37 @@ public class TargetFragment extends Fragment {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View v) {
-                    dialogBinding.saveRemarksBtn.setEnabled(false);
-                    String check = dialogBinding.remarksEdittext.getText().toString();
                     progressDialog = new ProgressDialog(requireContext());
                     progressDialog.setMessage("Loading....");
                     progressDialog.setCancelable(false);
                     progressDialog.show();
+                    dialogBinding.saveRemarksBtn.setEnabled(false);
+                    if (dialogBinding.remarksEdittext.getText() != null && dialogBinding.remarksEdittext.getText().toString().length() > 0) {
+                        remarksForCancel = dialogBinding.remarksEdittext.getText().toString();
+                    }
+                    String locationString = "";
+                    if (location != null) {
+                        locationString = location.getLatitude() + "," + location.getLongitude();
 
-                    if (!check.equals("")) {
-                        if (location != null) {
+                    }
+                    Date date = Calendar.getInstance().getTime();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
+                    String dateString = dateFormat.format(date);
+
+                    if (remarksForCancel != null && remarksForCancel.length() > 0) {
+                        if (locationString.length() > 0) {
+
                             List<UpdateWorkPlanStatus> list = new ArrayList<>();
-                            String remarks = dialogBinding.remarksEdittext.getText().toString();
                             int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
-                            String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
-                            String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
-                            Date date = Calendar.getInstance().getTime();
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
-                            String dateString = dateFormat.format(date);
+
 
                             UpdateWorkPlanStatus updateWorkPlanStatus = new UpdateWorkPlanStatus();
 
                             updateWorkPlanStatus.setDoctor_Id(doctorModel.getDoctorId());
                             updateWorkPlanStatus.setEmp_Id(userId);
-                            updateWorkPlanStatus.setRemarks(remarks);
+                            updateWorkPlanStatus.setRemarks(remarksForCancel);
                             updateWorkPlanStatus.setStatus(String.valueOf(key));
-                            updateWorkPlanStatus.setVisit_On(String.valueOf(dateString));
+                            updateWorkPlanStatus.setVisit_On(dateString);
                             updateWorkPlanStatus.setVisit_Cord(locationString);
 
                             if (doctorModel.getWorkId() > 0) {
@@ -567,37 +527,9 @@ public class TargetFragment extends Fragment {
 
                             list.add(updateWorkPlanStatus);
                             if (isNetworkConnected()) {
-                                Call<UpdateStatus> call = ApiClient.getInstance().getApi().UpdateWorkPlanStatus(token, "application/json", list);
-                                call.enqueue(new Callback<UpdateStatus>() {
-                                    @Override
-                                    public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-
-                                        if (response.body() != null) {
-
-
-                                            UpdateStatus updateStatus = response.body();
-                                            Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
-                                            eveningListAdapter.removeItem(doctorModel);
-                                            morningListAdapter.removeItem(doctorModel);
-                                            dialogBinding.saveRemarksBtn.setEnabled(true);
-
-                                            targetViewModel.DeleteDoctor(doctorModel);
-                                            progressDialog.dismiss();
-                                            alertDialog.dismiss();
-                                        } else {
-                                            progressDialog.dismiss();
-                                        }
-
-
-                                    }
-
-                                    @Override
-                                    public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
-                                        progressDialog.dismiss();
-                                        t.getMessage();
-                                    }
-                                });
+                                cancelWorkPlanStatus(list, doctorModel);
                             } else {
+                                remarksForCancel = "";
                                 eveningListAdapter.removeItem(doctorModel);
                                 morningListAdapter.removeItem(doctorModel);
                                 dialogBinding.saveRemarksBtn.setEnabled(true);
@@ -608,12 +540,17 @@ public class TargetFragment extends Fragment {
                                 uploadDataRepository.insertWorkPlanStatus(updateWorkPlanStatus);
                                 generateWorkRequest(CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN);
                             }
-
                         } else {
-                            Toast.makeText(getActivity(), "Please turn on location", Toast.LENGTH_LONG).show();
+                            Toast.makeText(requireContext(), "Please turn on Location", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            dialogBinding.saveRemarksBtn.setEnabled(true);
                         }
+
+
                     } else {
                         dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
+                        progressDialog.dismiss();
+                        dialogBinding.saveRemarksBtn.setEnabled(true);
                     }
                 }
             });
@@ -626,208 +563,284 @@ public class TargetFragment extends Fragment {
             });
         } else {
 
-            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
+            CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(), requireContext());
         }
 
 
     }
 
+    private void cancelWorkPlanStatus(List<UpdateWorkPlanStatus> list, DoctorModel doctorModel) {
+        String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().UpdateWorkPlanStatus(token, "application/json", list);
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+
+
+                        UpdateStatus updateStatus = response.body();
+                        Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
+                        eveningListAdapter.removeItem(doctorModel);
+                        morningListAdapter.removeItem(doctorModel);
+                        dialogBinding.saveRemarksBtn.setEnabled(true);
+                        remarksForCancel = "";
+                        targetViewModel.DeleteDoctor(doctorModel);
+                        progressDialog.dismiss();
+                        alertDialog.dismiss();
+                    } else {
+
+                        Toast.makeText(requireContext(), "" + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(requireContext(), "" + response.message(), Toast.LENGTH_SHORT).show();
+                    if (response.message().equals("Unauthorized")) {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(), requireContext());
+                    }
+                }
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     public void setUpRescheduleWorkPlanAlertDialog(DoctorModel doctorModel, int key) {
-        rescheduleDialogBinding = CustomRescheduleDialogBinding.inflate(getLayoutInflater());
+        if (doctorModel != null) {
+            rescheduleBinding = CustomRescheduleDialogBinding.inflate(getLayoutInflater());
 
-        alertDialog = new AlertDialog.Builder(requireContext()).setView(rescheduleDialogBinding.getRoot()).setCancelable(false).create();
-        alertDialog.show();
-        rescheduleDialogBinding.speechToTextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent
-                        = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+            alertDialog = new AlertDialog.Builder(requireContext()).setView(rescheduleBinding.getRoot()).setCancelable(false).create();
+            alertDialog.show();
+            rescheduleBinding.speechToTextBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent
+                            = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
 
-                try {
-                    startActivityForResult(intent, CONSTANTS.REQUEST_CODE_SPEECH_INPUT_FOR_RESCHEDULE_DIALOG);
-                } catch (Exception e) {
-                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    try {
+                        startActivityForResult(intent, CONSTANTS.REQUEST_CODE_SPEECH_INPUT_FOR_RESCHEDULE_DIALOG);
+                    } catch (Exception e) {
+                        Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
 
-        rescheduleDialogBinding.remarksEdittext.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+            rescheduleBinding.textDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Calendar calendar = Calendar.getInstance();
+                    int myear = calendar.get(Calendar.YEAR);
+                    int mday = calendar.get(Calendar.DAY_OF_MONTH);
+                    int mmonth = calendar.get(Calendar.MONTH);
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-            }
+                            if ((dayOfMonth - mday) >= 0 && (month - mmonth) >= 0) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                remarksForReschedule = remarksForReschedule + s.toString();
+                                int checkMonth = month % 10, checkday = (dayOfMonth % 10);
+                                ;
+                                String mMonth, mDay;
+                                if (checkMonth > 0 && month < 10) {
+                                    mMonth = "0" + (month + 1);
+                                } else {
+                                    mMonth = String.valueOf(month + 1);
 
-            }
-        });
+                                }
 
-        rescheduleDialogBinding.textDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                                if (checkday > 0 && dayOfMonth < 10) {
+                                    mDay = "0" + (dayOfMonth);
 
-                Calendar calendar = Calendar.getInstance();
-                int myear = calendar.get(Calendar.YEAR);
-                int mday = calendar.get(Calendar.DAY_OF_MONTH);
-                int mmonth = calendar.get(Calendar.MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                } else {
+                                    mDay = String.valueOf(dayOfMonth);
 
-                        if ((dayOfMonth - mday) >= 0 && (month - mmonth) >= 0) {
-
-                            int checkMonth = month % 10, checkday = (dayOfMonth % 10);
-                            ;
-                            String mMonth, mDay;
-                            if (checkMonth > 0 && month < 10) {
-                                mMonth = "0" + (month + 1);
-                            } else {
-                                mMonth = String.valueOf(month + 1);
-
-                            }
-
-                            if (checkday > 0 && dayOfMonth < 10) {
-                                mDay = "0" + (dayOfMonth);
+                                }
+                                String mDate = mMonth + "/" + mDay + "/" + year;
+                                rescheduleBinding.textDate.setText(mDate);
 
                             } else {
-                                mDay = String.valueOf(dayOfMonth);
-
+                                rescheduleBinding.textDate.setError("Select date forward from current date");
                             }
-                            String mDate = mMonth + "/" + mDay + "/" + year;
-                            rescheduleDialogBinding.textDate.setText(mDate);
 
-                        } else {
-                            rescheduleDialogBinding.textDate.setError("Select date forward from current date");
+
                         }
+                    }, myear, mmonth, mday);
+                    datePickerDialog.show();
+                }
+            });
 
+            rescheduleBinding.textTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Calendar calendar = Calendar.getInstance();
+                    int mHour = calendar.get(Calendar.HOUR_OF_DAY);
+                    int mMinute = calendar.get(Calendar.MINUTE);
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            String openingTime = String.valueOf(hourOfDay) + " : " + String.valueOf(minute);
+                            rescheduleBinding.textTime.setText(openingTime);
+                        }
+                    }, mHour, mMinute, false);
+                    timePickerDialog.show();
+                }
+            });
+            rescheduleBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onClick(View v) {
 
-                    }
-                }, myear, mmonth, mday);
-                datePickerDialog.show();
-            }
-        });
+                    rescheduleBinding.saveBtn.setEnabled(false);
 
-        rescheduleDialogBinding.textTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int mHour = calendar.get(Calendar.HOUR_OF_DAY);
-                int mMinute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String openingTime = String.valueOf(hourOfDay) + " : " + String.valueOf(minute);
-                        rescheduleDialogBinding.textTime.setText(openingTime);
-                    }
-                }, mHour, mMinute, false);
-                timePickerDialog.show();
-            }
-        });
-        rescheduleDialogBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-                try {
-                    rescheduleDialogBinding.saveBtn.setEnabled(false);
-                    String remarkCheck = rescheduleDialogBinding.remarksEdittext.getText().toString();
-                    String dateCheck = rescheduleDialogBinding.textDate.getText().toString();
-                    String timeCheck = rescheduleDialogBinding.textTime.getText().toString();
                     progressDialog = new ProgressDialog(requireContext());
                     progressDialog.setMessage("Loading....");
                     progressDialog.setCancelable(false);
                     progressDialog.show();
-                    if (!remarkCheck.equals("") && !dateCheck.equals("") && !timeCheck.equals("")) {
-                        int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
-                        String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
-                        AddNewWorkPlanModel addNewWorkPlanModel = new AddNewWorkPlanModel();
-                        addNewWorkPlanModel.setDoctorId(doctorModel.getDoctorId());
-                        addNewWorkPlanModel.setEmpId(userId);
-                        addNewWorkPlanModel.setRemarks1(remarkCheck);
-                        String dateTime = dateCheck + " " + timeCheck;
-                        addNewWorkPlanModel.setWorkFromDate(dateTime);
-                        addNewWorkPlanModel.setWorkToDate(dateTime);
-                        addNewWorkPlanModel.setWorkPlan("Meeting");
-                        addNewWorkPlanModel.setWorkId(doctorModel.getWorkId());
 
-                        if (isNetworkConnected())
-                        {
-                            Call<UpdateStatus> call = ApiClient.getInstance().getApi().RescheduleWorkPlan(token, addNewWorkPlanModel);
-                            call.enqueue(new Callback<UpdateStatus>() {
-                                @Override
-                                public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+                    String dateCheck = "", timeCheck = "";
 
-                                    if (response.body() != null) {
+                    if (rescheduleBinding.remarksEdittext.getText() != null && rescheduleBinding.remarksEdittext.getText().toString().length() > 0) {
+                        remarksForReschedule = rescheduleBinding.remarksEdittext.getText().toString();
+                    }
+                    if (rescheduleBinding.textDate.getText() != null && rescheduleBinding.textDate.getText().toString().length() > 0) {
+                        dateCheck = rescheduleBinding.textDate.getText().toString();
+                    }
 
+                    if (rescheduleBinding.textTime.getText() != null && rescheduleBinding.textTime.getText().toString().length() > 0) {
+                        timeCheck = rescheduleBinding.textTime.getText().toString();
+                    }
 
-                                        UpdateStatus updateStatus = response.body();
-                                        Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
+                    if (remarksForReschedule != null && remarksForReschedule.length() > 0) {
+                        rescheduleBinding.remarksEdittext.setError(null);
+                        if (dateCheck.length() > 0) {
+                            rescheduleBinding.textDate.setError(null);
+                            if (timeCheck.length() > 0) {
+                                rescheduleBinding.textTime.setError(null);
+                                int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
 
-//
-                                        targetViewModel.DeleteDoctor(doctorModel);
-                                        morningListAdapter.removeItem(doctorModel);
-                                        eveningListAdapter.removeItem(doctorModel);
-                                        rescheduleDialogBinding.saveBtn.setEnabled(true);
-                                        progressDialog.dismiss();
-                                        alertDialog.dismiss();
-                                    }else
-                                    {
-                                        progressDialog.dismiss();
+                                AddNewWorkPlanModel addNewWorkPlanModel = new AddNewWorkPlanModel();
 
-                                    }
+                                addNewWorkPlanModel.setDoctorId(doctorModel.getDoctorId());
+                                addNewWorkPlanModel.setEmpId(userId);
+                                addNewWorkPlanModel.setRemarks1(remarksForReschedule);
+                                String dateTime = dateCheck + " " + timeCheck;
+                                addNewWorkPlanModel.setWorkFromDate(dateTime);
+                                addNewWorkPlanModel.setWorkToDate(dateTime);
+                                addNewWorkPlanModel.setWorkPlan("Meeting");
+                                addNewWorkPlanModel.setWorkId(doctorModel.getWorkId());
 
-
-                                }
-
-                                @Override
-                                public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+                                if (isNetworkConnected()) {
+                                    rescheduleWorkPlanStatus(doctorModel, addNewWorkPlanModel);
+                                } else {
+                                    targetViewModel.DeleteDoctor(doctorModel);
+                                    morningListAdapter.removeItem(doctorModel);
+                                    eveningListAdapter.removeItem(doctorModel);
+                                    rescheduleBinding.saveBtn.setEnabled(true);
                                     progressDialog.dismiss();
-                                    t.getMessage();
+                                    alertDialog.dismiss();
+                                    uploadDataRepository.insertWorkPlan(addNewWorkPlanModel);
+                                    generateWorkRequest(CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN);
                                 }
-                            });
-                        }
-                        else
-                        {
-                            targetViewModel.DeleteDoctor(doctorModel);
-                            morningListAdapter.removeItem(doctorModel);
-                            eveningListAdapter.removeItem(doctorModel);
-                            rescheduleDialogBinding.saveBtn.setEnabled(true);
-                            progressDialog.dismiss();
-                            alertDialog.dismiss();
-                            uploadDataRepository.insertWorkPlan(addNewWorkPlanModel);
-                            generateWorkRequest(CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN);
-                        }
 
+                            } else {
+                                Toast.makeText(requireContext(), "Please select time", Toast.LENGTH_SHORT).show();
+                                rescheduleBinding.textTime.setError("Please select time");
+                                rescheduleBinding.textTime.requestFocus();
+                                progressDialog.dismiss();
+                                rescheduleBinding.saveBtn.setEnabled(true);
+
+                            }
+
+                        } else {
+                            Toast.makeText(requireContext(), "Please select date", Toast.LENGTH_SHORT).show();
+                            rescheduleBinding.textDate.setError("Please select date");
+                            rescheduleBinding.textDate.requestFocus();
+                            progressDialog.dismiss();
+                            rescheduleBinding.saveBtn.setEnabled(true);
+
+                        }
 
                     } else {
-                        dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
+                        Toast.makeText(requireContext(), "Please enter remarks", Toast.LENGTH_SHORT).show();
+                        rescheduleBinding.remarksEdittext.setError("Please enter remarks");
+                        rescheduleBinding.remarksEdittext.requestFocus();
                         progressDialog.dismiss();
+                        rescheduleBinding.saveBtn.setEnabled(true);
+
                     }
-                }catch (Exception e)
-                {
-                    Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+            rescheduleBinding.closeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+        } else {
+            Toast.makeText(requireContext(), "Doctor is empty", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    public void rescheduleWorkPlanStatus(DoctorModel doctorModel, AddNewWorkPlanModel addNewWorkPlanModel) {
+        String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().RescheduleWorkPlan(token, addNewWorkPlanModel);
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+
+
+                        UpdateStatus updateStatus = response.body();
+                        Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
+
+
+                        targetViewModel.DeleteDoctor(doctorModel);
+                        morningListAdapter.removeItem(doctorModel);
+                        eveningListAdapter.removeItem(doctorModel);
+                        rescheduleBinding.saveBtn.setEnabled(true);
+
+                        alertDialog.dismiss();
+                    } else {
+                        Toast.makeText(requireContext(), ""+response.message(), Toast.LENGTH_SHORT).show();
+
+                    }
+
+                } else {
+                    if (response.message().equals("Unauthorized")) {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(), requireContext());
+                    }
+                    Toast.makeText(requireContext(), "" + response.message(), Toast.LENGTH_SHORT).show();
                 }
 
-            }
-        });
+                progressDialog.dismiss();
 
-        rescheduleDialogBinding.closeBtn.setOnClickListener(new View.OnClickListener() {
+            }
+
             @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
+            public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private boolean isLocationEnabled() {
@@ -849,7 +862,7 @@ public class TargetFragment extends Fragment {
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 remarksForReschedule = remarksForReschedule + " " + result.get(0);
-                rescheduleDialogBinding.remarksEdittext.setText(remarksForReschedule);
+                rescheduleBinding.remarksEdittext.setText(remarksForReschedule);
             }
         }
     }
@@ -871,24 +884,22 @@ public class TargetFragment extends Fragment {
     private void generateWorkRequest(String workRequest) {
 
         Data mainData;
-        if (workRequest.equals(CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN))
-        {
+        if (workRequest.equals(CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN)) {
 
-            mainData= new Data.Builder()
-                    .putString(CONSTANTS.WORK_REQUEST_TAG,CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN)
+            mainData = new Data.Builder()
+                    .putString(CONSTANTS.WORK_REQUEST_TAG, CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN)
 
                     .build();
-        }else
-        {
-            mainData= new Data.Builder()
-                    .putString(CONSTANTS.WORK_REQUEST_TAG,CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN)
+        } else {
+            mainData = new Data.Builder()
+                    .putString(CONSTANTS.WORK_REQUEST_TAG, CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN)
 
                     .build();
 
         }
 
         Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(true).setRequiredNetworkType(NetworkType.CONNECTED).build();
-        OneTimeWorkRequest oneTimeWorkRequest= new OneTimeWorkRequest.Builder(UploadWorker.class)
+        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class)
                 .setInputData(mainData)
                 .setConstraints(constraints)
                 .build();
@@ -898,7 +909,7 @@ public class TargetFragment extends Fragment {
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
                     public void onChanged(WorkInfo workInfo) {
-                        Toast.makeText(requireContext(), ""+workInfo.getState().name(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "" + workInfo.getState().name(), Toast.LENGTH_SHORT).show();
                     }
                 });
 

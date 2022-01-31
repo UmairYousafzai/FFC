@@ -6,11 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.DeliveryModeModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.model.ClassificationModel;
+import com.example.ffccloud.model.DeliveryModeModel;
+import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
-import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.model.QualificationModel;
 
 import java.util.List;
 

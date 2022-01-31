@@ -1,7 +1,6 @@
 package com.example.ffccloud.medicalStore;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -13,23 +12,21 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
-import com.example.ffccloud.ModelClasses.SupplierMainModel;
-import com.example.ffccloud.ModelClasses.SupplierModelNew;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.SupplierMainModel;
+import com.example.ffccloud.model.SupplierModelNew;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.SupplierCompDetail;
-import com.example.ffccloud.ModelClasses.GradingModel;
-import com.example.ffccloud.ModelClasses.RegionModel;
+import com.example.ffccloud.model.GradingModel;
+import com.example.ffccloud.model.RegionModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.CompaniesDialogBinding;
-import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddMedicalStoreBinding;
 import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.medicalStore.adapter.CompanyRecyclerViewAdapter;
@@ -62,7 +59,7 @@ public class AddMedicalStoreFragment extends Fragment {
     private List<GradingModel> gradingModelList;
     private CompanyRecyclerViewAdapter adapter;
     private final List<SupplierCompDetail> companyModelList = new ArrayList<>();
-    private String locationString;
+    private String locationString,supplierCode="0";
     private String locationAddress;
     private int supplierID;
     private String callingAddBtn;
@@ -226,14 +223,24 @@ public class AddMedicalStoreFragment extends Fragment {
     }
 
     private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
-
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode()!=null)
+        {
+            supplierCode =getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode();
+        }
         mBinding.etName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
         mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
-        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
+        if(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length()>0)
+        {
+            mBinding.locationCheckBox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
             mBinding.locationCheckBox.setChecked(true);
+            locationAddress=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
         }
-        mBinding.locationCheckBox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length()>0)
+        {
+            locationString=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+        }
         mBinding.etMonthlySale.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getMonthlySale()));
 
 
@@ -293,7 +300,7 @@ public class AddMedicalStoreFragment extends Fragment {
                         supplierModelNew.setCountry_Id(1);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
-                        supplierModelNew.setSupplier_Code("0");
+                        supplierModelNew.setSupplier_Code(supplierCode);
                         supplierModelNew.setSupplier_Id(supplierID);
                         supplierModelNew.setAddress(address);
                         supplierModelNew.setPhone_No(phone);

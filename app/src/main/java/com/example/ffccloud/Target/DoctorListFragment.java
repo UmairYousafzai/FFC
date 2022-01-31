@@ -1,12 +1,10 @@
 package com.example.ffccloud.Target;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -25,32 +23,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.ffccloud.ModelClasses.ClassificationModel;
+import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.FilteredDoctoredModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
 import com.example.ffccloud.Target.Adapters.FilterDoctorRecyclerAdapter;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
 import com.example.ffccloud.databinding.FragmentDoctorListBinding;
-import com.example.ffccloud.databinding.FragmentSalesOrderListBinding;
 import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
-import com.example.ffccloud.utils.SyncDataToDB;
 import com.example.ffccloud.utils.UserViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

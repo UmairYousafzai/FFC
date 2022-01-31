@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "113781257222",
+    "firebase_url": "https://ffccloudtracking-default-rtdb.firebaseio.com",
+    "project_id": "ffccloudtracking",
+    "storage_bucket": "ffccloudtracking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113781257222:android:433591ef22314a0c4cbf87",
+        "android_client_info": {
+          "package_name": "com.example.ffccloud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113781257222-feel4lf1u199j0c8ullbe5c8t9ak6p1b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlYhdddrd4ocHtAD2EqQ1Y_vb7zKWDXus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113781257222-feel4lf1u199j0c8ullbe5c8t9ak6p1b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

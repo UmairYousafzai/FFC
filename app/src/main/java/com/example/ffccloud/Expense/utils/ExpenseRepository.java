@@ -6,8 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.ffccloud.Database.FfcDAO;
 import com.example.ffccloud.Database.FfcDatabase;
-import com.example.ffccloud.ModelClasses.Expense;
-import com.google.gson.internal.$Gson$Preconditions;
+import com.example.ffccloud.ExpenseModelClass;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -15,7 +14,7 @@ import java.util.concurrent.Executors;
 
 public class ExpenseRepository {
     private FfcDAO mDao;
-    private LiveData<List<Expense>> allExpenses;
+    private LiveData<List<ExpenseModelClass>> allExpenses;
     private Executor executor = Executors.newSingleThreadExecutor();
 
 
@@ -26,17 +25,17 @@ public class ExpenseRepository {
 
     }
 
-    public void insertExpense(Expense expense)
+    public void insertExpense(ExpenseModelClass expenseModelClass)
     {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                mDao.insertExpense(expense);
+                mDao.insertExpense(expenseModelClass);
             }
         });
     }
 
-    public void deleteExpense( )
+    public void deleteAllExpense( )
     {
         executor.execute(new Runnable() {
             @Override
@@ -45,8 +44,27 @@ public class ExpenseRepository {
             }
         });
     }
+    public void deleteExpense(ExpenseModelClass expenseModelClass)
+    {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteExpense(expenseModelClass);
+            }
+        });
+    }
 
-    public LiveData<List<Expense>> getAllExpense( )
+    public void updateExpense(ExpenseModelClass expenseModelClass)
+    {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.updateExpense(expenseModelClass);
+            }
+        });
+    }
+
+    public LiveData<List<ExpenseModelClass>> getAllExpense( )
     {
         return allExpenses;
     }

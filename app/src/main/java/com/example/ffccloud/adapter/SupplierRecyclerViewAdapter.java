@@ -34,6 +34,12 @@ public class SupplierRecyclerViewAdapter extends RecyclerView.Adapter<SupplierRe
     private int key=0;
     private int destinationID=0;
     private String calledSupplier ="";
+    private SetOnClickListener listener;
+
+    public void SetOnClickListener(SetOnClickListener listener)
+    {
+        this.listener = listener;
+    }
 
     public SupplierRecyclerViewAdapter(Fragment fragment) {
 
@@ -99,12 +105,15 @@ public class SupplierRecyclerViewAdapter extends RecyclerView.Adapter<SupplierRe
         if (list!=null)
         {
 
-            getSupplierModelList = list;
+            getSupplierModelList.clear();
+            getSupplierModelListFull.clear();
+            getSupplierModelList.addAll(list);
             getSupplierModelListFull.addAll(getSupplierModelList);
         }
         else
         {
             getSupplierModelList.clear();
+            getSupplierModelListFull.clear();
         }
         notifyDataSetChanged();
     }
@@ -233,11 +242,16 @@ public class SupplierRecyclerViewAdapter extends RecyclerView.Adapter<SupplierRe
             mBinding.btnClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    listener.onClick(getSupplierModelList.get(getAdapterPosition()));
                     getSupplierModelList.remove(getSupplierModelList.get(getAdapterPosition()));
                     notifyDataSetChanged();
                 }
             });
 
         }
+    }
+    public interface  SetOnClickListener
+    {
+         void onClick(GetSupplierModel supplierModel );
     }
 }

@@ -6,14 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.ModelClasses.Expense;
+import com.example.ffccloud.ExpenseModelClass;
 
 import java.util.List;
 
 public class ExpenseViewModel extends AndroidViewModel {
 
     private final ExpenseRepository expenseRepository;
-    private final LiveData<List<Expense>>  allExpense;
+    private final LiveData<List<ExpenseModelClass>>  allExpense;
 
     public ExpenseViewModel(@NonNull Application application) {
         super(application);
@@ -22,21 +22,34 @@ public class ExpenseViewModel extends AndroidViewModel {
         allExpense= expenseRepository.getAllExpense();
     }
 
-    public void insertExpense(Expense expense)
+    public void insertExpense(ExpenseModelClass expenseModelClass)
     {
 
-                expenseRepository.insertExpense(expense);
+                expenseRepository.insertExpense(expenseModelClass);
 
     }
 
-    public void deleteExpense( )
+    public void deleteAllExpense( )
     {
 
-        expenseRepository.deleteExpense();
+        expenseRepository.deleteAllExpense();
+
+    }
+    public void deleteExpense(ExpenseModelClass expenseModelClass)
+    {
+
+                expenseRepository.deleteExpense(expenseModelClass);
 
     }
 
-    public LiveData<List<Expense>> getAllExpense( )
+    public void updateExpense(ExpenseModelClass expenseModelClass)
+    {
+
+                expenseRepository.updateExpense(expenseModelClass);
+
+    }
+
+    public LiveData<List<ExpenseModelClass>> getAllExpense( )
     {
         return allExpense;
     }

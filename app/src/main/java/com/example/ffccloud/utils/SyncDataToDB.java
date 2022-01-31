@@ -1,26 +1,18 @@
 package com.example.ffccloud.utils;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-
-import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.DoctorModel;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.DeliveryModeModel;
+import com.example.ffccloud.model.ClassificationModel;
+import com.example.ffccloud.model.DeliveryModeModel;
 
-import com.example.ffccloud.ModelClasses.GradingModel;
-import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.model.GradingModel;
+import com.example.ffccloud.model.QualificationModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
-import com.example.ffccloud.SplashScreen.SplashActivity;
 import com.example.ffccloud.Target.utils.TargetRepository;
-import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 
 import org.jetbrains.annotations.NotNull;
 

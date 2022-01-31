@@ -6,14 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -24,7 +22,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -34,9 +31,8 @@ import android.widget.Toast;
 
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.Login.GetUserInfoModel;
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 import com.example.ffccloud.R;
-import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAttendanceBinding;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
@@ -216,12 +212,11 @@ public class AttendanceFragment extends Fragment {
 
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         uniqueID = UUID.randomUUID().toString();
-                        saveAttendance(uniqueID);
                     } else {
                         uniqueID = getDeviceIMEI();
-                        saveAttendance(uniqueID);
 
                     }
+                    saveAttendance(uniqueID);
 
 
                 }

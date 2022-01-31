@@ -2,9 +2,7 @@ package com.example.ffccloud.TargetMenu;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -17,16 +15,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 
 import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentStartDayBinding;
-import com.example.ffccloud.salesOrder.ProductInfoBottomSheetDialogFragment;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
@@ -94,6 +90,7 @@ public class StartDayFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
 
@@ -107,7 +104,7 @@ public class StartDayFragment extends Fragment {
 
         Date c = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyy y hh:mm:ss", Locale.getDefault());
         String formattedDate = df.format(c);
         Permission permission= new Permission(requireContext(),requireActivity());
 
@@ -160,5 +157,7 @@ public class StartDayFragment extends Fragment {
 
 
     }
+
+
 
 }

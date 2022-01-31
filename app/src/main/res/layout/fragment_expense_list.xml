@@ -5,13 +5,29 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Expense.ExpenseListFragment"
-    android:padding="15dp"
+    android:padding="5dp"
     android:background="@color/background_color">
+
+    <TextView
+        android:id="@+id/tv_nothing_found"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/nothing_found"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/expenseList_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/white"
         android:scrollIndicators="end"
         android:padding="5dp"
