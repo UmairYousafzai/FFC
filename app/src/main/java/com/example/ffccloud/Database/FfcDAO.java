@@ -174,10 +174,10 @@ public interface FfcDAO {
     @Update
     void updateDoctor(DoctorModel doctorModel);
 
-    @Query("Select *from Doctor Where shift = 'Evening' ")
+    @Query("Select *from Doctor Where shift = 'Evening' order by dotorId_pk desc ")
     LiveData<List<DoctorModel>> getAllEveningDoctors();
 
-    @Query("Select *from Doctor Where shift = 'Morning' ")
+    @Query("Select *from Doctor Where shift = 'Morning' order by dotorId_pk desc ")
     LiveData<List<DoctorModel>> getAllMorningDoctors();
 
     @Delete
@@ -186,16 +186,16 @@ public interface FfcDAO {
     @Query("Delete From Doctor")
     void deleteAllWorkPlanDoctor();
 
-    @Query("Select *From Doctor where (fromDate=:date) ")
+    @Query("Select *From Doctor where (fromDate=:date) order by dotorId_pk desc")
     LiveData<List<DoctorModel>> getMorningDoctorByDate(String date);
 
 //     +"and (shift = 'Morning')"
-    @Query("Select *From Doctor where (fromDate = :date)")
+    @Query("Select *From Doctor where (fromDate = :date) order by dotorId_pk desc")
     LiveData<List<DoctorModel>> getEveningDoctorByDate(String date);
 
     // + " and (shift = 'Evening')"
 
-    @Query("Select *From Doctor")
+    @Query("Select *From Doctor order by dotorId_pk desc")
     LiveData<List<DoctorModel>> getAllWorkPlanDoctors();
 
 
@@ -317,8 +317,16 @@ public interface FfcDAO {
     @Query("Select *From workPlan")
     List<AddNewWorkPlanModel> getAllWorkPlan();
 
+
+
     @Query("Select *From Doctor where doctorId= :workPlanID")
     DoctorModel getWorkPlanByID(int workPlanID);
+
+    @Query("Select Exists (Select *from workPlan)")
+    boolean isWorkPlanExists( );
+
+    @Query("Select Exists (Select *from workPlanStatus)")
+    boolean isWorkPlanStatusExists( );
 
 
                   /*
@@ -338,7 +346,7 @@ public interface FfcDAO {
     @Update
     void updateExpense(ExpenseModelClass expenseModelClass);
 
-    @Query("Select *From ExpenseModelClass")
+    @Query("Select *From ExpenseModelClass order by expenseID_pk desc")
     LiveData<List<ExpenseModelClass>> getAllExpenses();
 
 
@@ -363,6 +371,9 @@ public interface FfcDAO {
 
     @Query("select *from notification order by id desc")
     LiveData<List<Notification>> getAllNotifications();
+
+    @Query("select count(id) from notification ")
+    LiveData<Integer> getNotificationCount();
 
     @Query("Select *from Notification where senderId= :senderID and notificationTitle=:message ")
     Notification getNotification(String senderID,String message);

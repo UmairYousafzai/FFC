@@ -30,23 +30,25 @@ public class UploadWorker extends Worker {
     public Result doWork() {
 
         String data = getInputData().getString(CONSTANTS.WORK_REQUEST_TAG);
-        switch (data) {
-            case CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN:
-                SaveData.getInstance(mContext).SaveWorkPlanStatus();
-                break;
-            case CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN:
-                SaveData.getInstance(mContext).saveWorkPlan();
+        if (data != null) {
+            switch (data) {
+                case CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN:
+                    SaveData.getInstance(mContext).SaveWorkPlanStatus();
+                    break;
+                case CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN:
+                    SaveData.getInstance(mContext).saveWorkPlan();
 
-                break;
-            case CONSTANTS.WORK_REQUEST_COMPLETE_WORK_PLAN:
-                SaveData.getInstance(mContext).SaveWorkPlanStatus();
+                    break;
+                case CONSTANTS.WORK_REQUEST_COMPLETE_WORK_PLAN:
+                    SaveData.getInstance(mContext).SaveWorkPlanStatus();
 
 
-                break;
+                    break;
+            }
         }
 
 
-            return Result.success();
+        return Result.success();
     }
 
 //    public void updateWorkPlan(List<UpdateWorkPlanStatus> list)

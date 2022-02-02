@@ -99,11 +99,24 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
                 }
             });
+
+            mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (listener!=null && getAdapterPosition() != RecyclerView.NO_POSITION)
+                    {
+                        listener.onClick(notificationList.get(getAdapterPosition()));
+                    }
+
+                }
+            });
         }
     }
 
     public interface SetOnClickListener
     {
         void onCloseBtnClick(Notification notification);
+        void onClick(Notification notification);
     }
 }

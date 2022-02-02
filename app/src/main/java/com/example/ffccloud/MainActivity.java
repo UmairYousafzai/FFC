@@ -25,6 +25,7 @@ import com.example.ffccloud.Target.utils.DoctorViewModel;
 import com.example.ffccloud.Target.utils.TargetViewModel;
 import com.example.ffccloud.databinding.ActivityMainBinding;
 import com.example.ffccloud.databinding.NavigationDrawerHeaderBinding;
+import com.example.ffccloud.notification.NotificationViewModel;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
@@ -34,6 +35,8 @@ import com.example.ffccloud.utils.SyncDataToDB;
 
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.worker.UploadWorker;
+import com.example.ffccloud.worker.utils.UploadDataRepository;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -65,7 +68,6 @@ import java.util.List;
 import java.util.Locale;
 
 
-
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     private Permission permission;
     private ActivityViewModel activityViewModel;
     private List<Activity> runningActivity;
+    private UploadDataRepository uploadDataRepository;
+    private NotificationViewModel notificationViewModel;
 
 
     private boolean menuCheck = true;
@@ -93,12 +97,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         ffcDatabase = FfcDatabase.getInstance(getApplicationContext());
+        uploadDataRepository = new UploadDataRepository(this);
 
 
         permission = new Permission(this, this);
 
 
         activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
+        notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
 
         activityViewModel.getQueryActivity().observe(this, new Observer<List<Activity>>() {
             @Override
@@ -116,6 +122,28 @@ public class MainActivity extends AppCompatActivity {
         setUpNavigation();
         setDrawerHeader();
         drawerItemSelectedListener();
+        checkNotifications();
+
+    }
+
+    private void checkNotifications() {
+
+        notificationViewModel.getNotificationCount().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer numberOfNotifications) {
+                int menuID = mbinding.bottomNavigation.getMenu().getItem(4).getItemId();
+                BadgeDrawable badgeDrawable = mbinding.bottomNavigation.getOrCreateBadge(menuID);
+                if (numberOfNotifications != 0) {
+
+                    badgeDrawable.setVisible(true);
+                    badgeDrawable.setNumber(numberOfNotifications);
+                } else {
+                    badgeDrawable.setVisible(false);
+                }
+
+            }
+        });
+
 
     }
 
@@ -139,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
         if (SharedPreferenceHelper.getInstance(getApplication()).getGetDocListState()) {
             int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
 
-            SyncDataToDB.getInstance().saveDoctorsList(id,this,this);
-            SyncDataToDB.getInstance().SyncData(id,this,this);
+            SyncDataToDB.getInstance().saveDoctorsList(id, this, this);
+            SyncDataToDB.getInstance().SyncData(id, this, this);
             SharedPreferenceHelper.getInstance(getApplication()).setGetDocListState(false);
         }
 
@@ -159,14 +187,20 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.end_day) {
                     if (SharedPreferenceHelper.getInstance(getBaseContext()).getStart()) {
 
-                        if (isNetworkConnected()) {
-                            closeActivity();
-                            mbinding.drawerLayout.closeDrawer(GravityCompat.START);
-                        } else {
-                            generateWorkRequest();
-                            mbinding.drawerLayout.closeDrawer(GravityCompat.START);
 
+                        if (isNetworkConnected()) {
+                            if (!uploadDataRepository.isWorkPlanExists() || !uploadDataRepository.isWorkPlanStatusExists()) {
+                                closeActivity();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Please wait for uploading pending data \n Please try again later", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please connect to internet", Toast.LENGTH_SHORT).show();
                         }
+
+
+                        mbinding.drawerLayout.closeDrawer(GravityCompat.START);
 
 
                     }
@@ -182,28 +216,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void generateWorkRequest() {
-
-        Data data = new Data.Builder()
-                .putString(CONSTANTS.WORK_REQUEST_END_DAY, "Work in done")
-                .build();
-
-        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(true).setRequiredNetworkType(NetworkType.CONNECTED).build();
-        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class)
-                .setInputData(data)
-                .setConstraints(constraints)
-                .build();
-        WorkManager.getInstance().enqueue(oneTimeWorkRequest);
-
-        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
-                .observe(this, new Observer<WorkInfo>() {
-                    @Override
-                    public void onChanged(WorkInfo workInfo) {
-                        Toast.makeText(MainActivity.this, "" + workInfo.getState().name(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
+//    private void generateWorkRequest() {
+//
+//        Data data = new Data.Builder()
+//                .putString(CONSTANTS.WORK_REQUEST_END_DAY, "Work in done")
+//                .build();
+//
+//        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(true).setRequiredNetworkType(NetworkType.CONNECTED).build();
+//        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class)
+//                .setInputData(data)
+//                .setConstraints(constraints)
+//                .build();
+//        WorkManager.getInstance().enqueue(oneTimeWorkRequest);
+//
+//        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
+//                .observe(this, new Observer<WorkInfo>() {
+//                    @Override
+//                    public void onChanged(WorkInfo workInfo) {
+//                        Toast.makeText(MainActivity.this, "" + workInfo.getState().name(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//    }
 
 
     @Override
@@ -293,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
             ffcDatabase.dao().deleteAllClassification();
             ffcDatabase.dao().deleteAllDeliveryModes();
 
-            String password= SharedPreferenceHelper.getInstance(this).getUserPassword();
+            String password = SharedPreferenceHelper.getInstance(this).getUserPassword();
             SharedPreferenceHelper.getInstance(this).deleteSharedPreference();
             SharedPreferenceHelper.getInstance(this).setUserPassword(password);
 
@@ -334,8 +368,8 @@ public class MainActivity extends AppCompatActivity {
     public void setMenus(Menu menu) {
 //        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
 //        menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
-//        menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
-
+//        menu.add(1, R.id.expenseListFragment, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
+//
 //        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_route_svgrepo_com, null));
 //        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
 //        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, null));
@@ -371,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
                                 menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_home, null));
                                 break;
                             case "Ac_Target":
-                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
+                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
                                 break;
                             case "Ac_Expense":
                                 menu.add(1, R.id.expenseListFragment, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
@@ -383,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
                                 menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings, null));
                                 break;
                             case "Ac_EndDay":
-                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
+                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
                                 break;
                             case "Ac_MyProfile":
                                 menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null));
@@ -420,8 +454,7 @@ public class MainActivity extends AppCompatActivity {
         if (runningActivity != null && !runningActivity.isEmpty()) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (permission.isLocationEnabled()) {
-                    if (isNetworkConnected())
-                    {
+                    if (isNetworkConnected()) {
                         CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
                             @Override
                             public void gotLocation(Location location) {
@@ -459,15 +492,13 @@ public class MainActivity extends AppCompatActivity {
                         };
 
                         customLocation.getLastLocation(locationResults);
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(this, "Please Connect To Internet", Toast.LENGTH_SHORT).show();
 
                     }
 
                 } else {
-                    CustomsDialog.getInstance().showOpenLocationSettingDialog(this,this);
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(this, this);
 
                 }
 
@@ -484,19 +515,18 @@ public class MainActivity extends AppCompatActivity {
 
         int endHours = 0, endMinutes = 0, endSeconds = 0, startHours = 0, startMinutes = 0, startSeconds = 0;
         if (!startDateTime.isEmpty() && !startDateTime.isEmpty()) {
-            endHours= Integer.parseInt(formattedDate.substring(11,13));
-            endMinutes= Integer.parseInt(formattedDate.substring(14,16));
-            endSeconds=Integer.parseInt(formattedDate.substring(17,19));
-            startHours= Integer.parseInt(startDateTime.substring(11,13));
-            startMinutes= Integer.parseInt(startDateTime.substring(14,16));
-            startSeconds=Integer.parseInt(startDateTime.substring(17,19));
+            endHours = Integer.parseInt(formattedDate.substring(11, 13));
+            endMinutes = Integer.parseInt(formattedDate.substring(14, 16));
+            endSeconds = Integer.parseInt(formattedDate.substring(17, 19));
+            startHours = Integer.parseInt(startDateTime.substring(11, 13));
+            startMinutes = Integer.parseInt(startDateTime.substring(14, 16));
+            startSeconds = Integer.parseInt(startDateTime.substring(17, 19));
         }
 
 
         return (Math.abs(endHours - startHours)) + ":" + (Math.abs(endMinutes - startMinutes)) + ":" + (Math.abs(endSeconds - startSeconds));
 
     }
-
 
 
     public boolean isNetworkConnected() {

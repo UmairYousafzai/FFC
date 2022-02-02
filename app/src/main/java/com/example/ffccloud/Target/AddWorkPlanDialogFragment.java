@@ -276,7 +276,7 @@ public class AddWorkPlanDialogFragment extends DialogFragment {
 
             @Override
             public void onFailure(@NotNull Call<List<GetSupplierModel>> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+
                 progressDialog.dismiss();
             }
         });

@@ -258,6 +258,7 @@
     <string name="price_list_type">Price List Type</string>
     <string name="rs">Rs</string>
     <string name="upload">Upload</string>
+    <string name="select_client_type">Select Client Type</string>
 
 
 </resources>

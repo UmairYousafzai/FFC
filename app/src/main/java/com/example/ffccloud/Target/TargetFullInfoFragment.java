@@ -586,6 +586,7 @@ public class TargetFullInfoFragment extends Fragment {
                             progressDialog.dismiss();
                             uploadDataRepository.insertWorkPlanStatus(updateWorkPlanStatus);
                             generateWorkRequest();
+                            navController.popBackStack();
                         }
 
                     } else {

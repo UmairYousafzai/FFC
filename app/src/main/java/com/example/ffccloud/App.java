@@ -26,11 +26,13 @@ public class App extends Application {
                     "Message Notification",
                     NotificationManager.IMPORTANCE_HIGH);
             channelMessage.setDescription("This Notification show messages .");
+            channelMessage.setShowBadge(true);
             NotificationChannel channelLocation = new NotificationChannel(
                     LOCATION_NOTIFICATION_CHANNEL_ID,
                     "Message Notification",
                     NotificationManager.IMPORTANCE_HIGH);
             channelLocation.setDescription("This Notification show Location .");
+            channelLocation.setShowBadge(true);
 
             NotificationManager mNotificationManager= getSystemService(NotificationManager.class);
             mNotificationManager.createNotificationChannel(channelLocation);

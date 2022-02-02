@@ -239,26 +239,55 @@ public class AddworkPlanFragment extends Fragment {
                     key = 3;
                     AddworkPlanFragmentDirections.ActionAddworkPlanFragmentToAddWorkPlanDialogFragment action = AddworkPlanFragmentDirections.actionAddworkPlanFragmentToAddWorkPlanDialogFragment();
                     action.setKey(key);
+
+                    String type="";
                     if (mBinding.clientTypeSpinner.getText().toString().equals("Hospitals")) {
                         action.setClientType("H");
+                        type="H";
 
                     } else if (mBinding.clientTypeSpinner.getText().toString().equals("Doctors")) {
-                        action.setClientType("Dr");
+                        type="Dr";
 
                     } else if (mBinding.clientTypeSpinner.getText().toString().equals("Farms")) {
-                        action.setClientType("F");
+                        type="F";
 
-                    } else {
+                    } else if (mBinding.clientTypeSpinner.getText().toString().equals("Medical Stores")){
 
-                        action.setClientType("Str");
+                        type="Str";
 
 
                     }
+                    int regionId=0;
+                    if (mBinding.regionSpinner.getText()!=null && !mBinding.regionSpinner.getText().toString().equals(""))
+                    {
+                        regionId =  regionHashmap.get(mBinding.regionSpinner.getText().toString());
 
-                    int regionId = regionHashmap.get(mBinding.regionSpinner.getText().toString()) == null ? 0 : regionHashmap.get(mBinding.regionSpinner.getText().toString());
-                    action.setRegionID(regionId);
-                    navController.navigate(action);
-                    isDoctorDialogOpen = true;
+                    }
+                    if (regionId!=0)
+                    {
+                        mBinding.regionSpinnerLayout.setError(null);
+
+                        if (!type.equals(""))
+                        {
+                            mBinding.clientTypeSpinnerLayout.setError(null);
+                            action.setClientType(type);
+                            action.setRegionID(regionId);
+                            navController.navigate(action);
+                            isDoctorDialogOpen = true;
+                        }else
+                        {
+                            Toast.makeText(requireContext(), "Please Select client type", Toast.LENGTH_SHORT).show();
+                            mBinding.clientTypeSpinnerLayout.setError("Please select client type.");
+                            mBinding.clientTypeSpinnerLayout.requestFocus();
+                        }
+
+                    }else
+                    {
+                        Toast.makeText(requireContext(), "Please select region", Toast.LENGTH_SHORT).show();
+                        mBinding.regionSpinnerLayout.setError("Please select region.");
+                        mBinding.regionSpinnerLayout.requestFocus();
+                    }
+
                 }
 
 
@@ -292,20 +321,35 @@ public class AddworkPlanFragment extends Fragment {
                 }
 
 
-                if (remarks != null && remarks.length() > 0) {
-                    mBinding.remarks.setError(null);
-                    if (mDate != null && mDate.length() > 0) {
-                        mBinding.workPlanDateLayout.setError(null);
-                        if (dataIDs != null && dataIDs.length() > 0) {
+                if (mDate != null && mDate.length() > 1) {
+                    mBinding.workPlanDateLayout.setError(null);
+                    if (mBinding.clientTypeSpinner.getText()!=null && !mBinding.clientTypeSpinner.getText().toString().equals("Select Client Type"))
+                    {
+                        mBinding.clientTypeSpinnerLayout.setError(null);
+
+                        if (dataIDs != null && dataIDs.length()>1) {
+
                             mBinding.clientsLayout.setError(null);
 
-                            SaveNewWorkPlanModel model = new SaveNewWorkPlanModel();
-                            model.setDate(mDate);
-                            model.setDoctorIds(dataIDs);
-                            model.setEmpId(id);
-                            model.setRemarks(remarks);
+                            if (remarks != null && remarks.length() > 1) {
 
-                            saveWorkPlan(model);
+                                mBinding.remarks.setError(null);
+
+                                SaveNewWorkPlanModel model = new SaveNewWorkPlanModel();
+                                model.setDate(mDate);
+                                model.setDoctorIds(dataIDs);
+                                model.setEmpId(id);
+                                model.setRemarks(remarks);
+
+                                saveWorkPlan(model);
+
+                            } else {
+
+                                mBinding.remarks.setError("Please enter remarks");
+                                mBinding.remarks.requestFocus();
+                                mBinding.saveBtn.setEnabled(true);
+                            }
+
                         } else {
                             mBinding.clientsLayout.setError("Please select clients");
                             mBinding.clientsLayout.requestFocus();
@@ -313,28 +357,22 @@ public class AddworkPlanFragment extends Fragment {
 
                         }
 
-                    } else {
-                        mBinding.workPlanDateLayout.setError("Please select date");
-                        mBinding.workPlanDateLayout.requestFocus();
+                    }
+                    else
+                    {
+                        mBinding.clientTypeSpinnerLayout.setError("Please select client type.");
+                        mBinding.clientTypeSpinnerLayout.requestFocus();
                         mBinding.saveBtn.setEnabled(true);
                     }
+
                 } else {
-                    mBinding.remarks.setError("Please enter remarks");
-                    mBinding.remarks.requestFocus();
+                    mBinding.workPlanDateLayout.setError("Please select date");
+                    mBinding.workPlanDateLayout.requestFocus();
                     mBinding.saveBtn.setEnabled(true);
                 }
 
 
-                if (!remarks.isEmpty() && !dataTittles.isEmpty() && !mDate.isEmpty()) {
 
-
-                    mBinding.regionSpinner.setText(R.string.select_areas);
-                    mBinding.clients.setText(R.string.select_doctors);
-                    mBinding.workPlanDate.setText("");
-                    mBinding.remarks.setText("");
-                    dataTittles = "";
-                    mDate = "";
-                }
             }
         });
     }
@@ -360,6 +398,11 @@ public class AddworkPlanFragment extends Fragment {
 
                         CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(), "Add work plan", requireActivity(), requireContext());
 
+                        if (updateStatus.getStatus()==1)
+                        {
+                            refreshFields();
+                        }
+
                     }
 
                 } else {
@@ -377,6 +420,25 @@ public class AddworkPlanFragment extends Fragment {
 
             }
         });
+    }
+
+    private void refreshFields() {
+
+
+
+
+
+            mBinding.clientsLayout.setHint(R.string.select_client);
+            mBinding.clients.setText(null);
+            mBinding.clientTypeSpinnerLayout.setHint(R.string.select_client_type);
+            mBinding.clientTypeSpinner.setText(null);
+            mBinding.workPlanDate.setText(null);
+            mBinding.remarks.setText(null);
+            dataTittles = null;
+            dataIDs = null;
+            mDate = null;
+            remarks=null;
+
     }
 
     ActivityResultLauncher<Intent> ActivityResultLauncher = registerForActivityResult(

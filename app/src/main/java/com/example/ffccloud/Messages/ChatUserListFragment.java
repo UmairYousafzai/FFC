@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,7 @@ public class ChatUserListFragment extends Fragment {
         getUsers();
         setUpRecyclerView();
         searchViewListener();
-
+        setPullToFresh();
     }
 
     private void searchViewListener() {
@@ -119,7 +120,15 @@ public class ChatUserListFragment extends Fragment {
 
 
     }
-
+    public void setPullToFresh() {
+        mBinding.swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mBinding.swipeLayout.setRefreshing(false);
+                getUsers();
+            }
+        });
+    }
     private void setUpRecyclerView() {
         mBinding.chatUserRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter= new ChatUserListAdapter(this, requireContext());

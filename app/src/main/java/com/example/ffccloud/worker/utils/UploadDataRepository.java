@@ -91,6 +91,16 @@ public class UploadDataRepository {
         return mDao.getWorkPlanByID(id);
 
     }
+    public boolean isWorkPlanExists()
+    {
+        return mDao.isWorkPlanExists();
+
+    }
+    public boolean isWorkPlanStatusExists()
+    {
+        return mDao.isWorkPlanStatusExists();
+
+    }
 
     public void deleteWorkPlan(DoctorModel doctorModel)
     {

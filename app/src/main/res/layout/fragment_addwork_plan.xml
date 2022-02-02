@@ -77,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
-            android:hint="@string/select_client"
+            android:hint="@string/select_client_type"
             android:elevation="5dp"
             android:textColorHint="@color/black"
             app:helperTextTextColor="@color/APP_Theme_Color"

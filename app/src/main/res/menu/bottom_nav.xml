@@ -22,6 +22,6 @@
         android:title="@string/location_requests"/>
     <item
         android:id="@+id/notificationList"
-        android:icon="@drawable/ic_baseline_notifications_none_24"
+        android:icon="@drawable/ic_baseline_notifications_24"
         android:title="Notifications"/>
 </menu>

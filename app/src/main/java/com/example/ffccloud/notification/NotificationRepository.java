@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 public class NotificationRepository {
 
 
-
     private final FfcDAO mDao;
     private final LiveData<List<Notification>> notificationList;
     private static NotificationRepository notificationRepository;
@@ -24,23 +23,20 @@ public class NotificationRepository {
 
     private NotificationRepository(Context context) {
 
-        mDao= FfcDatabase.getInstance(context).dao();
+        mDao = FfcDatabase.getInstance(context).dao();
         notificationList = mDao.getAllNotifications();
     }
 
-    public static synchronized NotificationRepository getInstance(Context context)
-    {
-        if (notificationRepository==null)
-        {
-            notificationRepository= new NotificationRepository(context);
+    public static synchronized NotificationRepository getInstance(Context context) {
+        if (notificationRepository == null) {
+            notificationRepository = new NotificationRepository(context);
 
         }
 
         return notificationRepository;
     }
 
-    public void insertNotification(Notification notification)
-    {
+    public void insertNotification(Notification notification) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -50,8 +46,7 @@ public class NotificationRepository {
 
     }
 
-    public void deleteNotification(Notification notification)
-    {
+    public void deleteNotification(Notification notification) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -61,16 +56,21 @@ public class NotificationRepository {
 
     }
 
-    public Notification getNotification(String senderID,String message )
-    {
+    public Notification getNotification(String senderID, String message) {
 
-               return mDao.getNotification(senderID,message);
+        return mDao.getNotification(senderID, message);
 
 
     }
 
-  public void deleteAllNotifications( )
-    {
+    public LiveData<Integer> getNotificationCount() {
+
+        return mDao.getNotificationCount();
+
+
+    }
+
+    public void deleteAllNotifications() {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -80,8 +80,7 @@ public class NotificationRepository {
 
     }
 
-    public LiveData<List<Notification>> getAllNotifications()
-    {
+    public LiveData<List<Notification>> getAllNotifications() {
         return notificationList;
     }
 

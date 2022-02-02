@@ -204,8 +204,8 @@ public class TargetFragment extends Fragment {
         mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
         mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
 
-        eveningListAdapter.notifyDataSetChanged();
-        morningListAdapter.notifyDataSetChanged();
+//        eveningListAdapter.notifyDataSetChanged();
+//        morningListAdapter.notifyDataSetChanged();
     }
 
     private void SettingUpDatePicker() {
@@ -433,12 +433,13 @@ public class TargetFragment extends Fragment {
                             }
                         }
                     } else {
+                        mbinding.targetRecycler.swipeLayout.setRefreshing(false);
                         Toast.makeText(requireContext(), "Please Connect To Internet", Toast.LENGTH_SHORT).show();
                     }
 
 
                 } else {
-
+                    mbinding.targetRecycler.swipeLayout.setRefreshing(false);
                     CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(), requireContext());
                 }
 

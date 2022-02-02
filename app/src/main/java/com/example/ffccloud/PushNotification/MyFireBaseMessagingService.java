@@ -23,6 +23,7 @@ import androidx.navigation.NavDeepLinkBuilder;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.R;
 import com.example.ffccloud.notification.NotificationRepository;
+import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.UserRepository;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -62,6 +63,8 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
         // notificationId is a unique int for each notification that you must define
 
         int notificationID = new Random().nextInt(Integer.MAX_VALUE);
+        int numberOFNotification=0;
+
 
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -114,7 +117,8 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
         builder.setPriority(Notification.PRIORITY_HIGH);
-
+        builder.setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL);
+        builder.setNumber(numberOFNotification);
         mNotificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -156,6 +160,10 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
 
     private int insertNotification(String title, String message, int notificationID,String senderId) {
 
+
+        int number = SharedPreferenceHelper.getInstance(this).getNUMBER_OF_NOTIFICATION() +1;
+
+        SharedPreferenceHelper.getInstance(this).setNUMBER_OF_NOTIFICATION(number);
 
         NotificationRepository repository= NotificationRepository.getInstance(getApplication());
         com.example.ffccloud.model.Notification notification = repository.getNotification(senderId,title);
