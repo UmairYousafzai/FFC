@@ -33,6 +33,7 @@
             >
             <com.google.android.material.textfield.TextInputLayout
 
+                android:id="@+id/et_name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
@@ -57,6 +58,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
 
+                android:id="@+id/et_phone_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
@@ -83,6 +85,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
 
+                android:id="@+id/et_email_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
@@ -106,6 +109,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_address_layout"
                 app:startIconTint="@color/APP_Theme_Color"
                 android:background="@color/white"
 

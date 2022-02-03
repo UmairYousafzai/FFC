@@ -47,6 +47,7 @@ public class HomeFragment extends Fragment {
 
         if (!Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).isShowing()) {
             Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
+
         }
         doctorViewModel.deleteAllSchedule();
       navController = NavHostFragment.findNavController(this);

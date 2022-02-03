@@ -152,6 +152,16 @@ public class UserRepository {
             }
         });
     }
+
+    public void deleteAllMenus( )
+    {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.delete_all_menu();
+            }
+        });
+    }
     public void deleteUser( LocationRequestedUser user)
     {
         executor.execute(new Runnable() {

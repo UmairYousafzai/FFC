@@ -468,15 +468,20 @@ public class AddHospitalFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body() != null) {
-                    progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel = response.body();
-                    setUpFields(getSupplierDetailModel);
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
 
-                } else {
-                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                        GetSupplierDetailModel getSupplierDetailModel = response.body();
+                        setUpFields(getSupplierDetailModel);
+
+                    }
                 }
+                else {
+                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
+
             }
 
             @Override
@@ -696,16 +701,22 @@ public class AddHospitalFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body() != null) {
-                    UpdateStatus updateStatus = response.body();
-                    if (updateStatus.getStatus()==1)
-                    {
-                        refreshFields();
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
+                        UpdateStatus updateStatus = response.body();
+
+                        Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                        if (updateStatus.getStatus()==1)
+                        {
+                            navController.popBackStack();
+                        }
                     }
-                    Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else {
                     Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
+
                 progressDialog.dismiss();
             }
 

@@ -69,7 +69,12 @@ public class UserViewModel extends AndroidViewModel {
     {
         return allDeliveryModes;
     }
+    public void deleteAllMenus( )
+    {
 
+                userRepository.deleteAllMenus();
+
+    }
 
     public void insertUser(LocationRequestedUser user)
     {

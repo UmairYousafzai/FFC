@@ -345,15 +345,19 @@ public class AddDoctorFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body() != null) {
-                    progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel = response.body();
-                    setUpFields(getSupplierDetailModel);
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
 
+                        GetSupplierDetailModel getSupplierDetailModel = response.body();
+                        setUpFields(getSupplierDetailModel);
+
+                    }
                 } else {
                     Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+
                 }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -481,8 +485,15 @@ public class AddDoctorFragment extends Fragment {
         }
 
         if (!name.isEmpty() ) {
+            mBinding.etNameLayout.setError(null);
             if (!phone.isEmpty()) {
+
+                mBinding.etPhoneLayout.setError(null);
+
                 if (!address.isEmpty()) {
+
+                    mBinding.etAddressLayout.setError(null);
+
                     if (regionList.size() > 0) {
 
 
@@ -515,18 +526,26 @@ public class AddDoctorFragment extends Fragment {
 
                         saveSupplier(supplierModelNew);
                     } else {
+
+                        mBinding.spinnerRegion.requestFocus();
                         Toast.makeText(requireContext(), "Please select region", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
+                    mBinding.etAddressLayout.setError("Please enter the address");
+                    mBinding.idDocAdress.requestFocus();
                     Toast.makeText(requireContext(), "Please enter the address", Toast.LENGTH_SHORT).show();
                 }
 
             } else {
+                mBinding.etPhoneLayout.setError("Please enter the phone number");
+                mBinding.idDocPhone.requestFocus();
                 Toast.makeText(requireContext(), "Please enter the phone number", Toast.LENGTH_SHORT).show();
             }
 
         } else {
+            mBinding.etNameLayout.setError("Please enter the name");
+            mBinding.idDocName.requestFocus();
             Toast.makeText(requireContext(), "Please enter the name", Toast.LENGTH_SHORT).show();
         }
 
@@ -548,14 +567,21 @@ public class AddDoctorFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body() != null) {
-                    UpdateStatus updateStatus = response.body();
-                    Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                } else {
-                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
+                        UpdateStatus updateStatus = response.body();
+                        Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                        if (updateStatus.getStatus()==1)
+                        {
+                            navController.popBackStack();
+                        }
+                    }
                 }
+               else {
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
             }
 
             @Override

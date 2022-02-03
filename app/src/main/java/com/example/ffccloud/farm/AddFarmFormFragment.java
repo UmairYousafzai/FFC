@@ -201,6 +201,7 @@ public class AddFarmFormFragment extends Fragment {
     private void getSupplierByID(int supplierID) {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading Supplier...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         Call<GetSupplierDetailModel> call = ApiClient.getInstance().getApi().getSupplierDetail(supplierID);
@@ -209,15 +210,19 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body() != null) {
-                    progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel = response.body();
-                    setUpFields(getSupplierDetailModel);
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
+                        GetSupplierDetailModel getSupplierDetailModel = response.body();
+                        setUpFields(getSupplierDetailModel);
 
-                } else {
-                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    }
                 }
+                 else {
+                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
+
+                }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -474,7 +479,7 @@ public class AddFarmFormFragment extends Fragment {
 
     private void setUpSupplierModelForSave() {
 
-        String name = " ", phone = " ", address = " ", animalMainType = " ", animalSubType = " ", numberOfAnimal = " ";
+        String name = "", phone = "", address = "", animalMainType = "", animalSubType = "", numberOfAnimal = "";
         RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.animalRadioGroup.getCheckedRadioButtonId());
 
         int userId = 0, region = 0;
@@ -562,6 +567,7 @@ public class AddFarmFormFragment extends Fragment {
     private void saveSupplier(SupplierModelNew supplierModelNew) {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Saving....");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
 
@@ -573,10 +579,18 @@ public class AddFarmFormFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body() != null) {
-                    UpdateStatus updateStatus = response.body();
-                    Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                } else {
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
+                        UpdateStatus updateStatus = response.body();
+                        Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                        if (updateStatus.getStatus()==1)
+                        {
+                            navController.popBackStack();
+                        }
+                    }
+                }
+                else {
                     Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
                 progressDialog.dismiss();

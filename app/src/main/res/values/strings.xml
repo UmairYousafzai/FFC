@@ -27,6 +27,15 @@
         <item>Ac_MSetting</item>
         <item>Ac_EndDay</item>
         <item>Ac_MyProfile</item>
+        <item>Ac_Farm</item>
+        <item>Ac_Doctor</item>
+        <item>Ac_MedicalStore</item>
+        <item>Ac_Tracking</item>
+        <item>Ac_Chat</item>
+        <item>Ac_SaleOrder</item>
+        <item>Ac_Customer</item>
+        <item>Ac_Meeting</item>
+        <item>Ac_Reset_Password</item>
 
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->

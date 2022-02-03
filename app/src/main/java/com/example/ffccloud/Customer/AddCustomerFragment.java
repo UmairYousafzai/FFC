@@ -371,14 +371,13 @@ public class AddCustomerFragment extends Fragment {
                 {
                     UpdateStatus updateStatus = response.body();
                     Toast.makeText(requireContext(), updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
                 }
                 else
                 {
                     Toast.makeText(requireContext(), " " +response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
 
                 }
+                progressDialog.dismiss();
 
             }
 

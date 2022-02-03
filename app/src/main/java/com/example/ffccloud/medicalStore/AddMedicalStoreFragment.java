@@ -10,6 +10,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -63,13 +65,13 @@ public class AddMedicalStoreFragment extends Fragment {
     private String locationAddress;
     private int supplierID;
     private String callingAddBtn;
+    private NavController navController;
 
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = FragmentAddMedicalStoreBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
 
@@ -78,7 +80,8 @@ public class AddMedicalStoreFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        navController = NavHostFragment.findNavController(this);
 
     }
 
@@ -193,7 +196,9 @@ public class AddMedicalStoreFragment extends Fragment {
     private void getSupplierByID(int supplierID) {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading Supplier...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
+
 
         Call<GetSupplierDetailModel> call = ApiClient.getInstance().getApi().getSupplierDetail(supplierID);
 
@@ -201,15 +206,22 @@ public class AddMedicalStoreFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body() != null) {
-                    progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel = response.body();
-                    setUpFields(getSupplierDetailModel);
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
+                        GetSupplierDetailModel getSupplierDetailModel = response.body();
+                        setUpFields(getSupplierDetailModel);
 
-                } else {
-                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    }
                 }
+                else
+                {
+                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
+
+                }
+
+                progressDialog.dismiss();
+
             }
 
             @Override
@@ -338,6 +350,7 @@ public class AddMedicalStoreFragment extends Fragment {
     private void saveSupplier(SupplierModelNew supplierModelNew) {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Saving....");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
 
@@ -349,14 +362,23 @@ public class AddMedicalStoreFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body() != null) {
-                    UpdateStatus updateStatus = response.body();
-                    Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                } else {
-                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
+                        UpdateStatus updateStatus = response.body();
+                        Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                        if (updateStatus.getStatus()==1)
+                        {
+                            navController.popBackStack();
+                        }
+                    }
                 }
+                else
+                {
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
+                }
+
+                progressDialog.dismiss();
             }
 
             @Override
