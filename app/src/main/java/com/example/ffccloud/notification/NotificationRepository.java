@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 
-import com.example.ffccloud.Database.FfcDAO;
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.model.Notification;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class NotificationRepository {
 
 
-    private final FfcDAO mDao;
+    private final FFC_DAO mDao;
     private final LiveData<List<Notification>> notificationList;
     private static NotificationRepository notificationRepository;
     private final Executor executor = Executors.newSingleThreadExecutor();

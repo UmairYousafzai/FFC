@@ -423,7 +423,7 @@ public class AddFarmFormFragment extends Fragment {
                             if (mBinding.locationCheckbox.isChecked()) {
                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.locationCheckbox.setText(locationAddress);
-                                locationString = location.getLongitude() + "," + location.getLatitude();
+                                locationString = location.getLatitude() + "," +location.getLongitude() ;
                             } else {
 
                                 mBinding.locationCheckbox.setText("Enable Location");

@@ -238,13 +238,6 @@ public class TargetFullInfoFragment extends Fragment {
                     }
                 });
 
-                dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        alertDialog.dismiss();
-                    }
-                });
 
             }
         });
@@ -353,7 +346,7 @@ public class TargetFullInfoFragment extends Fragment {
             public void onClick(View v) {
 
 
-                completeAndDeleteWorkPlan(3, 2);
+                completeAndDeleteWorkPlan(2, 2);
 
 
             }
@@ -411,7 +404,11 @@ public class TargetFullInfoFragment extends Fragment {
             public void onClick(View v) {
 
                 if (doctorModel.getCoordinates() != null && !doctorModel.getCoordinates().isEmpty()) {
-                    String locationString = "geo:" + doctorModel.getCoordinates();
+
+                    String[] coordinates = doctorModel.getCoordinates().split(",");
+                    String address= new CustomLocation(requireContext()).getCompleteAddressString(Double.parseDouble(coordinates[0]),Double.parseDouble(coordinates[1]));
+                    String locationString= "geo:"+doctorModel.getCoordinates()+"?q="+ doctorModel.getCoordinates()+(address);
+
                     Uri mapIntentUri = Uri.parse(locationString);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
@@ -453,7 +450,7 @@ public class TargetFullInfoFragment extends Fragment {
                         if (distance <= 10) {
                             saveWorkPlane(key);
                         } else {
-                            CustomsDialog.getInstance().showDialog("You Are Out Of WorkPlan Location Radius", " ", requireActivity(), requireContext());
+                            CustomsDialog.getInstance().showDialog("You Are Out Of WorkPlan Location Radius", " ", requireActivity(), requireContext(),2);
                         }
 
                     } else if (distanceKey == 2) {
@@ -466,6 +463,7 @@ public class TargetFullInfoFragment extends Fragment {
                             AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
                             dialogBinding.title.setText("You Are Out Of WorkPlan Radius");
                             dialogBinding.body.setText("Do you want to Proceed.");
+                            dialogBinding.btnCheckLocation.setVisibility(View.VISIBLE);
                             alertDialog.show();
                             dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -475,14 +473,18 @@ public class TargetFullInfoFragment extends Fragment {
 
                                 }
                             });
-                            dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+                            dialogBinding.btnCheckLocation.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     alertDialog.dismiss();
-
-
+                                    TargetFullInfoFragmentDirections.ActionTargetFullInfoFragmentToMapFragment action =
+                                            TargetFullInfoFragmentDirections.actionTargetFullInfoFragmentToMapFragment();
+                                    action.setCoordinates(doctorModel.getCoordinates());
+                                    action.setWorkPlanName(doctorModel.getName());
+                                    navController.navigate(action);
                                 }
                             });
+
 
                         }
                     } else if (distance == 3) {

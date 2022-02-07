@@ -319,12 +319,12 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (status == 0) {
 
-                        CustomsDialog.getInstance().showDialog("Something went wrong.","Try Again",LoginActivity.this,LoginActivity.this);
+                        CustomsDialog.getInstance().showDialog("Something went wrong.","Try Again",LoginActivity.this,LoginActivity.this,2);
 
                     }
                     if (msg.equals("Code is Successfully Sent to your Email Please Check Your Email to Get the Security Code!!") && status == 1) {
 
-                        CustomsDialog.getInstance().showDialog("Code successfully sent to your given email address.","Success",LoginActivity.this,LoginActivity.this);
+                        CustomsDialog.getInstance().showDialog("Code successfully sent to your given email address.","Success",LoginActivity.this,LoginActivity.this,1);
 
 
                         Text_Input_Email_Dialog.setVisibility(GONE);
@@ -343,7 +343,7 @@ public class LoginActivity extends AppCompatActivity {
                     int code = response.code();
                     switch (code) {
                         case 400: {
-                            CustomsDialog.getInstance().showDialog("Provided username or password is incorrect.","Bad Request",LoginActivity.this,LoginActivity.this);
+                            CustomsDialog.getInstance().showDialog("Provided username or password is incorrect.","Bad Request",LoginActivity.this,LoginActivity.this,2);
 
                         }
                     }
@@ -353,10 +353,10 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ForgotPasswordModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<ForgotPasswordModel> call, @NonNull Throwable t) {
                 pDialog.cancel();
                 String error = t.getMessage();
-                CustomsDialog.getInstance().showDialog(" ","Try Again",LoginActivity.this,LoginActivity.this);
+                CustomsDialog.getInstance().showDialog(error,"Try Again",LoginActivity.this,LoginActivity.this,2);
 
 
             }
@@ -389,7 +389,8 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
 
 
-                    CustomsDialog.getInstance().showDialog(" ","Error",LoginActivity.this,LoginActivity.this);
+
+                        CustomsDialog.getInstance().showDialog(response.message(), "Error",LoginActivity.this,LoginActivity.this,2);
 
                 }
 
@@ -398,13 +399,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
             @Override
-            public void onFailure(Call<TokenResponseModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<TokenResponseModel> call, @NonNull Throwable t) {
                 pDialog.cancel();
                 String error = t.getMessage();
                 Log.e("url", "" + urll);
 
                 Log.e("error login", "" + error);
-                CustomsDialog.getInstance().showDialog(" ","Try Again",LoginActivity.this,LoginActivity.this);
+                CustomsDialog.getInstance().showDialog(error,"Try Again",LoginActivity.this,LoginActivity.this,2);
 
             }
         });
@@ -423,8 +424,11 @@ public class LoginActivity extends AppCompatActivity {
                     ffcDatabase.dao().delete_previous_user();
                     ffcDatabase.dao().insertUserInfo(getUserInfoModel);
 
-                    SharedPreferenceHelper.getInstance(getApplicationContext()).setEmpID(getUserInfoModel.getEmpId());
-                    SharedPreferenceHelper.getInstance(getApplicationContext()).setUserID(getUserInfoModel.getID());
+                    if (getUserInfoModel != null) {
+                        SharedPreferenceHelper.getInstance(getApplicationContext()).setEmpID(getUserInfoModel.getEmpId());
+                        SharedPreferenceHelper.getInstance(getApplicationContext()).setUserID(getUserInfoModel.getID());
+
+                    }
 
                     String a = ffcDatabase.dao().device_config().toString();
 
@@ -553,7 +557,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(@NotNull Call<List<GetUserMenuModel>> call, @NotNull Throwable t) {
                 pDialog.cancel();
                 String error = t.getMessage();
-                CustomsDialog.getInstance().showDialog(t.getMessage(),"Try Again",LoginActivity.this,LoginActivity.this);
+                CustomsDialog.getInstance().showDialog(t.getMessage(),"Try Again",LoginActivity.this,LoginActivity.this,2);
 
 
             }
@@ -588,7 +592,7 @@ public class LoginActivity extends AppCompatActivity {
                 pDialog.cancel();
                 String error = t.getMessage();
 
-                CustomsDialog.getInstance().showDialog(t.getMessage(),"Try Again",LoginActivity.this,LoginActivity.this);
+                CustomsDialog.getInstance().showDialog(t.getMessage(),"Try Again",LoginActivity.this,LoginActivity.this,2);
 
             }
         });
@@ -605,13 +609,13 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (new_password_model.equals("Password Update Successfully.")) {
 
-                        CustomsDialog.getInstance().showDialog("Password has been changed successfully.","Success",LoginActivity.this,LoginActivity.this);
+                        CustomsDialog.getInstance().showDialog("Password has been changed successfully.","Success",LoginActivity.this,LoginActivity.this,1);
 
 
                     }
 
                     if (new_password_model.equals("Please Enter a Valid Code.")) {
-                        CustomsDialog.getInstance().showDialog("Please enter correct code.","Try Again",LoginActivity.this,LoginActivity.this);
+                        CustomsDialog.getInstance().showDialog("Please enter correct code.","Try Again",LoginActivity.this,LoginActivity.this,2);
 
 
                     }
@@ -625,7 +629,7 @@ public class LoginActivity extends AppCompatActivity {
                 pDialog.cancel();
                 String error = t.getMessage();
 
-                CustomsDialog.getInstance().showDialog(" ","Try Again",LoginActivity.this,LoginActivity.this);
+                CustomsDialog.getInstance().showDialog(error,"Try Again",LoginActivity.this,LoginActivity.this,2);
 
             }
         });

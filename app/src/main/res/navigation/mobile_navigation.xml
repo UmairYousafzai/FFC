@@ -278,6 +278,14 @@
             app:popExitAnim="@anim/slide_out_right"
             />
         <action
+            android:id="@+id/action_TargetFullInfoFragment_to_MapFragment"
+            app:destination="@id/mapsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
+        <action
             android:id="@+id/action_targetPostMenuFragment_to_nav_history"
             app:destination="@id/nav_history"
             app:enterAnim="@anim/slide_in_right"
@@ -459,7 +467,19 @@
         android:id="@+id/mapsFragment"
         android:name="com.example.ffccloud.MapsFragment"
         android:label="Tracker"
-        tools:layout="@layout/fragment_maps2" />
+        tools:layout="@layout/fragment_maps2">
+        <argument
+            android:name="coordinates"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="workPlanName"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+
+
 
 
     <fragment
@@ -531,10 +551,10 @@
         android:label="Add Customer"
         tools:layout="@layout/fragment_add_customer" >
         <argument
-            android:name="customer"
-            app:argType="com.example.ffccloud.CustomerModel"
+            android:name="customerCode"
+            app:argType="string"
             app:nullable="true"
-            android:defaultValue="@null" />
+            android:defaultValue=" " />
     </fragment>
     <fragment
         android:id="@+id/customerListFragment"

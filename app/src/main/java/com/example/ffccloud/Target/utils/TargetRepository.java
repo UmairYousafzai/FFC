@@ -6,7 +6,7 @@ import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.Database.FfcDAO;
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.DoctorModel;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 public class TargetRepository {
 
-    private final FfcDAO mDao;
+    private final FFC_DAO mDao;
     Context mContext;
     private final LiveData<List<DoctorModel>> allMorningDoctors;
     private final LiveData<List<DoctorModel>> allEveningDoctors;

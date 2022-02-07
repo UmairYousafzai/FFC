@@ -50,7 +50,6 @@ public class CustomLocation {
     public void getLastLocation(CustomLocationResults results) {
 
 
-        this.mContext = mContext;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         customLocationResults=results;
         timer= new Timer();
@@ -97,10 +96,10 @@ public class CustomLocation {
 
                                 // Initializing LocationRequest
                                 // object with appropriate methods
-                                LocationRequest mLocationRequest = new LocationRequest();
+                                LocationRequest mLocationRequest =  LocationRequest.create();
                                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                                 mLocationRequest.setInterval(5);
-                                mLocationRequest.setFastestInterval(0);
+                                mLocationRequest.setFastestInterval(10);
                                 mLocationRequest.setNumUpdates(1);
 
                                 // setting LocationRequest

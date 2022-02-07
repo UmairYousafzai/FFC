@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.ffccloud.Customer.utils.CustomerRepository;
+import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.DoctorModel;
 import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.model.DeliveryModeModel;
@@ -38,7 +40,63 @@ public class SyncDataToDB {
         }
         return syncDataToDB;
     }
+    public void getCustomerData(Context mContext) {
 
+        CustomerRepository customerRepository= new CustomerRepository(mContext);
+        ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage("Loading Customer");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        int userID= SharedPreferenceHelper.getInstance(mContext).getUserID();
+
+        Call<List<CustomerModel>> call = ApiClient.getInstance().getApi().getAllCustomer(1,1,"C",userID);
+
+        call.enqueue(new Callback<List<CustomerModel>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<CustomerModel>> call, @NotNull Response<List<CustomerModel>> response) {
+
+
+                if (response.isSuccessful())
+                {
+
+                    if(response.body()!=null)
+                    {
+                        if (response.body().size()==0)
+                        {
+                            progressDialog.dismiss();
+
+                        }
+                        else {
+                            customerRepository.insertCustomers(response.body());
+                            progressDialog.dismiss();
+                        }
+
+                    }
+                    else
+                    {
+                        progressDialog.dismiss();
+                        Toast.makeText(mContext, ""+response.errorBody(), Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+                else {
+                    Toast.makeText(mContext, ""+response.message(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<List<CustomerModel>> call, @NotNull Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(mContext, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+    }
     public void saveDoctorsList(int empId,Context context,Activity activity) {
         ProgressDialog progressDialog= new ProgressDialog(context);
         progressDialog.setTitle("Loading");

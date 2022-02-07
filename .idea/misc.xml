@@ -4,12 +4,19 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable-v21/ic_round_close_24.xml" value="0.1425" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable-v24/ic_baseline_preview_blue_24.xml" value="0.1405" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable-v24/sender_chat_tv_bg.xml" value="0.1425" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable/ic_baseline_preview_24.xml" value="0.1405" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable/ic_success_.xml" value="0.137" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable/ic_success_26.xml" value="0.1405" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable/text_view_circle_background.xml" value="0.1425" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout-v23/fragment_add_customer.xml" value="0.1830601092896175" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/add_contact_dialog.xml" value="0.10022953328232594" />
-        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/custom_alert_dialog.xml" value="0.10022953328232594" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/card_view_doctor_evening_target.xml" value="0.30679156908665106" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/custom_alert_dialog.xml" value="0.5" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/custom_reschedule_dialog.xml" value="0.10022953328232594" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/expense_card.xml" value="0.30679156908665106" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_add_customer.xml" value="0.10022953328232594" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_add_doctor.xml" value="0.10022953328232594" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_addwork_plan.xml" value="0.10022953328232594" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_chat.xml" value="0.18" />
@@ -17,12 +24,16 @@
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_customer_list.xml" value="0.10022953328232594" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_expense_form_old.xml" value="0.10022953328232594" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_farm_list.xml" value="0.10022953328232594" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_maps2.xml" value="0.30679156908665106" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_notification.xml" value="0.1878415300546448" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_sale_order_form.xml" value="0.10022953328232594" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_tracker.xml" value="0.30679156908665106" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_users_list.xml" value="0.10022953328232594" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/navigation_drawer_header.xml" value="0.1830601092896175" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/notification_card.xml" value="0.18" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/receving_chat_card.xml" value="0.22" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/sending_chat_card.xml" value="0.10022953328232594" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/supplier_card.xml" value="0.15" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/menu/bottom_nav.xml" value="0.16527777777777777" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/menu/doctor_list_search_menu.xml" value="0.16527777777777777" />
       </map>

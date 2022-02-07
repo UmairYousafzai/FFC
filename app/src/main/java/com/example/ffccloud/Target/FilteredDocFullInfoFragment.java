@@ -109,13 +109,6 @@ public class FilteredDocFullInfoFragment extends Fragment {
                             navController.navigate(action);
                         }
                     });
-                    dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            alertDialog.dismiss();
-                        }
-                    });
 
 
 

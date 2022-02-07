@@ -31,6 +31,7 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
     public CustomerListRecyclerAdapter(Fragment fragment) {
         this.fragment = fragment;
         customerModelListFull = new ArrayList<>();
+        customerModelList= new ArrayList<>();
     }
 
     @NonNull
@@ -62,7 +63,6 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
 
         holder.mBinding.setCustomer(customerModel);
         holder.mBinding.executePendingBindings();
-        holder.mBinding.tvCity.setText(String.valueOf(customerModel.getCity_Id()));
 
 
     }
@@ -80,9 +80,10 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
 
     public  void setContactPersonsModelList(List<CustomerModel> list)
     {
-        if (list!=null)
+        if (list!=null&&list.size()>0)
         {
-            customerModelList = list;
+            customerModelListFull.clear();
+            customerModelList.addAll(list);
             customerModelListFull.addAll(customerModelList);
         }
         else
@@ -107,22 +108,31 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
 
                 List<CustomerModel> filterList= new ArrayList<>();
 
-                if (constraint==null||constraint.length()==0)
+                if (customerModelListFull.size()>0)
                 {
-                    filterList= customerModelListFull;
-                }
-                else {
-                    String filterPattern= constraint.toString().toLowerCase().trim();
-                    for (CustomerModel model:customerModelListFull)
+                    if (constraint==null||constraint.length()==0)
                     {
-                        if (model.getPartyName().toString().toLowerCase().trim().contains(filterPattern))
+                        filterList= customerModelListFull;
+                    }
+                    else {
+                        String filterPattern= constraint.toString().toLowerCase().trim();
+                        for (CustomerModel model:customerModelListFull)
                         {
-                            filterList.add(model);
+                            if (model.getPartyName().toString().toLowerCase().trim().contains(filterPattern))
+                            {
+                                filterList.add(model);
+                            }
                         }
                     }
                 }
+
+
                 FilterResults filterResults = new FilterResults();
-                filterResults.values= filterList;
+                if (filterList.size()>0)
+                {
+                    filterResults.values= filterList;
+
+                }
                 return filterResults;
 
 
@@ -132,10 +142,14 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
-
+            if (results.values!=null)
+            {
                 customerModelList.clear();
                 customerModelList.addAll((List)results.values);
                 notifyDataSetChanged();
+            }
+
+
 
 
 
@@ -157,7 +171,7 @@ public class CustomerListRecyclerAdapter extends RecyclerView.Adapter<CustomerLi
                 public void onClick(View v) {
                     NavController navController = NavHostFragment.findNavController(fragment);
                     CustomerListFragmentDirections.ActionCustomerListFragmentToAddCustomerFragment action = CustomerListFragmentDirections.actionCustomerListFragmentToAddCustomerFragment();
-                    action.setCustomer(customerModelList.get(getAdapterPosition()));
+                    action.setCustomerCode(customerModelList.get(getAdapterPosition()).getPartyCode());
                     navController.navigate(action);
 
 

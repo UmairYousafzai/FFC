@@ -119,7 +119,7 @@ public class TrackerFragment extends Fragment {
                             } else {
                                 CustomsDialog.getInstance().showDialog("Location request unaccepted from the user\n send request again to access location","Location Request",
                                         requireActivity(),
-                                        requireContext());                            }
+                                        requireContext(),2);                            }
                         }
 
                     }
@@ -217,7 +217,7 @@ public class TrackerFragment extends Fragment {
                     {
                         CustomsDialog.getInstance().showDialog("Location request unaccepted from the user\n send request again to access location","Location Request",
                                 requireActivity(),
-                                requireContext());
+                                requireContext(),2);
                     }
 
 

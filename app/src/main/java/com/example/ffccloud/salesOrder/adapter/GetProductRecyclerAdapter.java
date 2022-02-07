@@ -184,6 +184,8 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
                     productModel.setTitleProduct(productModelList.get(getAdapterPosition()).getTitle());
                     productModel.setUnitProduct(productModelList.get(getAdapterPosition()).getUnit());
                     productModel.setItem_Code((int)productModelList.get(getAdapterPosition()).getItCode());
+                    productModel.setItHead(productModelList.get(getAdapterPosition()).getItHead());
+                    productModel.setUnit_Name(productModelList.get(getAdapterPosition()).getUnit());
                     NavController navController = NavHostFragment.findNavController(fragment);
 
                     if (key==1)
@@ -194,8 +196,8 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
                     else {
                         mBinding.btnAdd.setEnabled(false);
                         AddProductFragmentDirections.ActionAddProductFragmentToProductInfoBottomSheetDialogFragment action = AddProductFragmentDirections.actionAddProductFragmentToProductInfoBottomSheetDialogFragment(productModel);
-                        action.setDate(date);
-                        action.setSupplierId(supplierID);
+                       action.setDate(date);
+                       action.setSupplierId(supplierID);
                         navController.navigate(action);
                         mBinding.btnAdd.setEnabled(true);
                     }

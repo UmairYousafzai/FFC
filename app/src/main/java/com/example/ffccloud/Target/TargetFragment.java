@@ -67,6 +67,7 @@ import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.worker.UploadWorker;
 import com.example.ffccloud.worker.utils.UploadDataRepository;
 import com.github.jhonnyx2012.horizontalpicker.DatePickerListener;
+import com.github.jhonnyx2012.horizontalpicker.Day;
 //import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -103,6 +104,7 @@ public class TargetFragment extends Fragment {
     private ProgressDialog progressDialog;
     private NavController navController;
     private UploadDataRepository uploadDataRepository;
+    private int DAY=0;
 
 
     @Override
@@ -210,31 +212,38 @@ public class TargetFragment extends Fragment {
 
     private void SettingUpDatePicker() {
         DateTime dateTime = new DateTime();
+        String mDay="", mMonth="", mYear ="";
 
+        if (selectedDate.equals(""))
+        {
+            selectedDay = dateTime.getDayOfMonth();
+            selectedMonth = dateTime.getMonthOfYear();
+            selectedYear = dateTime.getYear();
+            int checkmonth = (selectedMonth % 10);
+            int checkday = (selectedDay % 10);
+            if (checkmonth > 0 && selectedMonth < 9) {
+                mMonth = "0" + (selectedMonth);
+                //          date = day + "-" + "0" + (month + 1) + "-" + (year);
+            } else {
+                mMonth = String.valueOf(selectedMonth);
 
-        selectedDay = dateTime.getDayOfMonth();
-        selectedMonth = dateTime.getMonthOfYear();
+            }
 
-        selectedYear = dateTime.getYear();
+            if (checkday > 0 && selectedDay < 10) {
+                mDay = "0" + (selectedDay);
 
-        int checkmonth = (selectedMonth % 10);
-        int checkday = (selectedDay % 10);
-        String mDay, mMonth, mYear = String.valueOf(selectedYear);
-        if (checkmonth > 0 && selectedMonth < 9) {
-            mMonth = "0" + (selectedMonth);
-            //          date = day + "-" + "0" + (month + 1) + "-" + (year);
-        } else {
-            mMonth = String.valueOf(selectedMonth);
+            } else {
+                mDay = String.valueOf(selectedDay);
+
+            }
+            mYear = String.valueOf(selectedYear);
 
         }
 
-        if (checkday > 0 && selectedDay < 10) {
-            mDay = "0" + (selectedDay);
 
-        } else {
-            mDay = String.valueOf(selectedDay);
 
-        }
+
+
 
         mbinding.datePickerTimeline
                 .setOffset(30)
@@ -250,7 +259,6 @@ public class TargetFragment extends Fragment {
                 .init();
 
 
-        mbinding.datePickerTimeline.setSelected(true);
         String date = mDay + "/" + mMonth + "/" + mYear;
         Log.e("DateTag", "Date is:" + date);
         if (selectedDate.equals("")  || selectedDate.equals(date) ) {
@@ -261,7 +269,56 @@ public class TargetFragment extends Fragment {
         } else {
             getTargetViewModelData(selectedDate);
 
-            mbinding.datePickerTimeline.setDate(new DateTime().minusDays(selectedDay-dateTime.getDayOfMonth()));
+          if (selectedMonth == dateTime.getMonthOfYear())
+          {
+              if (selectedDay>= dateTime.getDayOfMonth())
+              {
+                  int difference= selectedDay-dateTime.getDayOfMonth();
+                  mbinding.datePickerTimeline.setDate(new DateTime().plusDays(difference));
+                  mbinding.datePickerTimeline.setSelected(true);
+              }
+              else
+              {
+                  int difference= dateTime.getDayOfMonth()-selectedDay;
+                  mbinding.datePickerTimeline.setDate(new DateTime().minusDays(difference));
+                  mbinding.datePickerTimeline.setSelected(true);
+              }
+
+          }
+          else if (selectedMonth>dateTime.getMonthOfYear())
+          {
+              int monthDifference= selectedMonth- dateTime.getMonthOfYear();
+              int difference=0;
+              if (selectedMonth%2==0)
+              {
+                  difference = (30-selectedDay)+dateTime.getDayOfMonth();
+              }
+              else
+              {
+                  difference = (31-selectedDay)+dateTime.getDayOfMonth();
+
+              }
+                  mbinding.datePickerTimeline.setDate(new DateTime().plusDays(difference));
+              mbinding.datePickerTimeline.setSelected(true);
+
+          }
+          else {
+              int difference=0;
+
+              if (selectedMonth%2==0)
+              {
+                  difference = (30-selectedDay)+dateTime.getDayOfMonth();
+              }
+              else
+              {
+                  difference = (31-selectedDay)+dateTime.getDayOfMonth();
+
+              }
+
+                  mbinding.datePickerTimeline.setDate(new DateTime().minusDays(difference));
+              mbinding.datePickerTimeline.setSelected(true);
+
+          }
 
         }
 
@@ -276,6 +333,7 @@ public class TargetFragment extends Fragment {
                 selectedDay = dateSelected.getDayOfMonth();
                 selectedMonth = dateSelected.getMonthOfYear();
                 selectedYear = dateSelected.getYear();
+                DAY=selectedDay;
                 int checkmonth = (selectedMonth % 10);
                 int checkday = (selectedDay % 10);
                 String mDay = null, mMonth = null, mYear = String.valueOf(selectedYear);
@@ -310,18 +368,18 @@ public class TargetFragment extends Fragment {
 
     public void getTargetViewModelData(String date) {
 
-//        targetViewModel.getAllEveningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
-//            @Override
-//            public void onChanged(List<DoctorModel> list) {
-//                if (list.size() > 0) {
-//
-//                    eveningListAdapter.setDoctorModelList(list);
-//                } else {
-//                    eveningListAdapter.clearData();
-//
-//                }
-//            }
-//        });
+        targetViewModel.getAllEveningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
+            @Override
+            public void onChanged(List<DoctorModel> list) {
+                if (list != null && list.size() > 0) {
+
+                    eveningListAdapter.setDoctorModelList(list);
+                } else {
+                    eveningListAdapter.clearData();
+
+                }
+            }
+        });
 
 
         targetViewModel.getAllMorningDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
@@ -740,7 +798,7 @@ public class TargetFragment extends Fragment {
                                 String dateTime = dateCheck + " " + timeCheck;
                                 addNewWorkPlanModel.setWorkFromDate(dateTime);
                                 addNewWorkPlanModel.setWorkToDate(dateTime);
-                                addNewWorkPlanModel.setWorkPlan("Meeting");
+                                addNewWorkPlanModel.setWorkPlan(doctorModel.getWork_Plan());
                                 addNewWorkPlanModel.setWorkId(doctorModel.getWorkId());
 
                                 if (isNetworkConnected()) {

@@ -2,20 +2,10 @@ package com.example.ffccloud.salesOrder;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +16,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.GetSaleOrderModel;
@@ -72,6 +73,8 @@ public class SalesOrderListFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
+
         mBinding = FragmentSalesOrderListBinding.inflate(inflater,container,false);
         return mBinding.getRoot();
     }
@@ -125,7 +128,16 @@ public class SalesOrderListFragment extends Fragment {
 
         String date =String.valueOf(calendar.get(Calendar.YEAR))+getDate(month,day);
         setUpRecyclerView();
-        getSalesOrder(0,date,date,0,0,0);
+        if (isNetworkConnected())
+        {
+            getSalesOrder(0,date,date,0,0,0);
+
+        }
+        else
+        {
+            Toast.makeText(requireContext(), "Sale order Loading Failed \n Please connect to internet", Toast.LENGTH_SHORT).show();
+
+        }
         btnListener();
         setPullToFresh();
     }
@@ -255,8 +267,11 @@ public class SalesOrderListFragment extends Fragment {
                 {
                     if (fromDate!=null)
                     {
+                        mBinding.tvFromDate.setError(null);
+
                         if (toDate!=null)
                         {
+                            mBinding.tvToDate.setError(null);
                             getSalesOrder(customerModel.getSupplier_Id(),fromDate,toDate,byStatusKey,byDateKey,byPriorityKey);
                         }
                         else {
@@ -331,7 +346,16 @@ public class SalesOrderListFragment extends Fragment {
             String date =String.valueOf(calendar.get(Calendar.YEAR))+getDate(calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DAY_OF_MONTH));
 
             mBinding.swipeLayout.setRefreshing(false);
-            getSalesOrder(0,date,date,0,0,0);
+            if (isNetworkConnected())
+            {
+                getSalesOrder(0,date,date,0,0,0);
+
+            }
+            else
+            {
+                Toast.makeText(requireContext(), "Sale order Loading Failed \n Please connect to internet", Toast.LENGTH_SHORT).show();
+
+            }
         });
     }
     private void setUpRecyclerView() {
@@ -401,7 +425,7 @@ public class SalesOrderListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if (item.getItemId()==R.id.filter)
+        if (item.getItemId()== R.id.filter)
         {
             if (mBinding.salesOrderFilterLayout.getVisibility()==View.GONE)
             {
@@ -432,5 +456,16 @@ public class SalesOrderListFragment extends Fragment {
         return true;
     }
 
+    public boolean isNetworkConnected() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return connected = true;
+        } else {
+            return connected = false;
+        }
 
+    }
 }

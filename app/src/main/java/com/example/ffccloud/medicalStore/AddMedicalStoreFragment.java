@@ -155,7 +155,7 @@ public class AddMedicalStoreFragment extends Fragment {
                             if (mBinding.locationCheckBox.isChecked()) {
                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.locationCheckBox.setText(locationAddress);
-                                locationString = location.getLongitude() + "," + location.getLatitude();
+                                locationString = location.getLatitude() + "," +location.getLongitude() ;
                             } else {
 
                                 mBinding.locationCheckBox.setText("Enable Location");

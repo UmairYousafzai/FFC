@@ -6,7 +6,8 @@ import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.Database.FfcDAO;
+
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.model.DeliveryModeModel;
@@ -20,7 +21,7 @@ import java.util.concurrent.Executors;
 
 public class UserRepository {
 
-    private FfcDAO mDao;
+    private FFC_DAO mDao;
     private Context context;
     private final LiveData<List<QualificationModel>> allQualification;
     private final LiveData<List<ClassificationModel>> allClassification;

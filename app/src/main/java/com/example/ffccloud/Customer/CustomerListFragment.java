@@ -1,34 +1,37 @@
 package com.example.ffccloud.Customer;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.ffccloud.Customer.Adapter.CustomerListRecyclerAdapter;
+import com.example.ffccloud.Customer.utils.CustomerViewModel;
 import com.example.ffccloud.CustomerModel;
-import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.FragmentCustomerListBinding;
-import com.example.ffccloud.utils.SharedPreferenceHelper;
+import com.example.ffccloud.utils.SyncDataToDB;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CustomerListFragment extends Fragment {
 
@@ -36,6 +39,8 @@ public class CustomerListFragment extends Fragment {
     private CustomerListRecyclerAdapter adapter;
     private ProgressDialog progressDialog;
     private NavController navController;
+    private CustomerViewModel customerViewModel;
+    private List<CustomerModel> customerModelList= new ArrayList<>();
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -47,6 +52,16 @@ public class CustomerListFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        navController = NavHostFragment.findNavController(this);
+
+        customerViewModel = new ViewModelProvider(this).get(CustomerViewModel.class);
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -55,7 +70,6 @@ public class CustomerListFragment extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        navController = NavHostFragment.findNavController(this);
 
         setupRecyclerView();
         getCustomerData();
@@ -106,53 +120,54 @@ public class CustomerListFragment extends Fragment {
 
     private void getCustomerData() {
 
-        int userID= SharedPreferenceHelper.getInstance(requireContext()).getUserID();
-
-        Call<List<CustomerModel>> call = ApiClient.getInstance().getApi().getAllCustomer(1,1,"C",userID);
-
-        call.enqueue(new Callback<List<CustomerModel>>() {
+        customerViewModel.getAllCustomer().observe(getViewLifecycleOwner(), new Observer<List<CustomerModel>>() {
             @Override
-            public void onResponse(@NotNull Call<List<CustomerModel>> call, @NotNull Response<List<CustomerModel>> response) {
+            public void onChanged(List<CustomerModel> customerModels) {
 
-                if(response.body()!=null)
+                if (customerModels!=null)
                 {
-                    if (response.body().size()==0)
+                    if (customerModels.size()>0)
+                    {
+                        mBinding.tvNothingFound.setVisibility(View.INVISIBLE);
+                        mBinding.customerListRecyclerview.setVisibility(View.VISIBLE);
+
+
+                    }
+                    else
                     {
                         mBinding.tvNothingFound.setVisibility(View.VISIBLE);
-                        progressDialog.dismiss();
-
+                        mBinding.customerListRecyclerview.setVisibility(View.INVISIBLE);
                     }
-                    else {
-                        mBinding.tvNothingFound.setVisibility(View.GONE);
-                        adapter.setContactPersonsModelList(response.body());
-                        progressDialog.dismiss();
-                    }
+                    customerModelList= customerModels;
+                    adapter.setContactPersonsModelList(customerModelList);
 
-                }
-                else
+                }else
                 {
-                    progressDialog.dismiss();
                     mBinding.tvNothingFound.setVisibility(View.VISIBLE);
-                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
-
+                    mBinding.customerListRecyclerview.setVisibility(View.INVISIBLE);
                 }
-
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<List<CustomerModel>> call, @NotNull Throwable t) {
                 progressDialog.dismiss();
-                mBinding.tvNothingFound.setVisibility(View.VISIBLE);
-
             }
         });
+
+
     }
     public void setPullToFresh() {
         mBinding.swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mBinding.swipeLayout.setRefreshing(false);
-               getCustomerData();
+                if (isNetworkConnected())
+                {
+                    customerViewModel.deleteAllCustomers();
+
+                    new SyncDataToDB().getCustomerData(requireContext());
+                }
+                else
+                {
+                    Toast.makeText(requireContext(), "Customer Loading Failed \n Please connect to internet", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -160,5 +175,18 @@ public class CustomerListFragment extends Fragment {
         mBinding.customerListRecyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new CustomerListRecyclerAdapter(this);
         mBinding.customerListRecyclerview.setAdapter(adapter);
+    }
+
+    public boolean isNetworkConnected() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return connected = true;
+        } else {
+            return connected = false;
+        }
+
     }
 }

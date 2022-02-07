@@ -580,13 +580,7 @@ public class DoctorFormFragment extends Fragment {
                         permissionArray,
                         CONSTANTS.PERMISSION_REQUEST_CODE_FOR_GALLERY);            }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
 
 

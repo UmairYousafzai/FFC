@@ -9,6 +9,7 @@ import androidx.room.Update;
 import androidx.room.Query;
 
 import com.example.ffccloud.AttendanceActivity.AttendanceModel;
+import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.ExpenseModelClass;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.Login.GetUserMenuModel;
@@ -30,7 +31,7 @@ import com.example.ffccloud.ScheduleModel;
 import java.util.List;
 
 @Dao
-public interface FfcDAO {
+public interface FFC_DAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertUserInfo(GetUserInfoModel u);
 
@@ -186,11 +187,15 @@ public interface FfcDAO {
     @Query("Delete From Doctor")
     void deleteAllWorkPlanDoctor();
 
-    @Query("Select *From Doctor where (fromDate=:date) order by dotorId_pk desc")
+    @Query("Select *From Doctor where (fromDate=:date) and" +
+            " (shift = 'Morning')" +
+            " order by dotorId_pk desc")
     LiveData<List<DoctorModel>> getMorningDoctorByDate(String date);
 
 //     +"and (shift = 'Morning')"
-    @Query("Select *From Doctor where (fromDate = :date) order by dotorId_pk desc")
+    @Query("Select *From Doctor where (fromDate = :date) and " +
+            "(shift = 'Evening') " +
+            "order by dotorId_pk desc")
     LiveData<List<DoctorModel>> getEveningDoctorByDate(String date);
 
     // + " and (shift = 'Evening')"
@@ -377,4 +382,27 @@ public interface FfcDAO {
 
     @Query("Select *from Notification where senderId= :senderID and notificationTitle=:message ")
     Notification getNotification(String senderID,String message);
+
+
+                    /*
+    //
+    // *******Customer  Queries*******
+    //
+     */
+
+
+    @Insert
+    void insertAllCustomer(List<CustomerModel> list);
+
+    @Query("Delete from Customer")
+    void deleteAllCustomer();
+
+    @Query("Select *from Customer")
+    LiveData<List<CustomerModel>> getAllCustomer();
+
+    @Query("Select *from Customer where  Supplier_Id=:customerID")
+    CustomerModel getCustomerById(int customerID);
+
+    @Query("Select *from Customer where  partyCode=:customerCode")
+    LiveData<List<CustomerModel>> getCustomerByCode(String  customerCode);
 }

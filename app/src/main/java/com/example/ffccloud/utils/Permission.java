@@ -31,7 +31,7 @@ public class Permission {
         String[] permissionArray = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -43,13 +43,7 @@ public class Permission {
                         CONSTANTS.PERMISSION_REQUEST_CODE);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
 
 
@@ -71,7 +65,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -83,13 +77,7 @@ public class Permission {
                         CONSTANTS.PERMISSION_REQUEST_CODE);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
 
@@ -110,7 +98,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -122,13 +110,7 @@ public class Permission {
                         CONSTANTS.PERMISSION_REQUEST_CODE);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
@@ -149,7 +131,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.CAMERA};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -161,13 +143,7 @@ public class Permission {
                         CONSTANTS.PERMISSION_REQUEST_CODE);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.CAMERA)) {
@@ -188,7 +164,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -200,13 +176,7 @@ public class Permission {
                         CONSTANTS.PERMISSION_REQUEST_CODE);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -228,7 +198,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.CALL_PHONE};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -240,13 +210,7 @@ public class Permission {
                         CONSTANTS.PERMISSION_REQUEST_CODE);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.CALL_PHONE)) {
@@ -271,7 +235,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.SEND_SMS};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -283,13 +247,7 @@ public class Permission {
                         CONSTANTS.PERMISSION_REQUEST_CODE);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.SEND_SMS)) {
 
@@ -311,7 +269,7 @@ public class Permission {
 
         String[] permissionArray = new String[]{Manifest.permission.READ_PHONE_STATE};
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        AlertDialog alertDialog = new AlertDialog.Builder( mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
 
 
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
@@ -323,13 +281,7 @@ public class Permission {
                         CONSTANTS.PERMISSION_REQUEST_CODE);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                alertDialog.dismiss();
-            }
-        });
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.READ_PHONE_STATE)) {
 
@@ -354,7 +306,7 @@ public class Permission {
 
 
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(mActivity.getLayoutInflater());
-        alertDialog = new AlertDialog.Builder(mContext).setView(dialogBinding.getRoot()).setCancelable(false).create();
+        alertDialog = new AlertDialog.Builder(mContext).setView(dialogBinding.getRoot()).setCancelable(true).create();
         dialogBinding.title.setText("Please turn on  location for this action.");
         dialogBinding.body.setText("Do you want to open location setting.");
         alertDialog.show();
@@ -367,11 +319,6 @@ public class Permission {
                 mContext.startActivity(intent);
             }
         });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
+
     }
 }

@@ -396,11 +396,16 @@ public class AddworkPlanFragment extends Fragment {
 
                         UpdateStatus updateStatus = response.body();
 
-                        CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(), "Add work plan", requireActivity(), requireContext());
 
                         if (updateStatus.getStatus()==1)
                         {
+                            CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(), "Add work plan", requireActivity(), requireContext(),1);
+
                             refreshFields();
+                        }else
+                        {
+                            CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage(), "Add work plan", requireActivity(), requireContext(),2);
+
                         }
 
                     }
@@ -415,7 +420,7 @@ public class AddworkPlanFragment extends Fragment {
             @Override
             public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
                 mBinding.saveBtn.setEnabled(true);
-                CustomsDialog.getInstance().showDialog(t.getMessage(), "Add work plan", requireActivity(), requireContext());
+                CustomsDialog.getInstance().showDialog(t.getMessage(), "Add work plan", requireActivity(), requireContext(),2);
                 progressDialog.dismiss();
 
             }

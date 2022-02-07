@@ -239,7 +239,7 @@ public class AddDoctorFragment extends Fragment {
                                 }
                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.location.setText(locationAddress);
-                                locationString = location.getLongitude() + "," + location.getLatitude();
+                                locationString = location.getLatitude() + "," +location.getLongitude() ;
                             } else {
 
                                 mBinding.location.setText("Enable Location");

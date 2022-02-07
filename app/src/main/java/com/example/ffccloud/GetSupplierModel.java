@@ -8,25 +8,27 @@ public class GetSupplierModel implements Parcelable {
     private int Supplier_Id;
     private String supplierLinkId;
     private String Supplier_Name;
+    private String Supplier_Code;
     private String Address;
     private boolean isRegister;
 
     public GetSupplierModel() {
     }
 
-    public GetSupplierModel(int supplier_Id, String supplier_Name, String address,boolean isRegister,String supplierLinkId) {
+    public GetSupplierModel(int supplier_Id, String supplierLinkId, String supplier_Name, String supplier_Code, String address, boolean isRegister) {
         Supplier_Id = supplier_Id;
+        this.supplierLinkId = supplierLinkId;
         Supplier_Name = supplier_Name;
+        Supplier_Code = supplier_Code;
         Address = address;
         this.isRegister = isRegister;
-        this.supplierLinkId =supplierLinkId;
     }
-
 
     protected GetSupplierModel(Parcel in) {
         Supplier_Id = in.readInt();
         supplierLinkId = in.readString();
         Supplier_Name = in.readString();
+        Supplier_Code = in.readString();
         Address = in.readString();
         isRegister = in.readByte() != 0;
     }
@@ -36,6 +38,7 @@ public class GetSupplierModel implements Parcelable {
         dest.writeInt(Supplier_Id);
         dest.writeString(supplierLinkId);
         dest.writeString(Supplier_Name);
+        dest.writeString(Supplier_Code);
         dest.writeString(Address);
         dest.writeByte((byte) (isRegister ? 1 : 0));
     }
@@ -56,6 +59,14 @@ public class GetSupplierModel implements Parcelable {
             return new GetSupplierModel[size];
         }
     };
+
+    public String getSupplier_Code() {
+        return Supplier_Code;
+    }
+
+    public void setSupplier_Code(String supplier_Code) {
+        Supplier_Code = supplier_Code;
+    }
 
     public String getSupplierLinkId() {
         return supplierLinkId;

@@ -3,8 +3,16 @@ package com.example.ffccloud;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class InsertProductModel implements Parcelable{
 
+    @SerializedName("It_Head")
+    @Expose
+    private String itHead;
+
+    private String Unit_Name;
     private int Item_Code;
     private int Sale_Order_Id;
     private int Unit_Id;
@@ -23,10 +31,14 @@ public class InsertProductModel implements Parcelable{
     private String unitProduct;
 
     public InsertProductModel() {
+
     }
 
 
     protected InsertProductModel(Parcel in) {
+        itHead = in.readString();
+        Unit_Name = in.readString();
+
         Item_Code = in.readInt();
         Sale_Order_Id = in.readInt();
         Unit_Id = in.readInt();
@@ -46,6 +58,9 @@ public class InsertProductModel implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(itHead);
+        dest.writeString(Unit_Name);
+
         dest.writeInt(Item_Code);
         dest.writeInt(Sale_Order_Id);
         dest.writeInt(Unit_Id);
@@ -79,6 +94,25 @@ public class InsertProductModel implements Parcelable{
             return new InsertProductModel[size];
         }
     };
+
+
+    public String getUnit_Name() {
+        return Unit_Name;
+    }
+
+    public void setUnit_Name(String unit_Name) {
+        Unit_Name = unit_Name;
+    }
+
+    public String getItHead() {
+        return itHead;
+    }
+
+    public void setItHead(String itHead) {
+        this.itHead = itHead;
+    }
+
+
 
     public String getTitleProduct() {
         return titleProduct;

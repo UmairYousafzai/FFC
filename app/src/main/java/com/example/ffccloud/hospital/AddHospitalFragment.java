@@ -409,7 +409,7 @@ public class AddHospitalFragment extends Fragment {
                                 isLocationChecked = true;
                                 locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
                                 mBinding.locationCheckbox.setText(locationAddress);
-                                locationString = location.getLongitude() + "," + location.getLatitude();
+                                locationString = location.getLatitude() + "," +location.getLongitude() ;
                             } else {
                                 isLocationChecked = false;
 

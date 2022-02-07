@@ -4,11 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ffccloud.Customer.utils.CustomerViewModel;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.model.Activity;
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     private NotificationViewModel notificationViewModel;
     private UserViewModel userViewModel;
     private boolean isEndDay=false;
+    private CustomerViewModel customerViewModel;
 
 
     private boolean menuCheck = true;
@@ -102,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         ffcDatabase = FfcDatabase.getInstance(getApplicationContext());
         userViewModel= new ViewModelProvider(this).get(UserViewModel.class);
         uploadDataRepository = new UploadDataRepository(this);
-
+        customerViewModel = new ViewModelProvider(this).get(CustomerViewModel.class);
 
         permission = new Permission(this, this);
 
@@ -188,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             SyncDataToDB.getInstance().SyncData(id, this, this);
+            SyncDataToDB.getInstance().saveDoctorsList(id, this, this);
             SharedPreferenceHelper.getInstance(getApplication()).setGetDocListState(false);
         }
 
@@ -340,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
 
                 targetViewModel.DeleteAllDoctor();
 
+                customerViewModel.deleteAllCustomers();
                 activityViewModel.deleteAllActivity();
                 doctorViewModel.deleteAllSchedule();
                 doctorViewModel.deleteAllFilterDoctor();
@@ -392,13 +399,15 @@ public class MainActivity extends AppCompatActivity {
             headerBinding.profileName.setText(loginUser.getUserName());
             headerBinding.profileEmail.setText(loginUser.getEmail());
             headerBinding.profileDesignation.setVisibility(View.GONE);
-
-            Glide.with(this)
-                    .load(loginUser.getImage())
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_profile)
-                    .into(headerBinding.profileImage);
-
+            byte[] data = Base64.decode(loginUser.getImage(), Base64.DEFAULT);
+            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+            headerBinding.profileImage.setImageBitmap(bmp);
+//            Glide.with(this)
+//                    .load(loginUser.getImage())
+//                    .centerCrop()
+//                    .placeholder(R.drawable.ic_profile)
+//                    .into(headerBinding.profileImage);
+//
         }
 
 

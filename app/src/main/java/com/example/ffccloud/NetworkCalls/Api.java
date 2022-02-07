@@ -19,6 +19,7 @@ import com.example.ffccloud.model.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.model.ExpenseType;
+import com.example.ffccloud.model.GetCustomerResponse;
 import com.example.ffccloud.model.GetLedgerBalanceModel;
 import com.example.ffccloud.model.GetSaleOrderDetail;
 import com.example.ffccloud.model.GetSupplierDetailModel;
@@ -87,7 +88,7 @@ public interface Api {
             @Query("UserId") int id
     );
 
-    @GET("api/FFCAppApi/GetDoctorByEmployee  ")
+    @GET("api/FFCAppApi/GetDoctorByEmployee")
     Call<List<DoctorModel>> GetDoctorsByEmployeeId(@Header("Authorization") String token, @Query("Emp_Id") int emp_Id);
 
     @POST("api/FFCAppApi/UpdateWorkPlanStatus")
@@ -216,5 +217,10 @@ public interface Api {
 
     @POST("api/FFCAppApi/SaveExpensesList")
     Call<UpdateStatus> insertExpenses(@Header("Authorization") String token, @Body List<ExpenseModelClass> sendExpenseModels);
+
+    @GET("api/SupplierApi/GetByID")
+    Call<GetCustomerResponse>  getCustomerByCode(@Query("Company_Id") int companyID,
+                                                 @Query("Country_Id") int Country_Id,
+                                                 @Query("Supplier_Code") String  customerCode);
 }
 

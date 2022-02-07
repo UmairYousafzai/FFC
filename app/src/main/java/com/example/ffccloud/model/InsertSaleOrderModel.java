@@ -28,11 +28,12 @@ public class InsertSaleOrderModel {
     private int Supplier_Id;
     private int Priority_Id;
     private int Delivery_Mode_Id;
+    private int Amount_Type;
 
     public InsertSaleOrderModel() {
     }
 
-    public InsertSaleOrderModel(List<InsertProductModel> productModelList, List<TermAndConditionModel> termAndConditionModelList, int company_Id, int country_Id, int location_Id, int project_Id, int sale_Order_Id, String sale_Order_Date, String delivery_Date, String delivery_Location, int ledger_Balance, int credit_Limit, int supplier_Id, int priority_Id, int delivery_Mode_Id) {
+    public InsertSaleOrderModel(List<InsertProductModel> productModelList, List<TermAndConditionModel> termAndConditionModelList, int company_Id, int country_Id, int location_Id, int project_Id, int sale_Order_Id, String sale_Order_Date, String delivery_Date, String delivery_Location, int ledger_Balance, int credit_Limit, int supplier_Id, int priority_Id, int delivery_Mode_Id,int amountType) {
         this.productModelList = productModelList;
         this.termAndConditionModelList = termAndConditionModelList;
         Company_Id = company_Id;
@@ -48,6 +49,7 @@ public class InsertSaleOrderModel {
         Supplier_Id = supplier_Id;
         Priority_Id = priority_Id;
         Delivery_Mode_Id = delivery_Mode_Id;
+        Amount_Type= amountType;
     }
 
     public List<InsertProductModel> getProductModelList() {
@@ -64,6 +66,14 @@ public class InsertSaleOrderModel {
 
     public void setTermAndConditionModelList(List<TermAndConditionModel> termAndConditionModelList) {
         this.termAndConditionModelList = termAndConditionModelList;
+    }
+
+    public int getAmount_Type() {
+        return Amount_Type;
+    }
+
+    public void setAmount_Type(int amount_Type) {
+        Amount_Type = amount_Type;
     }
 
     public int getCompany_Id() {

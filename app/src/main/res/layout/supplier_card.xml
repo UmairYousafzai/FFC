@@ -82,7 +82,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/id"
+                    android:text="@string/code"
                     android:textColor="@color/APP_Theme_Color"
                     android:textStyle="bold"
                     android:paddingStart="10dp"
@@ -97,7 +97,7 @@
                     android:background="@color/white"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="8dp"
-                    android:text="@{String.valueOf(supplier.supplier_Id)}"
+                    android:text="@{String.valueOf(supplier.supplier_Code)}"
                     android:textSize="14sp" />
             </LinearLayout>
 

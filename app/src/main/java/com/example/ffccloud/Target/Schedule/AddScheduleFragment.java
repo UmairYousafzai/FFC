@@ -233,13 +233,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                         alertDialog.dismiss();
                     }
                 });
-                dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                        alertDialog.dismiss();
-                    }
-                });
 
 
             }
@@ -262,14 +256,6 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
 
                                 primaryLocation = true;
 
-                                alertDialog.dismiss();
-                            }
-                        });
-                        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                primaryLocation = false;
-                                mBinding.primaryLocationBtn.setChecked(false);
                                 alertDialog.dismiss();
                             }
                         });
@@ -299,13 +285,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                         alertDialog.dismiss();
                     }
                 });
-                dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                        alertDialog.dismiss();
-                    }
-                });
 
 
 
@@ -332,7 +312,7 @@ public class AddScheduleFragment extends Fragment implements AdapterView.OnItemS
                 UpdateStatus updateStatus = response.body();
                 mBinding.primaryLocationBtn.setEnabled(false);
                 progressDialog.dismiss();
-                CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage()," ",requireActivity(),requireContext());
+                CustomsDialog.getInstance().showDialog(updateStatus.getStrMessage()," ",requireActivity(),requireContext(),2);
             }
 
             @Override

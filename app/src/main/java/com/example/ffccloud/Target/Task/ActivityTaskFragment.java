@@ -158,7 +158,7 @@ public class ActivityTaskFragment extends Fragment {
         mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomsDialog.getInstance().showDialog("Saved successfully"," ",requireActivity(),requireContext());
+                CustomsDialog.getInstance().showDialog("Saved successfully"," ",requireActivity(),requireContext(),2);
             }
         });
     }

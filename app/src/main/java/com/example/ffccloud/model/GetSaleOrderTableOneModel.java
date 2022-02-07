@@ -44,6 +44,9 @@ public class GetSaleOrderTableOneModel {
     @SerializedName("Supplier_Id")
     @Expose
     private double supplierId;
+    @SerializedName("Supplier_Name")
+    @Expose
+    private String supplierName;
     @SerializedName("Ledger_Balance")
     @Expose
     private double ledgerBalance;
@@ -80,6 +83,14 @@ public class GetSaleOrderTableOneModel {
     @SerializedName("Currency_Id")
     @Expose
     private Integer currencyId;
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
 
     public double getSaleOrderId() {
         return saleOrderId;

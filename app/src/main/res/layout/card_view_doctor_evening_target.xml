@@ -52,7 +52,7 @@
                         android:background="@color/APP_Theme_Color"
                         android:gravity="center_horizontal"
                         android:padding="10dp"
-                        android:text="@{DoctorEvening.status}"
+                        android:text="@{DoctorEvening.work_Plan}"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                        />

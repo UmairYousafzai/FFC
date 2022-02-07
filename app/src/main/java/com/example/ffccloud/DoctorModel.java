@@ -79,6 +79,8 @@ public class DoctorModel implements Parcelable {
 
     private String distance;
 
+    private String Work_Plan;
+
     public DoctorModel() {
     }
 
@@ -106,6 +108,7 @@ public class DoctorModel implements Parcelable {
         workDate = in.readString();
         WorkTime = in.readString();
         distance = in.readString();
+        Work_Plan = in.readString();
     }
 
     @Override
@@ -131,6 +134,7 @@ public class DoctorModel implements Parcelable {
         dest.writeString(workDate);
         dest.writeString(WorkTime);
         dest.writeString(distance);
+        dest.writeString(Work_Plan);
     }
 
     @Override
@@ -149,6 +153,14 @@ public class DoctorModel implements Parcelable {
             return new DoctorModel[size];
         }
     };
+
+    public String getWork_Plan() {
+        return Work_Plan;
+    }
+
+    public void setWork_Plan(String work_Plan) {
+        Work_Plan = work_Plan;
+    }
 
     public String getWorkDate() {
         return workDate;

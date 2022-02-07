@@ -1,27 +1,31 @@
 package com.example.ffccloud.salesOrder;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
-
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.model.RateListModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.databinding.FragmentProductInfoBottomSheetDialogBinding;
+import com.example.ffccloud.model.RateListModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
@@ -31,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,11 +44,10 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
     private FragmentProductInfoBottomSheetDialogBinding mBinding;
     private NavController navController;
     private InsertProductModel productModel= new InsertProductModel();
-    private List<String> priceTypeList=new ArrayList<>();
-    private String saleOrderDate;
-    private int supplierID;
+    private final List<String> priceTypeList=new ArrayList<>();
+    private String saleOrderDate=" ";
+    private int supplierID=0;
     private RateListModel rateListModel = new RateListModel();
-    private boolean flag= true, flag2= true;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -59,9 +61,12 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        saleOrderDate = ProductInfoBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getDate();
-        supplierID = ProductInfoBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getSupplierId();
-        productModel= ProductInfoBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getProductModel();
+        if (getArguments() != null) {
+            saleOrderDate = ProductInfoBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getDate();
+            supplierID = ProductInfoBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getSupplierId();
+            productModel= ProductInfoBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getProductModel();
+        }
+
 
 
 
@@ -78,6 +83,7 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
         btnListener();
         editTextListener();
         setUpSpinner();
+        openKeyBoard();
 
 
     }
@@ -113,11 +119,17 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 if (!s.toString().isEmpty())
                 {
                     try {
                         long rate = (long)rateListModel.getSaleRate();
-                        long discountPercentage =Long.parseLong(mBinding.etDiscountPercentage.getText().toString());
+                        long discountPercentage=0;
+                        if (mBinding.etDiscountPercentage.getText()!=null)
+                        {
+                             discountPercentage =Long.parseLong(mBinding.etDiscountPercentage.getText().toString());
+
+                        }
                         long gstPercentage = (long)rateListModel.getsTPercnt();
                         long quantity = Long.parseLong(s.toString());
                         long  amount =rate*quantity ;
@@ -133,7 +145,7 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
                         mBinding.etNetAmount.setText(String.valueOf(netAmount));
                     }catch (Exception exception)
                     {
-                        Toast.makeText(requireContext(), ""+exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("product Price Error:",exception.getMessage());
                     }
 
                 }
@@ -157,31 +169,35 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
             @Override
             public void afterTextChanged(Editable s) {
+                String amountString="0";
 
-
-                String amoutString = mBinding.etAmount.getText().toString();
-                if (!amoutString.equals(""))
+                if (mBinding.etAmount.getText()!=null)
                 {
-                    if (!s.toString().isEmpty())
+                     amountString = mBinding.etAmount.getText().toString();
+
+                }
+                    if (!amountString.equals(""))
                     {
-                        long amount = Long.parseLong(amoutString);
-                        long percentage = Long.parseLong(s.toString());
+                        if (!s.toString().isEmpty())
+                        {
+                            long amount = Long.parseLong(amountString);
+                            long percentage = Long.parseLong(s.toString());
 
-                        long discount= getPercentageAmount(amount,percentage);
-                        mBinding.etDiscount.setText(String.valueOf(discount));
+                            long discount= getPercentageAmount(amount,percentage);
+                            mBinding.etDiscount.setText(String.valueOf(discount));
 
-                        long discountedValue = amount - discount;
-                        mBinding.etDiscountedValue.setText(String.valueOf(discountedValue));
+                            long discountedValue = amount - discount;
+                            mBinding.etDiscountedValue.setText(String.valueOf(discountedValue));
 
-                        long gstPercentage = (long)rateListModel.getsTPercnt();
+                            long gstPercentage = (long)rateListModel.getsTPercnt();
 
-                        long gst = (discountedValue *gstPercentage)/100;
-                        mBinding.etGst.setText(String.valueOf(gst));
+                            long gst = (discountedValue *gstPercentage)/100;
+                            mBinding.etGst.setText(String.valueOf(gst));
+                            
+                            long netAmount = discountedValue+gst;
 
-                        long netAmount = discountedValue+gst;
-
-                        mBinding.etNetAmount.setText(String.valueOf(netAmount));
-                    }
+                            mBinding.etNetAmount.setText(String.valueOf(netAmount));
+                        }
 
 
                 }
@@ -204,29 +220,132 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
             public void onClick(View v) {
 
 
-
-                try {
-                    productModel.setAmount(Long.parseLong(Objects.requireNonNull(mBinding.etAmount.getText()).toString()));
-                    productModel.setComments(mBinding.etComment.getText().toString());
-                    productModel.setDisc_Amount(Long.parseLong(Objects.requireNonNull(mBinding.etDiscount.getText()).toString()));
-                    productModel.setDisc_Percentage(Long.parseLong(Objects.requireNonNull(mBinding.etDiscountPercentage.getText()).toString()));
-                    productModel.setDiscounted_Value(Long.parseLong(Objects.requireNonNull(mBinding.etDiscountedValue.getText()).toString()));
-                    productModel.setNet_Amount(Long.parseLong(Objects.requireNonNull(mBinding.etNetAmount.getText()).toString()));
-                    productModel.setQty(Long.parseLong(Objects.requireNonNull(mBinding.etOrderQuantity.getText()).toString()));
-                    productModel.setST_Amount(Long.parseLong(Objects.requireNonNull(mBinding.etGst.getText()).toString()));
-                    productModel.setST_Percentage(Long.parseLong(Objects.requireNonNull(mBinding.etGstPercentage.getText()).toString()));
-                    productModel.setItem_Code(productModel.getItem_Code());
-                    productModel.setRate(Double.parseDouble(Objects.requireNonNull(mBinding.etRate.getText()).toString()));
-
-                    Objects.requireNonNull(navController.getPreviousBackStackEntry()).getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL,productModel);
-
-
-                    navController.popBackStack();
-                }
-                catch (Exception e)
+                closeKeyBoard();
+                if (productModel!=null)
                 {
-                    Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (rateListModel.getSaleRate()!=0.0)
+                    {
+                        try {
+                            if(mBinding.etAmount.getText()!=null)
+                            {
+                                if (mBinding.etAmount.getText().toString().length()>0)
+                                {
+                                    productModel.setAmount(Long.parseLong(mBinding.etAmount.getText().toString()));
+
+                                }
+
+                            }
+                            if (mBinding.etComment.getText()!=null)
+                            {
+
+                                    productModel.setComments(mBinding.etComment.getText().toString());
+
+
+                            }
+                            if (mBinding.etDiscount.getText()!=null)
+                            {
+                                if (mBinding.etDiscount.getText().toString().length()>0)
+                                {
+                                    productModel.setDisc_Amount(Long.parseLong(mBinding.etDiscount.getText().toString()));
+                                }
+
+                            }
+                            if (mBinding.etDiscountPercentage.getText()!=null)
+                            {
+                                if (mBinding.etDiscountPercentage.getText().toString().length()>0)
+                                {
+
+                                    productModel.setDisc_Percentage(Long.parseLong(mBinding.etDiscountPercentage.getText().toString()));
+                                }
+
+                            }
+                            if (mBinding.etDiscountedValue.getText()!=null)
+                            {
+                                if (mBinding.etDiscountedValue.getText().toString().length()>0)
+                                {
+                                    productModel.setDiscounted_Value(Long.parseLong(mBinding.etDiscountedValue.getText().toString()));
+
+                                }
+
+                            }
+                            if (mBinding.etNetAmount.getText()!=null)
+                            {
+                                if (mBinding.etNetAmount.getText().toString().length()>0)
+                                {
+
+                                    productModel.setNet_Amount(Long.parseLong(mBinding.etNetAmount.getText().toString()));
+                                }
+
+                            }
+
+                            if (mBinding.etOrderQuantity.getText()!=null)
+                            {
+                                if (mBinding.etOrderQuantity.getText().toString().length()>0)
+                                {
+                                    productModel.setQty(Long.parseLong(mBinding.etOrderQuantity.getText().toString()));
+                                }
+
+                            }
+
+                            if (mBinding.etGst.getText()!=null)
+                            {
+                                if( mBinding.etGst.getText().toString().length()>0)
+                                {
+                                    productModel.setST_Amount(Long.parseLong(mBinding.etGst.getText().toString()));
+                                }
+
+                            }
+                            if (mBinding.etGstPercentage.getText()!=null)
+                            {
+                                if( mBinding.etGstPercentage.getText().toString().length()>0)
+                                {
+                                    productModel.setST_Percentage(Long.parseLong(mBinding.etGstPercentage.getText().toString()));
+
+                                }
+
+                            }
+
+                            if (productModel!=null)
+                            {
+                                productModel.setItem_Code(productModel.getItem_Code());
+                            }
+
+
+                            if (mBinding.etRate.getText()!=null)
+                            {
+                                if( mBinding.etRate.getText().toString().length()>0)
+                                {
+                                    productModel.setRate(Double.parseDouble(mBinding.etRate.getText().toString()));
+                                }
+
+                            }
+
+                            if (navController.getPreviousBackStackEntry()!=null)
+                            {
+                                navController.getPreviousBackStackEntry().getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL,productModel);
+                                navController.popBackStack();
+                            }
+
+
+
+
+                        }
+                        catch (Exception e)
+                        {
+                            Log.e("Product pricing Error: ",e.getMessage());
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(requireContext() , "Cannot save product, because product rate is Null", Toast.LENGTH_SHORT).show();
+                    }
                 }
+                else
+                {
+                    Toast.makeText(requireContext() , "Cannot save product, because product is Null", Toast.LENGTH_SHORT).show();
+                }
+
+
 
 
 
@@ -239,15 +358,28 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
                 if (position==4)
                 {
                     mBinding.etDiscountPercentage.setInputType(InputType.TYPE_CLASS_NUMBER| InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-//                    mBinding.etDiscountPercentage.setFocusable(true);
-//                    mBinding.etDiscountPercentage.requestFocus();
+                    mBinding.etDiscountPercentage.setFocusable(true);
+                    mBinding.etDiscountPercentage.setFocusableInTouchMode(true);
+                    mBinding.etDiscountPercentage.setCursorVisible(true);
+
                 }
                 else {
                     mBinding.etDiscountPercentage.setInputType(InputType.TYPE_NULL);
-//                    mBinding.etDiscountPercentage.setFocusable(false);
+                    mBinding.etDiscountPercentage.setFocusable(false);
+                    mBinding.etDiscountPercentage.setFocusableInTouchMode(false);
+                    mBinding.etDiscountPercentage.setCursorVisible(false);
 
                 }
-                getRateList(position);
+                if (isNetworkConnected())
+                {
+                    getRateList(position);
+
+                }
+                else
+                {
+                    Toast.makeText(requireContext(), " Please connect to internet", Toast.LENGTH_SHORT).show();
+
+                }
             }
 
             @Override
@@ -284,7 +416,7 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
                 }
                 else {
                     Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+
 
                     if (response.message().equals("Unauthorized"))
                     {
@@ -336,5 +468,46 @@ public class ProductInfoBottomSheetDialogFragment extends BottomSheetDialogFragm
     private long getPercentageAmount(long amount, long Percentage) {
 
         return (amount*Percentage)/100;
+    }
+
+    public void closeKeyBoard()
+    {
+        View view = requireActivity().getCurrentFocus();
+
+        if (view!=null)
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+
+        }
+
+
+    }
+
+    public void openKeyBoard()
+    {
+
+
+        if (mBinding.orderQuantityLayout.requestFocus())
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(mBinding.orderQuantityLayout,InputMethodManager.SHOW_IMPLICIT);
+        }
+
+
+
+
+    }
+    public boolean isNetworkConnected() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return connected = true;
+        } else {
+            return connected = false;
+        }
+
     }
 }

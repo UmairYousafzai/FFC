@@ -7,6 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.ffccloud.AttendanceActivity.AttendanceModel;
+import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.Login.GetUserMenuModel;
 import com.example.ffccloud.Login.GetUserSettingModel;
@@ -29,7 +30,7 @@ import com.example.ffccloud.ScheduleModel;
         RouteActivityModel.class, DoctorModel.class, ClassificationModel.class, GradingModel.class, QualificationModel.class,
         FilteredDoctoredModel.class, ScheduleModel.class, Activity.class, AttendanceModel.class, LocationRequestedUser.class,
         DeliveryModeModel.class, UpdateWorkPlanStatus.class, AddNewWorkPlanModel.class,
-        Notification.class, ExpenseModelClass.class,}, version = 1, exportSchema = false)
+        Notification.class, ExpenseModelClass.class, CustomerModel.class}, version = 1, exportSchema = false)
 public abstract class FfcDatabase extends RoomDatabase {
 
     private static FfcDatabase database;
@@ -44,6 +45,6 @@ public abstract class FfcDatabase extends RoomDatabase {
         return database;
     }
 
-    public abstract FfcDAO dao();
+    public abstract FFC_DAO dao();
 
 }

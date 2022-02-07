@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.example.ffccloud.Database.FfcDAO;
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.DoctorModel;
 import com.example.ffccloud.model.AddNewWorkPlanModel;
@@ -15,7 +15,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class UploadDataRepository {
-    private FfcDAO mDao;
+    private FFC_DAO mDao;
     Context mContext;
     private final List<UpdateWorkPlanStatus> allWorkPlanStatus;
     private final List<AddNewWorkPlanModel> allWorkPlan;

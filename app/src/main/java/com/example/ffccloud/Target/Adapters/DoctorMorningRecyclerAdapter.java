@@ -206,7 +206,9 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
 
                     if (doctorModelList.get(position).getCoordinates()!=null)
                     {
-                        String locationString= "geo:"+doctorModelList.get(position).getCoordinates()+"?q=3";
+                        String[] coordinates = doctorModelList.get(position).getCoordinates().split(",");
+                        String address= new CustomLocation(mContext).getCompleteAddressString(Double.parseDouble(coordinates[0]),Double.parseDouble(coordinates[1]));
+                        String locationString= "geo:"+doctorModelList.get(position).getCoordinates()+"?q="+ doctorModelList.get(position).getCoordinates()+(address);
                         Uri mapIntentUri= Uri.parse(locationString);
                         Intent mapIntent= new Intent(Intent.ACTION_VIEW,mapIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");

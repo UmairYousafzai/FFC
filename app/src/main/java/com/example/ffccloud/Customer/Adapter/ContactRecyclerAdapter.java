@@ -17,11 +17,18 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
 
     private LayoutInflater layoutInflater;
     private List<ContactPersons> contactPersonsList;
+    private SetOnClickListener listener;
 
     public ContactRecyclerAdapter() {
 
         contactPersonsList = new ArrayList<>();
     }
+
+    public void SetOnClickListener(SetOnClickListener listener)
+    {
+        this.listener = listener;
+    }
+
 
     @NonNull
     @Override
@@ -58,7 +65,8 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
     {
         if (list!=null)
         {
-            contactPersonsList = list;
+            contactPersonsList.clear();
+            contactPersonsList.addAll(list);
         }
         else
         {
@@ -80,10 +88,22 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
                 @Override
                 public void onClick(View v) {
 
-                    contactPersonsList.remove(contactPersonsList.get(getAdapterPosition()));
-                    notifyDataSetChanged();
+                    if (listener!=null&&getAdapterPosition()!=RecyclerView.NO_POSITION)
+                    {
+                        listener.onClick(contactPersonsList.get(getAdapterPosition()));
+                        contactPersonsList.remove(contactPersonsList.get(getAdapterPosition()));
+                        notifyDataSetChanged();
+                    }
+
+
                 }
             });
         }
     }
+
+    public interface  SetOnClickListener
+    {
+        public void onClick(ContactPersons contactPersons);
+    }
+
 }

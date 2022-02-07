@@ -35,6 +35,7 @@
         <item>Ac_SaleOrder</item>
         <item>Ac_Customer</item>
         <item>Ac_Meeting</item>
+        <item>Ac_Hospital</item>
         <item>Ac_Reset_Password</item>
 
     </string-array>
