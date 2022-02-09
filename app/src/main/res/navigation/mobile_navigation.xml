@@ -465,9 +465,9 @@
         tools:layout="@layout/fragment_meeting" />
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.example.ffccloud.MapsFragment"
+        android:name="com.example.ffccloud.Target.MapsFragment"
         android:label="Tracker"
-        tools:layout="@layout/fragment_maps2">
+        tools:layout="@layout/fragment_maps">
         <argument
             android:name="coordinates"
             app:argType="string"
@@ -854,4 +854,5 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
+
 </navigation>

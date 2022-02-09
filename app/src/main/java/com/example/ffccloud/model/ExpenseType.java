@@ -1,8 +1,14 @@
 package com.example.ffccloud.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class ExpenseType {
+
+    @PrimaryKey
     @SerializedName("Exp_Id")
     int expenseID;
     @SerializedName("Exp_Title")

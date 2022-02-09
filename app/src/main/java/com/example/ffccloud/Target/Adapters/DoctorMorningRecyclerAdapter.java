@@ -204,7 +204,7 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
 
                     int position = getAdapterPosition();
 
-                    if (doctorModelList.get(position).getCoordinates()!=null)
+                    if (doctorModelList.get(position).getCoordinates()!=null && !doctorModelList.get(position).getCoordinates().isEmpty())
                     {
                         String[] coordinates = doctorModelList.get(position).getCoordinates().split(",");
                         String address= new CustomLocation(mContext).getCompleteAddressString(Double.parseDouble(coordinates[0]),Double.parseDouble(coordinates[1]));

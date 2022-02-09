@@ -1,5 +1,8 @@
 package com.example.ffccloud.Tracking.Adapter;
 
+import static com.example.ffccloud.utils.CONSTANTS.ACTION_START_LOCATION_SERVICE;
+import static com.example.ffccloud.utils.CONSTANTS.LOCATION_RECEIVER_ID;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -144,7 +147,8 @@ public class RequestsRecyclerViewAdapter extends RecyclerView.Adapter<RequestsRe
                                         sendNotification(userModel);
 
                                         Intent intent = new Intent(context, LocationService.class);
-                                        intent.setAction(CONSTANTS.ACTION_START_LOCATION_SERVICE);
+                                        intent.setAction(ACTION_START_LOCATION_SERVICE);
+                                        intent.putExtra(LOCATION_RECEIVER_ID,user.getId());
                                         context.startService(intent);
 
                                         Toast.makeText(context, "Location Sharing Enable", Toast.LENGTH_SHORT).show();

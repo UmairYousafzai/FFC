@@ -266,9 +266,11 @@
     <string name="client">Client</string>
     <string name="select_client">Select Client</string>
     <string name="price_list_type">Price List Type</string>
-    <string name="rs">Rs</string>
+    <string name="rs">Rs </string>
     <string name="upload">Upload</string>
     <string name="select_client_type">Select Client Type</string>
+    <string name="coordinates_optional">Coordinates (Optional)</string>
+    <string name="download_master_data">DownLoad Master Data</string>
 
 
 </resources>

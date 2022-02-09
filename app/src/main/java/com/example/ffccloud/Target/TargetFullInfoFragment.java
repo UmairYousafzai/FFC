@@ -118,171 +118,177 @@ public class TargetFullInfoFragment extends Fragment {
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
         uploadDataRepository = new UploadDataRepository(requireContext());
 
-        bottomSheetBehavior = BottomSheetBehavior.from(mBinding.feedbackBottomSheet.getRoot());
+//        bottomSheetBehavior = BottomSheetBehavior.from(mBinding.feedbackBottomSheet.getRoot());
 
-        setUpBottomSheet();
+//        setUpBottomSheet();
 
         setInfoWorkPlan();
         btnListener();
-        bottomSheetBtnListener();
+//        bottomSheetBtnListener();
     }
 
-    private void setUpBottomSheet() {
-
-        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                    case BottomSheetBehavior.STATE_SETTLING:
-                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED: {
-
-                        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_keyboard_arrow_up_24, null);
-                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_COLLAPSED: {
-                        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_keyboard_arrow_down_24, null);
-
-                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
-
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-
-
-                        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_keyboard_arrow_up_24, null);
-                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-
-        ArrayAdapter<String> stageAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.stage));
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.status));
-        mBinding.feedbackBottomSheet.autoStage.setAdapter(stageAdapter);
-        mBinding.feedbackBottomSheet.autoStatus.setAdapter(statusAdapter);
-
-
-    }
-
-    public void bottomSheetBtnListener() {
-        mBinding.feedbackBottomSheet.voiceRecordBtnHostReview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
-
-                try {
-                    startActivityForResult(intent, 1);
-                } catch (Exception e) {
-                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        mBinding.feedbackBottomSheet.voiceRecordBtnEmpRemarks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
-
-                try {
-                    startActivityForResult(intent, 2);
-                } catch (Exception e) {
-                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        mBinding.feedbackBottomSheet.voiceRecordBtnRemarksProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
-
-                try {
-                    startActivityForResult(intent, 3);
-                } catch (Exception e) {
-                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        mBinding.feedbackBottomSheet.saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
-                AlertDialog alertDialog = new AlertDialog.Builder(requireActivity().getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
-                dialogBinding.title.setText("Save Successfully.");
-                dialogBinding.body.setText("You want to create another activity");
-                alertDialog.show();
-                dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showSelectActivityDialog();
-                        alertDialog.dismiss();
-                    }
-                });
-
-
-            }
-        });
-
-
-        mBinding.feedbackBottomSheet.interestLevelRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton radioButton = mBinding.feedbackBottomSheet.getRoot().findViewById(checkedId);
-                String check = radioButton.getText().toString();
-                switch (check) {
-                    case "Low": {
-                        if (radioButton.isChecked()) {
-                            interestLevel = 1;
-                            mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
-                            mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
-                            mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
-                        }
-
-                        break;
-                    }
-                    case "Medium": {
-                        if (radioButton.isChecked()) {
-                            interestLevel = 2;
-                            mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
-                            mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
-                            mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
-                        }
-
-                        break;
-                    }
-                    case "High": {
-                        if (radioButton.isChecked()) {
-                            interestLevel = 3;
-                            mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
-                            mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
-                            mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
-                        }
-
-                        break;
-                    }
-                }
-            }
-        });
-    }
+//    private void setUpBottomSheet() {
+//
+//        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                switch (newState) {
+//                    case BottomSheetBehavior.STATE_HIDDEN:
+//                    case BottomSheetBehavior.STATE_SETTLING:
+//                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
+//                        break;
+//                    case BottomSheetBehavior.STATE_EXPANDED: {
+//
+//                        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_keyboard_arrow_up_24, null);
+//                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
+//                    }
+//                    break;
+//                    case BottomSheetBehavior.STATE_COLLAPSED: {
+//                        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_keyboard_arrow_down_24, null);
+//
+//                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
+//
+//                    }
+//                    break;
+//                    case BottomSheetBehavior.STATE_DRAGGING:
+//
+//
+//                        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_keyboard_arrow_up_24, null);
+//                        mBinding.feedbackBottomSheet.headerBtn.setImageDrawable(drawable);
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//
+//            }
+//        });
+//
+//        ArrayAdapter<String> stageAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.stage));
+//        ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.status));
+//        mBinding.feedbackBottomSheet.autoStage.setAdapter(stageAdapter);
+//        mBinding.feedbackBottomSheet.autoStatus.setAdapter(statusAdapter);
+//
+//
+//    }
+//
+//    public void bottomSheetBtnListener() {
+//        mBinding.feedbackBottomSheet.voiceRecordBtnHostReview.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+//                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+//
+//                try {
+//                    startActivityForResult(intent, 1);
+//                } catch (Exception e) {
+//                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//        mBinding.feedbackBottomSheet.voiceRecordBtnEmpRemarks.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+//                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+//
+//                try {
+//                    startActivityForResult(intent, 2);
+//                } catch (Exception e) {
+//                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//
+//        mBinding.feedbackBottomSheet.voiceRecordBtnRemarksProduct.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+//                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+//
+//                try {
+//                    startActivityForResult(intent, 3);
+//                } catch (Exception e) {
+//                    Toast.makeText(requireContext(), " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//
+//        mBinding.feedbackBottomSheet.saveBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(getLayoutInflater());
+//                AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(true).create();
+//                dialogBinding.title.setText("Save Successfully.");
+//                dialogBinding.body.setText("You want to create another activity");
+//                alertDialog.show();
+//                dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showSelectActivityDialog();
+//                        alertDialog.dismiss();
+//                    }
+//                });
+//                dialogBinding.btnClose.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        alertDialog.dismiss();
+//                    }
+//                });
+//
+//
+//            }
+//        });
+//
+//
+//        mBinding.feedbackBottomSheet.interestLevelRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                RadioButton radioButton = mBinding.feedbackBottomSheet.getRoot().findViewById(checkedId);
+//                String check = radioButton.getText().toString();
+//                switch (check) {
+//                    case "Low": {
+//                        if (radioButton.isChecked()) {
+//                            interestLevel = 1;
+//                            mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
+//                            mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+//                            mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+//                        }
+//
+//                        break;
+//                    }
+//                    case "Medium": {
+//                        if (radioButton.isChecked()) {
+//                            interestLevel = 2;
+//                            mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
+//                            mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+//                            mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+//                        }
+//
+//                        break;
+//                    }
+//                    case "High": {
+//                        if (radioButton.isChecked()) {
+//                            interestLevel = 3;
+//                            mBinding.feedbackBottomSheet.radioButtonMedium.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+//                            mBinding.feedbackBottomSheet.radioButtonLow.setBackgroundColor(getResources().getColor(R.color.Light_APP_Theme_Color));
+//                            mBinding.feedbackBottomSheet.radioButtonHigh.setBackgroundColor(getResources().getColor(R.color.APP_Theme_Color));
+//                        }
+//
+//                        break;
+//                    }
+//                }
+//            }
+//        });
+//    }
 
     public void showSelectActivityDialog() {
         CustomSelectActivityDialogBinding dialogBinding = CustomSelectActivityDialogBinding.inflate(getLayoutInflater());
@@ -470,6 +476,13 @@ public class TargetFullInfoFragment extends Fragment {
                                 public void onClick(View v) {
                                     alertDialog.dismiss();
                                     saveWorkPlane(key);
+
+                                }
+                            });
+                            dialogBinding.btnClose.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
 
                                 }
                             });
@@ -752,30 +765,30 @@ public class TargetFullInfoFragment extends Fragment {
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK && data != null) {
-                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                hostRemarks = hostRemarks + " " + result.get(0);
-                mBinding.feedbackBottomSheet.hostReviewRemarksEdittext.setText(hostRemarks);
-            }
-        } else if (requestCode == 2) {
-            if (resultCode == RESULT_OK && data != null) {
-                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                empRemarks = empRemarks + " " + result.get(0);
-                mBinding.feedbackBottomSheet.empRemarks.setText(empRemarks);
-            }
-        } else if (requestCode == 3) {
-            if (resultCode == RESULT_OK && data != null) {
-                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                productsRemarks = productsRemarks + " " + result.get(0);
-                mBinding.feedbackBottomSheet.remarksAboutProdactEdittext.setText(productsRemarks);
-            }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == 1) {
+//            if (resultCode == RESULT_OK && data != null) {
+//                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+//                hostRemarks = hostRemarks + " " + result.get(0);
+//                mBinding.feedbackBottomSheet.hostReviewRemarksEdittext.setText(hostRemarks);
+//            }
+//        } else if (requestCode == 2) {
+//            if (resultCode == RESULT_OK && data != null) {
+//                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+//                empRemarks = empRemarks + " " + result.get(0);
+//                mBinding.feedbackBottomSheet.empRemarks.setText(empRemarks);
+//            }
+//        } else if (requestCode == 3) {
+//            if (resultCode == RESULT_OK && data != null) {
+//                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+//                productsRemarks = productsRemarks + " " + result.get(0);
+//                mBinding.feedbackBottomSheet.remarksAboutProdactEdittext.setText(productsRemarks);
+//            }
+//        }
+//    }
 
     public boolean isNetworkConnected() {
         boolean connected = false;

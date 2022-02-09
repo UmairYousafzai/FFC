@@ -236,7 +236,7 @@ public class AddWorkPlanDialogFragment extends DialogFragment {
 //            userID= SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 //        }
 
-        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier(clientType, userID, regionId);
+        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier(clientType, userID, regionId,1);
 
         call.enqueue(new Callback<List<GetSupplierModel>>() {
             @Override

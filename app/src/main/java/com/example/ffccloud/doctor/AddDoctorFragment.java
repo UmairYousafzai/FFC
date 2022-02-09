@@ -15,6 +15,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -193,7 +195,32 @@ public class AddDoctorFragment extends Fragment {
 
         }
         btnListener();
+        textListener();
 
+    }
+
+    private void textListener() {
+
+        mBinding.idCoordinates.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s!=null)
+                {
+                    locationString = s.toString();
+                }
+            }
+        });
     }
 
     private void setUpRecyclerView() {
@@ -231,17 +258,18 @@ public class AddDoctorFragment extends Fragment {
                         @Override
                         public void gotLocation(Location location) {
 
-
+                            if (supplierID!=0)
+                            {
+                                isLocationUpdate=true;
+                            }
                             if (mBinding.location.isChecked()) {
-                                if (supplierID!=0)
-                                {
-                                    isLocationUpdate=true;
-                                }
-                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                mBinding.location.setText(locationAddress);
                                 locationString = location.getLatitude() + "," +location.getLongitude() ;
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude())+
+                                locationString;
+                                mBinding.location.setText(locationAddress);
                             } else {
-
+                                locationAddress="";
+                                locationString="";
                                 mBinding.location.setText("Enable Location");
                                 mBinding.location.setChecked(false);
                             }
@@ -390,6 +418,7 @@ public class AddDoctorFragment extends Fragment {
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length()>0)
         {
             locationString=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+            mBinding.idCoordinates.setText(locationString);
         }
 
         medicineModalList.clear();

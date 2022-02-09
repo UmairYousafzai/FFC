@@ -1,11 +1,13 @@
 package com.example.ffccloud;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,7 +23,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ffccloud.Customer.utils.CustomerViewModel;
 import com.example.ffccloud.Database.FfcDatabase;
+import com.example.ffccloud.Expense.utils.ExpenseViewModel;
 import com.example.ffccloud.Login.GetUserInfoModel;
+import com.example.ffccloud.NetworkCalls.ApiClient;
+import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.model.Activity;
 import com.example.ffccloud.PushNotification.SendNoticationClass;
 import com.example.ffccloud.SplashScreen.SplashActivity;
@@ -29,6 +34,7 @@ import com.example.ffccloud.Target.utils.DoctorViewModel;
 import com.example.ffccloud.Target.utils.TargetViewModel;
 import com.example.ffccloud.databinding.ActivityMainBinding;
 import com.example.ffccloud.databinding.NavigationDrawerHeaderBinding;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.notification.NotificationViewModel;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
@@ -46,6 +52,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
@@ -64,6 +71,8 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +80,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -85,8 +98,9 @@ public class MainActivity extends AppCompatActivity {
     private UploadDataRepository uploadDataRepository;
     private NotificationViewModel notificationViewModel;
     private UserViewModel userViewModel;
-    private boolean isEndDay=false;
+    private boolean isEndDay = false;
     private CustomerViewModel customerViewModel;
+    private ExpenseViewModel expenseViewModel;
 
 
     private boolean menuCheck = true;
@@ -105,9 +119,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         ffcDatabase = FfcDatabase.getInstance(getApplicationContext());
-        userViewModel= new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         uploadDataRepository = new UploadDataRepository(this);
         customerViewModel = new ViewModelProvider(this).get(CustomerViewModel.class);
+        expenseViewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
 
         permission = new Permission(this, this);
 
@@ -129,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Activity> activities) {
 
-                isEndDay= activities != null && !activities.isEmpty();
+                isEndDay = activities != null && !activities.isEmpty();
             }
         });
 
@@ -190,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (SharedPreferenceHelper.getInstance(getApplication()).getGetDocListState()) {
             int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
-
+            new SendNoticationClass(this).UpdateToken();
 
             SyncDataToDB.getInstance().SyncData(id, this, this);
             SyncDataToDB.getInstance().saveDoctorsList(id, this, this);
@@ -214,8 +229,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                         if (isNetworkConnected()) {
-                            if (!uploadDataRepository.isWorkPlanExists() || !uploadDataRepository.isWorkPlanStatusExists()) {
-                                closeActivity();
+                            if (!uploadDataRepository.isWorkPlanExists() && !uploadDataRepository.isWorkPlanStatusExists()) {
+                                showDialog();
                             } else {
                                 Toast.makeText(MainActivity.this, "Please wait for uploading pending data \n Please try again later", Toast.LENGTH_SHORT).show();
                             }
@@ -334,52 +349,75 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
 
-        DoctorViewModel doctorViewModel;
-        TargetViewModel targetViewModel;
+
+
+
 
         if (item.getItemId() == R.id.signOut) {
+            signOut();
 
-            if (!isEndDay)
-            {
-                targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
-                doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
-
-                targetViewModel.DeleteAllDoctor();
-
-                customerViewModel.deleteAllCustomers();
-                activityViewModel.deleteAllActivity();
-                doctorViewModel.deleteAllSchedule();
-                doctorViewModel.deleteAllFilterDoctor();
-
-                notificationViewModel.deleteAllNotifications();
-                userViewModel.deleteAllMenus();
-                userViewModel.deleteAllGrades();
-                userViewModel.deleteAllQualification();
-                userViewModel.deleteAllClassification();
-                userViewModel.deleteAllDeliveryModes();
-                userViewModel.deleteAllUsers();
-
-
-                String password = SharedPreferenceHelper.getInstance(this).getUserPassword();
-                String url = SharedPreferenceHelper.getInstance(this).getBaseUrl();
-                SharedPreferenceHelper.getInstance(this).deleteSharedPreference();
-                SharedPreferenceHelper.getInstance(this).setUserPassword(password);
-                SharedPreferenceHelper.getInstance(this).setBaseUrl(url);
-
-                Intent intent = new Intent(this, SplashActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            else
-            {
-                Toast.makeText(this, "Please end day before Sign Out", Toast.LENGTH_SHORT).show();
-            }
-
-
+        }
+        else if (item.getItemId()== R.id.action_download_master_data)
+        {
+            downloadMaterData();
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void downloadMaterData()
+    {
+        int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
+        userViewModel.deleteAllGrades();
+        userViewModel.deleteAllQualification();
+        userViewModel.deleteAllClassification();
+        userViewModel.deleteAllDeliveryModes();
+        userViewModel.deleteAllUsers();
+        userViewModel.deleteAllExpenseType();
+
+        SyncDataToDB.getInstance().SyncData(id, this, this);
+
+    }
+
+    public void signOut()
+    {
+        DoctorViewModel doctorViewModel;
+        TargetViewModel targetViewModel;
+        if (!isEndDay) {
+            targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
+            doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
+
+            targetViewModel.DeleteAllDoctor();
+
+            customerViewModel.deleteAllCustomers();
+            activityViewModel.deleteAllActivity();
+            doctorViewModel.deleteAllSchedule();
+            doctorViewModel.deleteAllFilterDoctor();
+
+            notificationViewModel.deleteAllNotifications();
+            userViewModel.deleteAllMenus();
+            userViewModel.deleteAllGrades();
+            userViewModel.deleteAllQualification();
+            userViewModel.deleteAllClassification();
+            userViewModel.deleteAllDeliveryModes();
+            userViewModel.deleteAllUsers();
+            userViewModel.deleteAllExpenseType();
+
+            String password = SharedPreferenceHelper.getInstance(this).getUserPassword();
+            String url = SharedPreferenceHelper.getInstance(this).getBaseUrl();
+            SharedPreferenceHelper.getInstance(this).deleteSharedPreference();
+            SharedPreferenceHelper.getInstance(this).setUserPassword(password);
+            SharedPreferenceHelper.getInstance(this).setBaseUrl(url);
+
+            Intent intent = new Intent(this, SplashActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(this, "Please end day before Sign Out", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     @Override
@@ -394,8 +432,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationDrawerHeaderBinding headerBinding = NavigationDrawerHeaderBinding.bind(headerView);
         GetUserInfoModel loginUser = ffcDatabase.dao().getLoginUser();
 
-        if (loginUser!=null)
-        {
+        if (loginUser != null) {
             headerBinding.profileName.setText(loginUser.getUserName());
             headerBinding.profileEmail.setText(loginUser.getEmail());
             headerBinding.profileDesignation.setVisibility(View.GONE);
@@ -630,5 +667,91 @@ public class MainActivity extends AppCompatActivity {
             return connected = false;
         }
 
+    }
+
+    public void showDialog() {
+
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setView(dialogBinding.getRoot()).setCancelable(true).create();
+        dialogBinding.title.setText(R.string.end_day);
+        dialogBinding.body.setText("Are you sure, you want to end day");
+
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_warning_24, null);
+        dialogBinding.icon.setImageDrawable(drawable);
+
+        alertDialog.show();
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+
+                if (expenseViewModel.isExpenseExists()) {
+                    expenseViewModel.getAllExpense().observe(MainActivity.this, new Observer<List<ExpenseModelClass>>() {
+                        @Override
+                        public void onChanged(List<ExpenseModelClass> expenseModelClasses) {
+                            if (expenseModelClasses!=null)
+                            {
+                                uploadExpenses(expenseModelClasses);
+                            }
+                        }
+                    });
+
+                } else {
+
+                    closeActivity();
+                    CustomsDialog.getInstance().showDialog("Day Ended Successfully", "End Day", MainActivity.this, MainActivity.this, 1);
+
+                }
+            }
+        });
+        dialogBinding.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    private void uploadExpenses(List<ExpenseModelClass> expenseModelClassList) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Expenses");
+        progressDialog.setMessage("Uploading....");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        String token = SharedPreferenceHelper.getInstance(this).getToken();
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertExpenses(token, expenseModelClassList);
+
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        UpdateStatus updateStatus = response.body();
+                        Toast.makeText(MainActivity.this, "Expense:" + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                        if (updateStatus.getStatus() == 1) {
+                            expenseViewModel.deleteAllExpense();
+                            closeActivity();
+
+                            CustomsDialog.getInstance().showDialog("Day Ended Successfully", "End Day", MainActivity.this, MainActivity.this, 1);
+                        }
+
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Expense:" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+
+                Toast.makeText(MainActivity.this, "Expense:" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
     }
 }

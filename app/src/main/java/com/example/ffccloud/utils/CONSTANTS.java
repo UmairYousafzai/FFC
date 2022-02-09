@@ -40,6 +40,9 @@ public class CONSTANTS {
     public static final String MESSAGE_NOTIFICATION_TITLE =  "MESSAGE ";
     public static final String LOCATION_NOTIFICATION_CHANNEL_ID =  "Location notification";
     public static final String LOCATION_NOTIFICATION_TITLE =  "Location ";
+    public static final String LOCATION_RECEIVER_ID =  "location receiver";
+    public static final int EMPLOYEE_EXPENSE_RESPONSE =  1;
+    public static final int SERVER_ERROR_RESPONSE =  2;
 
 
 }

@@ -100,6 +100,7 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
     public void setUserList(List<UserModel> list) {
         if (list != null && list.size() > 0) {
             userList.clear();
+            userListFull.clear();
             userList.addAll(list);
             userListFull.addAll(list);
             notifyDataSetChanged();

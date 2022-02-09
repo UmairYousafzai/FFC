@@ -120,7 +120,8 @@ public class SaveData {
                         DoctorModel doctorModel =uploadDataRepository.getWorkPlanById(model.getDoctorId());
                         uploadDataRepository.deleteWorkPlan(doctorModel);
                          updateStatus[0] = response.body();
-
+                        clearNotification(CONSTANTS.NOTIFICATION_WORK_PLAN_ID);
+                        createNotification(""+response.errorBody(),2,CONSTANTS.NOTIFICATION_ERROR_ID);
 
                     }
                     else
@@ -141,15 +142,7 @@ public class SaveData {
                     clearNotification(CONSTANTS.NOTIFICATION_WORK_PLAN_ID);
                 }
             });
-            if (updateStatus[0]!=null)
-            {
-                createNotification("Work Plan "+ updateStatus[0].getStrMessage(),2,CONSTANTS.NOTIFICATION_WORK_PLAN_ID);
 
-            }
-            else
-            {
-
-            }
 
         }
 

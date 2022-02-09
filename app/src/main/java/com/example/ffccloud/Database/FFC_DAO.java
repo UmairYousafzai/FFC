@@ -19,6 +19,7 @@ import com.example.ffccloud.model.AddNewWorkPlanModel;
 import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.model.DeliveryModeModel;
+import com.example.ffccloud.model.ExpenseType;
 import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.model.Notification;
@@ -105,8 +106,12 @@ public interface FFC_DAO {
 
     @Insert
     void insertQualification(List<QualificationModel> list);
+
     @Insert
     void insertDeliveryModes(List<DeliveryModeModel> list);
+
+    @Insert
+    void insertExpenseType(List<ExpenseType> list);
 
     @Query("Delete From Classification")
     void deleteAllClassification();
@@ -120,6 +125,9 @@ public interface FFC_DAO {
     @Query("Delete From delivery_Mode")
     void deleteAllDeliveryModes();
 
+    @Query("Delete From ExpenseType")
+    void deleteAllExpenseType();
+
     @Query("Select *from Classification")
     LiveData<List<ClassificationModel>> getAllClassification();
 
@@ -131,6 +139,9 @@ public interface FFC_DAO {
 
     @Query("Select *from delivery_Mode")
     LiveData<List<DeliveryModeModel>> getAllDeliveryModes();
+
+    @Query("Select *from ExpenseType")
+    LiveData<List<ExpenseType>> getAllExpenseType();
 
     @Insert
     void insertUser(LocationRequestedUser user);
@@ -192,7 +203,7 @@ public interface FFC_DAO {
             " order by dotorId_pk desc")
     LiveData<List<DoctorModel>> getMorningDoctorByDate(String date);
 
-//     +"and (shift = 'Morning')"
+    //     +"and (shift = 'Morning')"
     @Query("Select *From Doctor where (fromDate = :date) and " +
             "(shift = 'Evening') " +
             "order by dotorId_pk desc")
@@ -265,10 +276,11 @@ public interface FFC_DAO {
     void deleteAllActivity();
 
     @Query("Select *From activity Where End_DateTime is null and End_Cord is null ")
-    LiveData<List<Activity>> getQueryActivity(  );
+    LiveData<List<Activity>> getQueryActivity();
+
     @Query("Select *From activity Where End_DateTime is null and End_Cord is null " +
             "and Sub_Activity != 'Complete' ")
-    LiveData<List<Activity>> getActivityWithoutTask(  );
+    LiveData<List<Activity>> getActivityWithoutTask();
 
 
                 /*
@@ -323,15 +335,14 @@ public interface FFC_DAO {
     List<AddNewWorkPlanModel> getAllWorkPlan();
 
 
-
     @Query("Select *From Doctor where doctorId= :workPlanID")
     DoctorModel getWorkPlanByID(int workPlanID);
 
     @Query("Select Exists (Select *from workPlan)")
-    boolean isWorkPlanExists( );
+    boolean isWorkPlanExists();
 
     @Query("Select Exists (Select *from workPlanStatus)")
-    boolean isWorkPlanStatusExists( );
+    boolean isWorkPlanStatusExists();
 
 
                   /*
@@ -345,6 +356,7 @@ public interface FFC_DAO {
 
     @Query("Delete from ExpenseModelClass")
     void deleteAllExpense();
+
     @Delete
     void deleteExpense(ExpenseModelClass expenseModelClass);
 
@@ -354,6 +366,8 @@ public interface FFC_DAO {
     @Query("Select *From ExpenseModelClass order by expenseID_pk desc")
     LiveData<List<ExpenseModelClass>> getAllExpenses();
 
+    @Query("Select Exists (Select *from ExpenseModelClass)")
+    boolean isExpenseExists();
 
 
 
@@ -381,7 +395,7 @@ public interface FFC_DAO {
     LiveData<Integer> getNotificationCount();
 
     @Query("Select *from Notification where senderId= :senderID and notificationTitle=:message ")
-    Notification getNotification(String senderID,String message);
+    Notification getNotification(String senderID, String message);
 
 
                     /*
@@ -404,5 +418,5 @@ public interface FFC_DAO {
     CustomerModel getCustomerById(int customerID);
 
     @Query("Select *from Customer where  partyCode=:customerCode")
-    LiveData<List<CustomerModel>> getCustomerByCode(String  customerCode);
+    LiveData<List<CustomerModel>> getCustomerByCode(String customerCode);
 }

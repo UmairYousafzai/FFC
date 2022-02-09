@@ -11,10 +11,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -26,7 +28,9 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
@@ -40,7 +44,8 @@ public class CustomLocation {
     private final Location[] location = new Location[1];
     private Timer timer;
     private CustomLocationResults customLocationResults;
-
+    private long UPDATE_INTERVAL = 1000;
+    private long FASTEST_INTERVAL = 500;
 
 
     public CustomLocation(Context mContext) {
@@ -52,8 +57,11 @@ public class CustomLocation {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         customLocationResults=results;
-        timer= new Timer();
-        timer.schedule(new GetLastLocation(),500);
+
+            getLocation();
+
+        
+
 
     }
 
@@ -64,59 +72,92 @@ public class CustomLocation {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    public class GetLastLocation extends TimerTask
+    public void getLocation ()
     {
 
 
-        @Override
-        public void run() {
-
             if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (isLocationEnabled()) {
-                    fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                        @SuppressLint("MissingPermission")
+
+                    Task<Location> locationTask=fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+                        @Override
+                        public boolean isCancellationRequested() {
+                            return false;
+                        }
+
+                        @NonNull
+                        @Override
+                        public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                            return null;
+                        }
+                    });
+
+                    locationTask.addOnCompleteListener(new OnCompleteListener<Location>() {
                         @Override
                         public void onComplete(@NonNull Task<Location> task) {
+                            Location location= task.getResult();
+                            Bundle extras = location.getExtras();
+                            boolean isMockLocation = extras != null && extras.getBoolean(FusedLocationProviderClient.KEY_MOCK_LOCATION, false);
 
-                            if (task.getResult()!=null)
+                            if (!isMockLocation)
                             {
-                                Location location= task.getResult();
                                 customLocationResults.gotLocation(location);
+
                             }
                             else
                             {
-                                LocationCallback mLocationCallback = new LocationCallback() {
-
-                                    @Override
-                                    public void onLocationResult(LocationResult locationResult) {
-                                        Location mLastLocation = locationResult.getLastLocation();
-                                        customLocationResults.gotLocation(mLastLocation);
-                                    }
-                                };
-
-                                // Initializing LocationRequest
-                                // object with appropriate methods
-                                LocationRequest mLocationRequest =  LocationRequest.create();
-                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                                mLocationRequest.setInterval(5);
-                                mLocationRequest.setFastestInterval(10);
-                                mLocationRequest.setNumUpdates(1);
-
-                                // setting LocationRequest
-                                // on FusedLocationClient
-                                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
-
-                                fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-
-
+                                Toast.makeText(mContext, "Mock location is ON \n Please Disable Mock Location", Toast.LENGTH_SHORT).show();
 
                             }
-
                         }
                     });
+
+
+
+//                    fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+//                        @SuppressLint("MissingPermission")
+//                        @Override
+//                        public void onComplete(@NonNull Task<Location> task) {
+//
+//                            if (task.getResult()!=null)
+//                            {
+//                                Location location= task.getResult();
+//                                customLocationResults.gotLocation(location);
+//                            }
+//                            else
+//                            {
+//                                LocationCallback mLocationCallback = new LocationCallback() {
+//
+//                                    @Override
+//                                    public void onLocationResult(LocationResult locationResult) {
+//                                        Location mLastLocation = locationResult.getLastLocation();
+//                                        customLocationResults.gotLocation(mLastLocation);
+//                                    }
+//                                };
+//
+//                                // Initializing LocationRequest
+//                                // object with appropriate methods
+//                                LocationRequest mLocationRequest =  LocationRequest.create();
+//                                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//                                mLocationRequest.setInterval(UPDATE_INTERVAL);
+//                                mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+//                                mLocationRequest.setNumUpdates(1);
+//
+//                                // setting LocationRequest
+//                                // on FusedLocationClient
+//                                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
+//
+//                                fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+//
+//
+//
+//                            }
+//
+//                        }
+//                    });
                 }
             }
-        }
+
     }
 
     public interface CustomLocationResults
@@ -148,5 +189,18 @@ public class CustomLocation {
         return strAdd;
     }
 
+    public static boolean isMockSettingsON(Context context) {
+        // returns true if mock location enabled, false if not enabled.
+        if (Settings.Secure.getString(context.getContentResolver(),Settings.Secure.ALLOW_MOCK_LOCATION).equals("0"))
+        {
+            return false;
 
+        }
+        else
+        {
+            Toast.makeText(context, "Mock location is ON \n Please Disable Mock Location", Toast.LENGTH_SHORT).show();
+            return true;
+
+        }
+    }
 }

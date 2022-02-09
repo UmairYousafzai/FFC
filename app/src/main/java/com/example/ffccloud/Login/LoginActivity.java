@@ -390,7 +390,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-                        CustomsDialog.getInstance().showDialog(response.message(), "Error",LoginActivity.this,LoginActivity.this,2);
+                        CustomsDialog.getInstance().showDialog(response.message(), response.message(),LoginActivity.this,LoginActivity.this,2);
 
                 }
 
@@ -496,7 +496,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<GetUserInfoModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetUserInfoModel> call, @NonNull Throwable t) {
                 pDialog.cancel();
                 String error = t.getMessage();
 
@@ -550,6 +550,11 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                     pDialog.cancel();
+                }
+                else
+                {
+                    CustomsDialog.getInstance().showDialog(response.message(),"Try Again",LoginActivity.this,LoginActivity.this,2);
+
                 }
             }
 

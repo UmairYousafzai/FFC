@@ -14,6 +14,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +77,7 @@ public class AddFarmFormFragment extends Fragment {
     private final List<GetSupplierModel> supplierDetailModelList = new ArrayList<>();
     private SupplierRecyclerViewAdapter supplierRecyclerViewAdapter;
     private String callingAddBtn;
-    private boolean isSpinnerUpdate = false;
+    private boolean isSpinnerUpdate = false,isLocationUpdate=false;
     private int animalPosition = -1, regionPosition = -1;
 
     @Override
@@ -132,9 +135,31 @@ public class AddFarmFormFragment extends Fragment {
         }
         btnListener();
 
-
+        textListener();
     }
+    private void textListener() {
 
+        mBinding.idCoordinates.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s!=null)
+                {
+                    locationString = s.toString();
+                }
+            }
+        });
+    }
     public void getLiveData() {
 
         MutableLiveData<GetSupplierModel> supplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
@@ -246,6 +271,9 @@ public class AddFarmFormFragment extends Fragment {
         if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
             mBinding.locationCheckbox.setChecked(true);
             mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+            locationAddress= getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
+            locationString =getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+            mBinding.idCoordinates.setText(locationString);
         }
 
 
@@ -299,6 +327,14 @@ public class AddFarmFormFragment extends Fragment {
                 break;
         }
 
+        String shift = getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
+        if (shift != null) {
+            if (shift.equals("Morning")) {
+                mBinding.morningRadioBtn.setChecked(true);
+            } else if (shift.equals("Evening")) {
+                mBinding.eveningRadioBtn.setChecked(true);
+            }
+        }
 
     }
 
@@ -419,13 +455,18 @@ public class AddFarmFormFragment extends Fragment {
                         @Override
                         public void gotLocation(Location location) {
 
-
+                            if (supplierID > 0) {
+                                isLocationUpdate = true;
+                            }
                             if (mBinding.locationCheckbox.isChecked()) {
-                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                mBinding.locationCheckbox.setText(locationAddress);
-                                locationString = location.getLatitude() + "," +location.getLongitude() ;
-                            } else {
 
+                                locationString = location.getLatitude() + "," +location.getLongitude() ;
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude())+
+                                        locationString;
+                                mBinding.locationCheckbox.setText(locationAddress);
+                            } else {
+                                locationAddress="";
+                                locationString="";
                                 mBinding.locationCheckbox.setText("Enable Location");
                                 mBinding.locationCheckbox.setChecked(false);
                             }
@@ -479,7 +520,7 @@ public class AddFarmFormFragment extends Fragment {
 
     private void setUpSupplierModelForSave() {
 
-        String name = "", phone = "", address = "", animalMainType = "", animalSubType = "", numberOfAnimal = "";
+        String name = "", phone = "", address = "", animalMainType = "", animalSubType = "", numberOfAnimal = "",shitType="";
         RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.animalRadioGroup.getCheckedRadioButtonId());
 
         int userId = 0, region = 0;
@@ -490,14 +531,15 @@ public class AddFarmFormFragment extends Fragment {
             address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
             animalMainType = radioButton.getText().toString();
             animalSubType = mBinding.animalSpinner.getSelectedItem().toString();
-
+            RadioButton radioButtonShift = mBinding.getRoot().findViewById(mBinding.docTimingRadioGroup.getCheckedRadioButtonId());
+            shitType = radioButtonShift.getText().toString();
             userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
             region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
 
             numberOfAnimal = mBinding.etNumberOfAnimal.getText().toString();
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("Farm save error:",e.getMessage());
         }
 
         if (name.length() > 0) {
@@ -513,6 +555,7 @@ public class AddFarmFormFragment extends Fragment {
                         supplierModelNew.setCountry_Id(1);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
+                        supplierModelNew.setShift_Type(shitType);
                         supplierModelNew.setSupplier_Code(supplierCode);
                         supplierModelNew.setSupplier_Id(supplierID);
                         supplierModelNew.setAddress(address);
@@ -527,6 +570,7 @@ public class AddFarmFormFragment extends Fragment {
                         supplierModelNew.setSupplierItemLinkingList(medicineModalList);
                         supplierModelNew.setContactPersonsList(contactPersonsList);
                         supplierModelNew.setLoc_Cord(locationString);
+                        supplierModelNew.setIs_update_Loc_Cord(isLocationUpdate);
                         supplierModelNew.setLoc_Cord_Address(locationAddress);
                         List<SupplierLinking> supplierLinkingList = new ArrayList<>();
                         for (GetSupplierModel model : supplierDetailModelList) {

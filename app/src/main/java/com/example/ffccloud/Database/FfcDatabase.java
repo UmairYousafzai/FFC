@@ -17,6 +17,7 @@ import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.model.DeliveryModeModel;
 import com.example.ffccloud.ExpenseModelClass;
+import com.example.ffccloud.model.ExpenseType;
 import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
 import com.example.ffccloud.model.Notification;
@@ -30,7 +31,7 @@ import com.example.ffccloud.ScheduleModel;
         RouteActivityModel.class, DoctorModel.class, ClassificationModel.class, GradingModel.class, QualificationModel.class,
         FilteredDoctoredModel.class, ScheduleModel.class, Activity.class, AttendanceModel.class, LocationRequestedUser.class,
         DeliveryModeModel.class, UpdateWorkPlanStatus.class, AddNewWorkPlanModel.class,
-        Notification.class, ExpenseModelClass.class, CustomerModel.class}, version = 1, exportSchema = false)
+        Notification.class, ExpenseModelClass.class, CustomerModel.class, ExpenseType.class}, version = 1, exportSchema = false)
 public abstract class FfcDatabase extends RoomDatabase {
 
     private static FfcDatabase database;

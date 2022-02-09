@@ -48,7 +48,12 @@ public class ExpenseViewModel extends AndroidViewModel {
                 expenseRepository.updateExpense(expenseModelClass);
 
     }
+    public boolean isExpenseExists( )
+    {
 
+        return expenseRepository.isExpenseExists();
+
+    }
     public LiveData<List<ExpenseModelClass>> getAllExpense( )
     {
         return allExpense;

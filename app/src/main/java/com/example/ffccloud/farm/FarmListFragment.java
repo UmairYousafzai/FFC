@@ -131,7 +131,7 @@ public class FarmListFragment extends Fragment {
         {
             userID=SharedPreferenceHelper.getInstance(requireContext()).getUserID();
         }
-        Call<List<GetSupplierModel>>  call = ApiClient.getInstance().getApi().getSupplier("F",userID,regionID);
+        Call<List<GetSupplierModel>>  call = ApiClient.getInstance().getApi().getSupplier("F",userID,regionID,0);
 
         call.enqueue(new Callback<List<GetSupplierModel>>() {
             @Override

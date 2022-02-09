@@ -14,10 +14,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.ffccloud.model.GetSupplierDetailModel;
@@ -66,6 +70,7 @@ public class AddMedicalStoreFragment extends Fragment {
     private int supplierID;
     private String callingAddBtn;
     private NavController navController;
+    private boolean isLocationUpdate=false;
 
 
     @Override
@@ -102,8 +107,31 @@ public class AddMedicalStoreFragment extends Fragment {
             getSupplierByID(supplierID);
         }
         setUpCompanyRecyclerView();
+        textListener();
     }
+    private void textListener() {
 
+        mBinding.idCoordinates.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s!=null)
+                {
+                    locationString = s.toString();
+                }
+            }
+        });
+    }
     private void setUpCompanyRecyclerView() {
 
         mBinding.companyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -151,13 +179,20 @@ public class AddMedicalStoreFragment extends Fragment {
                         @Override
                         public void gotLocation(Location location) {
 
-
+                            if (supplierID > 0) {
+                                isLocationUpdate = true;
+                            }
                             if (mBinding.locationCheckBox.isChecked()) {
-                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                mBinding.locationCheckBox.setText(locationAddress);
+
+
                                 locationString = location.getLatitude() + "," +location.getLongitude() ;
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude())+
+                                        locationString;
+                                mBinding.locationCheckBox.setText(locationAddress);
                             } else {
 
+                                locationAddress="";
+                                locationString="";
                                 mBinding.locationCheckBox.setText("Enable Location");
                                 mBinding.locationCheckBox.setChecked(false);
 
@@ -252,6 +287,7 @@ public class AddMedicalStoreFragment extends Fragment {
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length()>0)
         {
             locationString=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+            mBinding.idCoordinates.setText(locationString);
         }
         mBinding.etMonthlySale.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getMonthlySale()));
 
@@ -273,19 +309,30 @@ public class AddMedicalStoreFragment extends Fragment {
         companyModelList.addAll(getSupplierDetailModel.getSupplierCompDetailList());
         adapter.setCompanyModelList(companyModelList);
 
+        String shift = getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
 
+        if (shift != null) {
+            if (shift.equals("Morning")) {
+                mBinding.morningRadioBtn.setChecked(true);
+            } else if (shift.equals("Evening")) {
+                mBinding.eveningRadioBtn.setChecked(true);
+            }
+        }
     }
 
 
     private void setUpSupplierModelForSave() {
 
 
-        String name = " ", phone = " ", address = " ",monthlySale= " ";
+        String name = " ", phone = " ", address = " ",monthlySale= " ",shitType="";
         int gradeID = 0,region =0,userId = 0;
 
 
 
         try {
+
+            RadioButton radioButtonShift = mBinding.getRoot().findViewById(mBinding.TimingRadioGroup.getCheckedRadioButtonId());
+            shitType = radioButtonShift.getText().toString();
             userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
             name = Objects.requireNonNull(mBinding.etName.getText()).toString();
             phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
@@ -296,7 +343,7 @@ public class AddMedicalStoreFragment extends Fragment {
         }
         catch (Exception e)
         {
-            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("MedicalStore save error",":"+e.getMessage());
         }
 
 
@@ -310,6 +357,7 @@ public class AddMedicalStoreFragment extends Fragment {
                         supplierModelNew.setCompany_Id(1);
                         supplierModelNew.setUserId(userId);
                         supplierModelNew.setCountry_Id(1);
+                        supplierModelNew.setShift_Type(shitType);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
                         supplierModelNew.setSupplier_Code(supplierCode);
@@ -324,6 +372,7 @@ public class AddMedicalStoreFragment extends Fragment {
                         supplierModelNew.setMonthly_Sale(monthlySale);
                         supplierModelNew.setSupplierCompDetailList(companyModelList);
                         supplierModelNew.setLoc_Cord(locationString);
+                        supplierModelNew.setIs_update_Loc_Cord(isLocationUpdate);
                         supplierModelNew.setLoc_Cord_Address(locationAddress);
 
 

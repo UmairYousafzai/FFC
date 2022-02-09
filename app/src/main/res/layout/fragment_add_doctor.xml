@@ -139,13 +139,39 @@
                 android:id="@id/location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
+                android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="5dp"
                 android:text="Enable Location"
                 android:buttonTint="@color/APP_Theme_Color"
                 android:background="@color/white"
 
                 />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_coordinates_layout"
+                app:startIconTint="@color/APP_Theme_Color"
+                android:background="@color/white"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="5dp"
+                xmnls:boxBackgroundColor="@color/white"
+
+                android:hint="@string/coordinates_optional"
+                android:textColorHint="@color/black"
+                android:elevation="5dp"
+                app:startIconDrawable="@drawable/ic_location">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_coordinates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="textMultiLine"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:id="@+id/region_spinner_layout"
@@ -155,7 +181,7 @@
                 android:backgroundTint="@color/white"
                 android:elevation="5dp"
 
-                android:layout_marginHorizontal="10dp"
+                android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
@@ -200,7 +226,7 @@
                 android:backgroundTint="@color/white"
                 android:elevation="5dp"
 
-                android:layout_marginHorizontal="10dp"
+                android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical">
 

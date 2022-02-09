@@ -22,10 +22,11 @@
         app:showAsAction="ifRoom|collapseActionView"
         />
     <item
-        android:id="@+id/nav_privacy_policy"
-        android:title="@string/contact_us"
+        android:id="@+id/action_download_master_data"
+        android:title="@string/download_master_data"
         app:showAsAction="never"
         />
+
 
     <item
         android:id="@+id/nav_about_us"

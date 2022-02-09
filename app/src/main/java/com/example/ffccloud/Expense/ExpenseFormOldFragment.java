@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -27,6 +28,7 @@ import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentExpenseFormOldBinding;
 import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
+import com.example.ffccloud.utils.UserViewModel;
 import com.github.jhonnyx2012.horizontalpicker.DatePickerListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +52,7 @@ public class ExpenseFormOldFragment extends Fragment {
     private HashMap<Integer, String> expenseTypeNameHashMap = new HashMap<>();
     private String date = "";
     private ExpenseViewModel expenseViewModel;
+    private UserViewModel userViewModel;
     private NavController navController;
     private int expenseIDPk=0;
     private ExpenseModelClass expenseModelClass = new ExpenseModelClass(), expenseForDelete = new ExpenseModelClass();
@@ -72,6 +75,7 @@ public class ExpenseFormOldFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         expenseViewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         navController = NavHostFragment.findNavController(this);
 
         setupDatePicker();
@@ -287,36 +291,26 @@ public class ExpenseFormOldFragment extends Fragment {
         progressDialog.setMessage("Loading....");
         progressDialog.show();
 
-        String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
-
-        Call<List<ExpenseType>> call = ApiClient.getInstance().getApi().getExpenseType(token, 1, 1, 1);
-
-        call.enqueue(new Callback<List<ExpenseType>>() {
+        userViewModel.getAllExpenseTypes().observe(getViewLifecycleOwner(), new Observer<List<ExpenseType>>() {
             @Override
-            public void onResponse(@NotNull Call<List<ExpenseType>> call, @NotNull Response<List<ExpenseType>> response) {
+            public void onChanged(List<ExpenseType> expenseTypes) {
+                expenseTypeList.clear();
+                if (expenseTypes!=null)
+                {
 
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        expenseTypeList.addAll(response.body());
-                        setupExpenseTypeSpinner();
-                    } else {
-                        Toast.makeText(requireContext(), "Expense types not found", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(requireContext(), "" + response.message(), Toast.LENGTH_SHORT).show();
-                    CustomsDialog.getInstance().loginAgain(requireActivity(), requireContext());
+                    expenseTypeList.addAll(expenseTypes);
+                    setupExpenseTypeSpinner();
+                }else
+                {
+                    Toast.makeText(requireContext(), "Expense types not found", Toast.LENGTH_SHORT).show();
+
                 }
-
                 progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<List<ExpenseType>> call, @NotNull Throwable t) {
-
-                progressDialog.dismiss();
-                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
 
     }
 

@@ -15,11 +15,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.ffccloud.GetSupplierModel;
@@ -248,9 +251,31 @@ public class AddHospitalFragment extends Fragment {
 
 
         btnListener();
-
+        textListener();
     }
+    private void textListener() {
 
+        mBinding.idCoordinates.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s!=null)
+                {
+                    locationString = s.toString();
+                }
+            }
+        });
+    }
     private void setUpRecyclerView() {
 
 
@@ -400,19 +425,21 @@ public class AddHospitalFragment extends Fragment {
                         @Override
                         public void gotLocation(Location location) {
 
-
+                            if (supplierID > 0) {
+                                isLocationUpdate = true;
+                            }
                             if (mBinding.locationCheckbox.isChecked()) {
 
-                                if (supplierID > 0) {
-                                    isLocationUpdate = true;
-                                }
+
                                 isLocationChecked = true;
-                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                mBinding.locationCheckbox.setText(locationAddress);
                                 locationString = location.getLatitude() + "," +location.getLongitude() ;
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude())+
+                                        locationString;
+                                mBinding.locationCheckbox.setText(locationAddress);
                             } else {
                                 isLocationChecked = false;
-
+                                locationAddress="";
+                                locationString="";
                                 mBinding.locationCheckbox.setText("Enable Location");
                                 mBinding.locationCheckbox.setChecked(false);
                             }
@@ -513,18 +540,20 @@ public class AddHospitalFragment extends Fragment {
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord() != null) {
             if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length() > 0) {
                 locationString = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+                mBinding.idCoordinates.setText(locationString);
             }
         }
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress() != null) {
             if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length() > 0) {
-                locationString = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
+                locationAddress = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
+                mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+
             }
         }
 
         if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
             mBinding.locationCheckbox.setChecked(true);
         }
-        mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
 
         int gradeID = getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
 
@@ -566,14 +595,21 @@ public class AddHospitalFragment extends Fragment {
         }
         farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
         doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
-
+        String shift = getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
+        if (shift != null) {
+            if (shift.equals("Morning")) {
+                mBinding.morningRadioBtn.setChecked(true);
+            } else if (shift.equals("Evening")) {
+                mBinding.eveningRadioBtn.setChecked(true);
+            }
+        }
 
     }
 
     private void setUpSupplierModelForSave() {
 
 
-        String name = "", address = "", gasDays = "", hospitalSize = "";
+        String name = "", address = "", gasDays = "", hospitalSize = "",shitType="";
         int gradeID = 0, userId, regionID = 0;
         if (mBinding.etName.getText() != null && mBinding.etName.getText().toString().length() > 0) {
             name = mBinding.etName.getText().toString();
@@ -605,6 +641,10 @@ public class AddHospitalFragment extends Fragment {
             numberOfCases = mBinding.etNoOfCases.getText().toString();
         }
 
+            RadioButton radioButtonShift = mBinding.getRoot().findViewById(mBinding.TimingRadioGroup.getCheckedRadioButtonId());
+            shitType = radioButtonShift.getText().toString();
+
+
         userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
 
@@ -620,6 +660,7 @@ public class AddHospitalFragment extends Fragment {
                 supplierModelNew.setCountry_Id(1);
                 supplierModelNew.setLocation_Id(1);
                 supplierModelNew.setProject_Id(1);
+                supplierModelNew.setShift_Type(shitType);
                 supplierModelNew.setSupplier_Code(supplierCode);
                 supplierModelNew.setSupplier_Id(supplierID);
                 supplierModelNew.setRegion_Id(String.valueOf(regionID));

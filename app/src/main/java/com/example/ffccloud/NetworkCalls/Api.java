@@ -18,6 +18,7 @@ import com.example.ffccloud.model.DeliveryModeModel;
 import com.example.ffccloud.model.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
+import com.example.ffccloud.model.EmployeeExpense;
 import com.example.ffccloud.model.ExpenseType;
 import com.example.ffccloud.model.GetCustomerResponse;
 import com.example.ffccloud.model.GetLedgerBalanceModel;
@@ -177,7 +178,7 @@ public interface Api {
     Call<UpdateStatus>  insertSupplier(@Body SupplierModelNew supplierModelNew);
 
     @GET("api/SupplierApi/GetFFCSupplierByUser")
-    Call<List<GetSupplierModel>> getSupplier(@Query("User_Type")String userType, @Query("UserId")int userID,  @Query("Region_Id")int regionID);
+    Call<List<GetSupplierModel>> getSupplier(@Query("User_Type")String userType, @Query("UserId")int userID,  @Query("Region_Id")int regionID,@Query("isApproved") int isApproved);
 
     @GET("api/SupplierApi/GetFFCSupplierById")
     Call<GetSupplierDetailModel> getSupplierDetail(@Query("Supplier_id")int supplierID);
@@ -222,5 +223,12 @@ public interface Api {
     Call<GetCustomerResponse>  getCustomerByCode(@Query("Company_Id") int companyID,
                                                  @Query("Country_Id") int Country_Id,
                                                  @Query("Supplier_Code") String  customerCode);
+
+    @GET("api/DashboardApi/GetAllExpenses")
+    Call<List<EmployeeExpense>>  getEmployeeExpense(@Header("Authorization") String token,
+                                              @Query("Month_Id") String month,
+                                              @Query("User_Id") int userID);
+
+
 }
 

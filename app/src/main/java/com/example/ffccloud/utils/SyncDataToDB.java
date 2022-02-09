@@ -8,9 +8,11 @@ import android.widget.Toast;
 import com.example.ffccloud.Customer.utils.CustomerRepository;
 import com.example.ffccloud.CustomerModel;
 import com.example.ffccloud.DoctorModel;
+import com.example.ffccloud.Expense.utils.ExpenseRepository;
 import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.model.DeliveryModeModel;
 
+import com.example.ffccloud.model.ExpenseType;
 import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.model.QualificationModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
@@ -154,11 +156,10 @@ public class SyncDataToDB {
                 if (response.isSuccessful() ) {
                     classificationModelList = response.body();
                     repository.InsertClassifications(classificationModelList);
-                                      progressDialog.dismiss();
                 } else {
                     CustomsDialog.getInstance().loginAgain(activity,context);
-                    progressDialog.dismiss();
                 }
+                progressDialog.dismiss();
 
             }
 
@@ -179,11 +180,10 @@ public class SyncDataToDB {
                 if (response.isSuccessful()) {
                     gradingModelList = response.body();
                     repository.InsertGrades(gradingModelList);
-                    progressDialog.dismiss();
                 } else {
                     CustomsDialog.getInstance().loginAgain(activity,context);
-                    progressDialog.dismiss();
                 }
+                progressDialog.dismiss();
 
             }
 
@@ -204,11 +204,10 @@ public class SyncDataToDB {
                 if (response.isSuccessful()) {
                     qualificationModelList = response.body();
                     repository.InsertQualifications(qualificationModelList);
-                    progressDialog.dismiss();
                 } else {
                     CustomsDialog.getInstance().loginAgain(activity,context);
-                    progressDialog.dismiss();
                 }
+                progressDialog.dismiss();
 
             }
 
@@ -219,19 +218,18 @@ public class SyncDataToDB {
             }
         });
 
-        Call<List<DeliveryModeModel>> call = ApiClient.getInstance().getApi().getDeliveryModeTypes(token, 1, 1);
+        Call<List<DeliveryModeModel>> callDeliveryModes = ApiClient.getInstance().getApi().getDeliveryModeTypes(token, 1, 1);
 
-        call.enqueue(new Callback<List<DeliveryModeModel>>() {
+        callDeliveryModes.enqueue(new Callback<List<DeliveryModeModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<DeliveryModeModel>> call, @NotNull Response<List<DeliveryModeModel>> response) {
                 if (response.isSuccessful()) {
                     List<DeliveryModeModel> list = response.body();
                     repository.InsertDeliveryModes(list);
-                    progressDialog.dismiss();
                 } else {
                     CustomsDialog.getInstance().loginAgain(activity,context);
-                    progressDialog.dismiss();
                 }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -240,6 +238,35 @@ public class SyncDataToDB {
                 Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        Call<List<ExpenseType>> call = ApiClient.getInstance().getApi().getExpenseType(token, 1, 1, 1);
+
+        call.enqueue(new Callback<List<ExpenseType>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<ExpenseType>> call, @NotNull Response<List<ExpenseType>> response) {
+
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        repository.InsertExpenseType(response.body());
+                    } else {
+                        Toast.makeText(context, "Expense types not found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(context, "" + response.message(), Toast.LENGTH_SHORT).show();
+                    CustomsDialog.getInstance().loginAgain(activity,context);
+                }
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<List<ExpenseType>> call, @NotNull Throwable t) {
+
+                progressDialog.dismiss();
+                Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
     }
 

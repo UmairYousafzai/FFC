@@ -57,6 +57,12 @@ public class CustomsDialog {
                 alertDialog.dismiss();
             }
         });
+        dialogBinding.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
 
 
     }

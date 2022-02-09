@@ -116,7 +116,7 @@
                 android:id="@+id/tv_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/rs.concat(expenseModelClass.amount)}"
+                android:text="@{@string/rs+expenseModelClass.amount}"
                 android:textColor="@color/red"
                 android:textSize="18sp"
                 android:textStyle="bold"
