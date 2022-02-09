@@ -1,8 +1,14 @@
-package com.example.ffccloud.Expense;
+package com.example.ffccloud.expense;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,20 +19,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
-
 import com.example.ffccloud.ExpenseModelClass;
-import com.example.ffccloud.Expense.utils.ExpenseViewModel;
-import com.example.ffccloud.model.ExpenseType;
-import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentExpenseFormOldBinding;
-import com.example.ffccloud.utils.CustomsDialog;
+import com.example.ffccloud.expense.utils.ExpenseViewModel;
+import com.example.ffccloud.model.ExpenseType;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.UserViewModel;
 import com.github.jhonnyx2012.horizontalpicker.DatePickerListener;
@@ -38,10 +35,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ExpenseFormOldFragment extends Fragment {
 

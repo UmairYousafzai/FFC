@@ -1,4 +1,4 @@
-package com.example.ffccloud.Expense.utils;
+package com.example.ffccloud.expense.utils;
 
 import static com.example.ffccloud.utils.CONSTANTS.EMPLOYEE_EXPENSE_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
@@ -14,7 +14,6 @@ import com.example.ffccloud.ExpenseModelClass;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.interfaces.NetworkCallListener;
 import com.example.ffccloud.model.EmployeeExpense;
-import com.example.ffccloud.utils.CONSTANTS;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -103,7 +102,20 @@ public class ExpenseRepository {
                 {
                     if (response.body()!=null)
                     {
-                        callListener.onCallResponse(response.body(), EMPLOYEE_EXPENSE_RESPONSE);
+                        if (response.body().size()>0)
+                        {
+                            callListener.onCallResponse(response.body(), EMPLOYEE_EXPENSE_RESPONSE);
+
+                        }
+                        else
+                        {
+                            callListener.onCallResponse("Nothing Found According to selected Month",SERVER_ERROR_RESPONSE);
+
+                        }
+                    }
+                    else
+                    {
+                        callListener.onCallResponse("Nothing Found According to selected Month",SERVER_ERROR_RESPONSE);
                     }
                 }
                 else

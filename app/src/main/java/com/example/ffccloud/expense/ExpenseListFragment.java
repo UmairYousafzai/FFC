@@ -1,4 +1,4 @@
-package com.example.ffccloud.Expense;
+package com.example.ffccloud.expense;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -22,13 +22,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.ffccloud.Expense.adapter.ExpenseListAdapter;
-import com.example.ffccloud.Expense.utils.ExpenseViewModel;
+import com.example.ffccloud.databinding.FragmentExpenseListBinding;
+import com.example.ffccloud.expense.adapter.ExpenseListAdapter;
+import com.example.ffccloud.expense.utils.ExpenseViewModel;
 import com.example.ffccloud.ExpenseModelClass;
 import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
-import com.example.ffccloud.databinding.FragmentExpenseListBinding;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import org.jetbrains.annotations.NotNull;

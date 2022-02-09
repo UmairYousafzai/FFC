@@ -1,31 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Expense.EmployeesExpensesListFragment"
-    android:orientation="vertical"
-    android:background="@color/background_color"
-    android:paddingHorizontal="5dp"
-    android:paddingTop="10dp">
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="employeeExpenseViewModel"
+            type="com.example.ffccloud.expense.utils.ExpenseViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/spinner_bg"
-        android:elevation="5dp"
-        app:queryHint="Type name ...."
-        app:iconifiedByDefault="false"
-        android:layout_marginBottom="10dp"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/expense_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        tools:context=".expense.EmployeesExpensesListFragment"
+        android:orientation="vertical"
+        android:background="@color/background_color"
         android:paddingHorizontal="5dp"
-        tools:listitem="@layout/employees_expense_card" />
+        android:paddingTop="10dp">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/spinner_bg"
+            android:elevation="5dp"
+            app:queryHint="Type name ...."
+            app:iconifiedByDefault="false"
+            android:layout_marginBottom="10dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/month_spinner_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:elevation="5dp"
+            android:hint="Select Month"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="5dp"
+            app:boxCornerRadiusBottomStart="5dp"
+            app:boxCornerRadiusTopEnd="5dp"
+            app:boxCornerRadiusTopStart="5dp"
+            app:hintTextColor="@color/APP_Theme_Color"
+            >
+
+            <AutoCompleteTextView
+                android:id="@+id/month_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                app:setCustomSpinnerAdapter="@{employeeExpenseViewModel.getCustomSpinnerAdapter()}"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/expense_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:layout_marginTop="10dp"
+            app:setAdapter="@{employeeExpenseViewModel.getAdapter()}"
+            tools:listitem="@layout/employees_expense_card" />
 
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

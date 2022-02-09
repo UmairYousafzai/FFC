@@ -1,4 +1,4 @@
-package com.example.ffccloud.Expense;
+package com.example.ffccloud.expense;
 
 import android.os.Bundle;
 
@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import com.example.ffccloud.R;
 
 
-public class ExpenseWalletFragment extends Fragment {
+public class ExpenseFormFragment extends Fragment {
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_expense_wallet, container, false);
+        return inflater.inflate(R.layout.fragment_expense_form, container, false);
     }
 }

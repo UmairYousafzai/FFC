@@ -58,10 +58,23 @@
         <action
             android:id="@+id/action_nav_home_to_tableLayout"
             app:destination="@id/tableLayout" />
+        <action
+            android:id="@+id/action_nav_home_to_employeeExpenseFragment"
+            app:destination="@id/employeeExpenseFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
 
 
     </fragment>
 
+    <fragment
+        android:id="@+id/employeeExpenseFragment"
+        android:name="com.example.ffccloud.expense.EmployeesExpensesListFragment"
+        android:label="Expenses"
+        tools:layout="@layout/employees_expense_card" />
     <fragment
         android:id="@+id/nav_gallery"
         android:name="com.example.ffccloud.ui.gallery.GalleryFragment"
@@ -811,7 +824,7 @@
     </fragment>
     <fragment
         android:id="@+id/expenseListFragment"
-        android:name="com.example.ffccloud.Expense.ExpenseListFragment"
+        android:name="com.example.ffccloud.expense.ExpenseListFragment"
         android:label="Expense List"
         >
         <action
@@ -824,7 +837,7 @@
     </fragment>
     <fragment
         android:id="@+id/expenseFormFragment"
-        android:name="com.example.ffccloud.Expense.ExpenseFormOldFragment"
+        android:name="com.example.ffccloud.expense.ExpenseFormOldFragment"
         android:label="Expense Form"
         >
         <argument
