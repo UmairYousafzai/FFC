@@ -136,7 +136,7 @@ public class HospitalListFragment extends Fragment {
             userID= SharedPreferenceHelper.getInstance(requireContext()).getUserID();
         }
 
-        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier("H",userID,regionId);
+        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier("H",userID,regionId,0);
 
         call.enqueue(new Callback<List<GetSupplierModel>>() {
             @Override

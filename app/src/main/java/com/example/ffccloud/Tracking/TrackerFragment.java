@@ -16,10 +16,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentTrackerBinding;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -34,6 +36,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -87,25 +90,71 @@ public class TrackerFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
 
-        getLocationFromFireBase();
+        checkLocationAvailable();
+
+    }
+
+    private void checkLocationAvailable() {
+
+        FirebaseDatabase.getInstance().getReference("Users").child(requestedUserID).child("requestAccepted")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        if (snapshot.getValue()!=null)
+                        {
+                            boolean isRequestAccepted ;
+                            try
+                            {
+                                isRequestAccepted = snapshot.getValue(Boolean.class);
+                            }
+                            catch (Exception e)
+                            {
+                                isRequestAccepted=false;
+                            }
+
+                            if (isRequestAccepted) {
+
+                                getLocationFromFireBase();
+                            } else {
+                                CustomsDialog.getInstance().showDialog("Location request unaccepted from the user\n send request again to access location","Location Request",
+                                        requireActivity(),
+                                        requireContext(),2);                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(requireContext(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        databaseReference.child(requestedUserID).child("lastLocation").removeEventListener(valueEventListener);
+        if (valueEventListener!=null)
+        {
+            databaseReference.child(requestedUserID).child("lastLocation").removeEventListener(valueEventListener);
+        }
+
         flag = false;
         Log.d("Tracker ", "onDetach");
     }
 
     private void getLocationFromFireBase() {
         if (flag) {
+
+
             customLocation = new CustomLocation(requireContext());
 
 
             assert requestedUserID != null;
 
-            BitmapDescriptor icon = BitmapFromVector(R.drawable.current_location);
+            BitmapDescriptor icon = BitmapFromVector();
 
             valueEventListener = new ValueEventListener() {
                 @Override
@@ -114,44 +163,63 @@ public class TrackerFragment extends Fragment {
 //                LatLng marker = new LatLng(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
 //                mMap.addMarker(new MarkerOptions().position(marker).title(address).icon(BitmapFromVector(R.drawable.ic_current_location_svgrepo_com)));
 //                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker,15.0f));
-                    String location = snapshot.getValue(String.class);
+                    if (snapshot.exists())
+                    {
+                        String location = snapshot.getValue(String.class);
 
-                    if (location != null && location.length() > 0) {
-                        mMap.clear();
+                        if (location != null && location.length() > 0) {
+                            mMap.clear();
 
-                        String[] locationString = location.split(",");
-                        LatLng marker = new LatLng(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
-                        if (couter <= 1) {
-                            String address = customLocation.getCompleteAddressString(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
-                            mMap.addMarker(new MarkerOptions().position(marker).title(address).icon(icon));
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker, 15.0f));
-                            latLngList.add(marker);
-                            couter++;
-                        } else {
-                            latLngList.add(marker);
+                            String[] locationString = location.split(",");
+                            LatLng marker = new LatLng(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
+                            if (couter <= 1) {
+                                String address = customLocation.getCompleteAddressString(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
+                                if (icon!=null)
+                                {
+                                    mMap.addMarker(new MarkerOptions().position(marker).title(address).icon(icon));
 
-                        }
+                                }
 
-                        if (latLngList != null && latLngList.size() > 2) {
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker, 15.0f));
+                                latLngList.add(marker);
+                                couter++;
+                            } else {
+                                latLngList.add(marker);
 
-
-                            String distance = calculateDistance(latLngList.get(latLngList.size() - 1), latLngList.get(0));
-                            if (distance != null) {
-                                mBinding.distance.setText(distance);
                             }
-                            String address = customLocation.getCompleteAddressString(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
-                            mBinding.tvAddress.setText(address);
-                            mMap.addMarker(new MarkerOptions().position(latLngList.get(latLngList.size() - 1)).title(address).icon(icon));
 
-                            Log.d("Tracker ", "onGetLocation: ");
-                            polyline1 = mMap.addPolyline(new PolylineOptions()
-                                    .clickable(true)
-                                    .addAll(latLngList).color(getResources().getColor(R.color.blue)));
+                            if (latLngList != null && latLngList.size() > 2) {
 
+
+                                String distance = calculateDistance(latLngList.get(latLngList.size() - 1), latLngList.get(0));
+                                if (distance != null) {
+                                    mBinding.distance.setText(distance);
+                                }
+                                String address = customLocation.getCompleteAddressString(Double.parseDouble(locationString[0]), Double.parseDouble(locationString[1]));
+                                mBinding.tvAddress.setText(address);
+                                if (icon!=null)
+                                {
+                                    mMap.addMarker(new MarkerOptions().position(latLngList.get(latLngList.size() - 1)).title(address).icon(icon));
+                                }
+
+
+                                Log.d("Tracker ", "onGetLocation: ");
+                                polyline1 = mMap.addPolyline(new PolylineOptions()
+                                        .clickable(true)
+                                        .addAll(latLngList).color(getResources().getColor(R.color.blue)));
+
+
+                            }
 
                         }
-
                     }
+                    else
+                    {
+                        CustomsDialog.getInstance().showDialog("Location request unaccepted from the user\n send request again to access location","Location Request",
+                                requireActivity(),
+                                requireContext(),2);
+                    }
+
 
 
                 }
@@ -162,10 +230,7 @@ public class TrackerFragment extends Fragment {
             };
             databaseReference.child(requestedUserID).child("lastLocation").addValueEventListener(valueEventListener);
 
-        } else {
-
         }
-
 
     }
 
@@ -196,25 +261,37 @@ public class TrackerFragment extends Fragment {
 
     }
 
-    private BitmapDescriptor BitmapFromVector(int vectorResId) {
+    private BitmapDescriptor BitmapFromVector() {
         // below line is use to generate a drawable.
-        Drawable vectorDrawable = ContextCompat.getDrawable(requireContext(), vectorResId);
+        Drawable vectorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.current_location);
 
         // below line is use to set bounds to our vector drawable.
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        if (vectorDrawable != null) {
+            vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        }
 
         // below line is use to create a bitmap for our
         // drawable which we have added.
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = null;
+        if (vectorDrawable != null) {
+            bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
 
         // below line is use to add bitmap in our canvas.
         Canvas canvas = new Canvas(bitmap);
 
         // below line is use to draw our
         // vector drawable in canvas.
-        vectorDrawable.draw(canvas);
+        if (vectorDrawable != null) {
+            vectorDrawable.draw(canvas);
+        }
 
         // after generating our bitmap we are returning our bitmap.
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
+        if (bitmap != null) {
+            return BitmapDescriptorFactory.fromBitmap(bitmap);
+        }else
+        {
+            return null;
+        }
     }
 }

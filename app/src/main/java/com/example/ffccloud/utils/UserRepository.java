@@ -1,18 +1,20 @@
 package com.example.ffccloud.utils;
 
-import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.Database.FfcDAO;
+
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.DeliveryModeModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.model.ClassificationModel;
+import com.example.ffccloud.model.DeliveryModeModel;
+import com.example.ffccloud.model.ExpenseType;
+import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
-import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.model.QualificationModel;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -20,27 +22,28 @@ import java.util.concurrent.Executors;
 
 public class UserRepository {
 
-    private FfcDAO mDao;
-    Application application;
+    private final FFC_DAO mDao;
     private final LiveData<List<QualificationModel>> allQualification;
     private final LiveData<List<ClassificationModel>> allClassification;
-    private  LiveData<List<GradingModel>> allGrades;
+    private final LiveData<List<GradingModel>> allGrades;
     private final LiveData<List<LocationRequestedUser>> allUsers;
     private final LiveData<List<DeliveryModeModel>> allDeliveryModes;
+    private final LiveData<List<ExpenseType>> allExpenseTypes;
 
-    private Executor executor= Executors.newSingleThreadExecutor();
-    private Handler handler= new Handler(Looper.getMainLooper());
+    private final Executor executor= Executors.newSingleThreadExecutor();
+    private final Handler handler= new Handler(Looper.getMainLooper());
 
 
-    public UserRepository(Application application) {
-        FfcDatabase database = FfcDatabase.getInstance(application);
+    public UserRepository(Context context) {
+
+        FfcDatabase database = FfcDatabase.getInstance(context);
         mDao = database.dao();
-        this.application = application;
         allClassification = mDao.getAllClassification();
         allGrades = mDao.getAllGrades();
         allQualification = mDao.getAllQualification();
         allUsers = mDao.getAllUser();
         allDeliveryModes = mDao.getAllDeliveryModes();
+        allExpenseTypes= mDao.getAllExpenseType();
 
     }
 
@@ -75,6 +78,14 @@ public class UserRepository {
             @Override
             public void run() {
                 mDao.insertDeliveryModes(list);
+            }
+        });    }
+
+    public void InsertExpenseType(List<ExpenseType> list) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.insertExpenseType(list);
             }
         });    }
 
@@ -114,6 +125,15 @@ public class UserRepository {
             }
         });    }
 
+    public void DeleteAllExpenseType( )
+    {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.deleteAllExpenseType();
+            }
+        });    }
+
     public LiveData<List<ClassificationModel>> getAllClassification()
     {
         return allClassification;
@@ -133,6 +153,11 @@ public class UserRepository {
         return allDeliveryModes;
     }
 
+    public LiveData<List<ExpenseType>> getAllExpenseTypes()
+    {
+        return allExpenseTypes;
+    }
+
     public void insertUser(LocationRequestedUser user) {
         executor.execute(new Runnable() {
             @Override
@@ -148,6 +173,16 @@ public class UserRepository {
             @Override
             public void run() {
                 mDao.deleteAllUser();
+            }
+        });
+    }
+
+    public void deleteAllMenus( )
+    {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDao.delete_all_menu();
             }
         });
     }

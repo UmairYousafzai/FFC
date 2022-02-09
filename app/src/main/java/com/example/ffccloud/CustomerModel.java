@@ -3,12 +3,20 @@ package com.example.ffccloud;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@Entity(tableName = "Customer")
 public class CustomerModel implements  Parcelable {
+
+    @PrimaryKey (autoGenerate = true)
+    private int customerID_PK;
 
     private int Company_Id;
     private int Country_Id;
@@ -43,7 +51,7 @@ public class CustomerModel implements  Parcelable {
     private String EMail_CC ;
     private String EMail_BCC ;
 
-    private String contacts;
+    private String Contacts;
     private String Fax_No ;
     private int City_Id ;
 
@@ -51,13 +59,19 @@ public class CustomerModel implements  Parcelable {
     private String Address ;
     private String Instruction ;
     private String Comments ;
+    private String Loc_Cord ;
+    private String Loc_Cord_Address ;
+    private boolean Is_update_Loc_Cord  ;
 
     private boolean Is_Company;
     private String Prompt_Type;
+    private String User_Sub_Type;
 
     @SerializedName("Mobile_No")
     @Expose
     private String mobileNo;
+
+    @Ignore
     private List<ContactPersons> Contact_PersonsList;
 
     public CustomerModel() {
@@ -65,9 +79,9 @@ public class CustomerModel implements  Parcelable {
 
 
     protected CustomerModel(Parcel in) {
+        customerID_PK = in.readInt();
         Company_Id = in.readInt();
         Country_Id = in.readInt();
-
         Location_Id = in.readInt();
         Project_Id = in.readInt();
         Supplier_Id = in.readInt();
@@ -87,16 +101,65 @@ public class CustomerModel implements  Parcelable {
         Email = in.readString();
         EMail_CC = in.readString();
         EMail_BCC = in.readString();
-        contacts = in.readString();
+        Contacts = in.readString();
         Fax_No = in.readString();
         City_Id = in.readInt();
         Payee = in.readString();
         Address = in.readString();
         Instruction = in.readString();
         Comments = in.readString();
+        Loc_Cord = in.readString();
+        Loc_Cord_Address = in.readString();
+        Is_update_Loc_Cord = in.readByte() != 0;
         Is_Company = in.readByte() != 0;
         Prompt_Type = in.readString();
+        User_Sub_Type = in.readString();
         mobileNo = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(customerID_PK);
+        dest.writeInt(Company_Id);
+        dest.writeInt(Country_Id);
+        dest.writeInt(Location_Id);
+        dest.writeInt(Project_Id);
+        dest.writeInt(Supplier_Id);
+        dest.writeLong(userID);
+        dest.writeLong(salesManID);
+        dest.writeString(UserTypeName);
+        dest.writeString(partyCode);
+        dest.writeString(partyName);
+        dest.writeString(partyAbbreviation);
+        dest.writeString(Focal_Person);
+        dest.writeString(CNICNo);
+        dest.writeString(Sales_Tax_No);
+        dest.writeString(NTN);
+        dest.writeDouble(Cr_Limit);
+        dest.writeDouble(Cr_Limit_Amount);
+        dest.writeByte((byte) (Apply_Cr_Limit ? 1 : 0));
+        dest.writeString(Email);
+        dest.writeString(EMail_CC);
+        dest.writeString(EMail_BCC);
+        dest.writeString(Contacts);
+        dest.writeString(Fax_No);
+        dest.writeInt(City_Id);
+        dest.writeString(Payee);
+        dest.writeString(Address);
+        dest.writeString(Instruction);
+        dest.writeString(Comments);
+        dest.writeString(Loc_Cord);
+        dest.writeString(Loc_Cord_Address);
+        dest.writeByte((byte) (Is_update_Loc_Cord ? 1 : 0));
+        dest.writeByte((byte) (Is_Company ? 1 : 0));
+        dest.writeString(Prompt_Type);
+        dest.writeString(User_Sub_Type);
+        dest.writeString(mobileNo);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<CustomerModel> CREATOR = new Creator<CustomerModel>() {
@@ -111,7 +174,45 @@ public class CustomerModel implements  Parcelable {
         }
     };
 
+    public String getUser_Sub_Type() {
+        return User_Sub_Type;
+    }
 
+    public void setUser_Sub_Type(String user_Sub_Type) {
+        User_Sub_Type = user_Sub_Type;
+    }
+
+    public String getLoc_Cord() {
+        return Loc_Cord;
+    }
+
+    public void setLoc_Cord(String loc_Cord) {
+        Loc_Cord = loc_Cord;
+    }
+
+    public String getLoc_Cord_Address() {
+        return Loc_Cord_Address;
+    }
+
+    public void setLoc_Cord_Address(String loc_Cord_Address) {
+        Loc_Cord_Address = loc_Cord_Address;
+    }
+
+    public boolean isIs_update_Loc_Cord() {
+        return Is_update_Loc_Cord;
+    }
+
+    public void setIs_update_Loc_Cord(boolean is_update_Loc_Cord) {
+        Is_update_Loc_Cord = is_update_Loc_Cord;
+    }
+
+    public int getCustomerID_PK() {
+        return customerID_PK;
+    }
+
+    public void setCustomerID_PK(int customerID_PK) {
+        this.customerID_PK = customerID_PK;
+    }
 
     public String getMobileNo() {
         return mobileNo;
@@ -306,11 +407,11 @@ public class CustomerModel implements  Parcelable {
     }
 
     public String getContacts() {
-        return contacts;
+        return Contacts;
     }
 
     public void setContacts(String contacts) {
-        this.contacts = contacts;
+        this.Contacts = contacts;
     }
 
     public String getFax_No() {
@@ -370,44 +471,4 @@ public class CustomerModel implements  Parcelable {
     }
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(Company_Id);
-        dest.writeInt(Country_Id);
-        dest.writeInt(Location_Id);
-        dest.writeInt(Project_Id);
-
-        dest.writeInt(Supplier_Id);
-        dest.writeLong(userID);
-        dest.writeLong(salesManID);
-        dest.writeString(UserTypeName);
-        dest.writeString(partyCode);
-        dest.writeString(partyName);
-        dest.writeString(partyAbbreviation);
-        dest.writeString(Focal_Person);
-        dest.writeString(CNICNo);
-        dest.writeString(Sales_Tax_No);
-        dest.writeString(NTN);
-        dest.writeDouble(Cr_Limit);
-        dest.writeDouble(Cr_Limit_Amount);
-        dest.writeByte((byte) (Apply_Cr_Limit ? 1 : 0));
-        dest.writeString(Email);
-        dest.writeString(EMail_CC);
-        dest.writeString(EMail_BCC);
-        dest.writeString(contacts);
-        dest.writeString(Fax_No);
-        dest.writeInt(City_Id);
-        dest.writeString(Payee);
-        dest.writeString(Address);
-        dest.writeString(Instruction);
-        dest.writeString(Comments);
-        dest.writeByte((byte) (Is_Company ? 1 : 0));
-        dest.writeString(Prompt_Type);
-        dest.writeString(mobileNo);
-    }
 }

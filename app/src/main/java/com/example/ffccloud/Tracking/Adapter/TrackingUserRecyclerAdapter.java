@@ -1,5 +1,7 @@
 package com.example.ffccloud.Tracking.Adapter;
 
+import static com.example.ffccloud.utils.CONSTANTS.LOCATION_NOTIFICATION_TITLE;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -7,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +29,7 @@ import com.example.ffccloud.R;
 import com.example.ffccloud.Tracking.UsersListFragmentDirections;
 import com.example.ffccloud.UserModel;
 import com.example.ffccloud.databinding.UserCardBinding;
+import com.example.ffccloud.utils.CONSTANTS;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,9 +42,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUserRecyclerAdapter.UserListViewHolder> {
+public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUserRecyclerAdapter.UserListViewHolder> implements Filterable {
 
     private LayoutInflater layoutInflater;
+    public List<UserModel> userListFull;
     public List<UserModel> userList;
     private final Context context;
     private SendNoticationClass sendNoticationClass;
@@ -61,6 +67,8 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         sendNoticationClass = new SendNoticationClass(context);
+        userList= new ArrayList<>();
+        userListFull= new ArrayList<>();
     }
 
     @NonNull
@@ -91,11 +99,66 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
 
     public void setUserList(List<UserModel> list) {
         if (list != null && list.size() > 0) {
-            userList = list;
+            userList.clear();
+            userListFull.clear();
+            userList.addAll(list);
+            userListFull.addAll(list);
             notifyDataSetChanged();
 
         }
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+    private Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<UserModel> filterList = new ArrayList<>();
+
+            if (constraint!=null&&constraint.length()>0)
+            {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                if (userListFull!=null&& userListFull.size()>0)
+                {
+                    for (UserModel model :userListFull)
+                    {
+                        if (model.getUserName().toLowerCase().trim().contains(filterPattern))
+                        {
+                            filterList.add(model);
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                if (userListFull != null) {
+                    filterList.addAll(userListFull);
+                }
+            }
+
+            FilterResults filterResults= new FilterResults();
+            filterResults.values= filterList;
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            userList.clear();
+            if (results.values!=null)
+            {
+                userList.addAll((List) results.values);
+            }
+            notifyDataSetChanged();
+
+        }
+    };
 
 
     public class UserListViewHolder extends RecyclerView.ViewHolder {
@@ -131,6 +194,8 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
                                                         boolean isRequestAccepted = snapshot.getValue(Boolean.class);
                                                         if (!isRequestAccepted) {
                                                             sendNotification(user);
+                                                            Toast.makeText(context, "Location Request Sent", Toast.LENGTH_SHORT).show();
+
 
                                                         } else {
                                                             Toast.makeText(context, "Location Request Already send", Toast.LENGTH_SHORT).show();
@@ -138,12 +203,13 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
                                                     } catch (Exception e) {
                                                         Toast.makeText(context, " " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                     }
-
+                                                    progressDialog.dismiss();
                                                 }
 
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {
-
+                                                    progressDialog.dismiss();
+                                                    Toast.makeText(context, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 } else {
@@ -160,6 +226,8 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
                                     }).addOnCanceledListener(new OnCanceledListener() {
                                         @Override
                                         public void onCanceled() {
+                                            progressDialog.dismiss();
+
                                             Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                                         }
                                     });
@@ -169,6 +237,8 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                                 Log.e("Add User: ", " " + error.getMessage());
+                                Toast.makeText(context, "Something went wrong"+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
 
                             }
                         });
@@ -179,37 +249,77 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
             });
 
 
+
             mBinding.btnTrack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                         progressDialog.show();
+                            UserModel user = userList.get(getAdapterPosition());
+                            String email = user.getEmail();
 
-                        UserModel user = userList.get(getAdapterPosition());
+                        Query query = firebaseDatabase.getReference("Users").orderByChild("email").equalTo(email);
 
-                        FirebaseDatabase.getInstance().getReference("Users").child(user.getId()).child("requestAccepted")
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists())
+                                {
 
-                                        boolean isRequestAccepted = snapshot.getValue(Boolean.class);
-                                        if (isRequestAccepted) {
-                                            NavController navController = NavHostFragment.findNavController(fragment);
-                                            UsersListFragmentDirections.ActionUsersListFragmentToTrackerFragment action = UsersListFragmentDirections.actionUsersListFragmentToTrackerFragment();
-                                            action.setRecevierID(user.getId());
-                                            progressDialog.dismiss();
-                                            navController.navigate(action);
+                                    FirebaseDatabase.getInstance().getReference("Users").child(user.getId()).child("requestAccepted")
+                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                        } else {
-                                            Toast.makeText(context, "Please Send Location Request First", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
+                                                    if (snapshot.getValue()!=null)
+                                                    {
+                                                        boolean isRequestAccepted ;
+                                                        try
+                                                        {
+                                                            isRequestAccepted = snapshot.getValue(Boolean.class);
+                                                        }
+                                                        catch (Exception e)
+                                                        {
+                                                            isRequestAccepted=false;
+                                                        }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                        if (isRequestAccepted) {
+                                                            NavController navController = NavHostFragment.findNavController(fragment);
+                                                            UsersListFragmentDirections.ActionUsersListFragmentToTrackerFragment action = UsersListFragmentDirections.actionUsersListFragmentToTrackerFragment();
+                                                            action.setRecevierID(user.getId());
+                                                            progressDialog.dismiss();
+                                                            navController.navigate(action);
 
-                                    }
-                                });
+                                                        } else {
+                                                            Toast.makeText(context, "Please wait Location Request First", Toast.LENGTH_SHORT).show();
+                                                            progressDialog.dismiss();
+                                                        }
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    Toast.makeText(context, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+                                }
+                                else
+                                {
+                                    Toast.makeText(context, "Add user first", Toast.LENGTH_SHORT).show();
+                                }
+
+                                progressDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                Toast.makeText(context, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     }
 
                 }
@@ -232,7 +342,7 @@ public class TrackingUserRecyclerAdapter extends RecyclerView.Adapter<TrackingUs
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String receiverUserToken = dataSnapshot.getValue(String.class);
                     progressDialog.dismiss();
-                    sendNoticationClass.sendNotifications(receiverUserToken, senderUser, "Device Tracker", message, context);
+                    sendNoticationClass.sendNotifications(receiverUserToken, senderUser,LOCATION_NOTIFICATION_TITLE, message, context);
                 }
 
                 @Override

@@ -10,6 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="50dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -312,7 +313,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                android:layout_margin="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="50dp"
                 >
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_compelete"
@@ -339,9 +342,9 @@
         </LinearLayout>
     </ScrollView>
 
-    <include
-        android:id="@+id/feedback_bottom_sheet"
-        layout="@layout/bottom_sheet_feedback"/>
+<!--    <include-->
+<!--        android:id="@+id/feedback_bottom_sheet"-->
+<!--        layout="@layout/bottom_sheet_feedback"/>-->
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

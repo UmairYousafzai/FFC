@@ -92,7 +92,7 @@
                 android:layout_below="@+id/remarks_edittext"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:text="@string/select_date"
+                android:hint="@string/select_data"
                 android:layout_marginVertical="4dp"
                 app:drawableStartCompat="@drawable/ic_baseline_date_range_gray" />
 
@@ -100,7 +100,7 @@
                 android:id="@+id/line_view"
                 android:layout_width="200dp"
                 android:layout_height="2dp"
-                android:background="@color/gray"
+                android:background="@color/grey"
                 android:layout_below="@id/text_date"
                 android:layout_centerHorizontal="true"
                 android:layout_marginVertical="4dp"
@@ -112,7 +112,7 @@
                 android:layout_below="@+id/line_view"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:text="@string/select_time"
+                android:hint="@string/select_time"
                 android:layout_marginVertical="4dp"
                 app:drawableStartCompat="@drawable/ic_baseline_access_time_24" />
 

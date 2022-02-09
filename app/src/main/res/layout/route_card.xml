@@ -87,7 +87,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"
+                android:background="@color/grey"
                 />
             <TextView
                 android:id="@+id/start_time"
@@ -101,7 +101,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"
+                android:background="@color/grey"
                 />
 
             <TextView
@@ -117,7 +117,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"
+                android:background="@color/grey"
                 />
             <TextView
                 android:id="@+id/start_location"
@@ -132,7 +132,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"
+                android:background="@color/grey"
                 />
             <TextView
                 android:id="@+id/end_location"
@@ -147,7 +147,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"
+                android:background="@color/grey"
                 />
             <TextView
                 android:id="@+id/start_location_address"
@@ -164,7 +164,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"
+                android:background="@color/grey"
                 />
 
             <TextView

@@ -10,7 +10,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.example.ffccloud.GetSaleOrderModel;
 import com.example.ffccloud.databinding.SaleOrderCardBinding;
 import com.example.ffccloud.salesOrder.SalesOrderListFragmentDirections;

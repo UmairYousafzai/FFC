@@ -1,5 +1,6 @@
 package com.example.ffccloud.NetworkCalls;
 
+import com.example.ffccloud.ExpenseModelClass;
 import com.example.ffccloud.GetProductModel;
 import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.Login.GetUserInfoModel;
@@ -8,30 +9,32 @@ import com.example.ffccloud.Login.ForgotPasswordModel;
 import com.example.ffccloud.Login.GetUserSettingModel;
 import com.example.ffccloud.Login.TokenResponseModel;
 import com.example.ffccloud.DoctorModel;
-import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
-import com.example.ffccloud.ModelClasses.AreaModel;
-import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
+import com.example.ffccloud.model.AddNewWorkPlanModel;
+import com.example.ffccloud.model.AreaModel;
+import com.example.ffccloud.model.AreasByEmpIdModel;
+import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.CustomerModel;
-import com.example.ffccloud.ModelClasses.DeliveryModeModel;
-import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
+import com.example.ffccloud.model.DeliveryModeModel;
+import com.example.ffccloud.model.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
-import com.example.ffccloud.ModelClasses.GetLedgerBalanceModel;
-import com.example.ffccloud.ModelClasses.GetSaleOrderDetail;
-import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
-import com.example.ffccloud.ModelClasses.InsertSaleOrderModel;
-import com.example.ffccloud.ModelClasses.QualificationModel;
-import com.example.ffccloud.ModelClasses.RateListModel;
-import com.example.ffccloud.ModelClasses.RegionModel;
+import com.example.ffccloud.model.EmployeeExpense;
+import com.example.ffccloud.model.ExpenseType;
+import com.example.ffccloud.model.GetCustomerResponse;
+import com.example.ffccloud.model.GetLedgerBalanceModel;
+import com.example.ffccloud.model.GetSaleOrderDetail;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.GradingModel;
+import com.example.ffccloud.model.InsertSaleOrderModel;
+import com.example.ffccloud.model.QualificationModel;
+import com.example.ffccloud.model.RateListModel;
+import com.example.ffccloud.model.RegionModel;
 import com.example.ffccloud.GetSaleOrderModel;
-import com.example.ffccloud.ModelClasses.SupplierMainModel;
-import com.example.ffccloud.ModelClasses.SupplierModelNew;
+import com.example.ffccloud.model.SupplierModelNew;
 import com.example.ffccloud.SaveDoctorModel;
-import com.example.ffccloud.ModelClasses.SaveNewWorkPlanModel;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
-import com.example.ffccloud.ModelClasses.UpdateWorkPlanStatus;
+import com.example.ffccloud.model.SaveNewWorkPlanModel;
+import com.example.ffccloud.model.UpdateStatus;
+import com.example.ffccloud.model.UpdateWorkPlanStatus;
 import com.example.ffccloud.UserModel;
 import com.example.ffccloud.WorkPlanHistory;
 
@@ -86,7 +89,7 @@ public interface Api {
             @Query("UserId") int id
     );
 
-    @GET("api/FFCAppApi/GetDoctorByEmployee  ")
+    @GET("api/FFCAppApi/GetDoctorByEmployee")
     Call<List<DoctorModel>> GetDoctorsByEmployeeId(@Header("Authorization") String token, @Query("Emp_Id") int emp_Id);
 
     @POST("api/FFCAppApi/UpdateWorkPlanStatus")
@@ -175,7 +178,7 @@ public interface Api {
     Call<UpdateStatus>  insertSupplier(@Body SupplierModelNew supplierModelNew);
 
     @GET("api/SupplierApi/GetFFCSupplierByUser")
-    Call<List<GetSupplierModel>> getSupplier(@Query("User_Type")String userType, @Query("UserId")int userID,  @Query("Region_Id")int regionID);
+    Call<List<GetSupplierModel>> getSupplier(@Query("User_Type")String userType, @Query("UserId")int userID,  @Query("Region_Id")int regionID,@Query("isApproved") int isApproved);
 
     @GET("api/SupplierApi/GetFFCSupplierById")
     Call<GetSupplierDetailModel> getSupplierDetail(@Query("Supplier_id")int supplierID);
@@ -206,5 +209,26 @@ public interface Api {
                                                       @Query("Country_Id") int Country_Id,
                                                       @Query("Project_Id") int Project_Id,
                                                       @Query("Sale_Order_Id") int Sale_Order_Id);
+
+    @POST("api/FFCAppApi/GetALLExpenses")
+    Call<List<ExpenseType>> getExpenseType(@Header("Authorization") String token,
+                                           @Query("Company_ID") int companyId,
+                                           @Query("Country_ID") int countryId,
+                                           @Query("Loction_ID") int locationId);
+
+    @POST("api/FFCAppApi/SaveExpensesList")
+    Call<UpdateStatus> insertExpenses(@Header("Authorization") String token, @Body List<ExpenseModelClass> sendExpenseModels);
+
+    @GET("api/SupplierApi/GetByID")
+    Call<GetCustomerResponse>  getCustomerByCode(@Query("Company_Id") int companyID,
+                                                 @Query("Country_Id") int Country_Id,
+                                                 @Query("Supplier_Code") String  customerCode);
+
+    @GET("api/DashboardApi/GetAllExpenses")
+    Call<List<EmployeeExpense>>  getEmployeeExpense(@Header("Authorization") String token,
+                                              @Query("Month_Id") String month,
+                                              @Query("User_Id") int userID);
+
+
 }
 

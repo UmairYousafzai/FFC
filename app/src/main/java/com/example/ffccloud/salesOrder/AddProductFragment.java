@@ -1,7 +1,15 @@
 package com.example.ffccloud.salesOrder;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +24,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.ffccloud.GetProductModel;
 import com.example.ffccloud.InsertProductModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
@@ -27,6 +31,7 @@ import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentAddProductBinding;
 import com.example.ffccloud.salesOrder.adapter.GetProductRecyclerAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +44,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddProductFragment extends Fragment {
-    private FragmentAddProductBinding  mBinding;
+    private FragmentAddProductBinding mBinding;
     private GetProductRecyclerAdapter adapter;
     private NavController navController;
     private List<InsertProductModel> productModelList=new ArrayList<>();
@@ -80,9 +85,19 @@ public class AddProductFragment extends Fragment {
         final LifecycleEventObserver observer = (source, event) -> {
             if (event.equals(Lifecycle.Event.ON_RESUME) && navBackStackEntry.getSavedStateHandle().contains(CONSTANTS.PRODUCT_MODEL)) {
                 InsertProductModel productModel = navBackStackEntry.getSavedStateHandle().get(CONSTANTS.PRODUCT_MODEL);
+                if (!productModelList.contains(productModel))
+                {
+                    productModelList.add(productModel);
+                }
 
-                productModelList.add(productModel);
-                navController.getPreviousBackStackEntry().getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL, productModelList);
+
+                Toast.makeText(requireContext(), "Number Of Product Added :"+productModelList.size(), Toast.LENGTH_SHORT).show();
+                if (navController.getPreviousBackStackEntry()!=null)
+                {
+                    navController.getPreviousBackStackEntry().getSavedStateHandle().set(CONSTANTS.PRODUCT_MODEL, productModelList);
+
+                }
+
 
             }
         };
@@ -102,7 +117,17 @@ public class AddProductFragment extends Fragment {
 
 
         setUpRecyclerView();
-        getData("");
+
+        if (isNetworkConnected())
+        {
+            getData();
+        }
+        else
+        {
+            Toast.makeText(requireContext(), "Product Loading Failed \n Please connect to internet", Toast.LENGTH_SHORT).show();
+
+        }
+
         searchViewListener();
         setPullToFresh();
     }
@@ -113,7 +138,7 @@ public class AddProductFragment extends Fragment {
 
     }
 
-    private void getData(String productTitle) {
+    private void getData() {
 
          ProgressDialog progressDialog = new ProgressDialog(requireContext());
          progressDialog.setMessage("Loading...");
@@ -123,33 +148,46 @@ public class AddProductFragment extends Fragment {
 
 
         String token = SharedPreferenceHelper.getInstance(requireContext()).getToken();
-        Call<List<GetProductModel>> call = ApiClient.getInstance().getApi().getAllProducts(token,productTitle,1,1,0,1);
+        Call<List<GetProductModel>> call = ApiClient.getInstance().getApi().getAllProducts(token, "",1,1,0,1);
 
         call.enqueue(new Callback<List<GetProductModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<GetProductModel>> call, @NotNull Response<List<GetProductModel>> response) {
 
-                if(response.body()!=null)
+
+                if(response.isSuccessful())
                 {
-                    if (response.body().size()==0)
+                    if(response.body()!=null)
                     {
+                        if (response.body().size()==0)
+                        {
+                            mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+
+                        }
+                        else {
+                            mBinding.tvNothingFound.setVisibility(View.GONE);
+                            adapter.setProductModelList(response.body());
+                        }
+                        progressDialog.dismiss();
+
+                    }
+                    else
+                    {
+                        progressDialog.dismiss();
                         mBinding.tvNothingFound.setVisibility(View.VISIBLE);
-                        progressDialog.dismiss();
 
                     }
-                    else {
-                        mBinding.tvNothingFound.setVisibility(View.GONE);
-                        adapter.setProductModelList(response.body());
-                        progressDialog.dismiss();
-                    }
-
                 }
-                else
-                {
+                else {
                     progressDialog.dismiss();
-                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+                    Toast.makeText(requireContext(), ""+response.message(), Toast.LENGTH_SHORT).show();
 
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
                 }
+
 
             }
 
@@ -189,8 +227,40 @@ public class AddProductFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mBinding.swipeLayout.setRefreshing(false);
-                getData("");
+                getData();
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        closeKeyBoard();
+    }
+    public void closeKeyBoard()
+    {
+        View view = requireActivity().getCurrentFocus();
+
+        if (view!=null)
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+
+        }
+
+
+    }
+
+    public boolean isNetworkConnected() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return connected = true;
+        } else {
+            return connected = false;
+        }
+
     }
 }

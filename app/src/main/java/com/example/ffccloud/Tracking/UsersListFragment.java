@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +20,10 @@ import com.example.ffccloud.R;
 import com.example.ffccloud.Tracking.Adapter.TrackingUserRecyclerAdapter;
 import com.example.ffccloud.UserModel;
 import com.example.ffccloud.databinding.FragmentUsersListBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -34,7 +39,7 @@ public class UsersListFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding= FragmentUsersListBinding.inflate(inflater,container,false);
         return mBinding.getRoot();
@@ -54,7 +59,25 @@ public class UsersListFragment extends Fragment {
         setupRecyclerView();
         getUserList();
 
+        searchViewTextListener();
+        setPullToFresh();
+    }
 
+    private void searchViewTextListener() {
+
+        mBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
     private void setupRecyclerView() {
@@ -75,24 +98,47 @@ public class UsersListFragment extends Fragment {
 
         call.enqueue(new Callback<List<UserModel>>() {
             @Override
-            public void onResponse(Call<List<UserModel>> call, Response<List<UserModel>> response) {
+            public void onResponse(@NotNull Call<List<UserModel>> call, @NotNull Response<List<UserModel>> response) {
 
-                if (response!=null)
+                if (response.isSuccessful())
                 {
-                    List<UserModel> userModelList = response.body();
+                    if (response.body()!=null)
+                    {
+                        List<UserModel> userModelList = response.body();
 
-                    adapter.setUserList(userModelList);
-                    progressDialog.dismiss();
+                        adapter.setUserList(userModelList);
+                    }
+
+
 
                 }
+                else
+                {
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
+                }
+                progressDialog.dismiss();
             }
 
             @Override
-            public void onFailure(Call<List<UserModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<UserModel>> call, @NotNull Throwable t) {
                 Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
 
 
+    }
+
+    public void setPullToFresh() {
+        mBinding.swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mBinding.swipeLayout.setRefreshing(false);
+                getUserList();
+            }
+        });
     }
 }

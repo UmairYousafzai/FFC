@@ -6,7 +6,7 @@ import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.Database.FfcDAO;
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class AttendanceRepository {
 
 
-    private FfcDAO mDao;
+    private FFC_DAO mDao;
     Application application;
     private Executor executor= Executors.newSingleThreadExecutor();
     private Handler handler= new Handler(Looper.getMainLooper());

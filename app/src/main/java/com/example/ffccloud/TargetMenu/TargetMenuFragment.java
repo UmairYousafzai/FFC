@@ -1,9 +1,8 @@
 package com.example.ffccloud.TargetMenu;
 
 import android.Manifest;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -18,20 +17,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.ffccloud.MainActivity;
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 
 import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.FragmentTargetMenuBinding;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.Permission;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -42,7 +41,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class TargetMenuFragment extends Fragment {
     private NavController navController;
@@ -210,7 +208,7 @@ public class TargetMenuFragment extends Fragment {
 
         Date c = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
         String formattedDate = df.format(c);
         Permission permission= new Permission(requireContext(),requireActivity());
 
@@ -259,7 +257,7 @@ public class TargetMenuFragment extends Fragment {
             }
             else
             {
-                showDialog();
+                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
             }
 
         }
@@ -270,10 +268,8 @@ public class TargetMenuFragment extends Fragment {
 
     }
     public void openActivity(String mainActivity,String subActivity,int taskID)
-    {   SweetAlertDialog progressDialog= new SweetAlertDialog(requireContext(),SweetAlertDialog.PROGRESS_TYPE);
-        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-        progressDialog.setTitleText("Loading");
-        progressDialog.setCancelable(false);
+    {  ProgressDialog progressDialog= new ProgressDialog(requireContext());
+        progressDialog.setMessage("Loading...");
         progressDialog.show();
         CustomLocation customLocation= new CustomLocation(requireContext());
 
@@ -281,7 +277,7 @@ public class TargetMenuFragment extends Fragment {
 
         Date c = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
         String formattedDate = df.format(c);
         Permission permission= new Permission(requireContext(),requireActivity());
 
@@ -345,7 +341,8 @@ public class TargetMenuFragment extends Fragment {
             else
             {
                 progressDialog.dismiss();
-                showDialog();
+                CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
+
             }
 
         }
@@ -374,29 +371,7 @@ public class TargetMenuFragment extends Fragment {
         return (Math.abs(endHours-startHours))+":"+(Math.abs(endMinutes-startMinutes))+":"+(Math.abs(endSeconds-startSeconds));
 
     }
-    public void showDialog()
-    {
-        new SweetAlertDialog(requireContext())
-                .setTitleText("Please turn on  location for this action.")
-                .setContentText("Do you want to open location setting.")
-                .setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                        sweetAlertDialog.dismiss();
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        requireContext().startActivity(intent);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                }).show();
-    }
 
 
 }

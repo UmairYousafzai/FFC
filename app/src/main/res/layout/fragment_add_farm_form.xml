@@ -142,7 +142,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/region_spinner"
@@ -157,7 +157,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray"
+                    android:background="@color/grey"
                     android:layout_marginBottom="5dp"/>
 
             </LinearLayout>
@@ -175,6 +175,96 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/region_spinner_layout"
                 />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_coordinates_layout"
+                app:startIconTint="@color/APP_Theme_Color"
+                android:background="@color/white"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmnls:boxBackgroundColor="@color/white"
+
+                android:hint="@string/coordinates_optional"
+                android:textColorHint="@color/black"
+                android:elevation="5dp"
+                app:startIconDrawable="@drawable/ic_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location_checkbox"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_coordinates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_timing_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/timings_schedule"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@color/white"
+                android:elevation="5dp"
+                android:textColor="@color/APP_Theme_Color"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+
+                app:layout_constraintTop_toBottomOf="@+id/et_coordinates_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+
+
+
+            <RadioGroup
+                android:id="@+id/docTiming_radio_group"
+                style="Widget.MaterialComponents.CompoundButton.RadioButton"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:checkedButton="@+id/morning_radio_btn"
+                android:background="@color/white"
+                android:orientation="horizontal"
+
+                app:layout_constraintTop_toBottomOf="@+id/tv_timing_heading"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                >
+
+                <RadioButton
+                    android:id="@+id/morning_radio_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/morning"
+                    android:elevation="5dp"
+
+                    />
+
+                <RadioButton
+                    android:id="@+id/evening_radio_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/APP_Theme_Color"
+                    android:fontFamily="sans-serif-light"
+                    android:elevation="5dp"
+                    android:text="@string/evening" />
+
+
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/heading1"
@@ -189,7 +279,7 @@
                 android:padding="10dp"
                 app:layout_constraintEnd_toStartOf="@id/btn_add_doctor"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/location_checkbox"
+                app:layout_constraintTop_toBottomOf="@id/docTiming_radio_group"
                 />
             <ImageButton
                 android:id="@+id/btn_add_doctor"
@@ -316,7 +406,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray" />
+                    android:background="@color/grey" />
 
                 <Spinner
                     android:id="@+id/animal_spinner"
@@ -331,7 +421,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray"
+                    android:background="@color/grey"
                     android:layout_marginBottom="5dp"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/et_number_of_animal_layout"

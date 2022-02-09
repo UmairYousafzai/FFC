@@ -27,6 +27,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
+            android:elevation="5dp"
             />
 
         <androidx.fragment.app.FragmentContainerView

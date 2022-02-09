@@ -1,7 +1,6 @@
 package com.example.ffccloud.Target;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +15,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.ffccloud.GetSupplierModel;
-import com.example.ffccloud.ModelClasses.AreasByEmpIdModel;
-import com.example.ffccloud.ModelClasses.DoctorsByAreaIdsModel;
+import com.example.ffccloud.model.AreasByEmpIdModel;
+import com.example.ffccloud.model.DoctorsByAreaIdsModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
-import com.example.ffccloud.SplashScreen.SplashActivity;
+
 import com.example.ffccloud.Target.Adapters.AddWorkPlanDialogAdapter;
-import com.example.ffccloud.Target.AddWorkPlanDialogFragmentArgs;
 import com.example.ffccloud.databinding.CustomAddWorkplanDialogBinding;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
@@ -30,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -226,49 +223,60 @@ public class AddWorkPlanDialogFragment extends DialogFragment {
         progressDialog.show();
 
         int regionId = AddWorkPlanDialogFragmentArgs.fromBundle(getArguments()).getRegionID();
-        int userID = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
-        String clientType= AddWorkPlanDialogFragmentArgs.fromBundle(getArguments()).getClientType();
+        int userID = 0;
+        if (SharedPreferenceHelper.getInstance(requireContext()).getUserID()!=0)
+        {
+            userID = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+        }
+
+        String clientType = AddWorkPlanDialogFragmentArgs.fromBundle(getArguments()).getClientType();
 
 //        if (regionId==0)
 //        {
 //            userID= SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 //        }
 
-        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier(clientType, 0, regionId);
+        Call<List<GetSupplierModel>> call = ApiClient.getInstance().getApi().getSupplier(clientType, userID, regionId,1);
 
         call.enqueue(new Callback<List<GetSupplierModel>>() {
             @Override
             public void onResponse(@NotNull Call<List<GetSupplierModel>> call, @NotNull Response<List<GetSupplierModel>> response) {
-                if (response.body() != null) {
-                    if (response.body().size() == 0) {
-                        mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        if (response.body().size() == 0) {
+                            mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+
+                        } else {
+                            mBinding.tvNothingFound.setVisibility(View.GONE);
+                            List<GetSupplierModel> getSupplierModelList = response.body();
+
+                            for (GetSupplierModel model : getSupplierModelList) {
+                                DoctorsByAreaIdsModel doctor = new DoctorsByAreaIdsModel();
+                                doctor.setId(model.getSupplier_Id());
+                                doctor.setName(model.getSupplier_Name());
+                                doctorList.add(doctor);
+                            }
+                            adapter.setDoctorModelList(doctorList);
+                        }
 
                     } else {
-                        mBinding.tvNothingFound.setVisibility(View.GONE);
-                        List<GetSupplierModel> getSupplierModelList = response.body();
 
-                        for (GetSupplierModel model : getSupplierModelList) {
-                            DoctorsByAreaIdsModel doctor = new DoctorsByAreaIdsModel();
-                            doctor.setId(model.getSupplier_Id());
-                            doctor.setName(model.getSupplier_Name());
-                            doctorList.add(doctor);
-                        }
-                        adapter.setDoctorModelList(doctorList);
+                        mBinding.tvNothingFound.setVisibility(View.VISIBLE);
+                        Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
+
                     }
-                    progressDialog.dismiss();
-
                 } else {
-                    progressDialog.dismiss();
-                    mBinding.tvNothingFound.setVisibility(View.VISIBLE);
-                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(requireContext(), "" + response.message(), Toast.LENGTH_SHORT).show();
                 }
+
+                progressDialog.dismiss();
 
             }
 
             @Override
             public void onFailure(@NotNull Call<List<GetSupplierModel>> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+
                 progressDialog.dismiss();
             }
         });
@@ -286,19 +294,31 @@ public class AddWorkPlanDialogFragment extends DialogFragment {
         mBinding.btnSetData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (docListForOtherFragment != null || areaListForOtherFragment != null) {
+//                if (docListForOtherFragment != null || areaListForOtherFragment != null) {
+////
+//                    if (key == 2) {
+//                        navController.getPreviousBackStackEntry().getSavedStateHandle().set("Object", areaListForOtherFragment);
+//                        navController.popBackStack();
+//                    } else {
+//                        navController.getPreviousBackStackEntry().getSavedStateHandle().set("Object2", docListForOtherFragment);
+//                        navController.popBackStack();
+//                    }
 //
-                    if (key == 2) {
-                        navController.getPreviousBackStackEntry().getSavedStateHandle().set("Object", areaListForOtherFragment);
-                        navController.popBackStack();
-                    } else {
+//
+//                } else {
+//                    Toast.makeText(requireContext(), "Please Select At least One Location", Toast.LENGTH_LONG).show();
+//                }
+
+
+                if (docListForOtherFragment.size() > 0) {
+                    if ( navController.getPreviousBackStackEntry()!=null)
+                    {
                         navController.getPreviousBackStackEntry().getSavedStateHandle().set("Object2", docListForOtherFragment);
                         navController.popBackStack();
                     }
 
-
                 } else {
-                    Toast.makeText(requireContext(), "Please Select At least One Location", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), "Please Select At least One Client", Toast.LENGTH_LONG).show();
                 }
             }
         });

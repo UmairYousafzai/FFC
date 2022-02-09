@@ -37,12 +37,13 @@ import android.widget.Toast;
 
 import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.MainActivity;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
-import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.model.ClassificationModel;
+import com.example.ffccloud.model.GradingModel;
+import com.example.ffccloud.model.QualificationModel;
 import com.example.ffccloud.SaveDoctorModel;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
 
+import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.CustomSelectProfileImageDialogBinding;
 import com.example.ffccloud.databinding.FragmentDoctorFormBinding;
 import com.example.ffccloud.utils.CONSTANTS;
@@ -55,7 +56,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -563,74 +563,31 @@ public class DoctorFormFragment extends Fragment {
         return imgString;
     }
 
-    public void requestPermissionCamera() {
 
-
-        String[] permissionArray = new String[]{Manifest.permission.CAMERA};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE);
-
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(requireActivity(),
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE_FOR_CAMERA);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
-
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA) ) {
-
-            alertDialog.setTitle("Permission Needed");
-            alertDialog.setContentText("Camera Permission Needed For Taking Profile Picture. ");
-            alertDialog.show();
-
-
-        } else {
-            ActivityCompat.requestPermissions(requireActivity(), permissionArray, CONSTANTS.PERMISSION_REQUEST_CODE_FOR_CAMERA);
-
-        }
-
-
-    }
     public void requestPermissionGallery() {
 
 
         String[] permissionArray = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
-        SweetAlertDialog alertDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.ERROR_TYPE);
 
-        alertDialog.setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        ActivityCompat.requestPermissions(requireActivity(),
-                                permissionArray,
-                                CONSTANTS.PERMISSION_REQUEST_CODE_FOR_GALLERY);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                });
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
+        androidx.appcompat.app.AlertDialog alertDialog = new androidx.appcompat.app.AlertDialog.Builder( requireActivity().getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ActivityCompat.requestPermissions(requireActivity(),
+                        permissionArray,
+                        CONSTANTS.PERMISSION_REQUEST_CODE_FOR_GALLERY);            }
+        });
+
+
 
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA) ) {
 
-            alertDialog.setTitle("Permission Needed");
-            alertDialog.setContentText("Camera Permission Needed For Taking Profile Picture. ");
+            dialogBinding.title.setText("Storage Permission Needed");
+            dialogBinding.body.setText("This Permission Needed For The Better Experience Of The App. ");
             alertDialog.show();
 
 

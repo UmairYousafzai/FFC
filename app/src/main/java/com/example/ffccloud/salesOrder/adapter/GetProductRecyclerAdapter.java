@@ -34,6 +34,7 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
     public GetProductRecyclerAdapter(Fragment fragment) {
         this.fragment = fragment;
         productModelListFull = new ArrayList<>();
+        productModelList= new ArrayList<>();
     }
 
     @NonNull
@@ -110,26 +111,34 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
     private final Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-
-
             List<GetProductModel> filterList= new ArrayList<>();
 
-            if (constraint==null||constraint.length()==0)
+
+            if (productModelListFull.size()>0)
             {
-                filterList= productModelListFull;
-            }
-            else {
-                String filterPattern= constraint.toString().toLowerCase().trim();
-                for (GetProductModel model:productModelListFull)
+                if (constraint==null||constraint.length()==0)
                 {
-                    if (model.getTitle().toLowerCase().trim().contains(filterPattern))
+                    filterList= productModelListFull;
+                }
+                else {
+                    String filterPattern= constraint.toString().toLowerCase().trim();
+                    for (GetProductModel model:productModelListFull)
                     {
-                        filterList.add(model);
+                        if (model.getTitle().toLowerCase().trim().contains(filterPattern))
+                        {
+                            filterList.add(model);
+                        }
                     }
                 }
+
             }
             FilterResults filterResults = new FilterResults();
-            filterResults.values= filterList;
+            if (filterList.size()>0)
+            {
+                filterResults.values= filterList;
+
+            }
+
             return filterResults;
 
 
@@ -140,9 +149,13 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
 
-            productModelList.clear();
-            productModelList.addAll((List)results.values);
-            notifyDataSetChanged();
+            if (results.values!=null)
+            {
+                productModelList.clear();
+                productModelList.addAll((List)results.values);
+                notifyDataSetChanged();
+            }
+
 
 
 
@@ -171,6 +184,8 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
                     productModel.setTitleProduct(productModelList.get(getAdapterPosition()).getTitle());
                     productModel.setUnitProduct(productModelList.get(getAdapterPosition()).getUnit());
                     productModel.setItem_Code((int)productModelList.get(getAdapterPosition()).getItCode());
+                    productModel.setItHead(productModelList.get(getAdapterPosition()).getItHead());
+                    productModel.setUnit_Name(productModelList.get(getAdapterPosition()).getUnit());
                     NavController navController = NavHostFragment.findNavController(fragment);
 
                     if (key==1)
@@ -184,6 +199,7 @@ public class GetProductRecyclerAdapter extends RecyclerView.Adapter<GetProductRe
                        action.setDate(date);
                        action.setSupplierId(supplierID);
                         navController.navigate(action);
+                        mBinding.btnAdd.setEnabled(true);
                     }
 
 

@@ -40,12 +40,12 @@ public class TargetPreMenuFragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
-        mBinding.innerTextSystemSuggested.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
-            }
-        });
+//        mBinding.innerTextSystemSuggested.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
+//            }
+//        });
         mBinding.linearWorkPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,13 +53,13 @@ public class TargetPreMenuFragment extends Fragment {
             }
         });
 
-        mBinding.btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
-
-            }
-        });
+//        mBinding.btnNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                navController.navigate(TargetPreMenuFragmentDirections.actionNavTargetSubMenuToNavTarget());
+//
+//            }
+//        });
 
         mBinding.btnNext2.setOnClickListener(new View.OnClickListener() {
             @Override

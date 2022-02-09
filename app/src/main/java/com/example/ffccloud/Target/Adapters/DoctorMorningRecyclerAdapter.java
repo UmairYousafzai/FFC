@@ -130,35 +130,19 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
 
     }
 
-    //    public double getDistanceFromCurrentLocation(String location) {
-//        CustomLocation.CustomLocationResults results= new CustomLocation.CustomLocationResults() {
-//            @Override
-//            public void gotLocation(Location location) {
-//                currrentLocation=location;
-//            }
-//        };
-//        customLocation.getLastLocation(mContext,activity,results);
-//        String[] locationString = location.split(",");
-//        Location givenLocation = new Location("");
-//        givenLocation.setLatitude(Double.parseDouble(locationString[0]));
-//        givenLocation.setLongitude(Double.parseDouble(locationString[1]));
-//        if (currrentLocation != null && givenLocation != null)
-//        {
-//            return currrentLocation.distanceTo(givenLocation);
-//        }
-//        else
-//        {
-//            return 0;
-//        }
-//
-//
-//
-//    }
+
     public void setDoctorModelList(List<DoctorModel> list)
     {
 
-        doctorModelList.clear();
-        doctorModelList.addAll(list);
+        if (list!=null&&list.size()>0)
+        {
+            doctorModelList.clear();
+            doctorModelList.addAll(list);
+        }else
+        {
+            doctorModelList.clear();
+        }
+
 
         notifyDataSetChanged();
     }
@@ -220,9 +204,11 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
 
                     int position = getAdapterPosition();
 
-                    if (doctorModelList.get(position).getCoordinates()!=null)
+                    if (doctorModelList.get(position).getCoordinates()!=null && !doctorModelList.get(position).getCoordinates().isEmpty())
                     {
-                        String locationString= "geo:"+doctorModelList.get(position).getCoordinates()+"?q=3";
+                        String[] coordinates = doctorModelList.get(position).getCoordinates().split(",");
+                        String address= new CustomLocation(mContext).getCompleteAddressString(Double.parseDouble(coordinates[0]),Double.parseDouble(coordinates[1]));
+                        String locationString= "geo:"+doctorModelList.get(position).getCoordinates()+"?q="+ doctorModelList.get(position).getCoordinates()+(address);
                         Uri mapIntentUri= Uri.parse(locationString);
                         Intent mapIntent= new Intent(Intent.ACTION_VIEW,mapIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");

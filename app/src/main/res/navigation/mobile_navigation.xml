@@ -54,9 +54,7 @@
             android:id="@+id/action_nav_home_to_mapsFragment"
             app:destination="@id/mapsFragment" />
 
-        <action
-            android:id="@+id/action_nav_home_to_nav_expense_list"
-            app:destination="@id/nav_expense_list" />
+
         <action
             android:id="@+id/action_nav_home_to_tableLayout"
             app:destination="@id/tableLayout" />
@@ -280,6 +278,14 @@
             app:popExitAnim="@anim/slide_out_right"
             />
         <action
+            android:id="@+id/action_TargetFullInfoFragment_to_MapFragment"
+            app:destination="@id/mapsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
+        <action
             android:id="@+id/action_targetPostMenuFragment_to_nav_history"
             app:destination="@id/nav_history"
             app:enterAnim="@anim/slide_in_right"
@@ -459,29 +465,23 @@
         tools:layout="@layout/fragment_meeting" />
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.example.ffccloud.MapsFragment"
+        android:name="com.example.ffccloud.Target.MapsFragment"
         android:label="Tracker"
-        tools:layout="@layout/fragment_maps2" />
-    <fragment
-        android:id="@+id/expenseFormFragment"
-        android:name="com.example.ffccloud.Expense.ExpenseFormFragment"
-        android:label="ExpenseFormFragment"
-        tools:layout="@layout/fragment_expense_form"
-        />
-    <fragment
-        android:id="@+id/nav_expense_list"
-        android:name="com.example.ffccloud.Expense.ExpenseWalletFragment"
-        android:label="Expense Wallet"
-        tools:layout="@layout/fragment_expense_wallet"
-        >
-        <action
-            android:id="@+id/action_expenseWalletFragment_to_expenseFormFragment"
-            app:destination="@id/expenseFormFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+        tools:layout="@layout/fragment_maps">
+        <argument
+            android:name="coordinates"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="workPlanName"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
+
+
+
+
+
     <fragment
         android:id="@+id/tableLayout"
         android:name="com.example.ffccloud.TableLayout"
@@ -551,10 +551,10 @@
         android:label="Add Customer"
         tools:layout="@layout/fragment_add_customer" >
         <argument
-            android:name="customer"
-            app:argType="com.example.ffccloud.CustomerModel"
+            android:name="customerCode"
+            app:argType="string"
             app:nullable="true"
-            android:defaultValue="@null" />
+            android:defaultValue=" " />
     </fragment>
     <fragment
         android:id="@+id/customerListFragment"
@@ -809,4 +809,50 @@
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>
+    <fragment
+        android:id="@+id/expenseListFragment"
+        android:name="com.example.ffccloud.Expense.ExpenseListFragment"
+        android:label="Expense List"
+        >
+        <action
+            android:id="@+id/action_expenseListFragment_to_expenseFormFragment"
+            app:destination="@id/expenseFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/expenseFormFragment"
+        android:name="com.example.ffccloud.Expense.ExpenseFormOldFragment"
+        android:label="Expense Form"
+        >
+        <argument
+            android:name="expense"
+            app:argType="com.example.ffccloud.ExpenseModelClass"
+            app:nullable="true"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationList"
+        android:name="com.example.ffccloud.notification.NotificationFragment"
+        android:label="Notifications"
+        >
+        <action
+            android:id="@+id/action_notification_to_LocationRequestFragment"
+            app:destination="@id/locationRequestFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_notification_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
 </navigation>

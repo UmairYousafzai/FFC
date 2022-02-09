@@ -1,5 +1,6 @@
 package com.example.ffccloud.Target;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -24,11 +26,14 @@ import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.MainActivity;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.Target.Adapters.ScheduleAdapter;
+import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentFilteredDocFullInfoBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.SyncDataToDB;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import org.jetbrains.annotations.NotNull;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +44,7 @@ public class FilteredDocFullInfoFragment extends Fragment {
     private int doc_id;
     private FilteredDoctorInfomationModel doctoredFullInfoModel;
     private ScheduleAdapter adapter;
-    private SweetAlertDialog progressDialog;
+    private ProgressDialog progressDialog;
     private NavController navController;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,12 +60,11 @@ public class FilteredDocFullInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.e("onViewCreated","full info key on view created me ha");
 
-        progressDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-        progressDialog.setTitleText("Loading");
-        //pDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+        progressDialog = new ProgressDialog(requireContext());
+
+        progressDialog.setMessage("Loading");
+        progressDialog.setCancelable(false);
+        progressDialog.show();;
         navController= NavHostFragment.findNavController(this);
 
         doc_id = FilteredDocFullInfoFragmentArgs.fromBundle(getArguments()).getDoctorId();
@@ -90,25 +94,23 @@ public class FilteredDocFullInfoFragment extends Fragment {
                 if (doctoredFullInfoModel!=null)
                 {
 
-                    new SweetAlertDialog(requireContext(),SweetAlertDialog.ERROR_TYPE)
-                            .setContentText("Do you want to edit this profile ?")
-                            .setConfirmText("Yes")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                    FilteredDocFullInfoFragmentDirections.ActionFilteredDocFullInfoFragmentToDoctorFormFragment action = FilteredDocFullInfoFragmentDirections.actionFilteredDocFullInfoFragmentToDoctorFormFragment();
-                                    action.setFilterDoc(doctoredFullInfoModel);
-                                    navController.navigate(action);
-                                }
-                            })
-                            .setCancelText("No")
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                }
-                            }).show();
+
+                    CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
+                    AlertDialog alertDialog = new AlertDialog.Builder( requireActivity().getBaseContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
+                    dialogBinding.body.setText("Do you want to edit this profile ?");
+                    alertDialog.show();
+                    dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            alertDialog.dismiss();
+                            FilteredDocFullInfoFragmentDirections.ActionFilteredDocFullInfoFragmentToDoctorFormFragment action = FilteredDocFullInfoFragmentDirections.actionFilteredDocFullInfoFragmentToDoctorFormFragment();
+                            action.setFilterDoc(doctoredFullInfoModel);
+                            navController.navigate(action);
+                        }
+                    });
+
+
 
 
                 }
@@ -132,8 +134,8 @@ public class FilteredDocFullInfoFragment extends Fragment {
         Call<FilteredDoctorInfomationModel> call = ApiClient.getInstance().getApi().GetFullFilteredDoctor(token,doc_id);
         call.enqueue(new Callback<FilteredDoctorInfomationModel>() {
             @Override
-            public void onResponse(Call<FilteredDoctorInfomationModel> call, Response<FilteredDoctorInfomationModel> response) {
-                if(response.body()!=null)
+            public void onResponse(@NotNull Call<FilteredDoctorInfomationModel> call, @NotNull Response<FilteredDoctorInfomationModel> response) {
+                if(response.isSuccessful())
                 {
                     doctoredFullInfoModel = response.body();
                     doctoredFullInfoModel.setFormattedDate(dateTimeFormat(doctoredFullInfoModel.getDOB()));
@@ -166,12 +168,12 @@ public class FilteredDocFullInfoFragment extends Fragment {
                 }
                 else
                 {
-                    new SyncDataToDB(requireActivity().getApplication(),requireContext()).loginAgain(response.message());
+                    CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
                 }
             }
 
             @Override
-            public void onFailure(Call<FilteredDoctorInfomationModel> call, Throwable t) {
+            public void onFailure(@NotNull Call<FilteredDoctorInfomationModel> call, @NotNull Throwable t) {
                 Toast.makeText(requireContext(),""+t.getMessage(),Toast.LENGTH_LONG).show();
 
 

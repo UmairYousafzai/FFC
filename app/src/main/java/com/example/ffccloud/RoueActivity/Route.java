@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.Permission;
@@ -29,7 +29,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class Route {
 
@@ -203,26 +202,26 @@ public class Route {
     }
     public void showDialog()
     {
-        new SweetAlertDialog(mContext)
-                .setTitleText("Please turn on  location for this action.")
-                .setContentText("Do you want to open location setting.")
-                .setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                        sweetAlertDialog.dismiss();
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        mContext.startActivity(intent);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                }).show();
+//        new SweetAlertDialog(mContext)
+//                .setTitleText("Please turn on  location for this action.")
+//                .setContentText("Do you want to open location setting.")
+//                .setConfirmText("Yes")
+//                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                    @Override
+//                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//
+//                        sweetAlertDialog.dismiss();
+//                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                        mContext.startActivity(intent);
+//                    }
+//                })
+//                .setCancelText("Cancel")
+//                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                    @Override
+//                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                        sweetAlertDialog.dismiss();
+//                    }
+//                }).show();
     }
 }
 

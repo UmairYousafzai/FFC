@@ -1,7 +1,6 @@
 package com.example.ffccloud.hospital;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -16,34 +15,36 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
-import com.example.ffccloud.ModelClasses.RegionModel;
-import com.example.ffccloud.ModelClasses.SupplierLinking;
-import com.example.ffccloud.ModelClasses.SupplierMainModel;
-import com.example.ffccloud.ModelClasses.SupplierModelNew;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.RegionModel;
+import com.example.ffccloud.model.SupplierLinking;
+import com.example.ffccloud.model.SupplierMainModel;
+import com.example.ffccloud.model.SupplierModelNew;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.SupplierItemLinking;
-import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
-import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddHospitalBinding;
 import com.example.ffccloud.databinding.OtherFarmDialogBinding;
 import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.farm.adapter.MedicineAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 import com.example.ffccloud.utils.UserViewModel;
 
@@ -64,34 +65,34 @@ public class AddHospitalFragment extends Fragment {
     private UserViewModel userViewModel;
     private final HashMap<String, Integer> gradingHashMapForId = new HashMap<>();
     private HashMap<Integer, String> gradingHashMapForTitle = new HashMap<>();
-    private ArrayList<String>gradeArray=new ArrayList<>();
+    private ArrayList<String> gradeArray = new ArrayList<>();
     private List<GradingModel> gradingModelList;
-//    private GasDaysRecyclerAdapter gasDaysRecyclerAdapter;
+    //    private GasDaysRecyclerAdapter gasDaysRecyclerAdapter;
 //    private List<String> gasDaysList = new ArrayList<>();
     private NavController navController;
     private MedicineAdapter medicineAdapter;
-    private int supplierID;
+    private int supplierID = 0;
     private List<GetSupplierModel> doctorModelList = new ArrayList<>();
     private List<GetSupplierModel> farmModelList = new ArrayList<>();
     private SupplierRecyclerViewAdapter doctorRecyclerViewAdapter;
     private SupplierRecyclerViewAdapter farmRecyclerViewAdapter;
-    private List<SupplierItemLinking> medicineModalList= new ArrayList<>();
+    private List<SupplierItemLinking> medicineModalList = new ArrayList<>();
     private String callingAddBtn;
     private HashMap<String, Integer> regionHashmapForID = new HashMap<>();
     private HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
-    private ArrayList<String>  regionList = new ArrayList<>();
-    private String locationString;
+    private ArrayList<String> regionList = new ArrayList<>();
+    private String locationString, numberOfCases = "",supplierCode="0";
     private String locationAddress;
-    private int gradePosition=-1, regionPosition=-1;
-    private boolean isLocationChecked=false;
-    private boolean isSpinnerUpdate=false;
+    private int gradePosition = -1, regionPosition = -1;
+    private boolean isLocationChecked = false, isLocationUpdate = false;
+    private boolean isSpinnerUpdate = false;
 
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        mBinding = FragmentAddHospitalBinding.inflate(inflater,container,false);
+        mBinding = FragmentAddHospitalBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 
@@ -103,50 +104,49 @@ public class AddHospitalFragment extends Fragment {
         setUpRecyclerView();
         getLiveData();
 
-        if (!isSpinnerUpdate)
-        {
-            isSpinnerUpdate=true;
+        if (!isSpinnerUpdate) {
+            isSpinnerUpdate = true;
             getRegion();
+            setUpGradeSpinner();
 
         }
 
 
-        assert getArguments() != null;
-        supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
-        if (supplierID > 0&&callingAddBtn==null){
+        if (getArguments() != null) {
+            supplierID = AddFarmFormFragmentArgs.fromBundle(getArguments()).getSupplierId();
 
-          //  setup fields if edit request has been made
+        }
+        if (supplierID > 0 && callingAddBtn == null) {
+
+            //  setup fields if edit request has been made
             getSupplierByID(supplierID);
         }
 
     }
-    public void getLiveData()
-    {
+
+    public void getLiveData() {
         MutableLiveData<GetSupplierModel> doctorsupplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
                 .getSavedStateHandle()
                 .getLiveData(CONSTANTS.DOCTOR_SUPPLIER_KEY);
         doctorsupplierLiveData.observe(getViewLifecycleOwner(), new Observer<GetSupplierModel>() {
             @Override
             public void onChanged(GetSupplierModel model) {
-                if (model!=null)
-                {
+                if (model != null) {
 
-                    if (callingAddBtn.equals("DoctorAddBtn"))
-                    {
-                        if (doctorModelList.size()>0)
-                        {
-                            if (doctorModelList.get(doctorModelList.size()-1)!=model) {
+                    if (callingAddBtn.equals("DoctorAddBtn")) {
+                        if (doctorModelList.size() > 0) {
+                            if (doctorModelList.get(doctorModelList.size() - 1) != model) {
+                                model.setRegister(true);
                                 doctorModelList.add(model);
                                 doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
                             }
-                        }
-                        else
-                        {
+                        } else {
+                            model.setRegister(true);
                             doctorModelList.add(model);
+
                         }
 
                     }
-
 
 
                 }
@@ -161,24 +161,20 @@ public class AddHospitalFragment extends Fragment {
         farmSupplierLiveData.observe(getViewLifecycleOwner(), new Observer<GetSupplierModel>() {
             @Override
             public void onChanged(GetSupplierModel model) {
-                if (model!=null)
-                {
-                    if (callingAddBtn.equals("FarmAddBtn"))
-                    {
-                        if (farmModelList.size()>0)
-                        {
-                            if (farmModelList.get(farmModelList.size()-1)!=model) {
+                if (model != null) {
+                    if (callingAddBtn.equals("FarmAddBtn")) {
+                        if (farmModelList.size() > 0) {
+                            if (farmModelList.get(farmModelList.size() - 1) != model) {
+                                model.setRegister(true);
                                 farmModelList.add(model);
                                 farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
                             }
-                        }
-                        else
-                        {
+                        } else {
+                            model.setRegister(true);
                             farmModelList.add(model);
                         }
 
                     }
-
 
 
                 }
@@ -195,8 +191,7 @@ public class AddHospitalFragment extends Fragment {
             @Override
             public void onChanged(InsertProductModel model) {
                 if (model != null) {
-                    if (callingAddBtn.equals("MedicineAddBtn"))
-                    {
+                    if (callingAddBtn.equals("MedicineAddBtn")) {
                         SupplierItemLinking medicineModal = new SupplierItemLinking();
 
                         medicineModalList.size();
@@ -204,19 +199,16 @@ public class AddHospitalFragment extends Fragment {
                         medicineModal.setIsRegistered(true);
                         medicineModal.setSupplierItemLinkIdDtl("0");
                         medicineModal.setItCode(model.getItem_Code());
-                        if (medicineModalList.size()>0)
-                        {
-                            if (medicineModalList.get(medicineModalList.size()-1).getItCode()!=medicineModal.getItCode()) {
+                        if (medicineModalList.size() > 0) {
+                            if (medicineModalList.get(medicineModalList.size() - 1).getItCode() != medicineModal.getItCode()) {
                                 medicineModalList.add(medicineModal);
                                 medicineAdapter.setMedicineModalList(medicineModalList);
                             }
-                        }else
-                        {
+                        } else {
                             medicineModalList.add(medicineModal);
                         }
 
                     }
-
 
 
                 }
@@ -231,41 +223,59 @@ public class AddHospitalFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (callingAddBtn!=null)
-        {
+        if (callingAddBtn != null) {
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
             mBinding.regionSpinner.setAdapter(adapter);
 
-            ArrayAdapter<String> gradingAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item,gradeArray);
+            ArrayAdapter<String> gradingAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, gradeArray);
             mBinding.spinnerGrade.setAdapter(gradingAdapter);
             medicineAdapter.setMedicineModalList(medicineModalList);
             doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
             farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
-            if (regionPosition!=-1)
-            {
+            if (regionPosition != -1) {
                 mBinding.regionSpinner.setSelection(regionPosition);
 
             }
-            if (gradePosition!=-1)
-            {
+            if (gradePosition != -1) {
                 mBinding.spinnerGrade.setSelection(gradePosition);
             }
 
 
-            if (isLocationChecked)
-            {
+            if (isLocationChecked) {
                 mBinding.locationCheckbox.setChecked(true);
                 mBinding.locationCheckbox.setText(locationAddress);
             }
 
         }
 
-        setUpGradeSpinner();
+
         btnListener();
-
+        textListener();
     }
+    private void textListener() {
 
+        mBinding.idCoordinates.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s!=null)
+                {
+                    locationString = s.toString();
+                }
+            }
+        });
+    }
     private void setUpRecyclerView() {
 
 
@@ -290,25 +300,46 @@ public class AddHospitalFragment extends Fragment {
 
     private void btnListener() {
 
+        doctorRecyclerViewAdapter.SetOnClickListener(new SupplierRecyclerViewAdapter.SetOnClickListener() {
+            @Override
+            public void onClick(GetSupplierModel supplierModel) {
+
+                if (supplierModel != null) {
+
+                    doctorModelList.remove(supplierModel);
+
+                }
+            }
+        });
+        farmRecyclerViewAdapter.SetOnClickListener(new SupplierRecyclerViewAdapter.SetOnClickListener() {
+            @Override
+            public void onClick(GetSupplierModel supplierModel) {
+
+                if (supplierModel != null) {
+
+                    farmModelList.remove(supplierModel);
+
+                }
+            }
+        });
+
         mBinding.btnAddFarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (mBinding.registerFarmRadioBtn.isChecked())
-                {
-                    if (regionList.size()>0) {
+                if (mBinding.registerFarmRadioBtn.isChecked()) {
+                    if (regionList.size() > 0) {
 
-                        int region=0;
+                        int region = 0;
                         try {
-                             region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
+                            region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
 
-                        } catch (Exception e)
-                        {
-                            Toast.makeText(requireContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(requireContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
 
-                        callingAddBtn= "";
-                        callingAddBtn= "FarmAddBtn";
+                        callingAddBtn = "";
+                        callingAddBtn = "FarmAddBtn";
                         farmRecyclerViewAdapter.setCalledSupplier("Farm");
                         AddHospitalFragmentDirections.ActionAddHospitalFragmentToFarmListFragment action = AddHospitalFragmentDirections.actionAddHospitalFragmentToFarmListFragment();
                         action.setKey(1);
@@ -317,9 +348,7 @@ public class AddHospitalFragment extends Fragment {
                     }
 
 
-                }
-                else
-                {
+                } else {
                     showAddFarmDialog();
 
                 }
@@ -348,15 +377,13 @@ public class AddHospitalFragment extends Fragment {
         mBinding.btnAddMedicine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBinding.companyMedicineRadioBtn.isChecked())
-                {
-                    callingAddBtn= "";
-                    callingAddBtn= "MedicineAddBtn";
-                 AddHospitalFragmentDirections.ActionAddHospitalFragmentToAddProductFragment action = AddHospitalFragmentDirections.actionAddHospitalFragmentToAddProductFragment();
+                if (mBinding.companyMedicineRadioBtn.isChecked()) {
+                    callingAddBtn = "";
+                    callingAddBtn = "MedicineAddBtn";
+                    AddHospitalFragmentDirections.ActionAddHospitalFragmentToAddProductFragment action = AddHospitalFragmentDirections.actionAddHospitalFragmentToAddProductFragment();
                     action.setKey(1);
                     navController.navigate(action);
-                }
-                else {
+                } else {
 
                     showDialog();
                 }
@@ -365,11 +392,11 @@ public class AddHospitalFragment extends Fragment {
         mBinding.btnAddDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (regionList.size()>0) {
+                if (regionList.size() > 0) {
 
                     int region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
-                    callingAddBtn= "";
-                    callingAddBtn= "DoctorAddBtn";
+                    callingAddBtn = "";
+                    callingAddBtn = "DoctorAddBtn";
                     AddHospitalFragmentDirections.ActionAddHospitalFragmentToSupplierDoctorFragment action = AddHospitalFragmentDirections.actionAddHospitalFragmentToSupplierDoctorFragment();
                     action.setKey(1);
                     action.setRegionID(region);
@@ -398,16 +425,23 @@ public class AddHospitalFragment extends Fragment {
                         @Override
                         public void gotLocation(Location location) {
 
-
+                            if (supplierID > 0) {
+                                isLocationUpdate = true;
+                            }
                             if (mBinding.locationCheckbox.isChecked()) {
-                                isLocationChecked=true;
-                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                mBinding.locationCheckbox.setText(locationAddress);
-                                locationString = String.valueOf(location.getLongitude()) + "," + String.valueOf(location.getLatitude());
-                            } else {
-                                isLocationChecked=false;
 
+
+                                isLocationChecked = true;
+                                locationString = location.getLatitude() + "," +location.getLongitude() ;
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude())+
+                                        locationString;
+                                mBinding.locationCheckbox.setText(locationAddress);
+                            } else {
+                                isLocationChecked = false;
+                                locationAddress="";
+                                locationString="";
                                 mBinding.locationCheckbox.setText("Enable Location");
+                                mBinding.locationCheckbox.setChecked(false);
                             }
 
 
@@ -415,7 +449,8 @@ public class AddHospitalFragment extends Fragment {
                     };
                     customLocation.getLastLocation(results);
                 } else {
-                    showOpenLocationSettingDialog();
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(), requireContext());
+                    mBinding.locationCheckbox.setChecked(false);
 
                 }
             }
@@ -460,60 +495,99 @@ public class AddHospitalFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body()!=null)
+                if (response.isSuccessful())
                 {
-                    progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel= response.body();
-                    setUpFields(getSupplierDetailModel);
+                    if (response.body() != null) {
 
+                        GetSupplierDetailModel getSupplierDetailModel = response.body();
+                        setUpFields(getSupplierDetailModel);
+
+                    }
                 }
                 else {
-                    Toast.makeText(requireContext(), ""+response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
+                progressDialog.dismiss();
+
             }
 
             @Override
             public void onFailure(@NotNull Call<GetSupplierDetailModel> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
 
 
-
     }
 
     private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode()!=null)
+        {
+            supplierCode =getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode();
+        }
 
         mBinding.etName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
-        mBinding.etNoOfCases.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()!=0)
+        {
+            mBinding.etNoOfCases.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
+            numberOfCases =String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals());
+        }
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
         mBinding.etGasDays.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getGasDays());
         mBinding.etSizeOfHospital.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getSize()));
 
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord() != null) {
+            if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length() > 0) {
+                locationString = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+                mBinding.idCoordinates.setText(locationString);
+            }
+        }
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress() != null) {
+            if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length() > 0) {
+                locationAddress = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
+                mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+
+            }
+        }
+
+        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
+            mBinding.locationCheckbox.setChecked(true);
+        }
+
+        int gradeID = getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
+
+        String grade = gradingHashMapForTitle.get(gradeID);
+
+        mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
+        gradePosition = mBinding.spinnerGrade.getSelectedItemPosition();
+
+        int regionId = (int) getSupplierDetailModel.getSupplierModelNewList().get(0).getRegionId();
+
+        String regionTitle = regionHashmapForTitle.get(regionId);
+
+        mBinding.regionSpinner.setSelection(regionList.indexOf(regionTitle));
+        regionPosition = mBinding.regionSpinner.getSelectedItemPosition();
 
         medicineModalList.clear();
         medicineModalList.addAll(getSupplierDetailModel.getSupplierItemLinkingList());
         medicineAdapter.setMedicineModalList(medicineModalList);
 
         doctorModelList.clear();
-        for (SupplierLinking model:getSupplierDetailModel.getSupplierLinkingList())
-        {
+        for (SupplierLinking model : getSupplierDetailModel.getSupplierLinkingList()) {
             GetSupplierModel supplierModel = new GetSupplierModel();
             supplierModel.setSupplier_Name(model.getSupplierName());
             supplierModel.setAddress(model.getAddress());
             supplierModel.setSupplier_Id(model.getSupplierId());
-            String userType= model.getUser_Type();
-            if (userType!=null)
-            {
-                if (userType.equals("Dr"))
-                {
+            supplierModel.setSupplierLinkId(model.getSupplierLinkId());
+            String userType = model.getUser_Type();
+            if (userType != null) {
+                if (userType.equals("Dr")) {
                     doctorModelList.add(supplierModel);
 
-                }
-                else if (userType.equals("F"))
-                {
+                } else if (userType.equals("F")) {
+                    farmModelList.add(supplierModel);
+                } else {
                     farmModelList.add(supplierModel);
                 }
             }
@@ -521,85 +595,129 @@ public class AddHospitalFragment extends Fragment {
         }
         farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
         doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
-
-        int gradeID= getSupplierDetailModel.getSupplierModelNewList().get(0).getGradeId();
-
-        String grade =  gradingHashMapForTitle.get(gradeID);
-
-        mBinding.spinnerGrade.setSelection(gradeArray.indexOf(grade));
-
-
-
-
-
-
+        String shift = getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
+        if (shift != null) {
+            if (shift.equals("Morning")) {
+                mBinding.morningRadioBtn.setChecked(true);
+            } else if (shift.equals("Evening")) {
+                mBinding.eveningRadioBtn.setChecked(true);
+            }
+        }
 
     }
 
     private void setUpSupplierModelForSave() {
 
-        String name = Objects.requireNonNull(mBinding.etName.getText()).toString();
-        String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
-        int gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
-        int userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
+        String name = "", address = "", gasDays = "", hospitalSize = "",shitType="";
+        int gradeID = 0, userId, regionID = 0;
+        if (mBinding.etName.getText() != null && mBinding.etName.getText().toString().length() > 0) {
+            name = mBinding.etName.getText().toString();
+        }
+        if (mBinding.etAddress.getText() != null && mBinding.etAddress.getText().toString().length() > 0) {
+            address = mBinding.etAddress.getText().toString();
+        }
+        if (mBinding.etName.getText() != null && mBinding.etName.getText().toString().length() > 0) {
+            name = mBinding.etName.getText().toString();
+        }
+
+        if (mBinding.spinnerGrade.getSelectedItem() != null) {
+            gradeID = gradingHashMapForId.get(mBinding.spinnerGrade.getSelectedItem().toString());
+        }
+        if (mBinding.regionSpinner.getSelectedItem() != null) {
+            regionID = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
+        }
+
+        if (mBinding.etGasDays.getText() != null && mBinding.etGasDays.getText().toString().length() > 0) {
+            gasDays = mBinding.etGasDays.getText().toString();
+
+        }
+
+        if (mBinding.etSizeOfHospital.getText() != null && mBinding.etSizeOfHospital.getText().toString().length() > 0) {
+            hospitalSize = mBinding.etSizeOfHospital.getText().toString();
+        }
+
+        if (mBinding.etNoOfCases.getText() != null && mBinding.etNoOfCases.getText().toString().length() > 0) {
+            numberOfCases = mBinding.etNoOfCases.getText().toString();
+        }
+
+            RadioButton radioButtonShift = mBinding.getRoot().findViewById(mBinding.TimingRadioGroup.getCheckedRadioButtonId());
+            shitType = radioButtonShift.getText().toString();
+
+
+        userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
 
         if (name.length() > 0) {
 
-                if (address.length() > 0) {
+            if (address.length() > 0) {
 
 
-                        SupplierModelNew supplierModelNew = new SupplierModelNew();
+                SupplierModelNew supplierModelNew = new SupplierModelNew();
 
-                        supplierModelNew.setCompany_Id(1);
-                        supplierModelNew.setUserId(userId);
-                        supplierModelNew.setCountry_Id(1);
-                        supplierModelNew.setLocation_Id(1);
-                        supplierModelNew.setProject_Id(1);
-                        supplierModelNew.setSupplier_Code("0");
-                        supplierModelNew.setSupplier_Id(supplierID);
-                        supplierModelNew.setAddress(address);
-                        supplierModelNew.setGrade_id(gradeID);
-                        supplierModelNew.setGas_Days(Objects.requireNonNull(mBinding.etGasDays.getText()).toString());
-                        supplierModelNew.setGas_Days(Objects.requireNonNull(mBinding.etGasDays.getText()).toString());
-                        supplierModelNew.setSize(Objects.requireNonNull(mBinding.etSizeOfHospital.getText()).toString());
-                        supplierModelNew.setSupplier_Name(name);
-                        supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_HOSPITAL);
-                        supplierModelNew.setUserTypeName("H");
-                    supplierModelNew.setNo_Of_Animals(Objects.requireNonNull(mBinding.etNoOfCases.getText()).toString());
-                        supplierModelNew.setSupplierItemLinkingList(medicineModalList);
+                supplierModelNew.setCompany_Id(1);
+                supplierModelNew.setUserId(userId);
+                supplierModelNew.setCountry_Id(1);
+                supplierModelNew.setLocation_Id(1);
+                supplierModelNew.setProject_Id(1);
+                supplierModelNew.setShift_Type(shitType);
+                supplierModelNew.setSupplier_Code(supplierCode);
+                supplierModelNew.setSupplier_Id(supplierID);
+                supplierModelNew.setRegion_Id(String.valueOf(regionID));
+                supplierModelNew.setAddress(address);
+                supplierModelNew.setGrade_id(gradeID);
+                supplierModelNew.setGas_Days(gasDays);
+                supplierModelNew.setSize(hospitalSize);
+                supplierModelNew.setSupplier_Name(name);
+                supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_HOSPITAL);
+                supplierModelNew.setUserTypeName("H");
+                supplierModelNew.setLoc_Cord(locationString);
+                supplierModelNew.setLoc_Cord_Address(locationAddress);
+                supplierModelNew.setIs_update_Loc_Cord(isLocationUpdate);
+                supplierModelNew.setNo_Of_Animals(numberOfCases);
+                supplierModelNew.setSupplierItemLinkingList(medicineModalList);
+                supplierModelNew.setCell_No("0");
+                supplierModelNew.setMobile_No("0");
+                supplierModelNew.setPhone_No("0");
 
-                        List<SupplierLinking> supplierLinkingList= new ArrayList<>();
-                        for (GetSupplierModel  model:doctorModelList)
-                        {
-                            SupplierLinking supplierLinking= new SupplierLinking();
-                            supplierLinking.setAddress(model.getAddress());
-                            supplierLinking.setIsRegistered(true);
-                            supplierLinking.setSupplierId(model.getSupplier_Id());
-                            supplierLinking.setSupplierLinkIdDtl("0");
-                            supplierLinking.setSupplierName(model.getSupplier_Name());
-                            supplierLinkingList.add(supplierLinking);
-                        }
-                    for (GetSupplierModel  model:farmModelList)
-                    {
-                        SupplierLinking supplierLinking= new SupplierLinking();
-                        supplierLinking.setAddress(model.getAddress());
-                        supplierLinking.setIsRegistered(true);
-                        supplierLinking.setSupplierId(model.getSupplier_Id());
-                        supplierLinking.setSupplierLinkIdDtl("0");
-                        supplierLinking.setSupplierName(model.getSupplier_Name());
-                        supplierLinkingList.add(supplierLinking);
+                List<SupplierLinking> supplierLinkingList = new ArrayList<>();
+                for (GetSupplierModel model : doctorModelList) {
+                    SupplierLinking supplierLinking = new SupplierLinking();
+                    supplierLinking.setAddress(model.getAddress());
+                    supplierLinking.setIsRegistered(true);
+                    supplierLinking.setSupplierId(model.getSupplier_Id());
+                    if (model.getSupplierLinkId() != null && model.getSupplierLinkId().length() > 0) {
+                        supplierLinking.setSupplierLinkId(model.getSupplierLinkId());
+                    } else {
+                        supplierLinking.setSupplierLinkId("0");
                     }
-                        supplierModelNew.setSupplierLinkingList(supplierLinkingList);
-
-                        saveSupplier(supplierModelNew);
-
-
-                } else {
-                    Toast.makeText(requireContext(), "Please enter the address", Toast.LENGTH_SHORT).show();
+                    supplierLinking.setType("Dr");
+                    supplierLinking.setSupplierName(model.getSupplier_Name());
+                    supplierLinkingList.add(supplierLinking);
                 }
+                for (GetSupplierModel model : farmModelList) {
+                    SupplierLinking supplierLinking = new SupplierLinking();
+                    supplierLinking.setAddress(model.getAddress());
+                    supplierLinking.setIsRegistered(model.isRegister());
+                    supplierLinking.setSupplierId(model.getSupplier_Id());
+                    if (model.getSupplierLinkId() != null && model.getSupplierLinkId().length() > 0) {
+                        supplierLinking.setSupplierLinkId(model.getSupplierLinkId());
+                    } else {
+                        supplierLinking.setSupplierLinkId("0");
+                    }
 
+                    supplierLinking.setType("F");
+                    supplierLinking.setSupplierName(model.getSupplier_Name());
+                    supplierLinkingList.add(supplierLinking);
+                }
+                supplierModelNew.setSupplierLinkingList(supplierLinkingList);
+
+                saveSupplier(supplierModelNew);
+
+
+            } else {
+                Toast.makeText(requireContext(), "Please enter the address", Toast.LENGTH_SHORT).show();
+            }
 
 
         } else {
@@ -624,31 +742,60 @@ public class AddHospitalFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body()!=null)
+                if (response.isSuccessful())
                 {
-                    UpdateStatus updateStatus = response.body();
-                    Toast.makeText(requireContext(), " "+updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    if (response.body() != null) {
+                        UpdateStatus updateStatus = response.body();
+
+                        Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                        if (updateStatus.getStatus()==1)
+                        {
+                            navController.popBackStack();
+                        }
+                    }
                 }
-                else
-                {
-                    Toast.makeText(requireContext(), " "+response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                else {
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
                 }
+
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
-                Toast.makeText(requireContext(), " "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), " " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });
 
     }
 
+    private void refreshFields() {
+
+        mBinding.etName.setText("");
+        mBinding.etAddress.setText("");
+        mBinding.locationCheckbox.setText("");
+        mBinding.locationCheckbox.setText("");
+        mBinding.locationCheckbox.setChecked(false);
+        mBinding.etSizeOfHospital.setText("");
+        mBinding.etNoOfCases.setText("");
+        doctorModelList.clear();
+        doctorRecyclerViewAdapter.setGetSupplierModelList(doctorModelList);
+        farmModelList.clear();
+        farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
+        mBinding.etGasDays.setText("");
+        medicineModalList.clear();
+        medicineAdapter.setMedicineModalList(medicineModalList);
+        locationAddress="";
+        locationString="";
+        isLocationUpdate=false;
+        isLocationChecked=false;
+        supplierID=0;
+    }
+
     private void showAddFarmDialog() {
 
-        OtherFarmDialogBinding binding= OtherFarmDialogBinding.inflate(getLayoutInflater());
+        OtherFarmDialogBinding binding = OtherFarmDialogBinding.inflate(getLayoutInflater());
 
         AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).setView(binding.getRoot()).create();
         alertDialog.show();
@@ -659,17 +806,18 @@ public class AddHospitalFragment extends Fragment {
 
                 String name = Objects.requireNonNull(binding.etFarmName.getText()).toString();
 
-                if (name.length()>0)
-                {
+                if (name.length() > 0) {
 
-                    GetSupplierModel farmSupplierModel= new GetSupplierModel();
-                    farmSupplierModel.setAddress(binding.etFarmAddress.getText().toString());
+                    GetSupplierModel farmSupplierModel = new GetSupplierModel();
+                    if (binding.etFarmAddress.getText() != null && binding.etFarmAddress.getText().toString().length() > 0) {
+                        farmSupplierModel.setAddress(binding.etFarmAddress.getText().toString());
+                    }
+
                     farmSupplierModel.setSupplier_Name(name);
+                    farmSupplierModel.setRegister(false);
                     farmModelList.add(farmSupplierModel);
                     farmRecyclerViewAdapter.setGetSupplierModelList(farmModelList);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(requireContext(), " Please enter name", Toast.LENGTH_SHORT).show();
                 }
                 alertDialog.dismiss();
@@ -691,68 +839,61 @@ public class AddHospitalFragment extends Fragment {
                         progressDialog.dismiss();
 
 
-                        for (GradingModel model:gradingModels)
-                        {
+                        for (GradingModel model : gradingModels) {
                             gradeArray.add(model.getGrade_Title());
                             gradingHashMapForId.put(model.getGrade_Title(), model.getGrade_Id());
-                            gradingHashMapForTitle.put(model.getGrade_Id(),model.getGrade_Title());
+                            gradingHashMapForTitle.put(model.getGrade_Id(), model.getGrade_Title());
 
                         }
 
 
-                        ArrayAdapter<String> gradingAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item,gradeArray);
+                        ArrayAdapter<String> gradingAdapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, gradeArray);
                         mBinding.spinnerGrade.setAdapter(gradingAdapter);
-
-
 
 
                     }
                 });
     }
+
     private void showDialog() {
 
 
         AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
 
 
-            AddMedicineDialogBinding binding= AddMedicineDialogBinding.inflate(getLayoutInflater());
-            alertDialog.setView(binding.getRoot());
-            alertDialog.show();
+        AddMedicineDialogBinding binding = AddMedicineDialogBinding.inflate(getLayoutInflater());
+        alertDialog.setView(binding.getRoot());
+        alertDialog.show();
 
-            binding.addBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String companyName=Objects.requireNonNull(binding.etCompany.getText()).toString();
-                    String medicineName=Objects.requireNonNull(binding.etName.getText()).toString();
-                    if (companyName.length()>0)
-                    {
-                        if (medicineName.length()>0)
-                        {
-                            SupplierItemLinking medicineModal = new SupplierItemLinking();
-                            medicineModal.setCompName(companyName);
-                            medicineModal.setIsRegistered(false);
-                            medicineModal.setItHead(medicineName);
-                            medicineModal.setSupplierItemLinkIdDtl("0");
-                            medicineModalList.add(medicineModal);
-                            medicineAdapter.setMedicineModalList(medicineModalList);
-                        }
-                        else
-                        {
-                            Toast.makeText(requireContext(), "Please enter medicine name", Toast.LENGTH_SHORT).show();
-
-                        }
-
-
-                    }else
-                    {
-                        Toast.makeText(requireContext(), "Please enter company", Toast.LENGTH_SHORT).show();
+        binding.addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String companyName = Objects.requireNonNull(binding.etCompany.getText()).toString();
+                String medicineName = Objects.requireNonNull(binding.etName.getText()).toString();
+                if (companyName.length() > 0) {
+                    if (medicineName.length() > 0) {
+                        SupplierItemLinking medicineModal = new SupplierItemLinking();
+                        medicineModal.setCompName(companyName);
+                        medicineModal.setIsRegistered(false);
+                        medicineModal.setItHead(medicineName);
+                        medicineModal.setSupplierItemLinkIdDtl("0");
+                        medicineModalList.add(medicineModal);
+                        medicineAdapter.setMedicineModalList(medicineModalList);
+                    } else {
+                        Toast.makeText(requireContext(), "Please enter medicine name", Toast.LENGTH_SHORT).show();
 
                     }
 
-                    alertDialog.dismiss();
+
+                } else {
+                    Toast.makeText(requireContext(), "Please enter company", Toast.LENGTH_SHORT).show();
+
                 }
-            });
-        }
+
+                alertDialog.dismiss();
+            }
+        });
+    }
 
     public void getRegion() {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
@@ -767,55 +908,35 @@ public class AddHospitalFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
-                    progressDialog.dismiss();
-                    regionHashmapForID.clear();
-                    regionList.clear();
-                    List<RegionModel> regionModelList = new ArrayList<>();
-                    regionModelList = response.body();
-                    for (RegionModel model : regionModelList) {
-                        regionList.add(model.getName());
-                        regionHashmapForID.put(model.getName(), model.getRegionId());
-                        regionHashmapForTitle.put(model.getRegionId(), model.getName());
+                    if (response.body() != null) {
+                        regionHashmapForID.clear();
+                        regionList.clear();
+                        List<RegionModel> regionModelList = new ArrayList<>();
+                        regionModelList = response.body();
+                        for (RegionModel model : regionModelList) {
+                            regionList.add(model.getName());
+                            regionHashmapForID.put(model.getName(), model.getRegionId());
+                            regionHashmapForTitle.put(model.getRegionId(), model.getName());
 
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                        mBinding.regionSpinner.setAdapter(adapter);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
-                    mBinding.regionSpinner.setAdapter(adapter);
+
                 } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(requireContext(), " " + response.message(), Toast.LENGTH_SHORT).show();
+                    if (response.message().equals("Unauthorized")) {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(), requireContext());
+                    }
                 }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(@NotNull Call<List<RegionModel>> call, @NotNull Throwable t) {
                 progressDialog.dismiss();
                 Toast.makeText(requireContext(), " " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void showOpenLocationSettingDialog() {
-
-
-        AlertDialog alertDialog;
-        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
-        alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
-        dialogBinding.title.setText("Please turn on  location for this action.");
-        dialogBinding.body.setText("Do you want to open location setting.");
-        alertDialog.show();
-
-        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                requireContext().startActivity(intent);
-            }
-        });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
             }
         });
     }

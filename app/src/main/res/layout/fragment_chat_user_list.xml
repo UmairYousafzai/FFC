@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Messages.ChatUserListFragment"
-    android:orientation="vertical"
-    android:background="@color/background_color">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chats"
-        android:textColor="@color/APP_Theme_Color"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="30dp"
-        />
-    <View
+    android:background="@color/background_color"
+    android:id="@+id/swipe_layout"
+    >
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/APP_Theme_Color"
-        android:layout_marginBottom="10dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/spinner_bg"
+            android:elevation="5dp"
+            app:queryHint="Type name ...."
+            app:iconifiedByDefault="false"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_user_recyclerview"
@@ -29,5 +31,7 @@
             tools:listitem="@layout/chat_user_card"
             />
 
+    </LinearLayout>
 
-</LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

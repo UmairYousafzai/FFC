@@ -1,7 +1,6 @@
 package com.example.ffccloud.farm;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -15,7 +14,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,22 +30,22 @@ import com.example.ffccloud.ContactPersons;
 import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
 import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.ModelClasses.GetSupplierDetailModel;
-import com.example.ffccloud.ModelClasses.SupplierLinking;
-import com.example.ffccloud.ModelClasses.SupplierMainModel;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.SupplierLinking;
+import com.example.ffccloud.model.SupplierMainModel;
 import com.example.ffccloud.SupplierItemLinking;
-import com.example.ffccloud.ModelClasses.RegionModel;
-import com.example.ffccloud.ModelClasses.SupplierModelNew;
-import com.example.ffccloud.ModelClasses.UpdateStatus;
+import com.example.ffccloud.model.RegionModel;
+import com.example.ffccloud.model.SupplierModelNew;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.AddContactDialogBinding;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
-import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddFarmFormBinding;
 import com.example.ffccloud.farm.adapter.MedicineAdapter;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import org.jetbrains.annotations.NotNull;
@@ -70,13 +71,13 @@ public class AddFarmFormFragment extends Fragment {
     private final ArrayList<String> regionList = new ArrayList<>();
     private final HashMap<String, Integer> regionHashmapForID = new HashMap<>();
     private final HashMap<Integer, String> regionHashmapForTitle = new HashMap<>();
-    private String locationString;
+    private String locationString,supplierCode="0";
     private String locationAddress;
     private int supplierID = 0;
     private final List<GetSupplierModel> supplierDetailModelList = new ArrayList<>();
     private SupplierRecyclerViewAdapter supplierRecyclerViewAdapter;
     private String callingAddBtn;
-    private boolean isSpinnerUpdate = false;
+    private boolean isSpinnerUpdate = false,isLocationUpdate=false;
     private int animalPosition = -1, regionPosition = -1;
 
     @Override
@@ -134,9 +135,31 @@ public class AddFarmFormFragment extends Fragment {
         }
         btnListener();
 
-
+        textListener();
     }
+    private void textListener() {
 
+        mBinding.idCoordinates.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s!=null)
+                {
+                    locationString = s.toString();
+                }
+            }
+        });
+    }
     public void getLiveData() {
 
         MutableLiveData<GetSupplierModel> supplierLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
@@ -147,18 +170,14 @@ public class AddFarmFormFragment extends Fragment {
             public void onChanged(GetSupplierModel model) {
                 if (model != null) {
                     if (callingAddBtn.equals("DoctorAddBtn")) {
-                        if (supplierDetailModelList.size()>0)
-                        {
-                            if (supplierDetailModelList.get(supplierDetailModelList.size()-1)!=model) {
+                        if (supplierDetailModelList.size() > 0) {
+                            if (supplierDetailModelList.get(supplierDetailModelList.size() - 1) != model) {
                                 supplierDetailModelList.add(model);
                                 supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             supplierDetailModelList.add(model);
                         }
-
 
 
                     }
@@ -184,17 +203,14 @@ public class AddFarmFormFragment extends Fragment {
                         medicineModal.setIsRegistered(true);
                         medicineModal.setSupplierItemLinkIdDtl("0");
                         medicineModal.setItCode(model.getItem_Code());
-                        if (medicineModalList.size()>0)
-                        {
-                            if (medicineModalList.get(medicineModalList.size()-1).getItCode()!=medicineModal.getItCode()) {
+                        if (medicineModalList.size() > 0) {
+                            if (medicineModalList.get(medicineModalList.size() - 1).getItCode() != medicineModal.getItCode()) {
                                 medicineModalList.add(medicineModal);
                                 medicineAdapter.setMedicineModalList(medicineModalList);
                             }
-                        }else
-                        {
+                        } else {
                             medicineModalList.add(medicineModal);
                         }
-
 
 
                     }
@@ -210,6 +226,7 @@ public class AddFarmFormFragment extends Fragment {
     private void getSupplierByID(int supplierID) {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Loading Supplier...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         Call<GetSupplierDetailModel> call = ApiClient.getInstance().getApi().getSupplierDetail(supplierID);
@@ -218,15 +235,19 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<GetSupplierDetailModel> call, @NotNull Response<GetSupplierDetailModel> response) {
 
-                if (response.body() != null) {
-                    progressDialog.dismiss();
-                    GetSupplierDetailModel getSupplierDetailModel = response.body();
-                    setUpFields(getSupplierDetailModel);
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
+                        GetSupplierDetailModel getSupplierDetailModel = response.body();
+                        setUpFields(getSupplierDetailModel);
 
-                } else {
-                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    }
                 }
+                 else {
+                    Toast.makeText(requireContext(), "" + response.errorBody(), Toast.LENGTH_SHORT).show();
+
+                }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -240,24 +261,29 @@ public class AddFarmFormFragment extends Fragment {
     }
 
     private void setUpFields(GetSupplierDetailModel getSupplierDetailModel) {
-
+        if (getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode()!=null)
+        {
+            supplierCode =getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierCode();
+        }
         mBinding.etOwnerName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
         mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
-        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty())
-        {
+        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
             mBinding.locationCheckbox.setChecked(true);
+            mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+            locationAddress= getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
+            locationString =getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
+            mBinding.idCoordinates.setText(locationString);
         }
-        mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+
 
         mBinding.etNumberOfAnimal.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getNoOfAnimals()));
 
-        int regionId= (int) getSupplierDetailModel.getSupplierModelNewList().get(0).getRegionId();
+        int regionId = (int) getSupplierDetailModel.getSupplierModelNewList().get(0).getRegionId();
 
-        String regionTitle= regionHashmapForTitle.get(regionId);
+        String regionTitle = regionHashmapForTitle.get(regionId);
 
         mBinding.regionSpinner.setSelection(regionList.indexOf(regionTitle));
-
 
 
         medicineModalList.clear();
@@ -273,6 +299,7 @@ public class AddFarmFormFragment extends Fragment {
             supplierModel.setSupplier_Name(model.getSupplierName());
             supplierModel.setAddress(model.getAddress());
             supplierModel.setSupplier_Id(model.getSupplierId());
+            supplierModel.setSupplierLinkId(model.getSupplierLinkId());
             supplierDetailModelList.add(supplierModel);
         }
         supplierRecyclerViewAdapter.setGetSupplierModelList(supplierDetailModelList);
@@ -300,6 +327,14 @@ public class AddFarmFormFragment extends Fragment {
                 break;
         }
 
+        String shift = getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
+        if (shift != null) {
+            if (shift.equals("Morning")) {
+                mBinding.morningRadioBtn.setChecked(true);
+            } else if (shift.equals("Evening")) {
+                mBinding.eveningRadioBtn.setChecked(true);
+            }
+        }
 
     }
 
@@ -344,6 +379,14 @@ public class AddFarmFormFragment extends Fragment {
     }
 
     private void btnListener() {
+        supplierRecyclerViewAdapter.SetOnClickListener(new SupplierRecyclerViewAdapter.SetOnClickListener() {
+            @Override
+            public void onClick(GetSupplierModel supplierModel) {
+
+
+                supplierDetailModelList.remove(supplierModel);
+            }
+        });
 
         mBinding.btnAddDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,14 +455,20 @@ public class AddFarmFormFragment extends Fragment {
                         @Override
                         public void gotLocation(Location location) {
 
-
+                            if (supplierID > 0) {
+                                isLocationUpdate = true;
+                            }
                             if (mBinding.locationCheckbox.isChecked()) {
-                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                mBinding.locationCheckbox.setText(locationAddress);
-                                locationString = location.getLongitude() + "," + location.getLatitude();
-                            } else {
 
+                                locationString = location.getLatitude() + "," +location.getLongitude() ;
+                                locationAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude())+
+                                        locationString;
+                                mBinding.locationCheckbox.setText(locationAddress);
+                            } else {
+                                locationAddress="";
+                                locationString="";
                                 mBinding.locationCheckbox.setText("Enable Location");
+                                mBinding.locationCheckbox.setChecked(false);
                             }
 
 
@@ -427,7 +476,8 @@ public class AddFarmFormFragment extends Fragment {
                     };
                     customLocation.getLastLocation(results);
                 } else {
-                    showOpenLocationSettingDialog();
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(requireActivity(),requireContext());
+                    mBinding.locationCheckbox.setChecked(false);
 
                 }
             }
@@ -470,19 +520,33 @@ public class AddFarmFormFragment extends Fragment {
 
     private void setUpSupplierModelForSave() {
 
-        String name = Objects.requireNonNull(mBinding.etOwnerName.getText()).toString();
-        String phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
-        String address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
+        String name = "", phone = "", address = "", animalMainType = "", animalSubType = "", numberOfAnimal = "",shitType="";
         RadioButton radioButton = mBinding.getRoot().findViewById(mBinding.animalRadioGroup.getCheckedRadioButtonId());
-        String animalMainType = radioButton.getText().toString();
-        int userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
 
+        int userId = 0, region = 0;
+
+        try {
+            name = Objects.requireNonNull(mBinding.etOwnerName.getText()).toString();
+            phone = Objects.requireNonNull(mBinding.etContact.getText()).toString();
+            address = Objects.requireNonNull(mBinding.etAddress.getText()).toString();
+            animalMainType = radioButton.getText().toString();
+            animalSubType = mBinding.animalSpinner.getSelectedItem().toString();
+            RadioButton radioButtonShift = mBinding.getRoot().findViewById(mBinding.docTimingRadioGroup.getCheckedRadioButtonId());
+            shitType = radioButtonShift.getText().toString();
+            userId = SharedPreferenceHelper.getInstance(requireContext()).getUserID();
+
+            region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
+
+            numberOfAnimal = mBinding.etNumberOfAnimal.getText().toString();
+        } catch (Exception e) {
+            Log.e("Farm save error:",e.getMessage());
+        }
 
         if (name.length() > 0) {
             if (phone.length() > 0) {
                 if (address.length() > 0) {
                     if (regionList.size() > 0) {
-                        int region = regionHashmapForID.get(mBinding.regionSpinner.getSelectedItem().toString());
+
 
                         SupplierModelNew supplierModelNew = new SupplierModelNew();
 
@@ -491,7 +555,8 @@ public class AddFarmFormFragment extends Fragment {
                         supplierModelNew.setCountry_Id(1);
                         supplierModelNew.setLocation_Id(1);
                         supplierModelNew.setProject_Id(1);
-                        supplierModelNew.setSupplier_Code("0");
+                        supplierModelNew.setShift_Type(shitType);
+                        supplierModelNew.setSupplier_Code(supplierCode);
                         supplierModelNew.setSupplier_Id(supplierID);
                         supplierModelNew.setAddress(address);
                         supplierModelNew.setPhone_No(phone);
@@ -500,13 +565,29 @@ public class AddFarmFormFragment extends Fragment {
                         supplierModelNew.setUser_Sub_Type(CONSTANTS.USER_SUB_TYPE_FARM);
                         supplierModelNew.setUserTypeName("F");
                         supplierModelNew.setAnimals_Main_Type(animalMainType);
-                        supplierModelNew.setAnimals_Sub_Type(mBinding.animalSpinner.getSelectedItem().toString());
-                        supplierModelNew.setNo_Of_Animals(mBinding.etNumberOfAnimal.getText().toString());
+                        supplierModelNew.setAnimals_Sub_Type(animalSubType);
+                        supplierModelNew.setNo_Of_Animals(numberOfAnimal);
                         supplierModelNew.setSupplierItemLinkingList(medicineModalList);
                         supplierModelNew.setContactPersonsList(contactPersonsList);
                         supplierModelNew.setLoc_Cord(locationString);
+                        supplierModelNew.setIs_update_Loc_Cord(isLocationUpdate);
                         supplierModelNew.setLoc_Cord_Address(locationAddress);
-
+                        List<SupplierLinking> supplierLinkingList = new ArrayList<>();
+                        for (GetSupplierModel model : supplierDetailModelList) {
+                            SupplierLinking supplierLinking = new SupplierLinking();
+                            supplierLinking.setAddress(model.getAddress());
+                            supplierLinking.setIsRegistered(true);
+                            if (model.getSupplierLinkId() != null && model.getSupplierLinkId().length() > 0) {
+                                supplierLinking.setSupplierLinkId(model.getSupplierLinkId());
+                            } else {
+                                supplierLinking.setSupplierLinkId("0");
+                            }
+                            supplierLinking.setSupplierId(model.getSupplier_Id());
+                            supplierLinking.setSupplierLinkId("0");
+                            supplierLinking.setSupplierName(model.getSupplier_Name());
+                            supplierLinkingList.add(supplierLinking);
+                        }
+                        supplierModelNew.setSupplierLinkingList(supplierLinkingList);
                         saveSupplier(supplierModelNew);
                     } else {
                         Toast.makeText(requireContext(), "Please select region", Toast.LENGTH_SHORT).show();
@@ -530,6 +611,7 @@ public class AddFarmFormFragment extends Fragment {
     private void saveSupplier(SupplierModelNew supplierModelNew) {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
         progressDialog.setMessage("Saving....");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
 
@@ -541,14 +623,21 @@ public class AddFarmFormFragment extends Fragment {
         call.enqueue(new Callback<UpdateStatus>() {
             @Override
             public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
-                if (response.body() != null) {
-                    UpdateStatus updateStatus = response.body();
-                    Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                } else {
-                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                if (response.isSuccessful())
+                {
+                    if (response.body() != null) {
+                        UpdateStatus updateStatus = response.body();
+                        Toast.makeText(requireContext(), " " + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                        if (updateStatus.getStatus()==1)
+                        {
+                            navController.popBackStack();
+                        }
+                    }
                 }
+                else {
+                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -612,7 +701,7 @@ public class AddFarmFormFragment extends Fragment {
                     String phone = Objects.requireNonNull(binding.etPhone.getText()).toString();
 
                     if (name.length() > 0) {
-                        if (phone.length() > 11) {
+                        if (phone.length() == 11) {
                             ContactPersons contactPersons = new ContactPersons();
                             contactPersons.setContact_Person_ContactNo(phone);
                             contactPersons.setContact_Person_Design(binding.etDesignation.getText().toString());
@@ -637,31 +726,6 @@ public class AddFarmFormFragment extends Fragment {
 
     }
 
-    public void showOpenLocationSettingDialog() {
-
-
-        AlertDialog alertDialog;
-        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
-        alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
-        dialogBinding.title.setText("Please turn on  location for this action.");
-        dialogBinding.body.setText("Do you want to open location setting.");
-        alertDialog.show();
-
-        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                requireContext().startActivity(intent);
-            }
-        });
-        dialogBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-    }
 
     public void getRegion() {
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
@@ -675,23 +739,31 @@ public class AddFarmFormFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<RegionModel>> call, @NotNull Response<List<RegionModel>> response) {
                 if (response.isSuccessful()) {
-                    progressDialog.dismiss();
-                    regionHashmapForID.clear();
-                    regionList.clear();
-                    List<RegionModel> regionModelList = new ArrayList<>();
-                    regionModelList = response.body();
-                    for (RegionModel model : regionModelList) {
-                        regionList.add(model.getName());
-                        regionHashmapForID.put(model.getName(), model.getRegionId());
-                        regionHashmapForTitle.put(model.getRegionId(), model.getName());
+                    if (response.body()!=null)
+                    {
+                        regionHashmapForID.clear();
+                        regionList.clear();
+                        List<RegionModel> regionModelList = new ArrayList<>();
+                        regionModelList = response.body();
+                        for (RegionModel model : regionModelList) {
+                            regionList.add(model.getName());
+                            regionHashmapForID.put(model.getName(), model.getRegionId());
+                            regionHashmapForTitle.put(model.getRegionId(), model.getName());
 
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
+                        mBinding.regionSpinner.setAdapter(adapter);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_dropdown_item, regionList);
-                    mBinding.regionSpinner.setAdapter(adapter);
+
                 } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(requireContext(), " " + response.errorBody(), Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(requireContext(), " " + response.message(), Toast.LENGTH_SHORT).show();
+                    if (response.message().equals("Unauthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
+                    }
                 }
+                progressDialog.dismiss();
             }
 
             @Override

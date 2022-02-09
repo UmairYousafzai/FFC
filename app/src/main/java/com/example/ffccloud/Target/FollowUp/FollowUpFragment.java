@@ -45,7 +45,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
@@ -229,38 +228,38 @@ public class FollowUpFragment extends Fragment {
                 }
                 if(!principal_reviews.isEmpty() && !subjects_change.isEmpty() && !person_in_contact.isEmpty() && !person_in_contact_phone.isEmpty() && !remarks.isEmpty() && !purpose.isEmpty()){
 
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-                    //pDialog[0].getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Saving...");
-                    pDialog.setCanceledOnTouchOutside(false);
-                    pDialog.setCancelable(false);
-                    pDialog.show();
+//                    final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+//                    //pDialog[0].getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//                    pDialog.setTitleText("Saving...");
+//                    pDialog.setCanceledOnTouchOutside(false);
+//                    pDialog.setCancelable(false);
+//                    pDialog.show();
 
                     final Handler[] handler = {new Handler(Looper.getMainLooper())};
                     handler[0].postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            pDialog.cancel();
-                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
-                                    .setTitleText("Data saved Successfully")
-                                    .setContentText("Do you want to schedule next activity?")
-                                    .setCancelText("No")
-                                    .setConfirmText("Yes")
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.cancel();
-                                            //navController.navigate(R.id.FormFragment);
-                                        }
-                                    })
-                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.dismiss();
-                                            navController.navigate(R.id.target_fragment);
-                                        }
-                                    })
-                                    .show();
+//                            pDialog.cancel();
+//                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+//                                    .setTitleText("Data saved Successfully")
+//                                    .setContentText("Do you want to schedule next activity?")
+//                                    .setCancelText("No")
+//                                    .setConfirmText("Yes")
+//                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                        @Override
+//                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                            sweetAlertDialog.cancel();
+//                                            //navController.navigate(R.id.FormFragment);
+//                                        }
+//                                    })
+//                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                        @Override
+//                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                            sweetAlertDialog.dismiss();
+//                                            navController.navigate(R.id.target_fragment);
+//                                        }
+//                                    })
+//                                    .show();
                         }
                     }, 4000);
 

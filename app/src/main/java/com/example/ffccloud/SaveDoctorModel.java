@@ -3,7 +3,7 @@ package com.example.ffccloud;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.ffccloud.ModelClasses.DoctorScheduleModel;
+import com.example.ffccloud.model.DoctorScheduleModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

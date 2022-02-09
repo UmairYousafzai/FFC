@@ -1,5 +1,8 @@
 package com.example.ffccloud.Tracking.Adapter;
 
+import static com.example.ffccloud.utils.CONSTANTS.ACTION_START_LOCATION_SERVICE;
+import static com.example.ffccloud.utils.CONSTANTS.LOCATION_RECEIVER_ID;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -84,6 +87,14 @@ public class RequestsRecyclerViewAdapter extends RecyclerView.Adapter<RequestsRe
         holder.mBinding.status.setText("Loading");
         holder.mBinding.setUser(user);
         holder.mBinding.executePendingBindings();
+        if (SharedPreferenceHelper.getInstance(context).getLocationDoneButtonState(user.getId()))
+        {
+            holder.mBinding.btnDone.setVisibility(View.GONE);
+        }else
+        {
+            holder.mBinding.btnDone.setVisibility(View.VISIBLE);
+
+        }
 
 
     }
@@ -95,13 +106,13 @@ public class RequestsRecyclerViewAdapter extends RecyclerView.Adapter<RequestsRe
 
     public void setUserList(List<LocationRequestedUser> list) {
         if (list != null && list.size() > 0) {
-            userList = list;
-            notifyDataSetChanged();
+            userList.clear();
+            userList.addAll(list);
 
         } else {
             userList.clear();
-            notifyDataSetChanged();
         }
+        notifyDataSetChanged();
     }
 
 
@@ -132,10 +143,12 @@ public class RequestsRecyclerViewAdapter extends RecyclerView.Adapter<RequestsRe
                                 databaseReference.child(userID).child("requestAccepted").setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        SharedPreferenceHelper.getInstance(context).setLocationDoneButtonState(user.getId(),true);
                                         sendNotification(userModel);
 
                                         Intent intent = new Intent(context, LocationService.class);
-                                        intent.setAction(CONSTANTS.ACTION_START_LOCATION_SERVICE);
+                                        intent.setAction(ACTION_START_LOCATION_SERVICE);
+                                        intent.putExtra(LOCATION_RECEIVER_ID,user.getId());
                                         context.startService(intent);
 
                                         Toast.makeText(context, "Location Sharing Enable", Toast.LENGTH_SHORT).show();
@@ -147,6 +160,8 @@ public class RequestsRecyclerViewAdapter extends RecyclerView.Adapter<RequestsRe
                                 }).addOnCanceledListener(new OnCanceledListener() {
                                     @Override
                                     public void onCanceled() {
+                                        SharedPreferenceHelper.getInstance(context).setLocationDoneButtonState(user.getId(),false);
+
                                         progressDialog.dismiss();
                                         Toast.makeText(context, "Enable to start location service", Toast.LENGTH_SHORT).show();
                                     }
@@ -171,7 +186,13 @@ public class RequestsRecyclerViewAdapter extends RecyclerView.Adapter<RequestsRe
                 @Override
                 public void onClick(View v) {
                     if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                        user = userList.get(getAdapterPosition());
+                        UserModel userModel = new UserModel();
+                        userModel.setId(user.getId());
+                        userModel.setEmail(user.getEmail());
+                        userModel.setUserName(user.getUserName());
                         String userID = String.valueOf(SharedPreferenceHelper.getInstance(context).getUserID());
+                        SharedPreferenceHelper.getInstance(context).setLocationDoneButtonState(user.getId(),false);
 
                         progressDialog.show();
                         LocationRequestedUser user = userList.get(getAdapterPosition());

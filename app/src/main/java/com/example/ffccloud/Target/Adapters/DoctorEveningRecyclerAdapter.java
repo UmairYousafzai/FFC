@@ -65,34 +65,26 @@ public class DoctorEveningRecyclerAdapter extends RecyclerView.Adapter<DoctorEve
     public void onBindViewHolder(@NonNull DoctorViewHolder holder, int position) {
         DoctorModel doctorModel = doctorModelList.get(position);
         progressDialog = new ProgressDialog(mContext);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
+        Location givenLocation = new Location("");
 
-                progressDialog.setMessage("Loading");
-                progressDialog.show();
-                Location givenLocation = new Location("");
-
-                if (currrentLocation != null && givenLocation.getLatitude()!=0 && givenLocation.getLongitude()!=0)
-                {
-                    String[] locationString = doctorModel.getCoordinates().split(",");
-                    givenLocation.setLatitude(Double.parseDouble(locationString[0]));
-                    givenLocation.setLongitude(Double.parseDouble(locationString[1]));
-                    String distance= String.valueOf(currrentLocation.distanceTo(givenLocation)/1000) ;
-                    doctorModel.setDistance(distance.substring(0,3)+" "+"Km");
-                    holder.mbinding.setDoctorEvening(doctorModel);
-                    holder.mbinding.executePendingBindings();
-                }
-                else {
-                    doctorModel.setDistance("0.0");
-                    holder.mbinding.setDoctorEvening(doctorModel);
-                    holder.mbinding.executePendingBindings();
-                }
-                progressDialog.cancel();
-            }
-        }, 1000);
-
+        if (currrentLocation != null && givenLocation.getLatitude()!=0 && givenLocation.getLongitude()!=0)
+        {
+            String[] locationString = doctorModel.getCoordinates().split(",");
+            givenLocation.setLatitude(Double.parseDouble(locationString[0]));
+            givenLocation.setLongitude(Double.parseDouble(locationString[1]));
+            String distance= String.valueOf(currrentLocation.distanceTo(givenLocation)/1000) ;
+            doctorModel.setDistance(distance.substring(0,3)+" "+"Km");
+            holder.mbinding.setDoctorEvening(doctorModel);
+            holder.mbinding.executePendingBindings();
+        }
+        else {
+            doctorModel.setDistance("0.0");
+            holder.mbinding.setDoctorEvening(doctorModel);
+            holder.mbinding.executePendingBindings();
+        }
+        progressDialog.cancel();
 
 
 
@@ -229,7 +221,10 @@ public class DoctorEveningRecyclerAdapter extends RecyclerView.Adapter<DoctorEve
 
                     if (doctorModelList.get(position).getCoordinates()!=null&&!doctorModelList.get(position).getCoordinates().isEmpty())
                     {
-                        String locationString= "geo:"+doctorModelList.get(position).getCoordinates();
+
+                        String[] coordinates = doctorModelList.get(position).getCoordinates().split(",");
+                        String address= new CustomLocation(mContext).getCompleteAddressString(Double.parseDouble(coordinates[0]),Double.parseDouble(coordinates[1]));
+                        String locationString= "geo:"+doctorModelList.get(position).getCoordinates()+"?q="+ doctorModelList.get(position).getCoordinates()+(address);
                         Uri mapIntentUri= Uri.parse(locationString);
                         Intent mapIntent= new Intent(Intent.ACTION_VIEW,mapIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");

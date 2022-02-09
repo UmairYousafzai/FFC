@@ -1,26 +1,21 @@
 package com.example.ffccloud.worker.utils;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.lifecycle.LiveData;
-
-import com.example.ffccloud.Database.FfcDAO;
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.DoctorModel;
-import com.example.ffccloud.ModelClasses.AddNewWorkPlanModel;
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.QualificationModel;
-import com.example.ffccloud.ModelClasses.UpdateWorkPlanStatus;
+import com.example.ffccloud.model.AddNewWorkPlanModel;
+import com.example.ffccloud.model.UpdateWorkPlanStatus;
 
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class UploadDataRepository {
-    private FfcDAO mDao;
+    private FFC_DAO mDao;
     Context mContext;
     private final List<UpdateWorkPlanStatus> allWorkPlanStatus;
     private final List<AddNewWorkPlanModel> allWorkPlan;
@@ -94,6 +89,16 @@ public class UploadDataRepository {
     public DoctorModel getWorkPlanById(int id)
     {
         return mDao.getWorkPlanByID(id);
+
+    }
+    public boolean isWorkPlanExists()
+    {
+        return mDao.isWorkPlanExists();
+
+    }
+    public boolean isWorkPlanStatusExists()
+    {
+        return mDao.isWorkPlanStatusExists();
 
     }
 

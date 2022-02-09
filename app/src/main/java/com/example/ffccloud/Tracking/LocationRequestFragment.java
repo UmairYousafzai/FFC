@@ -19,6 +19,8 @@ import com.example.ffccloud.Tracking.Adapter.RequestsRecyclerViewAdapter;
 import com.example.ffccloud.databinding.FragmentLocationRequestBinding;
 import com.example.ffccloud.utils.UserViewModel;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class LocationRequestFragment extends Fragment {
@@ -31,7 +33,7 @@ public class LocationRequestFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mBinding= FragmentLocationRequestBinding.inflate(inflater,container,false);
 

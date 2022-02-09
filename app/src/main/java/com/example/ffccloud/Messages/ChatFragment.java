@@ -1,10 +1,11 @@
 package com.example.ffccloud.Messages;
 
+import static com.example.ffccloud.utils.CONSTANTS.MESSAGE_NOTIFICATION_TITLE;
+
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -18,14 +19,10 @@ import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.MainActivity;
 import com.example.ffccloud.Messages.Adapter.MessageRecyclerViewAdapter;
-import com.example.ffccloud.ModelClasses.Message;
+import com.example.ffccloud.model.Message;
 import com.example.ffccloud.PushNotification.SendNoticationClass;
-import com.example.ffccloud.R;
-import com.example.ffccloud.UserModel;
 import com.example.ffccloud.databinding.FragmentChatBinding;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,10 +31,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 
 public class ChatFragment extends Fragment {
 
@@ -122,6 +121,7 @@ public class ChatFragment extends Fragment {
     private void btnListener() {
 
         mBinding.btnSend.setOnClickListener(v -> {
+
             closeKeyboard();
 
             String messageString = mBinding.etMessage.getText().toString();
@@ -129,12 +129,18 @@ public class ChatFragment extends Fragment {
 
             if (messageString.length() > 0) {
 
-                Date date = new Date();
+
+                Date date = Calendar.getInstance().getTime();
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat(" hh:mm", Locale.getDefault());
+                String formattedTime = dateFormat.format(date);
+
                 Message message = new Message();
 
                 message.setMessage(messageString);
                 message.setSenderId(senderID);
                 message.setTimestamp(date.getTime());
+                message.setTime(formattedTime);
                 databaseReference.child("chats")
                         .child(senderRoom)
                         .child("messages")
@@ -163,7 +169,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String receiverUserToken = dataSnapshot.getValue(String.class);
-                sendNoticationClass.sendNotifications(receiverUserToken, senderUser, "Device Tracker", message, requireContext());
+                sendNoticationClass.sendNotifications(receiverUserToken, senderUser, MESSAGE_NOTIFICATION_TITLE, message, requireContext());
             }
 
             @Override

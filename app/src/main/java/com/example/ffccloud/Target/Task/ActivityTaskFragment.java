@@ -20,12 +20,12 @@ import android.widget.Toast;
 
 
 import com.example.ffccloud.databinding.FragmentActivityTaskBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -158,9 +158,7 @@ public class ActivityTaskFragment extends Fragment {
         mBinding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SweetAlertDialog(requireContext(), SweetAlertDialog.SUCCESS_TYPE)
-                        .setContentText("Save SuccessFully")
-                        .show();
+                CustomsDialog.getInstance().showDialog("Saved successfully"," ",requireActivity(),requireContext(),2);
             }
         });
     }

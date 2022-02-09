@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ffccloud.InsertProductModel;
 import com.example.ffccloud.databinding.InsertProductCardBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InsertProductRecyclerAdapter extends RecyclerView.Adapter<InsertProductRecyclerAdapter.ProductViewHolder> {

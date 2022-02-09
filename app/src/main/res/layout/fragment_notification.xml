@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".notification.NotificationFragment"
+    android:background="@color/background_color"
+    android:paddingVertical="10dp">
+
+   <TextView
+       android:id="@+id/tv_remove_all"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Remove all"
+      android:textColor="@color/APP_Theme_Color"
+       android:textSize="16sp"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       android:layout_margin="10dp"
+      />
+
+   <View
+       android:id="@+id/view"
+       android:layout_width="0dp"
+       android:layout_height="1dp"
+      android:background="@color/APP_Theme_Color"
+       app:layout_constraintTop_toBottomOf="@id/tv_remove_all"
+       app:layout_constraintStart_toStartOf="@id/tv_remove_all"
+       app:layout_constraintEnd_toEndOf="@id/tv_remove_all"
+      />
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/notifications_recycler_view"
+       android:layout_width="match_parent"
+       android:layout_height="0dp"
+       tools:listitem="@layout/notification_card"
+       android:background="@android:color/transparent"
+       app:layout_constraintTop_toBottomOf="@id/view"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintBottom_toBottomOf="parent"
+       android:layout_marginTop="10dp"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

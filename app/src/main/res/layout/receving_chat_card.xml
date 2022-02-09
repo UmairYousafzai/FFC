@@ -39,10 +39,10 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
     <TextView
-        android:id="@+id/sending_status_tv"
+        android:id="@+id/tv_time_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sending"
+        android:text="00:00"
         android:textColor="@color/blue"
         android:textSize="8sp"
         android:layout_gravity="start"

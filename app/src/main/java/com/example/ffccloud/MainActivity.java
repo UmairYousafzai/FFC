@@ -1,16 +1,19 @@
 package com.example.ffccloud;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -18,28 +21,38 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.ffccloud.Customer.utils.CustomerViewModel;
 import com.example.ffccloud.Database.FfcDatabase;
+import com.example.ffccloud.Expense.utils.ExpenseViewModel;
 import com.example.ffccloud.Login.GetUserInfoModel;
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.NetworkCalls.ApiClient;
+import com.example.ffccloud.databinding.CustomAlertDialogBinding;
+import com.example.ffccloud.model.Activity;
 import com.example.ffccloud.PushNotification.SendNoticationClass;
 import com.example.ffccloud.SplashScreen.SplashActivity;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
 import com.example.ffccloud.Target.utils.TargetViewModel;
 import com.example.ffccloud.databinding.ActivityMainBinding;
 import com.example.ffccloud.databinding.NavigationDrawerHeaderBinding;
+import com.example.ffccloud.model.UpdateStatus;
+import com.example.ffccloud.notification.NotificationViewModel;
 import com.example.ffccloud.utils.ActivityViewModel;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.Permission;
 import com.example.ffccloud.utils.SyncDataToDB;
 
 import com.example.ffccloud.utils.SharedPreferenceHelper;
+import com.example.ffccloud.utils.UserViewModel;
 import com.example.ffccloud.worker.UploadWorker;
+import com.example.ffccloud.worker.utils.UploadDataRepository;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
@@ -57,7 +70,8 @@ import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,8 +81,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cn.pedant.SweetAlert.Constants;
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,6 +95,12 @@ public class MainActivity extends AppCompatActivity {
     private Permission permission;
     private ActivityViewModel activityViewModel;
     private List<Activity> runningActivity;
+    private UploadDataRepository uploadDataRepository;
+    private NotificationViewModel notificationViewModel;
+    private UserViewModel userViewModel;
+    private boolean isEndDay = false;
+    private CustomerViewModel customerViewModel;
+    private ExpenseViewModel expenseViewModel;
 
 
     private boolean menuCheck = true;
@@ -97,12 +119,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         ffcDatabase = FfcDatabase.getInstance(getApplicationContext());
-
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        uploadDataRepository = new UploadDataRepository(this);
+        customerViewModel = new ViewModelProvider(this).get(CustomerViewModel.class);
+        expenseViewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
 
         permission = new Permission(this, this);
 
 
         activityViewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
+        notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
 
         activityViewModel.getQueryActivity().observe(this, new Observer<List<Activity>>() {
             @Override
@@ -114,12 +140,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        activityViewModel.getWithoutTaskActivity().observe(this, new Observer<List<Activity>>() {
+            @Override
+            public void onChanged(List<Activity> activities) {
+
+                isEndDay = activities != null && !activities.isEmpty();
+            }
+        });
+
 
         setupToolbar();
         syncData();
         setUpNavigation();
         setDrawerHeader();
         drawerItemSelectedListener();
+        checkNotifications();
+
+    }
+
+    private void checkNotifications() {
+
+        notificationViewModel.getNotificationCount().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer numberOfNotifications) {
+                int menuID = mbinding.bottomNavigation.getMenu().getItem(4).getItemId();
+                BadgeDrawable badgeDrawable = mbinding.bottomNavigation.getOrCreateBadge(menuID);
+                if (numberOfNotifications != 0) {
+
+                    badgeDrawable.setVisible(true);
+                    badgeDrawable.setNumber(numberOfNotifications);
+                } else {
+                    badgeDrawable.setVisible(false);
+                }
+
+            }
+        });
+
 
     }
 
@@ -136,15 +192,23 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(mbinding.customToolbar, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(mbinding.bottomNavigation, navController);
 
+
+        mbinding.bottomNavigation.getMenu().getItem(0).setVisible(false);
+        mbinding.bottomNavigation.getMenu().getItem(1).setVisible(false);
+        mbinding.bottomNavigation.getMenu().getItem(2).setVisible(false);
+        mbinding.bottomNavigation.getMenu().getItem(3).setVisible(false);
+
+
     }
 
     private void syncData() {
 
         if (SharedPreferenceHelper.getInstance(getApplication()).getGetDocListState()) {
             int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
-            SyncDataToDB syncDataToDB = new SyncDataToDB(getApplication(), this);
-            syncDataToDB.saveDoctorsList(id);
-            syncDataToDB.SyncData(id);
+            new SendNoticationClass(this).UpdateToken();
+
+            SyncDataToDB.getInstance().SyncData(id, this, this);
+            SyncDataToDB.getInstance().saveDoctorsList(id, this, this);
             SharedPreferenceHelper.getInstance(getApplication()).setGetDocListState(false);
         }
 
@@ -163,14 +227,20 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.end_day) {
                     if (SharedPreferenceHelper.getInstance(getBaseContext()).getStart()) {
 
-                        if (isNetworkConnected()) {
-                            closeActivity();
-                            mbinding.drawerLayout.closeDrawer(GravityCompat.START);
-                        } else {
-                            generateWorkRequest();
-                            mbinding.drawerLayout.closeDrawer(GravityCompat.START);
 
+                        if (isNetworkConnected()) {
+                            if (!uploadDataRepository.isWorkPlanExists() && !uploadDataRepository.isWorkPlanStatusExists()) {
+                                showDialog();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Please wait for uploading pending data \n Please try again later", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please connect to internet", Toast.LENGTH_SHORT).show();
                         }
+
+
+                        mbinding.drawerLayout.closeDrawer(GravityCompat.START);
 
 
                     }
@@ -186,28 +256,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void generateWorkRequest() {
-
-        Data data = new Data.Builder()
-                .putString(CONSTANTS.WORK_REQUEST_END_DAY, "Work in done")
-                .build();
-
-        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(true).setRequiredNetworkType(NetworkType.CONNECTED).build();
-        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class)
-                .setInputData(data)
-                .setConstraints(constraints)
-                .build();
-        WorkManager.getInstance().enqueue(oneTimeWorkRequest);
-
-        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
-                .observe(this, new Observer<WorkInfo>() {
-                    @Override
-                    public void onChanged(WorkInfo workInfo) {
-                        Toast.makeText(MainActivity.this, "" + workInfo.getState().name(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
+//    private void generateWorkRequest() {
+//
+//        Data data = new Data.Builder()
+//                .putString(CONSTANTS.WORK_REQUEST_END_DAY, "Work in done")
+//                .build();
+//
+//        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(true).setRequiredNetworkType(NetworkType.CONNECTED).build();
+//        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(UploadWorker.class)
+//                .setInputData(data)
+//                .setConstraints(constraints)
+//                .build();
+//        WorkManager.getInstance().enqueue(oneTimeWorkRequest);
+//
+//        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
+//                .observe(this, new Observer<WorkInfo>() {
+//                    @Override
+//                    public void onChanged(WorkInfo workInfo) {
+//                        Toast.makeText(MainActivity.this, "" + workInfo.getState().name(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//    }
 
 
     @Override
@@ -270,6 +340,7 @@ public class MainActivity extends AppCompatActivity {
 //
         menu.findItem(R.id.filter).setVisible(false);
         menu.findItem(R.id.search).setVisible(false);
+        menu.findItem(R.id.upload).setVisible(false);
 
         return true;
     }
@@ -278,37 +349,75 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
 
-        DoctorViewModel doctorViewModel;
-        TargetViewModel targetViewModel;
+
+
+
 
         if (item.getItemId() == R.id.signOut) {
+            signOut();
+
+        }
+        else if (item.getItemId()== R.id.action_download_master_data)
+        {
+            downloadMaterData();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void downloadMaterData()
+    {
+        int id = SharedPreferenceHelper.getInstance(getApplication()).getEmpID();
+        userViewModel.deleteAllGrades();
+        userViewModel.deleteAllQualification();
+        userViewModel.deleteAllClassification();
+        userViewModel.deleteAllDeliveryModes();
+        userViewModel.deleteAllUsers();
+        userViewModel.deleteAllExpenseType();
+
+        SyncDataToDB.getInstance().SyncData(id, this, this);
+
+    }
+
+    public void signOut()
+    {
+        DoctorViewModel doctorViewModel;
+        TargetViewModel targetViewModel;
+        if (!isEndDay) {
             targetViewModel = new ViewModelProvider(this).get(TargetViewModel.class);
             doctorViewModel = new ViewModelProvider(this).get(DoctorViewModel.class);
 
             targetViewModel.DeleteAllDoctor();
 
+            customerViewModel.deleteAllCustomers();
+            activityViewModel.deleteAllActivity();
             doctorViewModel.deleteAllSchedule();
             doctorViewModel.deleteAllFilterDoctor();
 
-            ffcDatabase.dao().delete_all_menu();
-            ffcDatabase.dao().deleteAllGrade();
-            ffcDatabase.dao().deleteAllQualification();
-            ffcDatabase.dao().deleteAllClassification();
-            ffcDatabase.dao().deleteAllDeliveryModes();
+            notificationViewModel.deleteAllNotifications();
+            userViewModel.deleteAllMenus();
+            userViewModel.deleteAllGrades();
+            userViewModel.deleteAllQualification();
+            userViewModel.deleteAllClassification();
+            userViewModel.deleteAllDeliveryModes();
+            userViewModel.deleteAllUsers();
+            userViewModel.deleteAllExpenseType();
 
+            String password = SharedPreferenceHelper.getInstance(this).getUserPassword();
+            String url = SharedPreferenceHelper.getInstance(this).getBaseUrl();
+            SharedPreferenceHelper.getInstance(this).deleteSharedPreference();
+            SharedPreferenceHelper.getInstance(this).setUserPassword(password);
+            SharedPreferenceHelper.getInstance(this).setBaseUrl(url);
 
-            SharedPreferenceHelper.getInstance(this).setFlterDocListState(false);
-            SharedPreferenceHelper.getInstance(this).setGetDocListState(true);
-            SharedPreferenceHelper.getInstance(this).setLogin_State(false);
-            SharedPreferenceHelper.getInstance(this).setStart(false);
             Intent intent = new Intent(this, SplashActivity.class);
             startActivity(intent);
             finish();
-
+        } else {
+            Toast.makeText(this, "Please end day before Sign Out", Toast.LENGTH_SHORT).show();
         }
 
 
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -323,36 +432,41 @@ public class MainActivity extends AppCompatActivity {
         NavigationDrawerHeaderBinding headerBinding = NavigationDrawerHeaderBinding.bind(headerView);
         GetUserInfoModel loginUser = ffcDatabase.dao().getLoginUser();
 
-        headerBinding.profileName.setText(loginUser.getUserName());
-        headerBinding.profileEmail.setText(loginUser.getEmail());
-
-        Glide.with(this)
-                .load(loginUser.getImage())
-                .centerCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(headerBinding.profileImage);
+        if (loginUser != null) {
+            headerBinding.profileName.setText(loginUser.getUserName());
+            headerBinding.profileEmail.setText(loginUser.getEmail());
+            headerBinding.profileDesignation.setVisibility(View.GONE);
+            byte[] data = Base64.decode(loginUser.getImage(), Base64.DEFAULT);
+            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+            headerBinding.profileImage.setImageBitmap(bmp);
+//            Glide.with(this)
+//                    .load(loginUser.getImage())
+//                    .centerCrop()
+//                    .placeholder(R.drawable.ic_profile)
+//                    .into(headerBinding.profileImage);
+//
+        }
 
 
     }
 
     public void setMenus(Menu menu) {
-        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
-        menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
-
-        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_route_svgrepo_com, null));
-        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
-        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, null));
-        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
-        menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_gps_fixed_24, null));
-        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_client_profile_svgrepo_com, null));
-        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_orders, null));
-        menu.add(1, R.id.farmListFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_farm_svgrepo_com, null));
-        menu.add(1, R.id.medicalStoreListFragment, 16, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_medical_pharmacy_store, null));
-        menu.add(1, R.id.hospitalListFragment, 17, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_hospital, null));
-        menu.add(1, R.id.SupplierDoctorFragment, 18, "Add Doctor").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_doctor, null));
+//        menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+//        menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
+//        menu.add(1, R.id.expenseListFragment, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
+//
+//        menu.add(1, R.id.showRouteFragment, 8, "Routes").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_route_svgrepo_com, null));
+//        menu.add(1, R.id.meetingFragment, 9, "Meetings").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
+//        menu.add(1, R.id.mapsFragment, 10, "Tracker").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_location, null));
+//        menu.add(1, R.id.tableLayout, 11, "Doctor Reports").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+//        menu.add(1, R.id.usersListFragment, 12, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_gps_fixed_24, null));
+//        menu.add(1, R.id.customerListFragment, 13, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_client_profile_svgrepo_com, null));
+//        menu.add(1, R.id.salesOrderListFragment, 14, "Sales Order").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_orders, null));
+//        menu.add(1, R.id.farmListFragment, 15, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_farm_svgrepo_com, null));
+//        menu.add(1, R.id.medicalStoreListFragment, 16, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_medical_pharmacy_store, null));
+//        menu.add(1, R.id.hospitalListFragment, 17, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_hospital, null));
+//        menu.add(1, R.id.SupplierDoctorFragment, 18, "Doctor").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_doctor, null));
         ArrayList<String> menuIds = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menu_items_ids)));
-        SimpleSQLiteQuery query = new SimpleSQLiteQuery("Select *from User_Menu Order By Menu_Order Asc");
-        ffcDatabase.dao().sortMenus();
         List<String> menuStateList = ffcDatabase.dao().get_menu_State();
 
         if (menuStateList != null && !menuStateList.isEmpty()) {
@@ -371,26 +485,70 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (filterList.get(ii)) {
                             case "Ac_Home":
+                                mbinding.bottomNavigation.getMenu().getItem(0).setVisible(true);
+
                                 menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_home, null));
                                 break;
-//                            case "Ac_Target":
-//                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_target,null));
-//                                break;
+                            case "Ac_Target":
+                                mbinding.bottomNavigation.getMenu().getItem(1).setVisible(true);
+
+                                menu.add(1, R.id.nav_start_day, 2, "Target").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_target, null));
+                                break;
                             case "Ac_Expense":
-                                menu.add(1, R.id.nav_expense_list, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
+                                menu.add(1, R.id.expenseListFragment, 3, "Expense").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expense, null));
                                 break;
-                            case "Ac_SOrder":
-                                menu.add(1, R.id.doctorListFragment, 4, "Doctor Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_profile, null));
+
+                            case "Ac_EndDay":
+                                menu.add(1, R.id.end_day, 4, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_end_day, null));
                                 break;
-                            case "Ac_MSetting":
-                                menu.add(1, R.id.nav_home, 5, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings, null));
-                                break;
-//                            case "Ac_EndDay":
-//                                menu.add(1, R.id.end_day, 6, "End Day").setIcon(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_end_day,null));
-//                                break;
                             case "Ac_MyProfile":
-                                menu.add(1, R.id.nav_home, 7, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null));
+                                menu.add(1, R.id.nav_home, 5, "My Profile").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null));
                                 break;
+                            case "Ac_SaleOrder":
+                                menu.add(1, R.id.salesOrderListFragment, 6, "Sale Order").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_orders, null));
+                                break;
+
+                            case "Ac_Doctor":
+                                menu.add(1, R.id.SupplierDoctorFragment, 7, "Doctor").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_doctor, null));
+                                break;
+                            case "Ac_Farm":
+                                menu.add(1, R.id.farmListFragment, 8, "Farm").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_farm_svgrepo_com, null));
+                                break;
+
+                            case "Ac_Customer":
+                                menu.add(1, R.id.customerListFragment, 9, "Customer").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_client_profile_svgrepo_com, null));
+                                break;
+                            case "Ac_Hospital":
+                                menu.add(1, R.id.hospitalListFragment, 10, "Hospital").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_hospital, null));
+                                break;
+
+                            case "Ac_MedicalStore":
+                                menu.add(1, R.id.medicalStoreListFragment, 11, "Medical Store").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_medical_pharmacy_store, null));
+                                break;
+
+
+                            case "Ac_Meeting":
+                                menu.add(1, R.id.meetingFragment, 12, "Meeting").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_meeting, null));
+                                break;
+                            case "Ac_Tracking":
+                                mbinding.bottomNavigation.getMenu().getItem(3).setVisible(true);
+                                menu.add(1, R.id.usersListFragment, 13, "Tracking").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_gps_fixed_24, null));
+                                break;
+                            case "Ac_Chat":
+                                mbinding.bottomNavigation.getMenu().getItem(2).setVisible(true);
+
+                                menu.add(1, R.id.chatUserListFragment, 14, "Chats").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_chat_24, null));
+                                break;
+
+                            case "Ac_MSetting":
+                                menu.add(1, R.id.nav_home, 15, "Master Setting").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings, null));
+                                break;
+
+                            case "Ac_Reset_Password":
+                                menu.add(1, R.id.nav_home, 16, "Reset Password").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null));
+                                break;
+
+
                         }
 
                     }
@@ -416,52 +574,59 @@ public class MainActivity extends AppCompatActivity {
 
         Date c = Calendar.getInstance().getTime();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
         String formattedDate = df.format(c);
         Permission permission = new Permission(this, this);
 
         if (runningActivity != null && !runningActivity.isEmpty()) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (permission.isLocationEnabled()) {
-                    CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
-                        @Override
-                        public void gotLocation(Location location) {
-                            String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                    if (isNetworkConnected()) {
+                        CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
+                            @Override
+                            public void gotLocation(Location location) {
+                                String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
 
-                            for (Activity activity : runningActivity) {
-                                String[] locationStringArray = activity.getStartCoordinates().split(",");
-                                Location startLocation = new Location("");
+                                for (Activity activity : runningActivity) {
+                                    String[] locationStringArray = activity.getStartCoordinates().split(",");
+                                    Location startLocation = new Location("");
 
-                                startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
-                                startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
+                                    startLocation.setLatitude(Double.parseDouble(locationStringArray[0]));
+                                    startLocation.setLongitude(Double.parseDouble(locationStringArray[1]));
 
-                                String distance = String.valueOf(location.distanceTo(startLocation));
+                                    String distance = String.valueOf(location.distanceTo(startLocation));
 
 
-                                String endAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                                activity.setEndAddress(endAddress);
-                                activity.setDistance(distance);
-                                activity.setEndCoordinates(locationString);
-                                activity.setEndDateTime(formattedDate);
-                                String totalTime = calculateTotalTime(formattedDate, activity.getStartDateTime());
-                                activity.setTotalTime(totalTime);
-                                activityViewModel.updateActivity(activity);
+                                    String endAddress = customLocation.getCompleteAddressString(location.getLatitude(), location.getLongitude());
+                                    activity.setEndAddress(endAddress);
+                                    activity.setDistance(distance);
+                                    activity.setEndCoordinates(locationString);
+                                    activity.setEndDateTime(formattedDate);
+                                    String totalTime = calculateTotalTime(formattedDate, activity.getStartDateTime());
+                                    activity.setTotalTime(totalTime);
+                                    activityViewModel.updateActivity(activity);
+                                }
+
+                                mbinding.bottomNavigation.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
+                                mbinding.navView.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
+
+                                SharedPreferenceHelper.getInstance(getParent()).setStart(false);
+
+                                navController.navigate(R.id.nav_home);
+
+
                             }
+                        };
 
-                            mbinding.bottomNavigation.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
-                            mbinding.navView.getMenu().findItem(R.id.nav_start_day).setEnabled(true);
+                        customLocation.getLastLocation(locationResults);
+                    } else {
+                        Toast.makeText(this, "Please Connect To Internet", Toast.LENGTH_SHORT).show();
 
-                            SharedPreferenceHelper.getInstance(getParent()).setStart(false);
+                    }
 
-                            navController.navigate(R.id.nav_home);
-
-
-                        }
-                    };
-
-                    customLocation.getLastLocation(locationResults);
                 } else {
-                    showDialog();
+                    CustomsDialog.getInstance().showOpenLocationSettingDialog(this, this);
+
                 }
 
             } else {
@@ -477,40 +642,17 @@ public class MainActivity extends AppCompatActivity {
 
         int endHours = 0, endMinutes = 0, endSeconds = 0, startHours = 0, startMinutes = 0, startSeconds = 0;
         if (!startDateTime.isEmpty() && !startDateTime.isEmpty()) {
-            endHours = Integer.parseInt(formattedDate.substring(10, 12));
-            endMinutes = Integer.parseInt(formattedDate.substring(14, 15));
-            endSeconds = Integer.parseInt(formattedDate.substring(17, 18));
-            startHours = Integer.parseInt(startDateTime.substring(10, 12));
-            startMinutes = Integer.parseInt(startDateTime.substring(14, 15));
-            startSeconds = Integer.parseInt(startDateTime.substring(17, 18));
+            endHours = Integer.parseInt(formattedDate.substring(11, 13));
+            endMinutes = Integer.parseInt(formattedDate.substring(14, 16));
+            endSeconds = Integer.parseInt(formattedDate.substring(17, 19));
+            startHours = Integer.parseInt(startDateTime.substring(11, 13));
+            startMinutes = Integer.parseInt(startDateTime.substring(14, 16));
+            startSeconds = Integer.parseInt(startDateTime.substring(17, 19));
         }
 
 
         return (Math.abs(endHours - startHours)) + ":" + (Math.abs(endMinutes - startMinutes)) + ":" + (Math.abs(endSeconds - startSeconds));
 
-    }
-
-    public void showDialog() {
-        new SweetAlertDialog(this)
-                .setTitleText("Please turn on  location for this action.")
-                .setContentText("Do you want to open location setting.")
-                .setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                        sweetAlertDialog.dismiss();
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
-                    }
-                })
-                .setCancelText("Cancel")
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                }).show();
     }
 
 
@@ -525,5 +667,91 @@ public class MainActivity extends AppCompatActivity {
             return connected = false;
         }
 
+    }
+
+    public void showDialog() {
+
+        CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(getLayoutInflater());
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setView(dialogBinding.getRoot()).setCancelable(true).create();
+        dialogBinding.title.setText(R.string.end_day);
+        dialogBinding.body.setText("Are you sure, you want to end day");
+
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_warning_24, null);
+        dialogBinding.icon.setImageDrawable(drawable);
+
+        alertDialog.show();
+
+        dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+
+                if (expenseViewModel.isExpenseExists()) {
+                    expenseViewModel.getAllExpense().observe(MainActivity.this, new Observer<List<ExpenseModelClass>>() {
+                        @Override
+                        public void onChanged(List<ExpenseModelClass> expenseModelClasses) {
+                            if (expenseModelClasses!=null)
+                            {
+                                uploadExpenses(expenseModelClasses);
+                            }
+                        }
+                    });
+
+                } else {
+
+                    closeActivity();
+                    CustomsDialog.getInstance().showDialog("Day Ended Successfully", "End Day", MainActivity.this, MainActivity.this, 1);
+
+                }
+            }
+        });
+        dialogBinding.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    private void uploadExpenses(List<ExpenseModelClass> expenseModelClassList) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Expenses");
+        progressDialog.setMessage("Uploading....");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        String token = SharedPreferenceHelper.getInstance(this).getToken();
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().insertExpenses(token, expenseModelClassList);
+
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NotNull Call<UpdateStatus> call, @NotNull Response<UpdateStatus> response) {
+
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        UpdateStatus updateStatus = response.body();
+                        Toast.makeText(MainActivity.this, "Expense:" + updateStatus.getStrMessage(), Toast.LENGTH_SHORT).show();
+                        if (updateStatus.getStatus() == 1) {
+                            expenseViewModel.deleteAllExpense();
+                            closeActivity();
+
+                            CustomsDialog.getInstance().showDialog("Day Ended Successfully", "End Day", MainActivity.this, MainActivity.this, 1);
+                        }
+
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Expense:" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
+
+                Toast.makeText(MainActivity.this, "Expense:" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
     }
 }

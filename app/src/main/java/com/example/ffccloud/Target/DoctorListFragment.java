@@ -1,11 +1,10 @@
 package com.example.ffccloud.Target;
 
-import android.graphics.Color;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -24,32 +23,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.ffccloud.ModelClasses.ClassificationModel;
+import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.FilteredDoctoredModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.R;
 import com.example.ffccloud.Target.Adapters.FilterDoctorRecyclerAdapter;
 import com.example.ffccloud.Target.utils.DoctorViewModel;
 import com.example.ffccloud.databinding.FragmentDoctorListBinding;
-import com.example.ffccloud.databinding.FragmentSalesOrderListBinding;
+import com.example.ffccloud.utils.CustomsDialog;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
-import com.example.ffccloud.utils.SyncDataToDB;
 import com.example.ffccloud.utils.UserViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +58,7 @@ public class DoctorListFragment extends Fragment {
     private DoctorViewModel doctorViewModel;
     private FilterDoctorRecyclerAdapter adapter;
     private List<FilteredDoctoredModel> filteredDoctoredModelList = new ArrayList<>();
-    private SweetAlertDialog progressDialog;
+    private ProgressDialog progressDialog;
     private UserViewModel userViewModel;
 
     @Override
@@ -91,11 +84,10 @@ public class DoctorListFragment extends Fragment {
         Log.e("onViewCreated", "on view created me ha");
         // styling searchView
 
-        progressDialog = new SweetAlertDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE);
-        progressDialog.getProgressHelper().setBarColor(Color.parseColor("#286A9C"));
-        progressDialog.setTitleText("Loading");
-        //pDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog = new ProgressDialog(requireContext());
+
+        progressDialog.setMessage("Loading");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -190,8 +182,8 @@ public class DoctorListFragment extends Fragment {
 
         call.enqueue(new Callback<List<FilteredDoctoredModel>>() {
             @Override
-            public void onResponse(Call<List<FilteredDoctoredModel>> call, Response<List<FilteredDoctoredModel>> response) {
-                if (response.body() != null) {
+            public void onResponse(@NotNull Call<List<FilteredDoctoredModel>> call, @NotNull Response<List<FilteredDoctoredModel>> response) {
+                if (response.isSuccessful()) {
                     List<FilteredDoctoredModel> list = response.body();
                     if (list.size() > 0) {
                         doctorViewModel.insertFilterDoctors(list);
@@ -201,12 +193,12 @@ public class DoctorListFragment extends Fragment {
 
                     }
                 } else {
-                    new SyncDataToDB(requireActivity().getApplication(), requireContext()).loginAgain(response.message());
+                    CustomsDialog.getInstance().loginAgain(requireActivity(),requireContext());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<FilteredDoctoredModel>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<FilteredDoctoredModel>> call, @NotNull Throwable t) {
 
                 Toast.makeText(requireContext(), "" + t.getMessage(), Toast.LENGTH_LONG).show();
 

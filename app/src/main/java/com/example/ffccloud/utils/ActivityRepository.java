@@ -6,9 +6,9 @@ import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.Database.FfcDAO;
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
-import com.example.ffccloud.ModelClasses.Activity;
+import com.example.ffccloud.model.Activity;
 
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 public class ActivityRepository {
 
 
-    private FfcDAO mDao;
+    private FFC_DAO mDao;
     Application application;
     private final LiveData<List<Activity>> allActivities;
     private  LiveData<List<Activity>> taskActivities;

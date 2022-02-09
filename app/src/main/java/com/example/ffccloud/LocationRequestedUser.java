@@ -14,6 +14,7 @@ public class LocationRequestedUser {
     private String lastLocation;
     private String userName;
     private int sharingState;
+    private int notificationID;
 
     public LocationRequestedUser(String id, String email, String userName) {
         this.id = id;
@@ -32,6 +33,14 @@ public class LocationRequestedUser {
     }
 
     public LocationRequestedUser() {
+    }
+
+    public int getNotificationID() {
+        return notificationID;
+    }
+
+    public void setNotificationID(int notificationID) {
+        this.notificationID = notificationID;
     }
 
     public int getSharingState() {

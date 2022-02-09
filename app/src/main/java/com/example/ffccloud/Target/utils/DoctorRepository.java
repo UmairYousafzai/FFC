@@ -6,7 +6,7 @@ import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.Database.FfcDAO;
+import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.ScheduleModel;
@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 
 public class DoctorRepository {
 
-    private FfcDAO mDao;
+    private FFC_DAO mDao;
     Application application;
     private final LiveData<List<FilteredDoctoredModel>> allFilterDoctor;
     private final LiveData<List<ScheduleModel>> allSchedule;

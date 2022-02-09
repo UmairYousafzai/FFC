@@ -18,14 +18,16 @@
             android:id="@+id/btn_close_cancel_dialog"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_baseline_cancel_24"
-            android:gravity="center"
-            android:textStyle="bold"
             android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:textColor="@color/APP_Theme_Color"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/bg_close_button"
-            />
+            android:gravity="center"
+            android:src="@drawable/ic_baseline_cancel_24"
+            android:textColor="@color/APP_Theme_Color"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/profile_image"

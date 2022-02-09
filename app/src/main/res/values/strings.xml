@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FFC_java</string>
+    <string name="app_name">FFC</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -17,7 +17,7 @@
     <string name="Target">Target</string>
     <string name="Office">Office</string>
     <string name="PrivateTravel">Private Travel</string>
-    <string name="Expense">Expense</string>
+    <string name="ExpenseModel">ExpenseModel</string>
 
     <string-array name="menu_items_ids">
         <item>Ac_Home</item>
@@ -27,6 +27,16 @@
         <item>Ac_MSetting</item>
         <item>Ac_EndDay</item>
         <item>Ac_MyProfile</item>
+        <item>Ac_Farm</item>
+        <item>Ac_Doctor</item>
+        <item>Ac_MedicalStore</item>
+        <item>Ac_Tracking</item>
+        <item>Ac_Chat</item>
+        <item>Ac_SaleOrder</item>
+        <item>Ac_Customer</item>
+        <item>Ac_Meeting</item>
+        <item>Ac_Hospital</item>
+        <item>Ac_Reset_Password</item>
 
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
@@ -113,7 +123,7 @@
     <string name="here_system_would_suggest_you_the_work_plan_for_a_specified_day_for_current_day_system_automatically_make_work_plan_for_you">Here, system would suggest you the work plan for a specified day. For current day, system automatically make work plan for you.</string>
     <string name="next">Next</string>
     <string name="work_plan">Work Plan</string>
-    <string name="here_you_can_find_the_work_plan_that_you_set_for_a_specified_date_and_time_this_work_plan_would_not_be_system_suggested">Here, you can find the work plan that you set for a specified date and time. This work plan would not be system suggested.</string>
+    <string name="long_text">Here, you can find the work plan that you set for a specified date and time. This work plan would not be system suggested.</string>
     <string name="menu">Menu</string>
     <string name="mark_your_attendance">Mark Your Attendance</string>
     <string name="date_time">Date/Time</string>
@@ -256,6 +266,11 @@
     <string name="client">Client</string>
     <string name="select_client">Select Client</string>
     <string name="price_list_type">Price List Type</string>
+    <string name="rs">Rs </string>
+    <string name="upload">Upload</string>
+    <string name="select_client_type">Select Client Type</string>
+    <string name="coordinates_optional">Coordinates (Optional)</string>
+    <string name="download_master_data">DownLoad Master Data</string>
 
 
 </resources>

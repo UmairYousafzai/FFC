@@ -6,11 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.ffccloud.ModelClasses.ClassificationModel;
-import com.example.ffccloud.ModelClasses.DeliveryModeModel;
-import com.example.ffccloud.ModelClasses.GradingModel;
+import com.example.ffccloud.model.ClassificationModel;
+import com.example.ffccloud.model.DeliveryModeModel;
+import com.example.ffccloud.model.ExpenseType;
+import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.LocationRequestedUser;
-import com.example.ffccloud.ModelClasses.QualificationModel;
+import com.example.ffccloud.model.QualificationModel;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class UserViewModel extends AndroidViewModel {
     private final  LiveData<List<GradingModel>> allGrades;
     private final  LiveData<List<DeliveryModeModel>> allDeliveryModes;
     private final LiveData<List<LocationRequestedUser>> allUsers;
+    private final LiveData<List<ExpenseType>> allExpenseType;
 
 
     public UserViewModel(@NonNull Application application) {
@@ -32,6 +34,7 @@ public class UserViewModel extends AndroidViewModel {
         allQualification = userRepository.getAllQualification();
         allUsers = userRepository.getAllUser();
         allDeliveryModes = userRepository.getAllDeliveryModes();
+        allExpenseType = userRepository.getAllExpenseTypes();
     }
 
     public void deleteAllClassification()
@@ -49,9 +52,15 @@ public class UserViewModel extends AndroidViewModel {
     }
     public void deleteAllDeliveryModes()
     {
-        userRepository.DeleteAllQualification();
+        userRepository.DeleteAllDeliveryModes();
     }
 
+    public void deleteAllExpenseType( )
+    {
+
+                userRepository.DeleteAllExpenseType();
+
+    }
     public LiveData<List<ClassificationModel>> getAllClassification()
     {
         return allClassification;
@@ -69,7 +78,18 @@ public class UserViewModel extends AndroidViewModel {
     {
         return allDeliveryModes;
     }
+    public LiveData<List<ExpenseType>> getAllExpenseTypes()
+    {
+        return allExpenseType;
+    }
 
+
+    public void deleteAllMenus( )
+    {
+
+                userRepository.deleteAllMenus();
+
+    }
 
     public void insertUser(LocationRequestedUser user)
     {
