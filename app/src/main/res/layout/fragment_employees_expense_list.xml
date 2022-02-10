@@ -26,6 +26,7 @@
             android:background="@drawable/spinner_bg"
             android:elevation="5dp"
             app:queryHint="Type name ...."
+            android:onQueryTextChange="@={employeeExpenseViewModel.queryText}"
             app:iconifiedByDefault="false"
             android:layout_marginBottom="10dp" />
 
@@ -50,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
+                android:text="@={employeeExpenseViewModel.selectedMonth}"
                 app:setCustomSpinnerAdapter="@{employeeExpenseViewModel.getCustomSpinnerAdapter()}"
                 />
         </com.google.android.material.textfield.TextInputLayout>

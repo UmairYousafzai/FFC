@@ -12,4 +12,10 @@
         <item>Cancel</item>
         <item>Pending</item>
     </string-array>
+
+    <string-array name="action">
+        <item>Un-Approved</item>
+        <item>Approved</item>
+        <item>Cancel</item>
+    </string-array>
 </resources>

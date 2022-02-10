@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,16 +43,16 @@ public class EmployeesExpensesListFragment extends Fragment {
     }
 
     private void clickListener() {
-        mBinding.monthSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mBinding.monthSpinner.getText()!=null&& mBinding.monthSpinner.getText().toString().length()>0)
-                {
-                    String month= expenseViewModel.getMonth(mBinding.monthSpinner.getText().toString());
-                    expenseViewModel.fetchEmployeeExpenses(month);
-                }
-            }
-        });
+//        mBinding.monthSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (mBinding.monthSpinner.getText()!=null&& mBinding.monthSpinner.getText().toString().length()>0)
+//                {
+//                    String month= expenseViewModel.getMonth(mBinding.monthSpinner.getText().toString());
+//                    expenseViewModel.fetchEmployeeExpenses(month);
+//                }
+//            }
+//        });
 
     }
 
@@ -89,6 +88,18 @@ public class EmployeesExpensesListFragment extends Fragment {
                 if (s!=null)
                 {
                     Toast.makeText(requireContext(), ""+s, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        expenseViewModel.getSelectedMonthLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+
+                if (s!=null)
+                {
+                    String month= expenseViewModel.getMonth(s);
+                    expenseViewModel.fetchEmployeeExpenses(month);
                 }
             }
         });

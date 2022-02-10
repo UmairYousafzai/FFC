@@ -87,6 +87,12 @@ public class CustomsDialog {
                 activity.startActivity(intent);
             }
         });
+        dialogBinding.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
 
 
     }
@@ -108,6 +114,12 @@ public class CustomsDialog {
                 alertDialog.dismiss();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 activity.startActivity(intent);
+            }
+        });
+        dialogBinding.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
             }
         });
 

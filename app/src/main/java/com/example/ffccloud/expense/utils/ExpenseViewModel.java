@@ -27,10 +27,13 @@ public class ExpenseViewModel extends AndroidViewModel {
     private final MutableLiveData<EmployeeExpense> employeeExpenseMutableLiveData;
     private final MutableLiveData<List<EmployeeExpense>> employeeExpenseList;
     private final MutableLiveData<String> serverError;
+    private final MutableLiveData<String> selectedMonthLiveData;
     private final EmployeeExpenseAdapter adapter;
     private final HashMap<String, String> monthHashMap;
     private final List<String> monthList;
     private final ArrayAdapter<String> customSpinnerAdapter;
+    private String selectedMonth;
+    private String queryText;
 
 
     public ExpenseViewModel(@NonNull Application application) {
@@ -41,6 +44,7 @@ public class ExpenseViewModel extends AndroidViewModel {
         employeeExpenseMutableLiveData = new MutableLiveData<>();
         employeeExpenseList = new MutableLiveData<>();
         serverError= new MutableLiveData<>();
+        selectedMonthLiveData = new MutableLiveData<>();
         adapter = new EmployeeExpenseAdapter(this);
         monthHashMap = new HashMap<>();
         monthList = new ArrayList<>();
@@ -87,6 +91,21 @@ public class ExpenseViewModel extends AndroidViewModel {
         employeeExpenseMutableLiveData.setValue(employeeExpense);
     }
 
+
+
+    public String getSelectedMonth() {
+        return selectedMonth;
+    }
+
+    public void setSelectedMonth(String selectedMonth) {
+        this.selectedMonth = selectedMonth;
+        selectedMonthLiveData.setValue(selectedMonth);
+    }
+
+    public MutableLiveData<String> getSelectedMonthLiveData()
+    {
+        return selectedMonthLiveData;
+    }
     public MutableLiveData<EmployeeExpense> getEmployeeExpenseOnClick() {
         return employeeExpenseMutableLiveData;
     }
@@ -141,6 +160,14 @@ public class ExpenseViewModel extends AndroidViewModel {
         return customSpinnerAdapter;
 
 
+    }
+
+    public String getQueryText() {
+        return queryText;
+    }
+
+    public void setQueryText(String queryText) {
+        this.queryText = queryText;
     }
 
     public void setUpMonthSpinner()
