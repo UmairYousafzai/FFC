@@ -33,7 +33,6 @@ public class ExpenseViewModel extends AndroidViewModel {
     private final List<String> monthList;
     private final ArrayAdapter<String> customSpinnerAdapter;
     private String selectedMonth;
-    private String queryText;
 
 
     public ExpenseViewModel(@NonNull Application application) {
@@ -91,21 +90,6 @@ public class ExpenseViewModel extends AndroidViewModel {
         employeeExpenseMutableLiveData.setValue(employeeExpense);
     }
 
-
-
-    public String getSelectedMonth() {
-        return selectedMonth;
-    }
-
-    public void setSelectedMonth(String selectedMonth) {
-        this.selectedMonth = selectedMonth;
-        selectedMonthLiveData.setValue(selectedMonth);
-    }
-
-    public MutableLiveData<String> getSelectedMonthLiveData()
-    {
-        return selectedMonthLiveData;
-    }
     public MutableLiveData<EmployeeExpense> getEmployeeExpenseOnClick() {
         return employeeExpenseMutableLiveData;
     }
@@ -118,7 +102,14 @@ public class ExpenseViewModel extends AndroidViewModel {
 
         return employeeExpenseList;
     }
+    public String getSelectedMonth() {
+        return selectedMonth;
+    }
 
+    public void setSelectedMonth(String selectedMonth) {
+        this.selectedMonth = selectedMonth;
+        selectedMonthLiveData.setValue(selectedMonth);
+    }
     public void fetchEmployeeExpenses(String month)
     {
         String token = SharedPreferenceHelper.getInstance(getApplication()).getToken();
@@ -149,9 +140,18 @@ public class ExpenseViewModel extends AndroidViewModel {
         return adapter;
     }
 
+    public void clearAdapterList()
+    {
+        adapter.clearList();
+    }
+
     public String getMonth(String month)
     {
         return monthHashMap.get(month);
+    }
+    public MutableLiveData<String> getSelectedMonthLiveData()
+    {
+        return selectedMonthLiveData;
     }
     public ArrayAdapter<String> getCustomSpinnerAdapter() {
 
@@ -160,14 +160,6 @@ public class ExpenseViewModel extends AndroidViewModel {
         return customSpinnerAdapter;
 
 
-    }
-
-    public String getQueryText() {
-        return queryText;
-    }
-
-    public void setQueryText(String queryText) {
-        this.queryText = queryText;
     }
 
     public void setUpMonthSpinner()

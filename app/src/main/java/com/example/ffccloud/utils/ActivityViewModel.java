@@ -25,6 +25,7 @@ public class ActivityViewModel extends AndroidViewModel {
         taskActivity = repository.getTaskActivity();
         queryActivity = repository.getQueryActivity();
         withoutTaskActivity = repository.getWithoutTaskActivities();
+
     }
 
     public void deleteAllActivity()

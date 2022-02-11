@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.ffccloud.databinding.FragmentEmployeesExpenseListBinding;
 import com.example.ffccloud.expense.utils.ExpenseViewModel;
@@ -22,7 +24,8 @@ public class EmployeesExpensesListFragment extends Fragment {
 
     private FragmentEmployeesExpenseListBinding mBinding;
     private ExpenseViewModel expenseViewModel;
-
+    private String month="";
+    private NavController navController;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class EmployeesExpensesListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController = NavHostFragment.findNavController(this);
         expenseViewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
         mBinding.setEmployeeExpenseViewModel(expenseViewModel);
         expenseViewModelObservers();
@@ -64,7 +68,7 @@ public class EmployeesExpensesListFragment extends Fragment {
             @Override
             public void onChanged(List<EmployeeExpense> employeeExpenses) {
 
-                if (employeeExpenses!=null)
+                if (employeeExpenses!=null&&employeeExpenses.size()>0)
                 {
                     expenseViewModel.setEmployeeExpenseAtAdapter(employeeExpenses);
                 }
@@ -76,7 +80,17 @@ public class EmployeesExpensesListFragment extends Fragment {
             public void onChanged(EmployeeExpense employeeExpense) {
                 if (employeeExpense!=null)
                 {
-                    Toast.makeText(requireContext(), employeeExpense.getEmpName(), Toast.LENGTH_SHORT).show();
+                    if (!month.isEmpty()&& employeeExpense.getUserId()>0)
+                    {
+                        EmployeesExpensesListFragmentDirections.
+                                ActionEmployeeExpenseFragmentToEmployeeExpenseDetailFragment action=EmployeesExpensesListFragmentDirections.
+                                actionEmployeeExpenseFragmentToEmployeeExpenseDetailFragment();
+                        action.setMonth(month);
+                        action.setUserId((int) employeeExpense.getUserId());
+                        month="";
+                        navController.navigate(action);
+                    }
+
                 }
             }
         });
@@ -87,6 +101,7 @@ public class EmployeesExpensesListFragment extends Fragment {
 
                 if (s!=null)
                 {
+                    expenseViewModel.clearAdapterList();
                     Toast.makeText(requireContext(), ""+s, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -98,7 +113,7 @@ public class EmployeesExpensesListFragment extends Fragment {
 
                 if (s!=null)
                 {
-                    String month= expenseViewModel.getMonth(s);
+                     month= expenseViewModel.getMonth(s);
                     expenseViewModel.fetchEmployeeExpenses(month);
                 }
             }

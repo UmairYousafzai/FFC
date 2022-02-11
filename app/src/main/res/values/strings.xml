@@ -274,6 +274,8 @@
     <string name="team_remarks">Team Remarks</string>
     <string name="action">Action</string>
     <string name="enter_amount">Enter Amount</string>
+    <string name="enter_remarks">Enter Remarks</string>
+    <string name="requested_amount">Requested Amount</string>
 
 
 </resources>

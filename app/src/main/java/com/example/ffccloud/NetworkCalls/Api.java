@@ -21,6 +21,7 @@ import com.example.ffccloud.FilteredDoctorInfomationModel;
 import com.example.ffccloud.model.EmployeeExpense;
 import com.example.ffccloud.model.ExpenseType;
 import com.example.ffccloud.model.GetCustomerResponse;
+import com.example.ffccloud.model.GetEmployeeExpensesDetail;
 import com.example.ffccloud.model.GetLedgerBalanceModel;
 import com.example.ffccloud.model.GetSaleOrderDetail;
 import com.example.ffccloud.model.GetSupplierDetailModel;
@@ -210,7 +211,7 @@ public interface Api {
                                                       @Query("Project_Id") int Project_Id,
                                                       @Query("Sale_Order_Id") int Sale_Order_Id);
 
-    @POST("api/FFCAppApi/GetALLExpenses")
+    @GET("api/FFCAppApi/GetALLExpenses")
     Call<List<ExpenseType>> getExpenseType(@Header("Authorization") String token,
                                            @Query("Company_ID") int companyId,
                                            @Query("Country_ID") int countryId,
@@ -229,6 +230,21 @@ public interface Api {
                                               @Query("Month_Id") String month,
                                               @Query("User_Id") int userID);
 
+ @GET("api/DashboardApi/GetEmpExpenses")
+    Call<List<GetEmployeeExpensesDetail>>  getEmployeeExpensesDetail(@Header("Authorization") String token,
+                                                              @Query("Month_Id") String month,
+                                                              @Query("User_Id") int userID);
 
+    @GET("api/DashboardApi/GetExpPostStatus")
+    Call<UpdateStatus>  updateExpenseStatus(@Query("Company_Id") String Company_Id,
+                                            @Query("Country_Id") String Country_Id,
+                                            @Query("Location_Id") String Location_Id,
+                                            @Query("Project_Id") String Project_Id,
+                                            @Query("Emp_Expenses_Id") String Emp_Expenses_Id,
+                                            @Query("Status_Remarks") String Status_Remarks,
+                                            @Query("Approved_Amount") String Approved_Amount,
+                                            @Query("Action") String Action,
+                                            @Query("UserId") int UserId,
+                                            @Query("Session_Id") int Session_Id );
 }
 

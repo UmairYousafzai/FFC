@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.ffccloud.expense.utils.EmployeeExpensesDetailViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp"
+        tools:context=".expense.EmployeeExpensesDetailFragment"
+        android:background="@color/background_color">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/employee_expense_detail_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/employee_expense_detail_card"
+            android:padding="5dp"
+            app:setAdapter="@{viewModel.adapter}"
+            />
+    </LinearLayout>
+</layout>

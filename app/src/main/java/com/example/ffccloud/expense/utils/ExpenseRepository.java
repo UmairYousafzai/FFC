@@ -1,5 +1,6 @@
 package com.example.ffccloud.expense.utils;
 
+import static com.example.ffccloud.utils.CONSTANTS.EMPLOYEE_EXPENSE_DETAIL_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.EMPLOYEE_EXPENSE_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
 
@@ -14,6 +15,8 @@ import com.example.ffccloud.ExpenseModelClass;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.interfaces.NetworkCallListener;
 import com.example.ffccloud.model.EmployeeExpense;
+import com.example.ffccloud.model.GetEmployeeExpensesDetail;
+import com.example.ffccloud.model.UpdateStatus;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -128,6 +131,91 @@ public class ExpenseRepository {
 
             @Override
             public void onFailure(@NonNull Call<List<EmployeeExpense>> call, @NonNull Throwable t) {
+                callListener.onCallResponse(t.getMessage(),SERVER_ERROR_RESPONSE);
+
+            }
+        });
+    }
+
+    public void getEmployeesExpensesDetails(String token,String month,int userID)
+    {
+        Call<List<GetEmployeeExpensesDetail>> call= ApiClient.getInstance().getApi().getEmployeeExpensesDetail(token,month,userID);
+
+        call.enqueue(new Callback<List<GetEmployeeExpensesDetail>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<GetEmployeeExpensesDetail>> call, @NonNull Response<List<GetEmployeeExpensesDetail>> response) {
+                if (response.isSuccessful())
+                {
+                    if (response.body()!=null)
+                    {
+                        if (response.body().size()>0)
+                        {
+                            callListener.onCallResponse(response.body(), EMPLOYEE_EXPENSE_DETAIL_RESPONSE);
+
+                        }
+                        else
+                        {
+                            callListener.onCallResponse("Nothing Found ",SERVER_ERROR_RESPONSE);
+
+                        }
+                    }
+                    else
+                    {
+                        callListener.onCallResponse("Nothing Found ",SERVER_ERROR_RESPONSE);
+                    }
+                }
+                else
+                {
+                    if (response.errorBody() != null) {
+                        callListener.onCallResponse(response.errorBody().toString(),SERVER_ERROR_RESPONSE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<GetEmployeeExpensesDetail>> call, @NonNull Throwable t) {
+                callListener.onCallResponse(t.getMessage(),SERVER_ERROR_RESPONSE);
+
+            }
+        });
+    }
+
+    public void updateExpense(GetEmployeeExpensesDetail expensesDetail)
+    {
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().updateExpenseStatus("1",
+                "1",
+                "1",
+                "1",
+                String.valueOf(expensesDetail.getEmpExpensesId()),
+                expensesDetail.getStatusRemarks(),
+                String.valueOf(expensesDetail.getApprovedAmount()),
+                );
+
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NonNull Call<UpdateStatus> call, @NonNull Response<UpdateStatus> response) {
+                if (response.isSuccessful())
+                {
+                    if (response.body()!=null)
+                    {
+                        callListener.onCallResponse(response.body().getStrMessage(), SERVER_ERROR_RESPONSE);
+
+                    }
+                    else
+                    {
+                        callListener.onCallResponse("Nothing Found ",SERVER_ERROR_RESPONSE);
+                    }
+                }
+                else
+                {
+                    if (response.errorBody() != null) {
+                        callListener.onCallResponse(response.errorBody().toString(),SERVER_ERROR_RESPONSE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UpdateStatus> call, @NonNull Throwable t) {
                 callListener.onCallResponse(t.getMessage(),SERVER_ERROR_RESPONSE);
 
             }

@@ -26,7 +26,6 @@
             android:background="@drawable/spinner_bg"
             android:elevation="5dp"
             app:queryHint="Type name ...."
-            android:onQueryTextChange="@={employeeExpenseViewModel.queryText}"
             app:iconifiedByDefault="false"
             android:layout_marginBottom="10dp" />
 

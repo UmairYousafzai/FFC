@@ -63,6 +63,12 @@ public class EmployeeExpenseAdapter extends RecyclerView.Adapter<EmployeeExpense
 
     }
 
+    public void clearList()
+    {
+        employeeExpenseList.clear();
+        notifyDataSetChanged();
+    }
+
     public static class EmployeeExpenseViewHolder extends RecyclerView.ViewHolder
     {
         EmployeesExpenseCardBinding mBinding;
