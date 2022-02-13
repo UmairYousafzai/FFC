@@ -1,10 +1,9 @@
 package com.example.ffccloud.model;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.databinding.library.baseAdapters.BR;
 
-import com.example.ffccloud.BR;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,6 +22,7 @@ public class GetEmployeeExpensesDetail extends BaseObservable {
     private double requestedAmount;
     @SerializedName("Approved_Amount")
     @Expose
+    @Bindable
     private double approvedAmount;
     @SerializedName("Expense_Remarks")
     @Expose
@@ -43,7 +43,6 @@ public class GetEmployeeExpensesDetail extends BaseObservable {
     @Expose
     @Bindable
     private String statusRemarks;
-    @Bindable
     private String approvedAmountString;
 
     @Bindable
@@ -140,17 +139,20 @@ public class GetEmployeeExpensesDetail extends BaseObservable {
     }
 
     public void setRequestedAmount(double requestedAmount) {
-        this.requestedAmount = requestedAmount;
+
 
     }
 
-    public double getApprovedAmount() {
-        return approvedAmount;
+    public int getApprovedAmount() {
+        return (int) approvedAmount;
     }
 
-    public void setApprovedAmount(double approvedAmount) {
-        this.approvedAmount = approvedAmount;
-        approvedAmountString = String.valueOf(approvedAmount);
+    public void setApprovedAmount(int approvedAmount) {
+        if (this.approvedAmount!=approvedAmount)
+        {
+            this.approvedAmount = approvedAmount;
+            notifyPropertyChanged(BR.approvedAmount);
+        }
     }
 
     public String getExpenseRemarks() {

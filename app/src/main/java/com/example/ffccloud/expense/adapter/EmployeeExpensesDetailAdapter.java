@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.EmployeeExpenseDetailCardBinding;
 import com.example.ffccloud.expense.utils.EmployeeExpensesDetailViewModel;
 import com.example.ffccloud.model.GetEmployeeExpensesDetail;
@@ -56,14 +54,17 @@ public class EmployeeExpensesDetailAdapter  extends RecyclerView.Adapter<Employe
         GetEmployeeExpensesDetail expensesDetail = expensesDetailList.get(position);
         if (expensesDetail.isApproved())
         {
-            expensesDetail.setAction("Post");
+            expensesDetail.setAction("1");
             holder.mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#ff669900"));
+            holder.mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#ff669900"));
+            holder.mBinding.actionSpinner.setSelection(1);
 
         }
         else if (expensesDetail.isCancelled())
         {
-            expensesDetail.setAction("Cancel");
+            expensesDetail.setAction("2");
             holder.mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#CF0015"));
+            holder.mBinding.actionSpinner.setSelection(2);
 
         }else
         {
@@ -116,11 +117,6 @@ public class EmployeeExpensesDetailAdapter  extends RecyclerView.Adapter<Employe
 
                         }
                         GetEmployeeExpensesDetail expensesDetail = expensesDetailList.get(getAdapterPosition());
-                        if (mBinding.etAmount.getText()!=null && mBinding.etAmount.getText().toString().length()>0)
-                        {
-                            expensesDetail.setApprovedAmount(Double.parseDouble(mBinding.etAmount.getText().toString()));
-
-                        }
                         listener.onItemSelected(expensesDetailList.get(getAdapterPosition()),position);
                     }
                 }

@@ -5,6 +5,7 @@
 
     <data>
         <import type="com.example.ffccloud.utils.CustomBindingAdapter" />
+        <import type="com.example.ffccloud.utils.Converter" />
         <variable
             name="expenseDetail"
             type="com.example.ffccloud.model.GetEmployeeExpensesDetail" />
@@ -131,7 +132,7 @@
                 android:inputType="numberDecimal"
                 android:lines="1"
                 android:singleLine="true"
-                android:text="@{String.valueOf(expenseDetail.approvedAmount),default=23455}" />
+                android:text="@={Converter.intToString(expenseDetail.approvedAmount),default=23455}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

@@ -180,15 +180,17 @@ public class ExpenseRepository {
         });
     }
 
-    public void updateExpense(GetEmployeeExpensesDetail expensesDetail)
+    public void updateExpense(GetEmployeeExpensesDetail expensesDetail,int userID,String token)
     {
-        Call<UpdateStatus> call = ApiClient.getInstance().getApi().updateExpenseStatus("1",
+        Call<UpdateStatus> call = ApiClient.getInstance().getApi().updateExpenseStatus(token,"1",
                 "1",
                 "1",
                 "1",
                 String.valueOf(expensesDetail.getEmpExpensesId()),
                 expensesDetail.getStatusRemarks(),
                 String.valueOf(expensesDetail.getApprovedAmount()),
+                expensesDetail.getAction(),
+                userID,1
                 );
 
         call.enqueue(new Callback<UpdateStatus>() {

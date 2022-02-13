@@ -1,7 +1,10 @@
 package com.example.ffccloud.expense;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,18 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.example.ffccloud.R;
-import com.example.ffccloud.SplashScreen.SplashActivity;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentEmployeeExpensesDetailBinding;
 import com.example.ffccloud.expense.utils.EmployeeExpensesDetailViewModel;
 import com.example.ffccloud.model.GetEmployeeExpensesDetail;
-import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 public class EmployeeExpensesDetailFragment extends Fragment {
 
@@ -82,13 +77,26 @@ public class EmployeeExpensesDetailFragment extends Fragment {
                         {
                             showDialog(expensesDetail);
                         }
+                        else
+                        {
+                            Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
+                        }
 
-                    }else {
-
-                        if (!expensesDetail.getAction().equals("UnApproved"))
+                    }
+                    else if (!expensesDetail.isApproved())
+                    {
+                        if (!expensesDetail.getAction().equals("UnApproved") && !expensesDetail.getAction().equals("1") )
                         {
                             showDialog(expensesDetail);
                         }
+                        else
+                        {
+                            Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -115,8 +123,8 @@ public class EmployeeExpensesDetailFragment extends Fragment {
                 expensesDetail.setProject_Id("1");
                 expensesDetail.setLocation_Id("1");
                 expensesDetail.setSession_Id(1);
-                viewModel.updateExpenseStatus(expensesDetail);
-
+                viewModel.updateExpenseStatus(expensesDetail,userId);
+                alertDialog.dismiss();
             }
         });
         dialogBinding.btnClose.setOnClickListener(new View.OnClickListener() {

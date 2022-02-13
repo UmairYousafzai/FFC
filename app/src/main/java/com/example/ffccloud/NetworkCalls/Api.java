@@ -38,6 +38,7 @@ import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.model.UpdateWorkPlanStatus;
 import com.example.ffccloud.UserModel;
 import com.example.ffccloud.WorkPlanHistory;
+import com.example.ffccloud.model.WorkPlan;
 
 import java.util.List;
 
@@ -236,7 +237,8 @@ public interface Api {
                                                               @Query("User_Id") int userID);
 
     @GET("api/DashboardApi/GetExpPostStatus")
-    Call<UpdateStatus>  updateExpenseStatus(@Query("Company_Id") String Company_Id,
+    Call<UpdateStatus>  updateExpenseStatus(@Header("Authorization") String token,
+                                            @Query("Company_Id") String Company_Id,
                                             @Query("Country_Id") String Country_Id,
                                             @Query("Location_Id") String Location_Id,
                                             @Query("Project_Id") String Project_Id,
@@ -246,5 +248,11 @@ public interface Api {
                                             @Query("Action") String Action,
                                             @Query("UserId") int UserId,
                                             @Query("Session_Id") int Session_Id );
+
+
+    @GET("api/DashboardApi/GetAllPendingWorkPlans")
+    Call<List<WorkPlan>>  getPendingWorkPlan(@Header("Authorization") String token,
+                                             @Query("Month_Id") String month,
+                                             @Query("UserId") int userID);
 }
 

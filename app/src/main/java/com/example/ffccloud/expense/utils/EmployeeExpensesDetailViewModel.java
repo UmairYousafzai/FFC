@@ -1,7 +1,6 @@
 package com.example.ffccloud.expense.utils;
 
 import android.app.Application;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -9,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.ffccloud.expense.adapter.EmployeeExpensesDetailAdapter;
 import com.example.ffccloud.interfaces.NetworkCallListener;
-import com.example.ffccloud.model.EmployeeExpense;
 import com.example.ffccloud.model.GetEmployeeExpensesDetail;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
@@ -45,11 +43,11 @@ public class EmployeeExpensesDetailViewModel extends AndroidViewModel {
             public void onItemSelected(GetEmployeeExpensesDetail expensesDetail ,int position) {
                 if (position==1)
                 {
-                    expensesDetail.setAction("Post");
+                    expensesDetail.setAction(String.valueOf(position));
                 }
                 else if (position==2)
                 {
-                    expensesDetail.setAction("Cancel");
+                    expensesDetail.setAction(String.valueOf(position));
 
                 }
                 else
@@ -105,9 +103,10 @@ public class EmployeeExpensesDetailViewModel extends AndroidViewModel {
         });
     }
 
-    public void updateExpenseStatus(GetEmployeeExpensesDetail expensesDetail)
+    public void updateExpenseStatus(GetEmployeeExpensesDetail expensesDetail,int userID)
     {
-        expenseRepository.updateExpense(expensesDetail);
+        String token = SharedPreferenceHelper.getInstance(getApplication()).getToken();
+        expenseRepository.updateExpense(expensesDetail,userID,token);
     }
 }
 

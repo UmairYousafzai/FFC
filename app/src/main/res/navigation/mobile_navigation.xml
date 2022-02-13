@@ -66,6 +66,14 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             />
+        <action
+            android:id="@+id/action_nav_home_to_workplan_Fragment"
+            app:destination="@id/work_plan_Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
 
 
     </fragment>
@@ -871,6 +879,13 @@
             app:argType="integer"
             android:defaultValue="0"
             />
+    </fragment>
+    <fragment
+        android:id="@+id/work_plan_Fragment"
+        android:name="com.example.ffccloud.workplan.PendingWorkPlansFragment"
+        android:label="Work Plans"
+        >
+
     </fragment>
     <fragment
         android:id="@+id/notificationList"

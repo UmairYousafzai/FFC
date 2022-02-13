@@ -4,12 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/drawable/spinner_bg.xml" value="0.114" />
-        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/employees_expense_card.xml" value="0.18" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/custom_alert_dialog.xml" value="0.209375" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/employee_expense_detail_card.xml" value="0.33" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/employees_expense_card.xml" value="0.22" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_employees_expense_list.xml" value="0.25" />
-        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable/ic_arrow_drop_down.xml" value="0.1285" />
-        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/employee_expense_detail_card.xml" value="0.5148809523809523" />
-        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_employee_expenses_detail.xml" value="0.5148809523809523" />
-        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_employees_expense_list.xml" value="0.28854625550660795" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_pending_work_plans.xml" value="0.3140625" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/route_card.xml" value="0.67" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/work_plan_card.xml" value="0.33" />
       </map>
     </option>
   </component>
