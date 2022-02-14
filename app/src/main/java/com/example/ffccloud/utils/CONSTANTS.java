@@ -44,6 +44,7 @@ public class CONSTANTS {
     public static final int EMPLOYEE_EXPENSE_RESPONSE =  1;
     public static final int EMPLOYEE_EXPENSE_DETAIL_RESPONSE =  3;
     public static final int SERVER_ERROR_RESPONSE =  2;
+    public static final int SERVER_RESPONSE =  5;
     public static final int SERVER_WORK_PLAN_RESPONSE =  4;
 
 

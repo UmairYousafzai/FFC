@@ -392,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
             userViewModel.deleteAllDeliveryModes();
             userViewModel.deleteAllUsers();
             userViewModel.deleteAllExpenseType();
+            userViewModel.deleteAllMenus();
 
             String password = SharedPreferenceHelper.getInstance(this).getUserPassword();
             String url = SharedPreferenceHelper.getInstance(this).getBaseUrl();

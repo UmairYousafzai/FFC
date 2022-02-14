@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.ffccloud.R;
+import com.example.ffccloud.databinding.ActionCustomDialogBinding;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentEmployeeExpensesDetailBinding;
 import com.example.ffccloud.expense.utils.EmployeeExpensesDetailViewModel;
@@ -54,7 +57,6 @@ public class EmployeeExpensesDetailFragment extends Fragment {
 
     private void setupLiveDataListener() {
         viewModel.fetchEmployeeExpenses(month,userId);
-        viewModel.onClick();
 
         viewModel.getServerError().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -69,44 +71,87 @@ public class EmployeeExpensesDetailFragment extends Fragment {
             @Override
             public void onChanged(GetEmployeeExpensesDetail expensesDetail) {
 
+//                if (expensesDetail!=null && !expensesDetail.getAction().isEmpty())
+//                {
+//                    if (!expensesDetail.isCancelled())
+//                    {
+//                        if (!expensesDetail.getAction().equals("UnApproved"))
+//                        {
+//                            showDialog(expensesDetail);
+//                        }
+//                        else
+//                        {
+//                            Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    }
+//                    else if (!expensesDetail.isApproved())
+//                    {
+//                        if (!expensesDetail.getAction().equals("UnApproved") && !expensesDetail.getAction().equals("1") )
+//                        {
+//                            showDialog(expensesDetail);
+//                        }
+//                        else
+//                        {
+//                            Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                    else
+//                    {
+//                        Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//
+//                }
                 if (expensesDetail!=null)
                 {
-                    if (!expensesDetail.isCancelled())
-                    {
-                        if (!expensesDetail.getAction().equals("UnApproved"))
-                        {
-                            showDialog(expensesDetail);
-                        }
-                        else
-                        {
-                            Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                    else if (!expensesDetail.isApproved())
-                    {
-                        if (!expensesDetail.getAction().equals("UnApproved") && !expensesDetail.getAction().equals("1") )
-                        {
-                            showDialog(expensesDetail);
-                        }
-                        else
-                        {
-                            Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    else
-                    {
-                        Toast.makeText(requireContext(), "Action Not Performed Because Of Cancel Expense", Toast.LENGTH_SHORT).show();
-                    }
-
-
+                    showSetActionDialog(expensesDetail);
                 }
 
             }
         });
     }
 
-    public void showDialog(GetEmployeeExpensesDetail expensesDetail)
+    public void showSetActionDialog(GetEmployeeExpensesDetail expensesDetail)
+    {
+
+
+        if (!expensesDetail.isCancelled())
+        {
+            ActionCustomDialogBinding dialogBinding = ActionCustomDialogBinding.inflate(getLayoutInflater());
+            AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(true).create();
+            alertDialog.show();
+            if (expensesDetail.isApproved())
+            {
+                dialogBinding.radioBtnApproved.setVisibility(View.GONE);
+            }
+            dialogBinding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId== R.id.radio_btn_approved)
+                    {
+
+                        expensesDetail.setAction("1");
+                    }
+                    else
+                    {
+
+                        expensesDetail.setAction("2");
+
+                    }
+                    alertDialog.dismiss();
+                    showConfirmationDialog(expensesDetail);
+                }
+            });
+        }
+        else
+        {
+            Toast.makeText(requireContext(), "Expense is already cancel." , Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void showConfirmationDialog(GetEmployeeExpensesDetail expensesDetail)
     {
 
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(getLayoutInflater());

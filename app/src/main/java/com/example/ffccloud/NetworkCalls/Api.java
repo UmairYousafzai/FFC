@@ -212,7 +212,7 @@ public interface Api {
                                                       @Query("Project_Id") int Project_Id,
                                                       @Query("Sale_Order_Id") int Sale_Order_Id);
 
-    @GET("api/FFCAppApi/GetALLExpenses")
+    @POST("api/FFCAppApi/GetALLExpenses")
     Call<List<ExpenseType>> getExpenseType(@Header("Authorization") String token,
                                            @Query("Company_ID") int companyId,
                                            @Query("Country_ID") int countryId,
@@ -254,5 +254,17 @@ public interface Api {
     Call<List<WorkPlan>>  getPendingWorkPlan(@Header("Authorization") String token,
                                              @Query("Month_Id") String month,
                                              @Query("UserId") int userID);
+
+
+    @GET("api/WorkPlanApiController/GetPostStatus")
+    Call<UpdateStatus>  updatePendingWorkPlanStatus(@Header("Authorization") String token,
+                                            @Query("Company_Id") String Company_Id,
+                                            @Query("Country_Id") String Country_Id,
+                                            @Query("Location_Id") String Location_Id,
+                                            @Query("Project_Id") String Project_Id,
+                                            @Query("Work_Plan_MId") String Work_Plan_MId,
+                                            @Query("Action") String Action,
+                                            @Query("UserId") int UserId,
+                                            @Query("Session_Id") int Session_Id );
 }
 

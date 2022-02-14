@@ -53,10 +53,10 @@
                 android:textColor="@color/APP_Theme_Color"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:gravity="center"
+                android:gravity="start"
 
-                android:layout_marginTop="5dp"
-                app:layout_constraintBottom_toTopOf="@+id/tv"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_date"
                 app:layout_constraintEnd_toEndOf="@id/tv"
                 app:layout_constraintHorizontal_bias="0.5"
 
@@ -68,58 +68,56 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pending for approval"
-                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/footer_view"
                 app:layout_constraintStart_toEndOf="@id/emp_img"
                 app:layout_constraintEnd_toStartOf="@id/btn_done"
-                app:layout_constraintTop_toBottomOf="@+id/tv_emp_name" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_date"
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/tv_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{workPlan.workPlanDate,default=jan2022}"
-                android:gravity="center"
-                android:textColor="@color/APP_Theme_Color"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="@id/tv_emp_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv"
-                app:layout_constraintBottom_toTopOf="@id/btn_cancel"
+                android:gravity="start"
+                android:layout_marginVertical="5dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_emp_name"
+                app:layout_constraintStart_toStartOf="@id/tv"
+                app:layout_constraintEnd_toEndOf="@id/tv"
+                app:layout_constraintBottom_toTopOf="@id/tv"
                 android:layout_marginEnd="5dp" />
 
             <ImageButton
                 android:id="@+id/btn_done"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/tick_two"
                 android:background="@color/white"
-                android:tint="@android:color/holo_green_dark"
+                android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:minWidth="35dp"
-                app:layout_constraintTop_toTopOf="@id/btn_cancel"
+                android:onClick="@{()->viewModel.onClick(workPlan,1)}"
+                android:src="@drawable/tick_two"
+                android:tint="@android:color/holo_green_dark"
+
                 app:layout_constraintBottom_toBottomOf="@id/btn_cancel"
                 app:layout_constraintEnd_toStartOf="@id/btn_cancel"
-                app:layout_constraintStart_toStartOf="@id/tv_date"
-                android:onClick="@{()->viewModel.onClick(workPlan,1)}"
-                />
+                app:layout_constraintStart_toEndOf="@id/tv"
+                app:layout_constraintTop_toTopOf="@id/btn_cancel" />
 
             <ImageButton
                 android:id="@+id/btn_cancel"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_close"
                 android:background="@color/white"
-                android:tint="@color/red"
-                android:minWidth="35dp"
+                android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:layout_marginEnd="5dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/footer_view"
-                app:layout_constraintStart_toEndOf="@id/btn_done"
                 android:onClick="@{()->viewModel.onClick(workPlan,2)}"
-                />
+                android:src="@drawable/ic_close"
+                android:tint="@color/red"
+                app:layout_constraintVertical_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/btn_done"
+                app:layout_constraintBottom_toTopOf="@id/footer_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/header_view" />
 
             <View
                 android:id="@+id/footer_view"

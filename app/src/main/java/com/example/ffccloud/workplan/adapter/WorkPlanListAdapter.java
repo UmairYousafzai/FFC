@@ -64,9 +64,9 @@ public class WorkPlanListAdapter extends RecyclerView.Adapter<WorkPlanListAdapte
 
     }
 
-    public void clearList()
+    public void removeFromList(WorkPlan workPlan)
     {
-        workPlanList.clear();
+        workPlanList.remove(workPlan);
         notifyDataSetChanged();
     }
 

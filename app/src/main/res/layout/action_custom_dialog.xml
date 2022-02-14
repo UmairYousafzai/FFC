@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/action"
+        android:textStyle="bold"
+        android:textColor="@color/APP_Theme_Color"
+        android:textSize="25sp"
+        android:padding="10dp"
+        android:gravity="center"
+        android:background="@color/background_color"
+        />
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <RadioButton
+            android:id="@+id/radio_btn_approved"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/approved"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@android:color/holo_green_dark"
+            android:buttonTint="@color/white"
+            />
+        <RadioButton
+            android:id="@+id/radio_btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@color/red"
+            android:buttonTint="@color/white"
+            />
+
+    </RadioGroup>
+
+
+</LinearLayout>

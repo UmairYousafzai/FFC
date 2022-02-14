@@ -1,12 +1,14 @@
 package com.example.ffccloud.workplan.repository;
 
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
+import static com.example.ffccloud.utils.CONSTANTS.SERVER_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_WORK_PLAN_RESPONSE;
 
 import androidx.annotation.NonNull;
 
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.interfaces.NetworkCallListener;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.model.WorkPlan;
 
 import java.util.List;
@@ -77,5 +79,53 @@ public class WorkPlanRepository {
                 listener.onCallResponse(t.getMessage(),SERVER_ERROR_RESPONSE);
             }
         });
+    }
+
+    public void UpdateWorkPlanStatus(String action, int userID, String token,String workPlanID)
+    {
+        Call<UpdateStatus> call= ApiClient.getInstance().getApi().updatePendingWorkPlanStatus(token,"1",
+                "1", "1","1",workPlanID,action,userID,1);
+
+        call.enqueue(new Callback<UpdateStatus>() {
+            @Override
+            public void onResponse(@NonNull Call<UpdateStatus> call, @NonNull Response<UpdateStatus> response) {
+                if (response.isSuccessful())
+                {
+                    if (response.body()!=null)
+                    {
+
+                        if (response.body().getStatus()==1)
+                        {
+                            listener.onCallResponse(response.body().getStrMessage(),SERVER_RESPONSE );
+
+                        }
+                        else
+                        {
+                            listener.onCallResponse(response.message(),SERVER_ERROR_RESPONSE);
+
+                        }
+
+                    }
+                    else
+                    {
+                        listener.onCallResponse(response.message(),SERVER_ERROR_RESPONSE);
+                    }
+                }
+                else
+                {
+                    if (response.errorBody() != null) {
+                        listener.onCallResponse(response.errorBody().toString(), SERVER_ERROR_RESPONSE);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UpdateStatus> call, @NonNull Throwable t) {
+                listener.onCallResponse(t.getMessage(), SERVER_ERROR_RESPONSE);
+
+            }
+        });
+
     }
 }

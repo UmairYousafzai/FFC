@@ -1,6 +1,6 @@
 package com.example.ffccloud.Target.utils;
 
-import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 public class DoctorRepository {
 
     private FFC_DAO mDao;
-    Application application;
+
     private final LiveData<List<FilteredDoctoredModel>> allFilterDoctor;
     private final LiveData<List<ScheduleModel>> allSchedule;
     private Executor executor= Executors.newSingleThreadExecutor();
@@ -26,10 +26,9 @@ public class DoctorRepository {
 
 
 
-    public DoctorRepository(Application application) {
-        FfcDatabase database = FfcDatabase.getInstance(application);
+    public DoctorRepository(Context context) {
+        FfcDatabase database = FfcDatabase.getInstance(context);
         mDao = database.dao();
-        this.application = application;
         allFilterDoctor = mDao.getAllFilterDoctor();
         allSchedule = mDao.getAllSchedule();
 

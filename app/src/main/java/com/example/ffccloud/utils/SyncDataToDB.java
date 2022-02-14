@@ -63,15 +63,10 @@ public class SyncDataToDB {
 
                     if(response.body()!=null)
                     {
-                        if (response.body().size()==0)
-                        {
-                            progressDialog.dismiss();
-
-                        }
-                        else {
+                        if (response.body().size() != 0) {
                             customerRepository.insertCustomers(response.body());
-                            progressDialog.dismiss();
                         }
+                        progressDialog.dismiss();
 
                     }
                     else
@@ -120,8 +115,13 @@ public class SyncDataToDB {
                     progressDialog.dismiss();
                     Toast.makeText(context, "Work Plan Added.\n Number Of Work Plan Added Is : " + (doctorModelList != null ? doctorModelList.size() : 0), Toast.LENGTH_LONG).show();
                 } else {
-                    CustomsDialog.getInstance().loginAgain(activity,context);
-                    progressDialog.dismiss();
+                    if (response.message().equals("UnAuthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(activity,context);
+                    }
+                    if (response.errorBody() != null) {
+                        Toast.makeText(context, "" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    }                    progressDialog.dismiss();
 
                 }
             }
@@ -156,8 +156,13 @@ public class SyncDataToDB {
                     classificationModelList = response.body();
                     repository.InsertClassifications(classificationModelList);
                 } else {
-                    CustomsDialog.getInstance().loginAgain(activity,context);
-                }
+                    if (response.message().equals("UnAuthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(activity,context);
+                    }
+                    if (response.errorBody() != null) {
+                        Toast.makeText(context, "" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    }                }
                 progressDialog.dismiss();
 
             }
@@ -180,8 +185,13 @@ public class SyncDataToDB {
                     gradingModelList = response.body();
                     repository.InsertGrades(gradingModelList);
                 } else {
-                    CustomsDialog.getInstance().loginAgain(activity,context);
-                }
+                    if (response.message().equals("UnAuthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(activity,context);
+                    }
+                    if (response.errorBody() != null) {
+                        Toast.makeText(context, "" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    }                }
                 progressDialog.dismiss();
 
             }
@@ -204,8 +214,13 @@ public class SyncDataToDB {
                     qualificationModelList = response.body();
                     repository.InsertQualifications(qualificationModelList);
                 } else {
-                    CustomsDialog.getInstance().loginAgain(activity,context);
-                }
+                    if (response.message().equals("UnAuthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(activity,context);
+                    }
+                    if (response.errorBody() != null) {
+                        Toast.makeText(context, "" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    }                }
                 progressDialog.dismiss();
 
             }
@@ -226,8 +241,13 @@ public class SyncDataToDB {
                     List<DeliveryModeModel> list = response.body();
                     repository.InsertDeliveryModes(list);
                 } else {
-                    CustomsDialog.getInstance().loginAgain(activity,context);
-                }
+                    if (response.message().equals("UnAuthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(activity,context);
+                    }
+                    if (response.errorBody() != null) {
+                        Toast.makeText(context, "" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    }                }
                 progressDialog.dismiss();
             }
 
@@ -251,8 +271,13 @@ public class SyncDataToDB {
                         Toast.makeText(context, "Expense types not found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(context, "" + response.message(), Toast.LENGTH_SHORT).show();
-                    CustomsDialog.getInstance().loginAgain(activity,context);
+                    if (response.message().equals("UnAuthorized"))
+                    {
+                        CustomsDialog.getInstance().loginAgain(activity,context);
+                    }
+                    if (response.errorBody() != null) {
+                        Toast.makeText(context, "" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 progressDialog.dismiss();

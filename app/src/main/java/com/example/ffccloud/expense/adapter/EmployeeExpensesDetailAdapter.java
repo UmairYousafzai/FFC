@@ -1,10 +1,9 @@
 package com.example.ffccloud.expense.adapter;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +21,8 @@ public class EmployeeExpensesDetailAdapter  extends RecyclerView.Adapter<Employe
     private LayoutInflater layoutInflater;
     private EmployeeExpensesDetailViewModel viewModel;
     private OnClick listener;
+    private boolean check = false;
+    private  int number;
 
     public void setOnClickListener(OnClick listener)
     {
@@ -55,21 +56,23 @@ public class EmployeeExpensesDetailAdapter  extends RecyclerView.Adapter<Employe
         if (expensesDetail.isApproved())
         {
             expensesDetail.setAction("1");
-            holder.mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#ff669900"));
-            holder.mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#ff669900"));
-            holder.mBinding.actionSpinner.setSelection(1);
+            holder.mBinding.btnAction.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff669900")));
+            holder.mBinding.btnAction.setText("Approved");
 
         }
         else if (expensesDetail.isCancelled())
         {
             expensesDetail.setAction("2");
-            holder.mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#CF0015"));
-            holder.mBinding.actionSpinner.setSelection(2);
+            holder.mBinding.btnAction.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CF0015")));
+
+//            holder.mBinding.btnAction.setBackgroundColor(Color.parseColor("#CF0015"));
+            holder.mBinding.btnAction.setText("Cancel");
 
         }else
         {
-            expensesDetail.setAction("UnApproved");
-            holder.mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#286A9C"));
+            expensesDetail.setAction("0");
+            holder.mBinding.btnAction.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#286A9C")));
+            holder.mBinding.btnAction.setText("UnApproved");
 
         }
         holder.mBinding.setExpenseDetail(expensesDetail);
@@ -88,6 +91,7 @@ public class EmployeeExpensesDetailAdapter  extends RecyclerView.Adapter<Employe
         if (list != null)
         {
             expensesDetailList.addAll(list);
+            number= expensesDetailList.size();
         }
         notifyDataSetChanged();
     }
@@ -100,32 +104,43 @@ public class EmployeeExpensesDetailAdapter  extends RecyclerView.Adapter<Employe
             super(binding.getRoot());
 
             mBinding= binding;
+//            if (check)
+//            {
+//                mBinding.actionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        if (position!=0&&listener!=null)
+//                        {
+//                            if (position==1)
+//                            {
+//                                mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#ff669900"));
+//
+//                            }
+//                            else
+//                            {
+//                                mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#CF0015"));
+//
+//                            }
+//
+//                            GetEmployeeExpensesDetail expensesDetail = expensesDetailList.get(getAdapterPosition());
+//                            listener.onItemSelected(expensesDetailList.get(getAdapterPosition()),position);
+//
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//
+//                    }
+//                });
+//            }
+//            else
+//            {
+//                check= true;
+//            }
 
-            mBinding.actionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position!=0&&listener!=null)
-                    {
-                        if (position==1)
-                        {
-                           mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#ff669900"));
 
-                        }
-                        else
-                        {
-                          mBinding.actionSpinner.setBackgroundColor(Color.parseColor("#CF0015"));
-
-                        }
-                        GetEmployeeExpensesDetail expensesDetail = expensesDetailList.get(getAdapterPosition());
-                        listener.onItemSelected(expensesDetailList.get(getAdapterPosition()),position);
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
 
 
         }

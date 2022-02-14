@@ -1,6 +1,7 @@
 package com.example.ffccloud.workplan.viewmodel;
 
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
+import static com.example.ffccloud.utils.CONSTANTS.SERVER_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_WORK_PLAN_RESPONSE;
 
 import android.app.Application;
@@ -30,6 +31,7 @@ public class WorkPlanViewModel extends AndroidViewModel {
     private final HashMap<String, String> monthHashMap;
     private final List<String> monthList;
     private final WorkPlanListAdapter adapter;
+    private WorkPlan workPlan;
 
 
 
@@ -38,6 +40,7 @@ public class WorkPlanViewModel extends AndroidViewModel {
         monthList = new ArrayList<>();
         monthHashMap= new HashMap<>();
         serverErrorLiveData = new MutableLiveData<>();
+        workPlan= new WorkPlan();
         setUpMonthSpinner();
         customSpinnerAdapter= new ArrayAdapter<>(getApplication(), android.R.layout.simple_spinner_dropdown_item,monthList);
         adapter= new WorkPlanListAdapter(this);
@@ -85,6 +88,11 @@ public class WorkPlanViewModel extends AndroidViewModel {
                         serverErrorLiveData.setValue((String) response);
                         adapter.setWorkPlanList(null);
                     }
+                    else if (key==SERVER_RESPONSE)
+                    {
+                        serverErrorLiveData.setValue((String) response);
+                        adapter.removeFromList(workPlan);
+                    }
                 }
             }
         });
@@ -101,7 +109,10 @@ public class WorkPlanViewModel extends AndroidViewModel {
 
     public void onClick(WorkPlan workPlan,int action)
     {
-
+        this.workPlan= workPlan;
+        String  token= SharedPreferenceHelper.getInstance(getApplication()).getToken();
+        int userID = SharedPreferenceHelper.getInstance(getApplication()).getUserID();
+        WorkPlanRepository.getInstance().UpdateWorkPlanStatus(String.valueOf(action),userID,token,String.valueOf(workPlan.getWorkPlanMId()));
     }
 
     public void setUpMonthSpinner()

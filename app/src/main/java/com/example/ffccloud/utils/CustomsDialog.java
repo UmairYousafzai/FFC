@@ -10,10 +10,14 @@ import android.view.View;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.example.ffccloud.Customer.utils.CustomerRepository;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.R;
 import com.example.ffccloud.SplashScreen.SplashActivity;
+import com.example.ffccloud.Target.utils.DoctorRepository;
+import com.example.ffccloud.Target.utils.TargetRepository;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
+import com.example.ffccloud.notification.NotificationRepository;
 
 public class CustomsDialog {
 
@@ -70,6 +74,10 @@ public class CustomsDialog {
     public void loginAgain(Activity activity,Context context) {
         FfcDatabase ffcDatabase;
         ffcDatabase = FfcDatabase.getInstance(activity.getBaseContext());
+        DoctorRepository doctorRepository= new DoctorRepository(context);
+        TargetRepository targetRepository = new TargetRepository(context);
+        UserRepository userRepository = new UserRepository(context);
+        CustomerRepository customerRepository = new CustomerRepository(context);
 
 
         CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(activity.getLayoutInflater());
@@ -80,9 +88,27 @@ public class CustomsDialog {
         dialogBinding.btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ffcDatabase.dao().deleteAllDeliveryModes();
+                targetRepository.DeleteAllDoctor();
 
-                SharedPreferenceHelper.getInstance(context).setLogin_State(false);
+                customerRepository.deleteCustomers();
+                doctorRepository.deleteAllSchedule();
+                doctorRepository.DeleteAllFilterDoctor();
+
+                NotificationRepository.getInstance(context).deleteAllNotifications();
+                userRepository.deleteAllMenus();
+                userRepository.DeleteAllGrades();
+                userRepository.DeleteAllQualification();
+                userRepository.DeleteAllClassification();
+                userRepository.DeleteAllDeliveryModes();
+                userRepository.deleteAllUser();
+                userRepository.DeleteAllExpenseType();
+                userRepository.deleteAllMenus();
+
+                String password = SharedPreferenceHelper.getInstance(context).getUserPassword();
+                String url = SharedPreferenceHelper.getInstance(context).getBaseUrl();
+                SharedPreferenceHelper.getInstance(context).deleteSharedPreference();
+                SharedPreferenceHelper.getInstance(context).setUserPassword(password);
+                SharedPreferenceHelper.getInstance(context).setBaseUrl(url);
                 Intent intent = new Intent(context, SplashActivity.class);
                 activity.startActivity(intent);
             }

@@ -4,9 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/drawable/spinner_bg.xml" value="0.114" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/action_custom_dialog.xml" value="0.3140625" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/custom_alert_dialog.xml" value="0.209375" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/employee_expense_detail_card.xml" value="0.33" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/employees_expense_card.xml" value="0.22" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/expense_card.xml" value="0.33" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_employees_expense_list.xml" value="0.25" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_pending_work_plans.xml" value="0.3140625" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/route_card.xml" value="0.67" />
