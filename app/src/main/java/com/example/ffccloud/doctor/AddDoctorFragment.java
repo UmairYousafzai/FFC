@@ -218,6 +218,9 @@ public class AddDoctorFragment extends Fragment {
                 if (s!=null)
                 {
                     locationString = s.toString();
+                    mBinding.location.setChecked(false);
+                    mBinding.location.setText("Enable Location");
+                    locationAddress="";
                 }
             }
         });
@@ -272,6 +275,7 @@ public class AddDoctorFragment extends Fragment {
                                 locationString="";
                                 mBinding.location.setText("Enable Location");
                                 mBinding.location.setChecked(false);
+                                mBinding.idCoordinates.setText("");
                             }
 
 

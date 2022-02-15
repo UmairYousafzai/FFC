@@ -1,4 +1,4 @@
-package com.example.ffccloud.workplan.viewmodel;
+package com.example.ffccloud.dashboard.workplan.viewmodel;
 
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_RESPONSE;
@@ -15,8 +15,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.ffccloud.interfaces.NetworkCallListener;
 import com.example.ffccloud.model.WorkPlan;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
-import com.example.ffccloud.workplan.adapter.WorkPlanListAdapter;
-import com.example.ffccloud.workplan.repository.WorkPlanRepository;
+import com.example.ffccloud.dashboard.workplan.adapter.WorkPlanListAdapter;
+import com.example.ffccloud.dashboard.workplan.repository.WorkPlanRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;

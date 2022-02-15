@@ -46,6 +46,7 @@ public class CONSTANTS {
     public static final int SERVER_ERROR_RESPONSE =  2;
     public static final int SERVER_RESPONSE =  5;
     public static final int SERVER_WORK_PLAN_RESPONSE =  4;
+    public static final int SERVER_CUSTOMER_RESPONSE =  6;
 
 
 }

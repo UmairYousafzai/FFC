@@ -9,7 +9,7 @@
         android:id="@+id/nav_home"
         android:name="com.example.ffccloud.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_nav_home_to_nav_start_day"
             app:destination="@id/nav_start_day"
@@ -23,8 +23,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_nav_home_to_fragment_menu"
             app:destination="@id/fragment_menu"
@@ -32,15 +31,14 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_nav_home_to_nav_target_sub_menu"
             app:destination="@id/nav_target_sub_menu"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_nav_home_to_doctorListFragment"
             app:destination="@id/doctorListFragment" />
@@ -64,33 +62,38 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_nav_home_to_workplan_Fragment"
             app:destination="@id/work_plan_Fragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_nav_home_to_suggested_customer_Fragment"
+            app:destination="@id/suggested_customer_Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
 
 
     </fragment>
 
     <fragment
         android:id="@+id/employeeExpenseFragment"
-        android:name="com.example.ffccloud.expense.EmployeesExpensesListFragment"
+        android:name="com.example.ffccloud.dashboard.expense.EmployeesExpensesListFragment"
         android:label="Expenses"
-        tools:layout="@layout/fragment_employees_expense_list" >
+        tools:layout="@layout/fragment_employees_expense_list">
         <action
             android:id="@+id/action_employeeExpenseFragment_to_employeeExpenseDetailFragment"
             app:destination="@id/employee_expense_detail_Fragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/nav_gallery"
@@ -108,7 +111,7 @@
         android:id="@+id/nav_start_day"
         android:name="com.example.ffccloud.TargetMenu.StartDayFragment"
         android:label="Start Day"
-        tools:layout="@layout/fragment_start_day" >
+        tools:layout="@layout/fragment_start_day">
         <action
             android:id="@+id/action_nav_start_day_to_nav_target_main"
             app:destination="@id/nav_target_main"
@@ -124,14 +127,14 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_target_main"
         android:name="com.example.ffccloud.TargetMenu.TargetMainFragment"
         android:label="Target Main"
-        tools:layout="@layout/fragment_target_main" >
+        tools:layout="@layout/fragment_target_main">
         <action
             android:id="@+id/action_nav_target_main_to_nav_target_sub_menu"
             app:destination="@id/nav_target_sub_menu"
@@ -140,7 +143,7 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/nav_home"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
 
         <action
@@ -151,7 +154,7 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/nav_home"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_nav_target_main_to_showRouteFragment"
             app:destination="@id/showRouteFragment" />
@@ -161,7 +164,7 @@
         android:id="@+id/nav_target_sub_menu"
         android:name="com.example.ffccloud.Target.TargetPreMenuFragment"
         android:label="Target Sub Menu"
-        tools:layout="@layout/fragment_target_sub_menu" >
+        tools:layout="@layout/fragment_target_sub_menu">
         <action
             android:id="@+id/action_nav_target_sub_menu_to_nav_target"
             app:destination="@id/target_fragment"
@@ -173,15 +176,14 @@
             />
         <action
             android:id="@+id/action_nav_target_sub_menu_to_fragment_menu"
-            app:destination="@id/fragment_menu"
-            />
+            app:destination="@id/fragment_menu" />
     </fragment>
 
     <fragment
         android:id="@+id/target_fragment"
         android:name="com.example.ffccloud.Target.TargetFragment"
         android:label="Target"
-        tools:layout="@layout/fragment_target" >
+        tools:layout="@layout/fragment_target">
         <action
             android:id="@+id/action_target_to_targetPostMenuFragment"
             app:destination="@id/targetPostMenuFragment"
@@ -208,12 +210,12 @@
         android:id="@+id/nav_history"
         android:name="com.example.ffccloud.Target.Visit.HistoryFragment"
         android:label="History"
-        tools:layout="@layout/fragment_history" >
+        tools:layout="@layout/fragment_history">
 
         <argument
             android:name="doc_id"
-            app:argType="long"
-            android:defaultValue="0L" />
+            android:defaultValue="0L"
+            app:argType="long" />
     </fragment>
 
     <fragment
@@ -227,7 +229,7 @@
         android:id="@+id/fragment_menu"
         android:name="com.example.ffccloud.TargetMenu.TargetMenuFragment"
         android:label="Office"
-        tools:layout="@layout/fragment_target_menu" >
+        tools:layout="@layout/fragment_target_menu">
         <action
             android:id="@+id/action_fragment_menu_to_nav_target_sub_menu"
             app:destination="@id/nav_target_sub_menu"
@@ -236,12 +238,12 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/nav_home"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <argument
             android:name="selectedMenu"
+            android:defaultValue=""
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="" />
+            app:nullable="true" />
         <action
             android:id="@+id/action_fragment_menu_to_showRouteFragment"
             app:destination="@id/showRouteFragment" />
@@ -281,21 +283,20 @@
         android:id="@+id/nav_attendance"
         android:name="com.example.ffccloud.AttendanceActivity.AttendanceFragment"
         android:label="Attendance"
-        tools:layout="@layout/fragment_attendance" >
+        tools:layout="@layout/fragment_attendance">
         <action
             android:id="@+id/action_nav_attendance_to_nav_target_main"
             app:destination="@id/nav_target_main"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/targetPostMenuFragment"
         android:name="com.example.ffccloud.Target.TargetFullInfoFragment"
         android:label="Post Menu"
-        tools:layout="@layout/fragment_target_full_info" >
+        tools:layout="@layout/fragment_target_full_info">
         <argument
             android:name="DoctorModel"
             app:argType="com.example.ffccloud.DoctorModel" />
@@ -305,23 +306,21 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_TargetFullInfoFragment_to_MapFragment"
             app:destination="@id/mapsFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_targetPostMenuFragment_to_nav_history"
             app:destination="@id/nav_history"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
 
 
     </fragment>
@@ -329,7 +328,7 @@
         android:id="@+id/addworkPlanFragment"
         android:name="com.example.ffccloud.Target.AddworkPlanFragment"
         android:label="Add Work Plan"
-        tools:layout="@layout/fragment_addwork_plan" >
+        tools:layout="@layout/fragment_addwork_plan">
         <action
             android:id="@+id/action_addworkPlanFragment_to_target_fragment"
             app:destination="@id/target_fragment"
@@ -349,16 +348,16 @@
             app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="areaIds"
-            app:argType="string"
-            android:defaultValue="none" />
+            android:defaultValue="none"
+            app:argType="string" />
         <argument
             android:name="areaTittles"
-            app:argType="string"
-            android:defaultValue="none" />
+            android:defaultValue="none"
+            app:argType="string" />
         <argument
             android:name="key"
-            app:argType="integer"
-            android:defaultValue="1" />
+            android:defaultValue="1"
+            app:argType="integer" />
 
 
     </fragment>
@@ -366,27 +365,23 @@
         android:id="@+id/addWorkPlanDialogFragment"
         android:name="com.example.ffccloud.Target.AddWorkPlanDialogFragment"
         android:label="AddWorkPlanDialogFragment"
-        tools:layout="@layout/custom_add_workplan_dialog"
-        >
+        tools:layout="@layout/custom_add_workplan_dialog">
         <argument
             android:name="key"
-            app:argType="integer"
             android:defaultValue="1"
-            />
+            app:argType="integer" />
         <argument
             android:name="regionID"
-            app:argType="integer"
             android:defaultValue="0"
-            />
+            app:argType="integer" />
         <argument
             android:name="ClientType"
-            app:argType="string"
             android:defaultValue="none"
-            />
+            app:argType="string" />
         <argument
             android:name="dataIds"
-            app:argType="string"
-            android:defaultValue="none" />
+            android:defaultValue="none"
+            app:argType="string" />
 
 
     </dialog>
@@ -394,7 +389,7 @@
         android:id="@+id/doctorListFragment"
         android:name="com.example.ffccloud.Target.DoctorListFragment"
         android:label="Doctor List"
-        tools:layout="@layout/fragment_doctor_list" >
+        tools:layout="@layout/fragment_doctor_list">
         <action
             android:id="@+id/action_doctorListFragment_to_filteredDocFullInfoFragment"
             app:destination="@id/filteredDocFullInfoFragment"
@@ -402,53 +397,52 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_doctorListFragment_to_doctorFormFragment"
             app:destination="@id/doctorFormFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
-    </fragment><action android:id="@+id/action_global_doctorListFragment" app:destination="@id/doctorListFragment"/>
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_doctorListFragment"
+        app:destination="@id/doctorListFragment" />
     <fragment
         android:id="@+id/filteredDocFullInfoFragment"
         android:name="com.example.ffccloud.Target.FilteredDocFullInfoFragment"
         android:label="Doctor Info"
-        tools:layout="@layout/fragment_filtered_doc_full_info" >
+        tools:layout="@layout/fragment_filtered_doc_full_info">
         <argument
             android:name="doctorId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_filteredDocFullInfoFragment_to_doctorFormFragment"
             app:destination="@id/doctorFormFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/doctorFormFragment"
         android:name="com.example.ffccloud.Target.DoctorFormFragment"
         android:label="Doctor Form"
-        tools:layout="@layout/fragment_doctor_form" >
+        tools:layout="@layout/fragment_doctor_form">
         <action
             android:id="@+id/action_doctorFormFragment_to_addScheduleFragment"
             app:destination="@id/addScheduleFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="filter_doc"
+            android:defaultValue="@null"
             app:argType="com.example.ffccloud.FilteredDoctorInfomationModel"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
 
 
     </fragment>
@@ -456,27 +450,27 @@
         android:id="@+id/addScheduleFragment"
         android:name="com.example.ffccloud.Target.Schedule.AddScheduleFragment"
         android:label="Add Schedule"
-        tools:layout="@layout/fragment_add_schedule" >
+        tools:layout="@layout/fragment_add_schedule">
         <argument
             android:name="doctorToSave"
+            android:defaultValue="@null"
             app:argType="com.example.ffccloud.SaveDoctorModel"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/showRouteFragment"
         android:name="com.example.ffccloud.TargetMenu.ShowRouteFragment"
         android:label="Routes"
-        tools:layout="@layout/fragment_show_route" >
+        tools:layout="@layout/fragment_show_route">
         <action
             android:id="@+id/action_showRouteFragment_to_nav_home"
             app:destination="@id/nav_home"
-            app:popUpTo="@+id/nav_home"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@+id/nav_home"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/activityTaskFragment"
@@ -485,8 +479,8 @@
         tools:layout="@layout/fragment_activity_task">
         <argument
             android:name="activity_type"
-            app:argType="string"
-            android:defaultValue=" " />
+            android:defaultValue=" "
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/meetingFragment"
@@ -500,16 +494,13 @@
         tools:layout="@layout/fragment_maps">
         <argument
             android:name="coordinates"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
         <argument
             android:name="workPlanName"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
-
-
-
 
 
     <fragment
@@ -521,14 +512,14 @@
         android:id="@+id/usersListFragment"
         android:name="com.example.ffccloud.Tracking.UsersListFragment"
         android:label="Users "
-        tools:layout="@layout/fragment_users_list" >
+        tools:layout="@layout/fragment_users_list">
         <action
             android:id="@+id/action_usersListFragment_to_trackerFragment"
             app:destination="@id/trackerFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/locationRequestFragment"
@@ -539,83 +530,83 @@
         android:id="@+id/trackerFragment"
         android:name="com.example.ffccloud.Tracking.TrackerFragment"
         android:label="Tracker"
-        tools:layout="@layout/fragment_tracker" >
+        tools:layout="@layout/fragment_tracker">
         <argument
             android:name="recevierID"
+            android:defaultValue=" "
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue=" "/>
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/chatUserListFragment"
         android:name="com.example.ffccloud.Messages.ChatUserListFragment"
         android:label="Chats"
-        tools:layout="@layout/fragment_chat_user_list" >
+        tools:layout="@layout/fragment_chat_user_list">
         <action
             android:id="@+id/action_chatUserListFragment_to_chatFragment"
             app:destination="@id/chatFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.example.ffccloud.Messages.ChatFragment"
         android:label="Chat"
-        tools:layout="@layout/fragment_chat" >
+        tools:layout="@layout/fragment_chat">
         <argument
             android:name="recevierID"
+            android:defaultValue=" "
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue=" "/>
+            app:nullable="true" />
         <argument
             android:name="recevierUserName"
+            android:defaultValue=" "
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue=" "/>
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/addCustomerFragment"
         android:name="com.example.ffccloud.Customer.AddCustomerFragment"
         android:label="Add Customer"
-        tools:layout="@layout/fragment_add_customer" >
+        tools:layout="@layout/fragment_add_customer">
         <argument
             android:name="customerCode"
+            android:defaultValue=" "
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue=" " />
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/customerListFragment"
         android:name="com.example.ffccloud.Customer.CustomerListFragment"
         android:label="Customer List"
-        tools:layout="@layout/fragment_customer_list" >
+        tools:layout="@layout/fragment_customer_list">
         <action
             android:id="@+id/action_customerListFragment_to_addCustomerFragment"
             app:destination="@id/addCustomerFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
 
         <argument
             android:name="CallingFragmentKey"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/salesOrderListFragment"
         android:name="com.example.ffccloud.salesOrder.SalesOrderListFragment"
         android:label="Sales Order"
-        tools:layout="@layout/fragment_sales_order_list" >
+        tools:layout="@layout/fragment_sales_order_list">
         <action
             android:id="@+id/action_salesOrderListFragment_to_customerListFragment"
             app:destination="@id/customerListFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_salesOrderListFragment_to_saleOrderFormFragment"
             app:destination="@id/saleOrderFormFragment" />
@@ -624,109 +615,108 @@
         android:id="@+id/saleOrderFormFragment"
         android:name="com.example.ffccloud.salesOrder.SaleOrderFormFragment"
         android:label="Sales Order Form"
-        tools:layout="@layout/fragment_sale_order_form" >
+        tools:layout="@layout/fragment_sale_order_form">
         <argument
             android:name="saleOrderId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_saleOrderFormFragment_to_addProductFragment"
             app:destination="@id/addProductFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_saleOrderFormFragment_to_customerListFragment"
             app:destination="@id/customerListFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/addProductFragment"
         android:name="com.example.ffccloud.salesOrder.AddProductFragment"
         android:label="Add Product"
-        tools:layout="@layout/fragment_add_product"
-        >
+        tools:layout="@layout/fragment_add_product">
         <action
             android:id="@+id/action_addProductFragment_to_productInfoBottomSheetDialogFragment"
             app:destination="@id/productInfoBottomSheetDialogFragment" />
         <argument
             android:name="key"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="supplierId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="date"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
     <dialog
         android:id="@+id/productInfoBottomSheetDialogFragment"
         android:name="com.example.ffccloud.salesOrder.ProductInfoBottomSheetDialogFragment"
         android:label="Product Info"
-        tools:layout="@layout/fragment_product_info_bottom_sheet_dialog" >
+        tools:layout="@layout/fragment_product_info_bottom_sheet_dialog">
         <argument
             android:name="productModel"
             app:argType="com.example.ffccloud.InsertProductModel"
             app:nullable="true" />
         <argument
             android:name="date"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
         <argument
             android:name="supplierId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </dialog>
     <fragment
         android:id="@+id/addFarmFormFragment"
         android:name="com.example.ffccloud.farm.AddFarmFormFragment"
         android:label="Farm Form"
-        tools:layout="@layout/fragment_add_farm_form" >
+        tools:layout="@layout/fragment_add_farm_form">
         <action
             android:id="@+id/action_addFarmFormFragment_to_search_DoctorFragment"
             app:destination="@id/SupplierDoctorFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addFarmFormFragment_to_addProductFragment"
             app:destination="@id/addProductFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="supplierId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/SupplierDoctorFragment"
         android:name="com.example.ffccloud.doctor.SupplierDoctorListFragment"
-        android:label="Doctors" >
+        android:label="Doctors">
         <argument
             android:name="key"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="regionID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_SupplierDoctorFragment_to_addDoctorFragment"
             app:destination="@id/addDoctorFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/addMedicalStoreFragment"
@@ -735,170 +725,169 @@
         tools:layout="@layout/fragment_add_medical_store">
         <argument
             android:name="supplierId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/addHospitalFragment"
         android:name="com.example.ffccloud.hospital.AddHospitalFragment"
         android:label="Add Hospital"
-        tools:layout="@layout/fragment_add_hospital" >
+        tools:layout="@layout/fragment_add_hospital">
         <action
             android:id="@+id/action_addHospitalFragment_to_addProductFragment"
             app:destination="@id/addProductFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addHospitalFragment_to_SupplierDoctorFragment"
             app:destination="@id/SupplierDoctorFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addHospitalFragment_to_farmListFragment"
             app:destination="@id/farmListFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="supplierId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
 
     </fragment>
     <fragment
         android:id="@+id/addDoctorFragment"
         android:name="com.example.ffccloud.doctor.AddDoctorFragment"
         android:label="Add Doctor"
-        tools:layout="@layout/fragment_add_doctor" >
+        tools:layout="@layout/fragment_add_doctor">
         <action
             android:id="@+id/action_addDoctorFragment_to_addProductFragment"
             app:destination="@id/addProductFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="supplierId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/farmListFragment"
         android:name="com.example.ffccloud.farm.FarmListFragment"
-        android:label="Farms" >
+        android:label="Farms">
         <argument
             android:name="key"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="regionID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_farmListFragment_to_addFarmFormFragment"
             app:destination="@id/addFarmFormFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/hospitalListFragment"
         android:name="com.example.ffccloud.hospital.HospitalListFragment"
-        android:label="Hospitals" >
+        android:label="Hospitals">
         <action
             android:id="@+id/action_hospitalListFragment_to_addHospitalFragment"
             app:destination="@id/addHospitalFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="key"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/medicalStoreListFragment"
         android:name="com.example.ffccloud.medicalStore.MedicalStoreListFragment"
-        android:label="Medical Stores" >
+        android:label="Medical Stores">
         <action
             android:id="@+id/action_medicalStoreListFragment_to_addMedicalStoreFragment"
             app:destination="@id/addMedicalStoreFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="key"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/expenseListFragment"
         android:name="com.example.ffccloud.expense.ExpenseListFragment"
-        android:label="Expense List"
-        >
+        android:label="Expense List">
         <action
             android:id="@+id/action_expenseListFragment_to_expenseFormFragment"
             app:destination="@id/expenseFormFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/expenseFormFragment"
         android:name="com.example.ffccloud.expense.ExpenseFormOldFragment"
-        android:label="Expense Form"
-        >
+        android:label="Expense Form">
         <argument
             android:name="expense"
             app:argType="com.example.ffccloud.ExpenseModelClass"
-            app:nullable="true"
-            />
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/employee_expense_detail_Fragment"
-        android:name="com.example.ffccloud.expense.EmployeeExpensesDetailFragment"
-        android:label="Expenses Detail"
-        >
+        android:name="com.example.ffccloud.dashboard.expense.EmployeeExpensesDetailFragment"
+        android:label="Expenses Detail">
         <argument
             android:name="month"
-            app:argType="string"
-            app:nullable="true"
             android:defaultValue=""
-            />
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="userId"
-            app:argType="integer"
             android:defaultValue="0"
-            />
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/work_plan_Fragment"
-        android:name="com.example.ffccloud.workplan.PendingWorkPlansFragment"
-        android:label="Work Plans"
-        >
+        android:name="com.example.ffccloud.dashboard.workplan.PendingWorkPlansFragment"
+        android:label="Work Plans">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/suggested_customer_Fragment"
+        android:name="com.example.ffccloud.dashboard.customer.SuggestedCustomersFragment"
+        android:label="Suggested Customer">
 
     </fragment>
     <fragment
         android:id="@+id/notificationList"
         android:name="com.example.ffccloud.notification.NotificationFragment"
-        android:label="Notifications"
-        >
+        android:label="Notifications">
         <action
             android:id="@+id/action_notification_to_LocationRequestFragment"
             app:destination="@id/locationRequestFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
 
         <action
             android:id="@+id/action_notification_to_chatFragment"
@@ -906,7 +895,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
 </navigation>

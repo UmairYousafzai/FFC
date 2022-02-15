@@ -134,5 +134,13 @@ public class HomeFragment extends Fragment {
                 navController.navigate(R.id.action_nav_home_to_workplan_Fragment);
             }
         });
+
+        mbinding.customerCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                navController.navigate(R.id.action_nav_home_to_suggested_customer_Fragment);
+            }
+        });
     }
 }

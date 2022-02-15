@@ -272,6 +272,9 @@ public class AddHospitalFragment extends Fragment {
                 if (s!=null)
                 {
                     locationString = s.toString();
+                    locationAddress="";
+                    mBinding.locationCheckbox.setText("Enable Location");
+                    mBinding.locationCheckbox.setChecked(false);
                 }
             }
         });
@@ -442,6 +445,8 @@ public class AddHospitalFragment extends Fragment {
                                 locationString="";
                                 mBinding.locationCheckbox.setText("Enable Location");
                                 mBinding.locationCheckbox.setChecked(false);
+                                mBinding.idCoordinates.setText("");
+
                             }
 
 

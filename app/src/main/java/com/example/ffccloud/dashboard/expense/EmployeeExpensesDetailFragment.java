@@ -1,4 +1,4 @@
-package com.example.ffccloud.expense;
+package com.example.ffccloud.dashboard.expense;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,7 +18,7 @@ import com.example.ffccloud.R;
 import com.example.ffccloud.databinding.ActionCustomDialogBinding;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentEmployeeExpensesDetailBinding;
-import com.example.ffccloud.expense.utils.EmployeeExpensesDetailViewModel;
+import com.example.ffccloud.dashboard.expense.viewmodel.EmployeeExpensesDetailViewModel;
 import com.example.ffccloud.model.GetEmployeeExpensesDetail;
 
 public class EmployeeExpensesDetailFragment extends Fragment {

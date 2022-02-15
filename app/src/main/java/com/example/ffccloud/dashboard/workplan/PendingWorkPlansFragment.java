@@ -1,4 +1,4 @@
-package com.example.ffccloud.workplan;
+package com.example.ffccloud.dashboard.workplan;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ffccloud.databinding.FragmentPendingWorkPlansBinding;
-import com.example.ffccloud.workplan.viewmodel.WorkPlanViewModel;
+import com.example.ffccloud.dashboard.workplan.viewmodel.WorkPlanViewModel;
 
 
 public class PendingWorkPlansFragment extends Fragment {

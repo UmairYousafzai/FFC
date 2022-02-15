@@ -128,6 +128,9 @@ public class AddMedicalStoreFragment extends Fragment {
                 if (s!=null)
                 {
                     locationString = s.toString();
+                    locationAddress="";
+                    mBinding.locationCheckBox.setText("Enable Location");
+                    mBinding.locationCheckBox.setChecked(false);
                 }
             }
         });
@@ -195,6 +198,8 @@ public class AddMedicalStoreFragment extends Fragment {
                                 locationString="";
                                 mBinding.locationCheckBox.setText("Enable Location");
                                 mBinding.locationCheckBox.setChecked(false);
+                                mBinding.idCoordinates.setText("");
+
 
                             }
 

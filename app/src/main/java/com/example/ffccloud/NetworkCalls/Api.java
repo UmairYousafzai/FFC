@@ -14,6 +14,7 @@ import com.example.ffccloud.model.AreaModel;
 import com.example.ffccloud.model.AreasByEmpIdModel;
 import com.example.ffccloud.model.ClassificationModel;
 import com.example.ffccloud.CustomerModel;
+import com.example.ffccloud.model.DashBoardCustomer;
 import com.example.ffccloud.model.DeliveryModeModel;
 import com.example.ffccloud.model.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
@@ -266,5 +267,20 @@ public interface Api {
                                             @Query("Action") String Action,
                                             @Query("UserId") int UserId,
                                             @Query("Session_Id") int Session_Id );
+
+    @GET("api/DashboardApi/GetAllPendingDoctors")
+    Call<List<DashBoardCustomer>> getSuggestedCustomer(@Header("Authorization") String token,@Query("Company_Id") int Company_Id,@Query("Country_Id") int Country_Id,@Query("UserId") int UserId);
+
+    @GET("api/DoctorController/GetPostStatus")
+    Call<UpdateStatus>  updateSuggestedCustomerStatus(@Header("Authorization") String token,
+                                                    @Query("Company_Id") String Company_Id,
+                                                    @Query("Country_Id") String Country_Id,
+                                                    @Query("Location_Id") String Location_Id,
+                                                    @Query("Project_Id") String Project_Id,
+                                                    @Query("Doctor_Id") String customerID,
+                                                    @Query("Action") String Action,
+                                                    @Query("UserId") int UserId,
+                                                    @Query("Session_Id") int Session_Id );
+
 }
 

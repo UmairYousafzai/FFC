@@ -11,7 +11,7 @@
             type="com.example.ffccloud.model.GetEmployeeExpensesDetail" />
         <variable
             name="viewModel"
-            type="com.example.ffccloud.expense.utils.EmployeeExpensesDetailViewModel" />
+            type="com.example.ffccloud.dashboard.expense.viewmodel.EmployeeExpensesDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

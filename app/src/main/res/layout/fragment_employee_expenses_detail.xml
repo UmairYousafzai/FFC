@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.ffccloud.expense.utils.EmployeeExpensesDetailViewModel" />
+            type="com.example.ffccloud.dashboard.expense.viewmodel.EmployeeExpensesDetailViewModel" />
     </data>
 
     <LinearLayout
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="5dp"
-        tools:context=".expense.EmployeeExpensesDetailFragment"
+        tools:context=".dashboard.expense.EmployeeExpensesDetailFragment"
         android:background="@color/background_color">
 
         <androidx.recyclerview.widget.RecyclerView

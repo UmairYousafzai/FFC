@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ffccloud.ExpenseModelClass;
-import com.example.ffccloud.expense.adapter.EmployeeExpenseAdapter;
+import com.example.ffccloud.dashboard.expense.adapter.EmployeeExpenseAdapter;
 import com.example.ffccloud.interfaces.NetworkCallListener;
 import com.example.ffccloud.model.EmployeeExpense;
 import com.example.ffccloud.utils.CONSTANTS;

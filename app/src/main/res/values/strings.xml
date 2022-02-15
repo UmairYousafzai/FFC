@@ -277,6 +277,7 @@
     <string name="enter_remarks">Enter Remarks</string>
     <string name="requested_amount">Requested Amount</string>
     <string name="approved">Approved</string>
+    <string name="suggested_by">Suggested By  </string>
 
 
 </resources>

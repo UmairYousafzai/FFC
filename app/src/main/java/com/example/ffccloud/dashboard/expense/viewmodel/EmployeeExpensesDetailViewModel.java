@@ -1,4 +1,4 @@
-package com.example.ffccloud.expense.utils;
+package com.example.ffccloud.dashboard.expense.viewmodel;
 
 import android.app.Application;
 
@@ -7,7 +7,8 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.ffccloud.expense.adapter.EmployeeExpensesDetailAdapter;
+import com.example.ffccloud.dashboard.expense.adapter.EmployeeExpensesDetailAdapter;
+import com.example.ffccloud.expense.utils.ExpenseRepository;
 import com.example.ffccloud.interfaces.NetworkCallListener;
 import com.example.ffccloud.model.GetEmployeeExpensesDetail;
 import com.example.ffccloud.utils.CONSTANTS;

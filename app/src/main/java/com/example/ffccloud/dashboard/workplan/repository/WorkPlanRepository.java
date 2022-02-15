@@ -1,4 +1,4 @@
-package com.example.ffccloud.workplan.repository;
+package com.example.ffccloud.dashboard.workplan.repository;
 
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_RESPONSE;

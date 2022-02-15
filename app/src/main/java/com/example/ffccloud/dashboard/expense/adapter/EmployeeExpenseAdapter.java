@@ -1,4 +1,4 @@
-package com.example.ffccloud.expense.adapter;
+package com.example.ffccloud.dashboard.expense.adapter;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

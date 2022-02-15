@@ -1,4 +1,4 @@
-package com.example.ffccloud.workplan.adapter;
+package com.example.ffccloud.dashboard.workplan.adapter;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ffccloud.databinding.WorkPlanCardBinding;
 import com.example.ffccloud.model.WorkPlan;
-import com.example.ffccloud.workplan.viewmodel.WorkPlanViewModel;
+import com.example.ffccloud.dashboard.workplan.viewmodel.WorkPlanViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

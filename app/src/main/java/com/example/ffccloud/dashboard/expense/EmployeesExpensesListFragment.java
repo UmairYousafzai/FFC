@@ -1,4 +1,4 @@
-package com.example.ffccloud.expense;
+package com.example.ffccloud.dashboard.expense;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,23 +42,9 @@ public class EmployeesExpensesListFragment extends Fragment {
         expenseViewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
         mBinding.setEmployeeExpenseViewModel(expenseViewModel);
         expenseViewModelObservers();
-        clickListener();
 
     }
 
-    private void clickListener() {
-//        mBinding.monthSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if (mBinding.monthSpinner.getText()!=null&& mBinding.monthSpinner.getText().toString().length()>0)
-//                {
-//                    String month= expenseViewModel.getMonth(mBinding.monthSpinner.getText().toString());
-//                    expenseViewModel.fetchEmployeeExpenses(month);
-//                }
-//            }
-//        });
-
-    }
 
     private void expenseViewModelObservers() {
 

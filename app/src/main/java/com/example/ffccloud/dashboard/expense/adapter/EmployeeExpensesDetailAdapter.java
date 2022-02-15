@@ -1,4 +1,4 @@
-package com.example.ffccloud.expense.adapter;
+package com.example.ffccloud.dashboard.expense.adapter;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ffccloud.databinding.EmployeeExpenseDetailCardBinding;
-import com.example.ffccloud.expense.utils.EmployeeExpensesDetailViewModel;
+import com.example.ffccloud.dashboard.expense.viewmodel.EmployeeExpensesDetailViewModel;
 import com.example.ffccloud.model.GetEmployeeExpensesDetail;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class EmployeeExpensesDetailAdapter  extends RecyclerView.Adapter<Employe
 
     private List<GetEmployeeExpensesDetail> expensesDetailList;
     private LayoutInflater layoutInflater;
-    private EmployeeExpensesDetailViewModel viewModel;
+    private final EmployeeExpensesDetailViewModel viewModel;
     private OnClick listener;
     private boolean check = false;
     private  int number;
@@ -53,20 +53,21 @@ public class EmployeeExpensesDetailAdapter  extends RecyclerView.Adapter<Employe
     public void onBindViewHolder(@NonNull ExpensesDetailsViewHolder holder, int position) {
 
         GetEmployeeExpensesDetail expensesDetail = expensesDetailList.get(position);
-        if (expensesDetail.isApproved())
-        {
-            expensesDetail.setAction("1");
-            holder.mBinding.btnAction.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff669900")));
-            holder.mBinding.btnAction.setText("Approved");
 
-        }
-        else if (expensesDetail.isCancelled())
+         if (expensesDetail.isCancelled())
         {
             expensesDetail.setAction("2");
             holder.mBinding.btnAction.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CF0015")));
 
 //            holder.mBinding.btnAction.setBackgroundColor(Color.parseColor("#CF0015"));
             holder.mBinding.btnAction.setText("Cancel");
+
+        }
+        else if (expensesDetail.isApproved())
+        {
+            expensesDetail.setAction("1");
+            holder.mBinding.btnAction.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff669900")));
+            holder.mBinding.btnAction.setText("Approved");
 
         }else
         {
