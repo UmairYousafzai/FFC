@@ -114,7 +114,6 @@
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="@{()-> viewModel.onClick(customer,2)}"
-
                 android:src="@drawable/tick_two"
                 android:tint="@android:color/holo_green_dark"
                 app:layout_constraintStart_toEndOf="@id/btn_view"
@@ -129,6 +128,7 @@
                 android:background="@color/white"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
+                android:onClick="@{()-> viewModel.onClick(customer,1)}"
                 android:src="@drawable/ic_baseline_preview_blue_24"
                 app:layout_constraintStart_toEndOf="@id/tv_name"
                 app:layout_constraintBottom_toBottomOf="@id/btn_cancel"

@@ -3,6 +3,15 @@ package com.example.ffccloud.medicalStore;
 import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,28 +23,18 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
-import android.widget.Toast;
-
-import com.example.ffccloud.model.GetSupplierDetailModel;
-import com.example.ffccloud.model.SupplierMainModel;
-import com.example.ffccloud.model.SupplierModelNew;
-import com.example.ffccloud.model.UpdateStatus;
-import com.example.ffccloud.SupplierCompDetail;
-import com.example.ffccloud.model.GradingModel;
-import com.example.ffccloud.model.RegionModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
+import com.example.ffccloud.SupplierCompDetail;
 import com.example.ffccloud.databinding.CompaniesDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddMedicalStoreBinding;
 import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.medicalStore.adapter.CompanyRecyclerViewAdapter;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.GradingModel;
+import com.example.ffccloud.model.RegionModel;
+import com.example.ffccloud.model.SupplierMainModel;
+import com.example.ffccloud.model.SupplierModelNew;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.CustomsDialog;
@@ -284,7 +283,7 @@ public class AddMedicalStoreFragment extends Fragment {
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
         if(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length()>0)
         {
-            mBinding.locationCheckBox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+            mBinding.locationCheckBox.setText(String.format("%s%s", getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress(), getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord()));
             mBinding.locationCheckBox.setChecked(true);
             locationAddress=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
         }
@@ -292,7 +291,6 @@ public class AddMedicalStoreFragment extends Fragment {
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length()>0)
         {
             locationString=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
-            mBinding.idCoordinates.setText(locationString);
         }
         mBinding.etMonthlySale.setText(String.valueOf(getSupplierDetailModel.getSupplierModelNewList().get(0).getMonthlySale()));
 

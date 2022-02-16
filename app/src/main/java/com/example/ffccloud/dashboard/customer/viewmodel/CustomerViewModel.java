@@ -15,7 +15,6 @@ import com.example.ffccloud.dashboard.customer.repository.CustomerRepository;
 import com.example.ffccloud.interfaces.NetworkCallListener;
 import com.example.ffccloud.model.DashBoardCustomer;
 import com.example.ffccloud.model.UpdateStatus;
-import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import java.util.List;
@@ -62,6 +61,11 @@ public class CustomerViewModel extends AndroidViewModel {
             customerMutableLiveData.setValue(customer);
         }
         else if (key==4)
+        {
+            customer.setAction(String.valueOf(key));
+            customerMutableLiveData.setValue(customer);
+        }
+        else if(key==1)
         {
             customer.setAction(String.valueOf(key));
             customerMutableLiveData.setValue(customer);

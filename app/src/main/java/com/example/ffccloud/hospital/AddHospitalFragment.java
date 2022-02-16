@@ -3,6 +3,15 @@ package com.example.ffccloud.hospital;
 import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,33 +24,23 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
-import android.widget.Toast;
-
 import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.InsertProductModel;
-import com.example.ffccloud.model.GetSupplierDetailModel;
-import com.example.ffccloud.model.RegionModel;
-import com.example.ffccloud.model.SupplierLinking;
-import com.example.ffccloud.model.SupplierMainModel;
-import com.example.ffccloud.model.SupplierModelNew;
-import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.SupplierItemLinking;
-import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddHospitalBinding;
 import com.example.ffccloud.databinding.OtherFarmDialogBinding;
 import com.example.ffccloud.farm.AddFarmFormFragmentArgs;
 import com.example.ffccloud.farm.adapter.MedicineAdapter;
+import com.example.ffccloud.model.GetSupplierDetailModel;
+import com.example.ffccloud.model.GradingModel;
+import com.example.ffccloud.model.RegionModel;
+import com.example.ffccloud.model.SupplierLinking;
+import com.example.ffccloud.model.SupplierMainModel;
+import com.example.ffccloud.model.SupplierModelNew;
+import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.utils.CONSTANTS;
 import com.example.ffccloud.utils.CustomLocation;
 import com.example.ffccloud.utils.CustomsDialog;
@@ -545,13 +544,12 @@ public class AddHospitalFragment extends Fragment {
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord() != null) {
             if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length() > 0) {
                 locationString = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
-                mBinding.idCoordinates.setText(locationString);
             }
         }
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress() != null) {
             if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length() > 0) {
                 locationAddress = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
-                mBinding.locationCheckbox.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress());
+                mBinding.locationCheckbox.setText(String.format("%s%s", getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress(), getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord()));
 
             }
         }

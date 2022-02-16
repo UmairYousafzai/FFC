@@ -876,6 +876,43 @@
         android:name="com.example.ffccloud.dashboard.customer.SuggestedCustomersFragment"
         android:label="Suggested Customer">
 
+        <action
+            android:id="@+id/action_suggested_customer_fragment_to_add_doctor_fragment"
+            app:destination="@id/addDoctorFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+
+        <action
+            android:id="@+id/action_suggested_customer_fragment_to_add_farm_fragment"
+            app:destination="@id/addFarmFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+
+        <action
+            android:id="@+id/action_suggested_customer_fragment_to_add_hospital_fragment"
+            app:destination="@id/addHospitalFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+
+        <action
+            android:id="@+id/action_suggested_customer_fragment_to_add_medical_store_fragment"
+            app:destination="@id/addMedicalStoreFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+
+
     </fragment>
     <fragment
         android:id="@+id/notificationList"

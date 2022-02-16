@@ -2,6 +2,10 @@ package com.example.ffccloud.medicalStore;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,19 +17,11 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
-import com.example.ffccloud.R;
 import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
-import com.example.ffccloud.databinding.FragmentDoctorListFormBinding;
 import com.example.ffccloud.databinding.FragmentMedicalStoreListBinding;
 import com.example.ffccloud.doctor.SupplierDoctorListFragmentArgs;
-import com.example.ffccloud.doctor.SupplierDoctorListFragmentDirections;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +42,7 @@ public class MedicalStoreListFragment extends Fragment {
     private int regionId=0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         mBinding = FragmentMedicalStoreListBinding.inflate(inflater,container,false);

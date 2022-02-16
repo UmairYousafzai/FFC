@@ -117,11 +117,11 @@ public class SaveData {
 
 
                         uploadDataRepository.DeleteAllWorkPlan();
-                        DoctorModel doctorModel =uploadDataRepository.getWorkPlanById(model.getDoctorId());
-                        uploadDataRepository.deleteWorkPlan(doctorModel);
+//                        DoctorModel doctorModel =uploadDataRepository.getWorkPlanById(model.getDoctorId());
+//                        uploadDataRepository.deleteWorkPlan(doctorModel);
                          updateStatus[0] = response.body();
                         clearNotification(CONSTANTS.NOTIFICATION_WORK_PLAN_ID);
-                        createNotification(""+response.errorBody(),2,CONSTANTS.NOTIFICATION_ERROR_ID);
+                        createNotification(""+response.body().getStrMessage(),2,CONSTANTS.NOTIFICATION_ERROR_ID);
 
                     }
                     else

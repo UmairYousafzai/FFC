@@ -1,6 +1,10 @@
 package com.example.ffccloud.dashboard.customer;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,13 +12,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.example.ffccloud.R;
 import com.example.ffccloud.dashboard.customer.viewmodel.CustomerViewModel;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentSuggestedCustomersBinding;
@@ -25,6 +25,8 @@ public class SuggestedCustomersFragment extends Fragment {
 
     private FragmentSuggestedCustomersBinding mBinding;
     private CustomerViewModel viewModel;
+    private NavController navController;
+
 
 
     @Override
@@ -39,10 +41,14 @@ public class SuggestedCustomersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController= NavHostFragment.findNavController(this);
+
         viewModel = new ViewModelProvider(this).get(CustomerViewModel.class);
         mBinding.setViewModel(viewModel);
 
         getLiveData();
+
+
 
     }
 
@@ -63,10 +69,54 @@ public class SuggestedCustomersFragment extends Fragment {
             @Override
             public void onChanged(DashBoardCustomer customer) {
 
+                if (customer!=null)
+                {
+                   if (!customer.getAction().equals("1"))
+                   {
+                       showDialog(customer);
 
-                showDialog(customer);
+                   }
+                   else
+                   {
+                       checkUser(customer);
+                       viewModel.getCustomerMutableLiveData().setValue(null);
+                   }
+                }
+
             }
         });
+    }
+
+    private void checkUser(DashBoardCustomer customer) {
+
+        if (customer.getUserType().equals("Dr"))
+        {
+            SuggestedCustomersFragmentDirections.ActionSuggestedCustomerFragmentToAddDoctorFragment action =
+                    SuggestedCustomersFragmentDirections.actionSuggestedCustomerFragmentToAddDoctorFragment();
+            action.setSupplierId((int)customer.getDoctorId());
+            navController.navigate(action);
+        }
+        else if (customer.getUserType().equals("F"))
+        {
+            SuggestedCustomersFragmentDirections.ActionSuggestedCustomerFragmentToAddFarmFragment action =
+                    SuggestedCustomersFragmentDirections.actionSuggestedCustomerFragmentToAddFarmFragment();
+            action.setSupplierId((int)customer.getDoctorId());
+            navController.navigate(action);
+        }
+        else if (customer.getUserType().equals("H"))
+        {
+            SuggestedCustomersFragmentDirections.ActionSuggestedCustomerFragmentToAddHospitalFragment action =
+                    SuggestedCustomersFragmentDirections.actionSuggestedCustomerFragmentToAddHospitalFragment();
+            action.setSupplierId((int)customer.getDoctorId());
+            navController.navigate(action);
+        }
+        else if (customer.getUserType().equals("Str"))
+        {
+            SuggestedCustomersFragmentDirections.ActionSuggestedCustomerFragmentToAddMedicalStoreFragment action =
+                    SuggestedCustomersFragmentDirections.actionSuggestedCustomerFragmentToAddMedicalStoreFragment();
+            action.setSupplierId((int)customer.getDoctorId());
+            navController.navigate(action);
+        }
     }
 
     private void showDialog(DashBoardCustomer customer) {
