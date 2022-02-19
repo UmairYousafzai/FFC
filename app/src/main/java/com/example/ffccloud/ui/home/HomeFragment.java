@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                navController.navigate(R.id.action_nav_home_to_suggested_customer_Fragment);
+                navController.navigate(R.id.action_nav_home_to_customer_menu_Fragment);
             }
         });
     }

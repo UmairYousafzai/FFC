@@ -25,6 +25,7 @@ public class CustomerViewModel extends AndroidViewModel {
     private MutableLiveData<String> toastMessage;
     private MutableLiveData<DashBoardCustomer>  customerMutableLiveData;
     private DashBoardCustomer customer;
+    private String type;
 
     public CustomerViewModel(@NonNull Application application) {
         super(application);
@@ -32,8 +33,16 @@ public class CustomerViewModel extends AndroidViewModel {
         adapter = new SuggestedCustomerAdapter(this);
         toastMessage= new MutableLiveData<>();
         getServerResponse();
-        fetchSuggestedCustomer();
         customerMutableLiveData= new MutableLiveData<>();
+    }
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public SuggestedCustomerAdapter getAdapter() {
@@ -52,24 +61,21 @@ public class CustomerViewModel extends AndroidViewModel {
         CustomerRepository.getInstance().getSuggestedCustomer(userID,token);
 
     }
+   public void fetchCancelCustomer()
+    {
+        int userID= SharedPreferenceHelper.getInstance(getApplication()).getUserID();
+        String token= SharedPreferenceHelper.getInstance(getApplication()).getToken();
+
+        CustomerRepository.getInstance().getCancelCustomer(userID,token);
+
+    }
 
     public void onClick(DashBoardCustomer customer, int key)
     {
-        if (key==2)
-        {
+
             customer.setAction(String.valueOf(key));
             customerMutableLiveData.setValue(customer);
-        }
-        else if (key==4)
-        {
-            customer.setAction(String.valueOf(key));
-            customerMutableLiveData.setValue(customer);
-        }
-        else if(key==1)
-        {
-            customer.setAction(String.valueOf(key));
-            customerMutableLiveData.setValue(customer);
-        }
+
 
         this.customer= customer;
     }
@@ -105,7 +111,15 @@ public class CustomerViewModel extends AndroidViewModel {
                     {
                         UpdateStatus  updateStatus = (UpdateStatus) response;
                         toastMessage.setValue(updateStatus.getStrMessage());
-                        fetchSuggestedCustomer();
+                        if (type.equals("Cancel"))
+                        {
+                            fetchCancelCustomer();
+                        }
+                        else
+                        {
+                            fetchSuggestedCustomer();
+
+                        }
                     }
                 }
 

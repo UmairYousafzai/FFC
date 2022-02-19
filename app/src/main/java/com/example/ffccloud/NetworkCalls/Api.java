@@ -282,5 +282,10 @@ public interface Api {
                                                     @Query("UserId") int UserId,
                                                     @Query("Session_Id") int Session_Id );
 
+
+    @GET("api/DashboardApi/GetAllPendingCancelDoctors")
+    Call<List<DashBoardCustomer>> getCanceledCustomer(@Header("Authorization") String token,@Query("Company_Id") int Company_Id,@Query("Country_Id") int Country_Id,@Query("UserId") int UserId);
+
+
 }
 

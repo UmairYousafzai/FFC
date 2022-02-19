@@ -26,6 +26,7 @@ public class SuggestedCustomersFragment extends Fragment {
     private FragmentSuggestedCustomersBinding mBinding;
     private CustomerViewModel viewModel;
     private NavController navController;
+    private String type;
 
 
 
@@ -48,6 +49,23 @@ public class SuggestedCustomersFragment extends Fragment {
 
         getLiveData();
 
+        if (getArguments()!=null)
+        {
+            type= SuggestedCustomersFragmentArgs.fromBundle(getArguments()).getSelectedCustomer();
+        }
+
+        if (type != null) {
+            if (type.equals("Cancel"))
+            {
+                viewModel.setType(type);
+                viewModel.fetchCancelCustomer();
+            }
+            else
+            {
+                viewModel.setType(type);
+                viewModel.fetchSuggestedCustomer();
+            }
+        }
 
 
     }
@@ -127,10 +145,15 @@ public class SuggestedCustomersFragment extends Fragment {
         {
             dialogBinding.title.setText("Customer");
             dialogBinding.body.setText("Are You Sure You Want To Approve?");
-        }else
+        }else if (customer.getAction().equals("4"))
         {
             dialogBinding.title.setText("Customer");
             dialogBinding.body.setText("Are You Sure You Want To Cancel?");
+        }
+        else if (customer.getAction().equals("3"))
+        {
+            dialogBinding.title.setText("Customer");
+            dialogBinding.body.setText("Are You Sure You Want To ignore?");
         }
 
         alertDialog.show();

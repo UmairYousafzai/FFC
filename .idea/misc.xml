@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/drawable/ic_doctor.xml" value="0.1" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/drawable/ic_farm_svgrepo_com.xml" value="0.1" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/drawable/ic_hospital.xml" value="0.1" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/drawable/ic_medical_pharmacy_store.xml" value="0.1" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/drawable/spinner_bg.xml" value="0.114" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/action_custom_dialog.xml" value="0.3140625" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/custom_alert_dialog.xml" value="0.209375" />
@@ -11,10 +15,12 @@
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/employees_expense_card.xml" value="0.22" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/expense_card.xml" value="0.33" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_all_work_plan.xml" value="0.3024193548387097" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_customer_menu.xml" value="0.33" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_employees_expense_list.xml" value="0.25" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_expense_form_old.xml" value="0.15067466266866567" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_pending_work_plans.xml" value="0.3140625" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_suggested_customers.xml" value="0.15067466266866567" />
+        <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/fragment_target_sub_menu.xml" value="0.15067466266866567" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/route_card.xml" value="0.67" />
         <entry key="..\:/Android Projects Repositary/FFC/app/src/main/res/layout/work_plan_card.xml" value="0.33" />
       </map>

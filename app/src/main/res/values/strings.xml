@@ -124,6 +124,7 @@
     <string name="next">Next</string>
     <string name="work_plan">Work Plan</string>
     <string name="long_text">Here, you can find the work plan that you set for a specified date and time. This work plan would not be system suggested.</string>
+    <string name="long_text_customer_suggested">Here, you can find the Customer that created by users and suggested by system.</string>
     <string name="menu">Menu</string>
     <string name="mark_your_attendance">Mark Your Attendance</string>
     <string name="date_time">Date/Time</string>
@@ -278,6 +279,7 @@
     <string name="requested_amount">Requested Amount</string>
     <string name="approved">Approved</string>
     <string name="suggested_by">Suggested By  </string>
+    <string name="suggested_customer">Suggested Customers</string>
 
 
 </resources>

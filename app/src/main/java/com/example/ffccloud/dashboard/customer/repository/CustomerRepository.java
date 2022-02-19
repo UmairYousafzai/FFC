@@ -3,7 +3,6 @@ package com.example.ffccloud.dashboard.customer.repository;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_CUSTOMER_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_RESPONSE;
-import static com.example.ffccloud.utils.CONSTANTS.SERVER_WORK_PLAN_RESPONSE;
 
 import androidx.annotation.NonNull;
 
@@ -43,6 +42,47 @@ public class CustomerRepository {
     public void getSuggestedCustomer(int userID,String token)
     {
         Call<List<DashBoardCustomer>> call = ApiClient.getInstance().getApi().getSuggestedCustomer(token,1,1,userID);
+        call.enqueue(new Callback<List<DashBoardCustomer>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<DashBoardCustomer>> call, @NonNull Response<List<DashBoardCustomer>> response) {
+
+                if (response.isSuccessful())
+                {
+                    if (response.body()!=null)
+                    {
+                        if (response.body().size()>0)
+                        {
+                            listener.onCallResponse(response.body(),SERVER_CUSTOMER_RESPONSE );
+                        }
+                        else
+                        {
+                            listener.onCallResponse("Nothing Found",SERVER_ERROR_RESPONSE);
+                        }
+                    }
+                    else
+                    {
+                        listener.onCallResponse(response.message(),SERVER_ERROR_RESPONSE);
+                    }
+                }
+                else
+                {
+                    if (response.errorBody() != null) {
+                        listener.onCallResponse(response.errorBody().toString(), SERVER_ERROR_RESPONSE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<DashBoardCustomer>> call, @NonNull Throwable t) {
+
+                listener.onCallResponse(t.getMessage(),SERVER_ERROR_RESPONSE);
+
+            }
+        });
+    }
+    public void getCancelCustomer(int userID,String token)
+    {
+        Call<List<DashBoardCustomer>> call = ApiClient.getInstance().getApi().getCanceledCustomer(token,1,1,userID);
         call.enqueue(new Callback<List<DashBoardCustomer>>() {
             @Override
             public void onResponse(@NonNull Call<List<DashBoardCustomer>> call, @NonNull Response<List<DashBoardCustomer>> response) {

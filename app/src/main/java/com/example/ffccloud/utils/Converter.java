@@ -4,6 +4,11 @@ import android.util.Log;
 
 import androidx.databinding.InverseMethod;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class Converter {
 
@@ -30,4 +35,44 @@ public class Converter {
        return number;
 
     }
+
+    public static String StringToFormatDate(String date)
+    {
+        Date date1 = null;
+        String formatDate="";
+        try {
+             date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DateFormat dateFormat= new SimpleDateFormat("dd MMM yyyy");
+
+        if (date1 != null) {
+            formatDate= dateFormat.format(date1);
+        }
+        return formatDate;
+
+    }
+
+    public static String StringToFormatTime(String date)
+    {
+        Date date1 = null;
+        String time="";
+        try {
+             date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DateFormat dateFormat= new SimpleDateFormat("h:mm a");
+
+        if (date1 != null) {
+            time= dateFormat.format(date1);
+        }
+        return time;
+
+    }
+
+
 }

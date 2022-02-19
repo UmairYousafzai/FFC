@@ -72,8 +72,8 @@
             app:popExitAnim="@anim/slide_out_right" />
 
         <action
-            android:id="@+id/action_nav_home_to_suggested_customer_Fragment"
-            app:destination="@id/suggested_customer_Fragment"
+            android:id="@+id/action_nav_home_to_customer_menu_Fragment"
+            app:destination="@id/customer_menu_fragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -872,6 +872,21 @@
     </fragment>
 
     <fragment
+        android:id="@+id/customer_menu_fragment"
+        android:name="com.example.ffccloud.dashboard.customer.CustomerMenuFragment"
+        android:label="Customer Menu">
+
+        <action
+            android:id="@+id/action_customer_menu_fragment_to_suggested_customer_Fragment"
+            app:destination="@id/suggested_customer_Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/suggested_customer_Fragment"
         android:name="com.example.ffccloud.dashboard.customer.SuggestedCustomersFragment"
         android:label="Suggested Customer">
@@ -911,7 +926,11 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
 
-
+        <argument
+            android:name="selectedCustomer"
+            android:defaultValue=""
+            app:argType="string"
+            app:nullable="true" />
 
     </fragment>
     <fragment
