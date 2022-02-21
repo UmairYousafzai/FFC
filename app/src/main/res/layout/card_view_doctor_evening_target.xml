@@ -2,6 +2,8 @@
 <layout>
 
     <data>
+        <import type="com.example.ffccloud.utils.Converter"/>
+
         <variable
             name="DoctorEvening"
             type="com.example.ffccloud.DoctorModel" />
@@ -64,11 +66,12 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:layout_gravity="center_vertical"
-                        android:text="@{DoctorEvening.workTime}"
+                        android:text="@{Converter.StringToFormatTimeTarget(DoctorEvening.toDate)}"
                         android:textColor="@color/APP_Theme_Color"
-                        android:textSize="15sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:layout_marginTop="30dp"
+                        android:padding="5dp"
 
                         />
 
@@ -105,7 +108,8 @@
                             android:id="@+id/doc_name_eveing_card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="90"
+                            android:layout_weight="85"
+                            android:maxLines="2"
                             android:text="@{DoctorEvening.name}"
                             android:textColor="@color/black"
                             android:textSize="14sp"
@@ -115,8 +119,8 @@
                         <Button
                             android:id="@+id/btn_map_evening_card"
                             android:layout_width="0dp"
-                            android:layout_height="25dp"
-                            android:layout_weight="10"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="15"
                             android:background="@drawable/ic_location" />
 
                     </LinearLayout>

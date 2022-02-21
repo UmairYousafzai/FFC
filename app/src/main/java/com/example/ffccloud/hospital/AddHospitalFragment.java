@@ -547,16 +547,14 @@ public class AddHospitalFragment extends Fragment {
             }
         }
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress() != null) {
-            if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length() > 0) {
+            if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length() > 0 ||
+                    !getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().isEmpty()) {
                 locationAddress = getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();
                 mBinding.locationCheckbox.setText(String.format("%s%s", getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress(), getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord()));
-
+                mBinding.locationCheckbox.setChecked(true);
             }
         }
 
-        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
-            mBinding.locationCheckbox.setChecked(true);
-        }
 
         int gradeID = getSupplierDetailModel.getSupplierModelNewList().get(0).getGrade();
 

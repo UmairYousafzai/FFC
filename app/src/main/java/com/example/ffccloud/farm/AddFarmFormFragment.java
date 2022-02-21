@@ -271,7 +271,8 @@ public class AddFarmFormFragment extends Fragment {
         mBinding.etOwnerName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
         mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
-        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty()) {
+        if (!getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().isEmpty() ||
+                !getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().isEmpty()) {
             mBinding.locationCheckbox.setChecked(true);
             mBinding.locationCheckbox.setText(String.format("%s%s", getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress(), getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord()));
             locationAddress= getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress();

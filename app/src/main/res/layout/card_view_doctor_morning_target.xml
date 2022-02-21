@@ -2,6 +2,7 @@
 <layout>
 
     <data>
+        <import type="com.example.ffccloud.utils.Converter"/>
         <variable
             name="DoctorMorning"
             type="com.example.ffccloud.DoctorModel" />
@@ -52,7 +53,7 @@
                         android:background="@color/APP_Theme_Color"
                         android:gravity="center_horizontal"
                         android:padding="10dp"
-                        android:text="@{DoctorMorning.status}"
+                        android:text="@{DoctorMorning.work_Plan}"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                          />
@@ -64,10 +65,11 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:layout_gravity="center_vertical"
-                        android:text="@{DoctorMorning.workTime}"
+                        android:text="@{Converter.StringToFormatTimeTarget(DoctorMorning.toDate)}"
                         android:textColor="@color/APP_Theme_Color"
-                        android:textSize="15sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
+                        android:padding="5dp"
                         android:layout_marginTop="30dp"
 
                         />
@@ -105,19 +107,21 @@
                             android:id="@+id/doc_morning_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="90"
+                            android:layout_weight="80"
+                            android:maxLines="2"
                             android:text="@{DoctorMorning.name}"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:paddingBottom="4dp"/>
 
-                        <Button
+                        <ImageButton
                             android:id="@+id/btn_map_morning_card"
                             android:layout_width="0dp"
-                            android:layout_height="25dp"
-                            android:layout_weight="10"
-                            android:background="@drawable/ic_location" />
+                            android:layout_height="wrap_content"
+                            android:layout_weight="20"
+                            android:src="@drawable/ic_location"
+                            android:background="@android:color/transparent"/>
 
                     </LinearLayout>
 
@@ -154,6 +158,7 @@
                         android:background="#7C808080" />
 
                     <LinearLayout
+                        android:id="@+id/btn_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"

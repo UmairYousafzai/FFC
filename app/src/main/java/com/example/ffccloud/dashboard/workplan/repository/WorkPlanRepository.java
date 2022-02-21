@@ -1,5 +1,6 @@
 package com.example.ffccloud.dashboard.workplan.repository;
 
+import static com.example.ffccloud.utils.CONSTANTS.SERVER_ALL_WORK_PLAN_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_WORK_PLAN_RESPONSE;
@@ -53,6 +54,50 @@ public class WorkPlanRepository {
                         if (response.body().size()>0)
                         {
                             listener.onCallResponse(response.body(),SERVER_WORK_PLAN_RESPONSE );
+                        }
+                        else
+                        {
+                            listener.onCallResponse("Nothing Found",SERVER_ERROR_RESPONSE);
+                        }
+                    }
+                    else
+                    {
+                        listener.onCallResponse(response.message(),SERVER_ERROR_RESPONSE);
+                    }
+                }
+                else
+                {
+                    if (response.errorBody() != null) {
+                        listener.onCallResponse(response.errorBody().toString(), SERVER_ERROR_RESPONSE);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<WorkPlan>> call, @NonNull Throwable t) {
+
+                listener.onCallResponse(t.getMessage(),SERVER_ERROR_RESPONSE);
+            }
+        });
+    }
+
+
+    public void getAllWorkPlan(String token,int workPlanID)
+    {
+        Call<List<WorkPlan>> call = ApiClient.getInstance().getApi().getAllDashBoardWorkPlan(token,"","",0,0,workPlanID);
+
+        call.enqueue(new Callback<List<WorkPlan>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<WorkPlan>> call, @NonNull Response<List<WorkPlan>> response) {
+
+                if (response.isSuccessful())
+                {
+                    if (response.body()!=null)
+                    {
+                        if (response.body().size()>0)
+                        {
+                            listener.onCallResponse(response.body(),SERVER_ALL_WORK_PLAN_RESPONSE);
                         }
                         else
                         {

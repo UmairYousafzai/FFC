@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="5dp"
             android:layout_marginTop="10dp"
-            app:setAdapter="@{viewModel.getAdapter()}"
+            app:setAdapter="@{viewModel.pendingAdapter}"
             tools:listitem="@layout/work_plan_card" />
 
 

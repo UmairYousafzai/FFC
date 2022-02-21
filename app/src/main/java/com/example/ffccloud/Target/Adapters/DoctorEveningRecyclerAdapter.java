@@ -76,14 +76,12 @@ public class DoctorEveningRecyclerAdapter extends RecyclerView.Adapter<DoctorEve
             givenLocation.setLongitude(Double.parseDouble(locationString[1]));
             String distance= String.valueOf(currrentLocation.distanceTo(givenLocation)/1000) ;
             doctorModel.setDistance(distance.substring(0,3)+" "+"Km");
-            holder.mbinding.setDoctorEvening(doctorModel);
-            holder.mbinding.executePendingBindings();
         }
         else {
             doctorModel.setDistance("0.0");
-            holder.mbinding.setDoctorEvening(doctorModel);
-            holder.mbinding.executePendingBindings();
         }
+        holder.mbinding.setDoctorEvening(doctorModel);
+        holder.mbinding.executePendingBindings();
         progressDialog.cancel();
 
 

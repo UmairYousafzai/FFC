@@ -116,10 +116,13 @@ public class SaveData {
                     if (response.body() != null) {
 
 
-                        uploadDataRepository.DeleteAllWorkPlan();
-//                        DoctorModel doctorModel =uploadDataRepository.getWorkPlanById(model.getDoctorId());
-//                        uploadDataRepository.deleteWorkPlan(doctorModel);
+
                          updateStatus[0] = response.body();
+                         if(response.body().getStatus()==1)
+                         {
+                             uploadDataRepository.DeleteAllWorkPlan();
+
+                         }
                         clearNotification(CONSTANTS.NOTIFICATION_WORK_PLAN_ID);
                         createNotification(""+response.body().getStrMessage(),2,CONSTANTS.NOTIFICATION_ERROR_ID);
 
@@ -158,12 +161,6 @@ public class SaveData {
     public void createNotification( String message, int key,int id) {
         NotificationManager mNotificationManager;
 
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Ringtone r = RingtoneManager.getRingtone(mContext, notification);
-        r.play();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            r.setLooping(false);
-        }
 
         // vibration
         Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);

@@ -410,7 +410,8 @@ public class AddDoctorFragment extends Fragment {
         mBinding.idDocAdress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
         mBinding.idDocEmail.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getEmail());
 
-        if(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length()>0)
+        if(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length()>0 ||
+                getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length()>0)
         {
             mBinding.location.setText(String.format("%s%s", getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress(), getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord()));
             mBinding.location.setChecked(true);
@@ -419,6 +420,7 @@ public class AddDoctorFragment extends Fragment {
 
         if (getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length()>0)
         {
+            mBinding.location.setChecked(true);
 
             locationString=getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord();
         }

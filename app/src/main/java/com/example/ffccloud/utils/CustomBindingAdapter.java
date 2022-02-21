@@ -19,6 +19,7 @@ public class CustomBindingAdapter {
         {
             recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
             recyclerView.setAdapter(adapter);
+            recyclerView.setHasFixedSize(true);
         }
 
         Log.e("setAdapter error:",adapter.toString());

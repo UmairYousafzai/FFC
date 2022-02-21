@@ -459,37 +459,22 @@ public class TargetFragment extends Fragment {
             @Override
             public void onRefresh() {
                 if (isLocationEnabled()) {
-                    List<UpdateWorkPlanStatus> updateWorkPlanStatusList = new ArrayList<>();
-                    updateWorkPlanStatusList = uploadDataRepository.getAllWorkPlanStatus();
-                    List<AddNewWorkPlanModel> addNewWorkPlanModelList = new ArrayList<>();
-                    addNewWorkPlanModelList = uploadDataRepository.getAllWorkPlan();
+
                     if (isNetworkConnected()) {
-                        if (updateWorkPlanStatusList.size() > 0) {
+                        if (uploadDataRepository.isWorkPlanStatusExists()) {
                             SaveData.getInstance(requireContext()).SaveWorkPlanStatus();
-                            mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-                        } else {
-                            mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-
-                            int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
-
-                            targetViewModel.DeleteAllDoctor();
-                            SyncDataToDB.getInstance().saveDoctorsList(id, requireContext(), requireActivity());
                         }
 
-                        if (addNewWorkPlanModelList.size() > 0) {
+                        if (uploadDataRepository.isWorkPlanExists()) {
                             SaveData.getInstance(requireContext()).saveWorkPlan();
-                            mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-                        } else {
-                            if (updateWorkPlanStatusList.size() > 0) {
-                                mbinding.targetRecycler.swipeLayout.setRefreshing(false);
-
-                                int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
-
-                                targetViewModel.DeleteAllDoctor();
-
-                                SyncDataToDB.getInstance().saveDoctorsList(id, requireContext(), requireActivity());
-                            }
                         }
+
+                        mbinding.targetRecycler.swipeLayout.setRefreshing(false);
+
+                        int id = SharedPreferenceHelper.getInstance(getContext()).getEmpID();
+
+                        targetViewModel.DeleteAllDoctor();
+                        SyncDataToDB.getInstance().saveDoctorsList(id, requireContext(), requireActivity());
                     } else {
                         mbinding.targetRecycler.swipeLayout.setRefreshing(false);
                         Toast.makeText(requireContext(), "Please Connect To Internet", Toast.LENGTH_SHORT).show();

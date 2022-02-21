@@ -24,7 +24,7 @@ public class SharedPreferenceHelper {
     private static SharedPreferenceHelper helperInstance = null;
     private final SharedPreferences sharedPreferences;
     public String activity = "Activity 0";
-    public boolean startDay = false;
+    public String startDay = "startDay";
     private final String DocListState = "DocListState";
     private final String FilterDocListState = "FilterDocListState";
     private final String previousUserID = "previous user id";

@@ -31,19 +31,23 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
     private int flag=0;
     private final RecyclerOnItemClickListener mListener;
     private Location currrentLocation;
-    private ProgressDialog progressDialog;
+    private int key=0;
     public DoctorMorningRecyclerAdapter(Context mContext, RecyclerOnItemClickListener mListener, Activity activity) {
         this.mContext = mContext;
         doctorModelList= new ArrayList<>();
         this.mListener = mListener;
-        CustomLocation customLocation = new CustomLocation(mContext);
-        CustomLocation.CustomLocationResults results= new CustomLocation.CustomLocationResults() {
-            @Override
-            public void gotLocation(Location location) {
-                currrentLocation=location;
-            }
-        };
-        customLocation.getLastLocation(results);
+        if (mContext!=null)
+        {
+            CustomLocation customLocation = new CustomLocation(mContext);
+            CustomLocation.CustomLocationResults results= new CustomLocation.CustomLocationResults() {
+                @Override
+                public void gotLocation(Location location) {
+                    currrentLocation=location;
+                }
+            };
+            customLocation.getLastLocation(results);
+        }
+
     }
 
     @NonNull
@@ -60,14 +64,7 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
     @Override
     public void onBindViewHolder(@NonNull DoctorMorningRecyclerAdapter.DoctorMorningViewHolder holder, int position) {
         DoctorModel doctorModel = doctorModelList.get(position);
-        progressDialog = new ProgressDialog(mContext);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
 
-                progressDialog.setMessage("Lodaing");
-                progressDialog.show();
                 Location givenLocation = new Location("");
 
                 if (currrentLocation != null && givenLocation.getLatitude()!=0 && givenLocation.getLongitude()!=0)
@@ -78,17 +75,19 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
                     givenLocation.setLongitude(Double.parseDouble(locationString[1]));
                     String distance= String.valueOf(currrentLocation.distanceTo(givenLocation)/1000) ;
                     doctorModel.setDistance(distance.substring(0,3)+" "+"Km");
-                    holder.mbinding.setDoctorMorning(doctorModel);
-                    holder.mbinding.executePendingBindings();
                 }
                 else {
                     doctorModel.setDistance("0.0");
-                    holder.mbinding.setDoctorMorning(doctorModel);
-                    holder.mbinding.executePendingBindings();
                 }
-                progressDialog.cancel();
-            }
-        }, 1000);
+                if (key==1)
+                {
+                    holder.mbinding.btnLayout.setVisibility(View.GONE);
+                    holder.mbinding.simpleRatingBar.setVisibility(View.GONE);
+
+                }
+        holder.mbinding.setDoctorMorning(doctorModel);
+        holder.mbinding.executePendingBindings();
+
 
 
 
@@ -115,21 +114,32 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
     @Override
     public int getItemCount() {
 
-        if (flag==0&&doctorModelList.size()>0)
-        {
-            return 1;
-        }
-        else if (flag == 0)
+        if (key==1)
         {
             return doctorModelList.size();
         }
         else
         {
-            return doctorModelList.size();
+            if (flag==0&&doctorModelList.size()>0)
+            {
+                return 1;
+            }
+            else if (flag == 0)
+            {
+                return doctorModelList.size();
+            }
+            else
+            {
+                return doctorModelList.size();
+            }
         }
+
 
     }
 
+    public void setKey(int key) {
+        this.key = key;
+    }
 
     public void setDoctorModelList(List<DoctorModel> list)
     {
@@ -190,11 +200,15 @@ public class DoctorMorningRecyclerAdapter extends RecyclerView.Adapter<DoctorMor
             mbinding.targetCardMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mListener!=null && getAdapterPosition()!=RecyclerView.NO_POSITION)
+                    if(key==0)
                     {
-                        int position = getAdapterPosition();
-                        mListener.GetDoctorOnClick(doctorModelList.get(position),position,10);
+                        if (mListener!=null && getAdapterPosition()!=RecyclerView.NO_POSITION)
+                        {
+                            int position = getAdapterPosition();
+                            mListener.GetDoctorOnClick(doctorModelList.get(position),position,10);
+                        }
                     }
+
                 }
             });
 

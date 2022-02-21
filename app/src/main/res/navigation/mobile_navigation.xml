@@ -869,6 +869,23 @@
         android:name="com.example.ffccloud.dashboard.workplan.PendingWorkPlansFragment"
         android:label="Work Plans">
 
+        <action
+            android:id="@+id/action_work_plan_Fragment_to_all_work_plan_Fragment"
+            app:destination="@id/all_work_plan_Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/all_work_plan_Fragment"
+        android:name="com.example.ffccloud.dashboard.workplan.AllWorkPlanFragment"
+        android:label="Work Plans">
+
+        <argument
+            android:name="work_plan_id"
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 
     <fragment

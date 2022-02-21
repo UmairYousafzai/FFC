@@ -537,9 +537,9 @@ public class TargetFullInfoFragment extends Fragment {
                         String remarks = dialogBinding.remarksEdittext.getText().toString();
                         int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
                         String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
-                        String locationString = String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude());
+                        String locationString = location.getLatitude() + "," + location.getLongitude();
                         Date date = Calendar.getInstance().getTime();
-                        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
+                        SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a", Locale.getDefault());
                         String dateString = df.format(date);
                         UpdateWorkPlanStatus updateWorkPlanStatus = new UpdateWorkPlanStatus();
 
@@ -547,7 +547,7 @@ public class TargetFullInfoFragment extends Fragment {
                         updateWorkPlanStatus.setEmp_Id(userId);
                         updateWorkPlanStatus.setRemarks(remarks);
                         updateWorkPlanStatus.setStatus(String.valueOf(key));
-                        updateWorkPlanStatus.setVisit_On(String.valueOf(dateString));
+                        updateWorkPlanStatus.setVisit_On(dateString);
                         updateWorkPlanStatus.setVisit_Cord(locationString);
 
                         if (doctorModel.getWorkId() > 0) {
@@ -563,8 +563,9 @@ public class TargetFullInfoFragment extends Fragment {
 
                                     if (response.isSuccessful()) {
                                         UpdateStatus updateStatus = response.body();
-                                        Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
-                                        targetViewModel.DeleteDoctor(doctorModel);
+                                        if (updateStatus != null) {
+                                            Toast.makeText(getContext(), updateStatus.getStrMessage(), Toast.LENGTH_LONG).show();
+                                        }
                                         alertDialog.dismiss();
                                         progressDialog.dismiss();
 
@@ -599,6 +600,7 @@ public class TargetFullInfoFragment extends Fragment {
                         } else {
                             alertDialog.dismiss();
                             progressDialog.dismiss();
+                            targetViewModel.DeleteDoctor(doctorModel);
                             uploadDataRepository.insertWorkPlanStatus(updateWorkPlanStatus);
                             generateWorkRequest();
                             navController.popBackStack();

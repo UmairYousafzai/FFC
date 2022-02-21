@@ -96,19 +96,23 @@ public class CustomLocation {
                         @Override
                         public void onComplete(@NonNull Task<Location> task) {
                             Location location= task.getResult();
-                            Bundle extras = location.getExtras();
-                            boolean isMockLocation = extras != null && extras.getBoolean(FusedLocationProviderClient.KEY_MOCK_LOCATION, false);
-
-                            if (!isMockLocation)
+                            if(location!=null)
                             {
-                                customLocationResults.gotLocation(location);
+                                Bundle extras = location.getExtras();
+                                boolean isMockLocation = extras != null && extras.getBoolean(FusedLocationProviderClient.KEY_MOCK_LOCATION, false);
 
-                            }
-                            else
-                            {
-                                Toast.makeText(mContext, "Mock location is ON \n Please Disable Mock Location", Toast.LENGTH_SHORT).show();
+                                if (!isMockLocation)
+                                {
+                                    customLocationResults.gotLocation(location);
 
+                                }
+                                else
+                                {
+                                    Toast.makeText(mContext, "Mock location is ON \n Please Disable Mock Location", Toast.LENGTH_SHORT).show();
+
+                                }
                             }
+
                         }
                     });
 

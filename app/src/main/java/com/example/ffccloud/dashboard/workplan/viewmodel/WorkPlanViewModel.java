@@ -1,5 +1,6 @@
 package com.example.ffccloud.dashboard.workplan.viewmodel;
 
+import static com.example.ffccloud.utils.CONSTANTS.SERVER_ALL_WORK_PLAN_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_RESPONSE;
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_WORK_PLAN_RESPONSE;
@@ -12,6 +13,9 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.ffccloud.DoctorModel;
+import com.example.ffccloud.Target.Adapters.DoctorMorningRecyclerAdapter;
+import com.example.ffccloud.dashboard.workplan.adapter.AllWorkPlanAdapter;
 import com.example.ffccloud.interfaces.NetworkCallListener;
 import com.example.ffccloud.model.WorkPlan;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
@@ -25,13 +29,14 @@ import java.util.List;
 
 public class WorkPlanViewModel extends AndroidViewModel {
 
-    private ObservableField<String> selectedMonth;
+    private final ObservableField<String> selectedMonth;
     private final MutableLiveData<String> serverErrorLiveData;
     private final ArrayAdapter<String> customSpinnerAdapter;
     private final HashMap<String, String> monthHashMap;
     private final List<String> monthList;
-    private final WorkPlanListAdapter adapter;
+    private final WorkPlanListAdapter pendingAdapter;
     private WorkPlan workPlan;
+    private final MutableLiveData<WorkPlan> selectedWorkPlan;
 
 
 
@@ -43,17 +48,27 @@ public class WorkPlanViewModel extends AndroidViewModel {
         workPlan= new WorkPlan();
         setUpMonthSpinner();
         customSpinnerAdapter= new ArrayAdapter<>(getApplication(), android.R.layout.simple_spinner_dropdown_item,monthList);
-        adapter= new WorkPlanListAdapter(this);
+        pendingAdapter = new WorkPlanListAdapter(this);
+
         selectedMonth= new ObservableField<>();
+        selectedWorkPlan= new MutableLiveData<>();
 
     }
+
+    public MutableLiveData<WorkPlan> getSelectedWorkPlan() {
+        return selectedWorkPlan;
+    }
+
+
+
+
 
     public MutableLiveData<String> getServerErrorLiveData() {
         return serverErrorLiveData;
     }
 
-    public WorkPlanListAdapter getAdapter() {
-        return adapter;
+    public WorkPlanListAdapter getPendingAdapter() {
+        return pendingAdapter;
     }
 
     public String getSelectedMonth() {
@@ -71,6 +86,14 @@ public class WorkPlanViewModel extends AndroidViewModel {
         getServerResponse();
     }
 
+    public void getAllWorkPlan(int workPlanID)
+    {
+        String token = SharedPreferenceHelper.getInstance(getApplication()).getToken();
+
+        WorkPlanRepository.getInstance().getAllWorkPlan(token,workPlanID);
+    }
+
+
     private void getServerResponse() {
 
         WorkPlanRepository.getInstance().setNetWorkCallListener(new NetworkCallListener() {
@@ -81,17 +104,17 @@ public class WorkPlanViewModel extends AndroidViewModel {
                     if (key== SERVER_WORK_PLAN_RESPONSE)
                     {
                         List<WorkPlan> list = (List<WorkPlan>) response;
-                        adapter.setWorkPlanList(list);
+                        pendingAdapter.setWorkPlanList(list);
                     }
                     else if (key==SERVER_ERROR_RESPONSE)
                     {
                         serverErrorLiveData.setValue((String) response);
-                        adapter.setWorkPlanList(null);
+                        pendingAdapter.setWorkPlanList(null);
                     }
                     else if (key==SERVER_RESPONSE)
                     {
                         serverErrorLiveData.setValue((String) response);
-                        adapter.removeFromList(workPlan);
+                        pendingAdapter.removeFromList(workPlan);
                     }
                 }
             }
@@ -109,10 +132,19 @@ public class WorkPlanViewModel extends AndroidViewModel {
 
     public void onClick(WorkPlan workPlan,int action)
     {
-        this.workPlan= workPlan;
-        String  token= SharedPreferenceHelper.getInstance(getApplication()).getToken();
-        int userID = SharedPreferenceHelper.getInstance(getApplication()).getUserID();
-        WorkPlanRepository.getInstance().UpdateWorkPlanStatus(String.valueOf(action),userID,token,String.valueOf(workPlan.getWorkPlanMId()));
+        if (action!=0)
+        {
+            this.workPlan= workPlan;
+            String  token= SharedPreferenceHelper.getInstance(getApplication()).getToken();
+            int userID = SharedPreferenceHelper.getInstance(getApplication()).getUserID();
+            WorkPlanRepository.getInstance().UpdateWorkPlanStatus(String.valueOf(action),userID,token,String.valueOf(workPlan.getWorkPlanMId()));
+
+        }
+        else
+        {
+            selectedWorkPlan.setValue(workPlan);
+        }
+
     }
 
     public void setUpMonthSpinner()

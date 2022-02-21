@@ -281,7 +281,8 @@ public class AddMedicalStoreFragment extends Fragment {
         mBinding.etName.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getSupplierName());
         mBinding.etContact.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getPhoneNo());
         mBinding.etAddress.setText(getSupplierDetailModel.getSupplierModelNewList().get(0).getAddress());
-        if(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length()>0)
+        if(getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress().length()>0||
+                getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord().length()>0)
         {
             mBinding.locationCheckBox.setText(String.format("%s%s", getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCordAddress(), getSupplierDetailModel.getSupplierModelNewList().get(0).getLocCord()));
             mBinding.locationCheckBox.setChecked(true);
