@@ -115,32 +115,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        btnListener();
+
     }
 
-    private void btnListener() {
-        mbinding.expenseCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                navController.navigate(R.id.action_nav_home_to_employeeExpenseFragment);
-            }
-        });
-        
-        mbinding.workPlanCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-                navController.navigate(R.id.action_nav_home_to_workplan_Fragment);
-            }
-        });
-
-        mbinding.customerCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                navController.navigate(R.id.action_nav_home_to_customer_menu_Fragment);
-            }
-        });
-    }
 }

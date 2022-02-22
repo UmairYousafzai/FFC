@@ -37,6 +37,7 @@ public class WorkPlanViewModel extends AndroidViewModel {
     private final WorkPlanListAdapter pendingAdapter;
     private WorkPlan workPlan;
     private final MutableLiveData<WorkPlan> selectedWorkPlan;
+    private final MutableLiveData<String> toastMessage;
 
 
 
@@ -45,6 +46,7 @@ public class WorkPlanViewModel extends AndroidViewModel {
         monthList = new ArrayList<>();
         monthHashMap= new HashMap<>();
         serverErrorLiveData = new MutableLiveData<>();
+        toastMessage = new MutableLiveData<>();
         workPlan= new WorkPlan();
         setUpMonthSpinner();
         customSpinnerAdapter= new ArrayAdapter<>(getApplication(), android.R.layout.simple_spinner_dropdown_item,monthList);
@@ -53,6 +55,10 @@ public class WorkPlanViewModel extends AndroidViewModel {
         selectedMonth= new ObservableField<>();
         selectedWorkPlan= new MutableLiveData<>();
 
+    }
+
+    public MutableLiveData<String> getToastMessage() {
+        return toastMessage;
     }
 
     public MutableLiveData<WorkPlan> getSelectedWorkPlan() {
@@ -86,12 +92,6 @@ public class WorkPlanViewModel extends AndroidViewModel {
         getServerResponse();
     }
 
-    public void getAllWorkPlan(int workPlanID)
-    {
-        String token = SharedPreferenceHelper.getInstance(getApplication()).getToken();
-
-        WorkPlanRepository.getInstance().getAllWorkPlan(token,workPlanID);
-    }
 
 
     private void getServerResponse() {
@@ -110,11 +110,14 @@ public class WorkPlanViewModel extends AndroidViewModel {
                     {
                         serverErrorLiveData.setValue((String) response);
                         pendingAdapter.setWorkPlanList(null);
+                        toastMessage.setValue((String) response);
                     }
                     else if (key==SERVER_RESPONSE)
                     {
                         serverErrorLiveData.setValue((String) response);
                         pendingAdapter.removeFromList(workPlan);
+                        toastMessage.setValue((String) response);
+
                     }
                 }
             }

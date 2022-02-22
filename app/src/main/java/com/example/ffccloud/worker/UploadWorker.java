@@ -39,11 +39,7 @@ public class UploadWorker extends Worker {
                     SaveData.getInstance(mContext).saveWorkPlan();
 
                     break;
-                case CONSTANTS.WORK_REQUEST_COMPLETE_WORK_PLAN:
-                    SaveData.getInstance(mContext).SaveWorkPlanStatus();
 
-
-                    break;
             }
         }
 

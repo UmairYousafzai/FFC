@@ -465,10 +465,16 @@ public class AddDoctorFragment extends Fragment {
 
         String shift = getSupplierDetailModel.getSupplierModelNewList().get(0).getShiftType();
         if (shift != null) {
-            if (shift.equals("Morning")) {
-                mBinding.morningRadioBtn.setChecked(true);
-            } else if (shift.equals("Evening")) {
-                mBinding.eveningRadioBtn.setChecked(true);
+            switch (shift) {
+                case "Morning":
+                    mBinding.morningRadioBtn.setChecked(true);
+                    break;
+                case "Evening":
+                    mBinding.eveningRadioBtn.setChecked(true);
+                    break;
+                case "FullDay":
+                    mBinding.fullDayRadioBtn.setChecked(true);
+                    break;
             }
         }
 

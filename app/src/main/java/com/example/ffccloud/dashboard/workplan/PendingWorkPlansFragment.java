@@ -48,7 +48,7 @@ public class PendingWorkPlansFragment extends Fragment {
 
     private void getLiveData() {
 
-        viewModel.getServerErrorLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+        viewModel.getToastMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
 

@@ -87,13 +87,12 @@ public class ChatUserListAdapter extends RecyclerView.Adapter<ChatUserListAdapte
 
 
     public void setUserList(List<UserModel> list) {
+        userList.clear();
 
         if (list!=null && list.size()>0) {
 
             userList.addAll(list);
             userListFull.addAll(list);
-        } else {
-            userList.clear();
         }
         notifyDataSetChanged();
     }

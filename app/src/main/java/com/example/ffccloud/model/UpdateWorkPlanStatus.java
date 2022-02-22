@@ -16,9 +16,44 @@ public class UpdateWorkPlanStatus {
 
 
     @SerializedName("Work_Id")
-    public String Work_Id;
+    private String Work_Id;
     @SerializedName("Emp_Id")
-    public long Emp_Id;
+    private long Emp_Id;
+
+
+
+    @SerializedName("Status")
+    private String Status;
+    @SerializedName("Remarks1")
+    private String Remarks;
+    //    @SerializedName("Remarks2")
+//    public String Remarks2 ;
+
+    @SerializedName("Visit_On")
+    private String Visit_On;
+    @SerializedName("Visit_Cord")
+    private String Visit_Cord;
+
+    @SerializedName("Visit_Address ")
+    private String visitAddress;
+    @SerializedName("Visit_distance_Ver  ")
+    private String visitDistance;
+
+    public void setVisitAddress(String visitAddress) {
+        this.visitAddress = visitAddress;
+    }
+
+    public void setVisitDistance(String visitDistance) {
+        this.visitDistance = visitDistance;
+    }
+
+    public String getVisitAddress() {
+        return visitAddress;
+    }
+
+    public String getVisitDistance() {
+        return visitDistance;
+    }
 
     public long getEmp_Id() {
         return Emp_Id;
@@ -27,20 +62,6 @@ public class UpdateWorkPlanStatus {
     public void setEmp_Id(long emp_Id) {
         Emp_Id = emp_Id;
     }
-
-    @SerializedName("Status")
-    public String Status;
-    @SerializedName("Remarks1")
-    public String Remarks;
-    //    @SerializedName("Remarks2")
-//    public String Remarks2 ;
-
-    @SerializedName("Visit_On")
-    public String Visit_On;
-    @SerializedName("Visit_Cord")
-    public String Visit_Cord;
-
-
     public int getStatusID() {
         return statusID;
     }

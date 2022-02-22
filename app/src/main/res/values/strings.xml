@@ -21,6 +21,7 @@
 
     <string-array name="menu_items_ids">
         <item>Ac_Home</item>
+        <item>Ac_Dashboard</item>
         <item>Ac_Target</item>
         <item>Ac_Expense</item>
         <item>Ac_SOrder</item>
@@ -86,7 +87,7 @@
     <string name="type_remarks">Type Remarks</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
-    <string name="classification">Classification</string>
+    <string name="classification">Classification </string>
     <string name="select_filter">Select Filter</string>
     <string name="select_classification">Select Classification</string>
     <string name="qualification">Qualification</string>
@@ -132,7 +133,7 @@
     <string name="name">Name</string>
     <string name="done">Done</string>
     <string name="routes">Routes</string>
-    <string name="status">Status</string>
+    <string name="status">Status </string>
     <string name="stage">Stage</string>
     <string name="please_enter_purpose">Please enter purpose</string>
     <string name="visit_purpose">Visit Purpose</string>
@@ -280,6 +281,10 @@
     <string name="approved">Approved</string>
     <string name="suggested_by">Suggested By  </string>
     <string name="suggested_customer">Suggested Customers</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="full_day">FullDay</string>
+    <string name="customer_type">Customer Type</string>
+    <string name="shift">Shift</string>
 
 
 </resources>

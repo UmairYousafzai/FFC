@@ -1,9 +1,6 @@
 package com.example.ffccloud.dashboard.workplan.viewmodel;
 
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ALL_WORK_PLAN_RESPONSE;
-import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
-import static com.example.ffccloud.utils.CONSTANTS.SERVER_RESPONSE;
-import static com.example.ffccloud.utils.CONSTANTS.SERVER_WORK_PLAN_RESPONSE;
 
 import android.app.Application;
 
@@ -15,6 +12,7 @@ import com.example.ffccloud.DoctorModel;
 import com.example.ffccloud.dashboard.workplan.adapter.AllWorkPlanAdapter;
 import com.example.ffccloud.dashboard.workplan.repository.WorkPlanRepository;
 import com.example.ffccloud.interfaces.NetworkCallListener;
+import com.example.ffccloud.model.LookUpWorkPlan;
 import com.example.ffccloud.model.WorkPlan;
 import com.example.ffccloud.utils.SharedPreferenceHelper;
 
@@ -28,7 +26,7 @@ public class AllWorkPlanViewModel extends AndroidViewModel {
 
     public AllWorkPlanViewModel(@NonNull Application application) {
         super(application);
-        allWorkPlanAdapter= new AllWorkPlanAdapter(getApplication(),1);
+        allWorkPlanAdapter= new AllWorkPlanAdapter(getApplication());
         serverErrorLiveData = new MutableLiveData<>();
 
     }
@@ -54,18 +52,9 @@ public class AllWorkPlanViewModel extends AndroidViewModel {
                 {
                    if (key== SERVER_ALL_WORK_PLAN_RESPONSE)
                     {
-                        List<WorkPlan> list = (List<WorkPlan>) response;
-                        List<DoctorModel> doctorModelList= new ArrayList<>();
-                        for (WorkPlan model:list)
-                        {
-                            DoctorModel doctorModel= new DoctorModel();
-                            doctorModel.setName(model.getWorkPlanNo());
-                            doctorModel.setWork_Plan(model.getWorkPlan());
-                            doctorModel.setToDate(model.getCreatedOn());
-                            doctorModel.setCoordinates(model.getVisitCord());
-                            doctorModelList.add(doctorModel);
-                        }
-                        allWorkPlanAdapter.setDoctorModelList(doctorModelList);
+                        List<LookUpWorkPlan> list = (List<LookUpWorkPlan>) response;
+
+                        allWorkPlanAdapter.setWorkPlanList(list);
 
                     }
 

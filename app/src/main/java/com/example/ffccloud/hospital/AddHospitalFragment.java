@@ -602,6 +602,8 @@ public class AddHospitalFragment extends Fragment {
                 mBinding.morningRadioBtn.setChecked(true);
             } else if (shift.equals("Evening")) {
                 mBinding.eveningRadioBtn.setChecked(true);
+            } else if (shift.equals("FullDay")) {
+                mBinding.fullDayRadioBtn.setChecked(true);
             }
         }
 

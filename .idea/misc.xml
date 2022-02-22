@@ -30,12 +30,18 @@
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/drawable/tick_two.xml" value="0.138" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/activity_splash.xml" value="0.1" />
-        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/card_view_doctor_evening_target.xml" value="0.67" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/all_work_plan_card.xml" value="0.67" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/card_view_doctor_evening_target.xml" value="0.3470715835140998" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/card_view_doctor_morning_target.xml" value="0.28854625550660795" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/chat_user_card.xml" value="0.28854625550660795" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/dash_board_cutomer_card.xml" value="0.5744047619047619" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/employee_expense_detail_card.xml" value="0.28854625550660795" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_add_doctor.xml" value="0.33" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_add_farm_form.xml" value="0.19640179910044978" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_add_hospital.xml" value="0.19640179910044978" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_add_medical_store.xml" value="0.19640179910044978" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_all_work_plan.xml" value="0.33" />
+        <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_dash_board.xml" value="0.19640179910044978" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_employees_expense_list.xml" value="0.28854625550660795" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_home.xml" value="0.28854625550660795" />
         <entry key="..\:/umair folder/work from office/FFC_Java/app/src/main/res/layout/fragment_pending_work_plans.xml" value="0.28854625550660795" />

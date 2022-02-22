@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.ffccloud.Database.FFC_DAO;
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.DoctorModel;
@@ -17,10 +19,11 @@ import java.util.concurrent.Executors;
 public class UploadDataRepository {
     private FFC_DAO mDao;
     Context mContext;
-    private final List<UpdateWorkPlanStatus> allWorkPlanStatus;
-    private final List<AddNewWorkPlanModel> allWorkPlan;
+    private List<UpdateWorkPlanStatus> allWorkPlanStatus;
+    private List<AddNewWorkPlanModel> allWorkPlan;
     private Executor executor= Executors.newSingleThreadExecutor();
     private Handler handler= new Handler(Looper.getMainLooper());
+    private CallBackListener callBackListener;
 
 
 
@@ -28,11 +31,12 @@ public class UploadDataRepository {
         FfcDatabase database = FfcDatabase.getInstance(context.getApplicationContext());
         mDao = database.dao();
         this.mContext = context;
-        allWorkPlanStatus = mDao.getAllWorkPlanStatus();
-        allWorkPlan = mDao.getAllWorkPlan();
 
     }
 
+    public void setCallBackListener(CallBackListener callBackListener) {
+        this.callBackListener = callBackListener;
+    }
 
     public void insertWorkPlanStatus(UpdateWorkPlanStatus updateWorkPlanStatus) {
         executor.execute(new Runnable() {
@@ -54,9 +58,21 @@ public class UploadDataRepository {
     }
 
 
-    public List<UpdateWorkPlanStatus> getAllWorkPlanStatus()
+    public void  getAllWorkPlanStatus()
     {
-        return allWorkPlanStatus;
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                allWorkPlanStatus = mDao.getAllWorkPlanStatus();
+                if (callBackListener!=null)
+                {
+                    callBackListener.onDataReceived(allWorkPlanStatus,1);
+
+                }
+
+            }
+        });
+
     }
 
 
@@ -81,9 +97,19 @@ public class UploadDataRepository {
     }
 
 
-    public List<AddNewWorkPlanModel> getAllWorkPlan()
+    public void getAllWorkPlan()
     {
-        return allWorkPlan;
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                allWorkPlan = mDao.getAllWorkPlan();
+                if (callBackListener!=null)
+                {
+                    callBackListener.onDataReceived(allWorkPlan,2);
+
+                }
+            }
+        });
     }
 
     public DoctorModel getWorkPlanById(int id)
@@ -110,6 +136,12 @@ public class UploadDataRepository {
                 mDao.DeleteWorkPlanDoctor(doctorModel);
             }
         });
+    }
+
+    public interface CallBackListener{
+
+         void onDataReceived(Object object,int key);
+
     }
 
 }

@@ -479,6 +479,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 menu.add(1, R.id.nav_home, 1, "Home").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_home, null));
                                 break;
+                                case "Ac_Dashboard":
+
+                                menu.add(1, R.id.DashBoardFragment, 1, "DashBoard").setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_dashboard, null));
+                                break;
                             case "Ac_Target":
                                 mbinding.bottomNavigation.getMenu().getItem(1).setVisible(true);
 

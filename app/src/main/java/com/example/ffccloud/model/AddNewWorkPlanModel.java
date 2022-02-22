@@ -27,9 +27,50 @@ public class AddNewWorkPlanModel {
     @SerializedName("Emp_Id")
     private int empId;
 
+    @SerializedName("Visit_On")
+    private String Visit_On;
+    @SerializedName("Visit_Cord")
+    private String Visit_Cord;
+
+    @SerializedName("Visit_Address ")
+    private String visitAddress;
+    @SerializedName("Visit_distance_Ver  ")
+    private String visitDistance;
     public AddNewWorkPlanModel()
     {
 
+    }
+
+    public String getVisit_On() {
+        return Visit_On;
+    }
+
+    public void setVisit_On(String visit_On) {
+        Visit_On = visit_On;
+    }
+
+    public String getVisit_Cord() {
+        return Visit_Cord;
+    }
+
+    public void setVisit_Cord(String visit_Cord) {
+        Visit_Cord = visit_Cord;
+    }
+
+    public String getVisitAddress() {
+        return visitAddress;
+    }
+
+    public void setVisitAddress(String visitAddress) {
+        this.visitAddress = visitAddress;
+    }
+
+    public String getVisitDistance() {
+        return visitDistance;
+    }
+
+    public void setVisitDistance(String visitDistance) {
+        this.visitDistance = visitDistance;
     }
 
     public int getId() {

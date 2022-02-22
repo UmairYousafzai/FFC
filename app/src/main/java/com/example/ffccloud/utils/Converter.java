@@ -92,5 +92,22 @@ public class Converter {
 
     }
 
+    public static String StringToFormatDateTarget(String date)
+    {
+        Date date1 = null;
+        String formatDate="";
+        try {
+            date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+        DateFormat dateFormat= new SimpleDateFormat("dd-MM-yyyy");
+
+        if (date1 != null) {
+            formatDate= dateFormat.format(date1);
+        }
+        return formatDate;
+
+    }
 }

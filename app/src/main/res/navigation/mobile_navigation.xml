@@ -56,28 +56,7 @@
         <action
             android:id="@+id/action_nav_home_to_tableLayout"
             app:destination="@id/tableLayout" />
-        <action
-            android:id="@+id/action_nav_home_to_employeeExpenseFragment"
-            app:destination="@id/employeeExpenseFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_nav_home_to_workplan_Fragment"
-            app:destination="@id/work_plan_Fragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
 
-        <action
-            android:id="@+id/action_nav_home_to_customer_menu_Fragment"
-            app:destination="@id/customer_menu_fragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
 
 
     </fragment>
@@ -949,6 +928,36 @@
             app:argType="string"
             app:nullable="true" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/DashBoardFragment"
+        android:name="com.example.ffccloud.dashboard.DashBoardFragment"
+        android:label="DashBoard">
+
+
+        <action
+            android:id="@+id/action_DashBoardFragment_to_employeeExpenseFragment"
+            app:destination="@id/employeeExpenseFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_DashBoardFragment_to_workplan_Fragment"
+            app:destination="@id/work_plan_Fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_DashBoardFragment_to_customer_menu_Fragment"
+            app:destination="@id/customer_menu_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/notificationList"

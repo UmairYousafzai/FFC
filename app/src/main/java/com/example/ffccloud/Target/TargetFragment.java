@@ -499,15 +499,7 @@ public class TargetFragment extends Fragment {
             dialogBinding = CustomCancelDialogBinding.inflate(getLayoutInflater());
             alertDialog = new AlertDialog.Builder(requireContext()).setView(dialogBinding.getRoot()).setCancelable(false).create();
             alertDialog.show();
-            CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
-                @Override
-                public void gotLocation(Location location1) {
-                    if (location1 != null) {
-                        location = location1;
-                    }
 
-                }
-            };
 
 
             dialogBinding.speechToTextBtn.setOnClickListener(new View.OnClickListener() {
@@ -527,7 +519,6 @@ public class TargetFragment extends Fragment {
                 }
             });
 
-            customLocation.getLastLocation(locationResults);
             dialogBinding.saveRemarksBtn.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
@@ -536,66 +527,86 @@ public class TargetFragment extends Fragment {
                     progressDialog.setMessage("Loading....");
                     progressDialog.setCancelable(false);
                     progressDialog.show();
-                    dialogBinding.saveRemarksBtn.setEnabled(false);
-                    if (dialogBinding.remarksEdittext.getText() != null && dialogBinding.remarksEdittext.getText().toString().length() > 0) {
-                        remarksForCancel = dialogBinding.remarksEdittext.getText().toString();
-                    }
-                    String locationString = "";
-                    if (location != null) {
-                        locationString = location.getLatitude() + "," + location.getLongitude();
+                    CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
+                        @Override
+                        public void gotLocation(Location location1) {
+                            if (location1 != null) {
+                                location = location1;
 
-                    }
-                    Date date = Calendar.getInstance().getTime();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
-                    String dateString = dateFormat.format(date);
+                                dialogBinding.saveRemarksBtn.setEnabled(false);
+                                if (dialogBinding.remarksEdittext.getText() != null && dialogBinding.remarksEdittext.getText().toString().length() > 0) {
+                                    remarksForCancel = dialogBinding.remarksEdittext.getText().toString();
+                                }
+                                String locationString = "";
+                                if (location != null) {
+                                    locationString = location.getLatitude() + "," + location.getLongitude();
 
-                    if (remarksForCancel != null && remarksForCancel.length() > 0) {
-                        if (locationString.length() > 0) {
+                                }
+                                Date date = Calendar.getInstance().getTime();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
+                                String dateString = dateFormat.format(date);
 
-                            List<UpdateWorkPlanStatus> list = new ArrayList<>();
-                            int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
+                                if (remarksForCancel != null && remarksForCancel.length() > 0) {
+                                    if (locationString.length() > 0) {
+                                        String[] locationArray = doctorModel.getCoordinates().split(",");
+                                        Location workPlanLocation = new Location("");
+                                        workPlanLocation.setLatitude(Double.parseDouble(locationArray[0]));
+                                        workPlanLocation.setLongitude(Double.parseDouble(locationArray[1]));
+                                        double distance = location.distanceTo(workPlanLocation);
+                                        String distanceString= distance / 1000 +"Km";
+                                        String visitAddress= customLocation.getCompleteAddressString(location1.getLatitude(),location1.getLongitude());
+                                        List<UpdateWorkPlanStatus> list = new ArrayList<>();
+                                        int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
 
 
-                            UpdateWorkPlanStatus updateWorkPlanStatus = new UpdateWorkPlanStatus();
+                                        UpdateWorkPlanStatus updateWorkPlanStatus = new UpdateWorkPlanStatus();
 
-                            updateWorkPlanStatus.setDoctor_Id(doctorModel.getDoctorId());
-                            updateWorkPlanStatus.setEmp_Id(userId);
-                            updateWorkPlanStatus.setRemarks(remarksForCancel);
-                            updateWorkPlanStatus.setStatus(String.valueOf(key));
-                            updateWorkPlanStatus.setVisit_On(dateString);
-                            updateWorkPlanStatus.setVisit_Cord(locationString);
+                                        updateWorkPlanStatus.setDoctor_Id(doctorModel.getDoctorId());
+                                        updateWorkPlanStatus.setEmp_Id(userId);
+                                        updateWorkPlanStatus.setRemarks(remarksForCancel);
+                                        updateWorkPlanStatus.setStatus(String.valueOf(key));
+                                        updateWorkPlanStatus.setVisit_On(dateString);
+                                        updateWorkPlanStatus.setVisit_Cord(locationString);
+                                        updateWorkPlanStatus.setVisitDistance(distanceString);
+                                        updateWorkPlanStatus.setVisitAddress(visitAddress);
+                                        if (doctorModel.getWorkId() > 0) {
+                                            updateWorkPlanStatus.setWork_Id(String.valueOf(doctorModel.getWorkId()));
+                                        }
 
-                            if (doctorModel.getWorkId() > 0) {
-                                updateWorkPlanStatus.setWork_Id(String.valueOf(doctorModel.getWorkId()));
+                                        list.add(updateWorkPlanStatus);
+                                        if (isNetworkConnected()) {
+                                            cancelWorkPlanStatus(list, doctorModel);
+                                        } else {
+                                            remarksForCancel = "";
+                                            eveningListAdapter.removeItem(doctorModel);
+                                            morningListAdapter.removeItem(doctorModel);
+                                            dialogBinding.saveRemarksBtn.setEnabled(true);
+
+                                            targetViewModel.DeleteDoctor(doctorModel);
+                                            progressDialog.dismiss();
+                                            alertDialog.dismiss();
+                                            uploadDataRepository.insertWorkPlanStatus(updateWorkPlanStatus);
+                                            generateWorkRequest(CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN);
+                                        }
+                                    } else {
+                                        Toast.makeText(requireContext(), "Please turn on Location", Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
+                                        dialogBinding.saveRemarksBtn.setEnabled(true);
+                                    }
+
+
+                                } else {
+                                    dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
+                                    progressDialog.dismiss();
+                                    dialogBinding.saveRemarksBtn.setEnabled(true);
+                                }
                             }
 
-                            list.add(updateWorkPlanStatus);
-                            if (isNetworkConnected()) {
-                                cancelWorkPlanStatus(list, doctorModel);
-                            } else {
-                                remarksForCancel = "";
-                                eveningListAdapter.removeItem(doctorModel);
-                                morningListAdapter.removeItem(doctorModel);
-                                dialogBinding.saveRemarksBtn.setEnabled(true);
-
-                                targetViewModel.DeleteDoctor(doctorModel);
-                                progressDialog.dismiss();
-                                alertDialog.dismiss();
-                                uploadDataRepository.insertWorkPlanStatus(updateWorkPlanStatus);
-                                generateWorkRequest(CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN);
-                            }
-                        } else {
-                            Toast.makeText(requireContext(), "Please turn on Location", Toast.LENGTH_SHORT).show();
-                            progressDialog.dismiss();
-                            dialogBinding.saveRemarksBtn.setEnabled(true);
                         }
+                    };
+                    customLocation.getLastLocation(locationResults);
 
 
-                    } else {
-                        dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
-                        progressDialog.dismiss();
-                        dialogBinding.saveRemarksBtn.setEnabled(true);
-                    }
                 }
             });
 
@@ -754,77 +765,110 @@ public class TargetFragment extends Fragment {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
 
-                    String dateCheck = "", timeCheck = "";
+                    CustomLocation customLocation = new CustomLocation(requireContext());
 
-                    if (rescheduleBinding.remarksEdittext.getText() != null && rescheduleBinding.remarksEdittext.getText().toString().length() > 0) {
-                        remarksForReschedule = rescheduleBinding.remarksEdittext.getText().toString();
-                    }
-                    if (rescheduleBinding.textDate.getText() != null && rescheduleBinding.textDate.getText().toString().length() > 0) {
-                        dateCheck = rescheduleBinding.textDate.getText().toString();
-                    }
+                    CustomLocation.CustomLocationResults locationResults = new CustomLocation.CustomLocationResults() {
+                        @Override
+                        public void gotLocation(Location location) {
 
-                    if (rescheduleBinding.textTime.getText() != null && rescheduleBinding.textTime.getText().toString().length() > 0) {
-                        timeCheck = rescheduleBinding.textTime.getText().toString();
-                    }
+                            if (location!=null)
+                            {
 
-                    if (remarksForReschedule != null && remarksForReschedule.length() > 0) {
-                        rescheduleBinding.remarksEdittext.setError(null);
-                        if (dateCheck.length() > 0) {
-                            rescheduleBinding.textDate.setError(null);
-                            if (timeCheck.length() > 0) {
-                                rescheduleBinding.textTime.setError(null);
-                                int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
+                                Date date = Calendar.getInstance().getTime();
+                                SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a", Locale.getDefault());
+                                String dateString = df.format(date);
+                                String locationString = location.getLatitude() + "," + location.getLongitude();
 
-                                AddNewWorkPlanModel addNewWorkPlanModel = new AddNewWorkPlanModel();
+                                String[] locationArray = doctorModel.getCoordinates().split(",");
+                                Location workPlanLocation = new Location("");
+                                workPlanLocation.setLatitude(Double.parseDouble(locationArray[0]));
+                                workPlanLocation.setLongitude(Double.parseDouble(locationArray[1]));
+                                double distance = location.distanceTo(workPlanLocation);
+                                String distanceString= distance / 1000 +"Km";
+                                String visitAddress= customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
 
-                                addNewWorkPlanModel.setDoctorId(doctorModel.getDoctorId());
-                                addNewWorkPlanModel.setEmpId(userId);
-                                addNewWorkPlanModel.setRemarks1(remarksForReschedule);
-                                String dateTime = dateCheck + " " + timeCheck;
-                                addNewWorkPlanModel.setWorkFromDate(dateTime);
-                                addNewWorkPlanModel.setWorkToDate(dateTime);
-                                addNewWorkPlanModel.setWorkPlan(doctorModel.getWork_Plan());
-                                addNewWorkPlanModel.setWorkId(doctorModel.getWorkId());
+                                String dateCheck = "", timeCheck = "";
 
-                                if (isNetworkConnected()) {
-                                    rescheduleWorkPlanStatus(doctorModel, addNewWorkPlanModel);
-                                } else {
-                                    targetViewModel.DeleteDoctor(doctorModel);
-                                    morningListAdapter.removeItem(doctorModel);
-                                    eveningListAdapter.removeItem(doctorModel);
-                                    rescheduleBinding.saveBtn.setEnabled(true);
-                                    progressDialog.dismiss();
-                                    alertDialog.dismiss();
-                                    uploadDataRepository.insertWorkPlan(addNewWorkPlanModel);
-                                    generateWorkRequest(CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN);
+                                if (rescheduleBinding.remarksEdittext.getText() != null && rescheduleBinding.remarksEdittext.getText().toString().length() > 0) {
+                                    remarksForReschedule = rescheduleBinding.remarksEdittext.getText().toString();
+                                }
+                                if (rescheduleBinding.textDate.getText() != null && rescheduleBinding.textDate.getText().toString().length() > 0) {
+                                    dateCheck = rescheduleBinding.textDate.getText().toString();
                                 }
 
-                            } else {
-                                Toast.makeText(requireContext(), "Please select time", Toast.LENGTH_SHORT).show();
-                                rescheduleBinding.textTime.setError("Please select time");
-                                rescheduleBinding.textTime.requestFocus();
-                                progressDialog.dismiss();
-                                rescheduleBinding.saveBtn.setEnabled(true);
+                                if (rescheduleBinding.textTime.getText() != null && rescheduleBinding.textTime.getText().toString().length() > 0) {
+                                    timeCheck = rescheduleBinding.textTime.getText().toString();
+                                }
+
+                                if (remarksForReschedule != null && remarksForReschedule.length() > 0) {
+                                    rescheduleBinding.remarksEdittext.setError(null);
+                                    if (dateCheck.length() > 0) {
+                                        rescheduleBinding.textDate.setError(null);
+                                        if (timeCheck.length() > 0) {
+                                            rescheduleBinding.textTime.setError(null);
+                                            int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
+
+                                            AddNewWorkPlanModel addNewWorkPlanModel = new AddNewWorkPlanModel();
+
+                                            addNewWorkPlanModel.setDoctorId(doctorModel.getDoctorId());
+                                            addNewWorkPlanModel.setEmpId(userId);
+                                            addNewWorkPlanModel.setRemarks1(remarksForReschedule);
+                                            String dateTime = dateCheck + " " + timeCheck;
+                                            addNewWorkPlanModel.setWorkFromDate(dateTime);
+                                            addNewWorkPlanModel.setWorkToDate(dateTime);
+                                            addNewWorkPlanModel.setWorkPlan(doctorModel.getWork_Plan());
+                                            addNewWorkPlanModel.setWorkId(doctorModel.getWorkId());
+                                            addNewWorkPlanModel.setVisitDistance(distanceString);
+                                            addNewWorkPlanModel.setVisitAddress(visitAddress);
+                                            addNewWorkPlanModel.setVisit_Cord(locationString);
+                                            addNewWorkPlanModel.setVisit_On(dateString);
+
+
+                                            if (isNetworkConnected()) {
+                                                rescheduleWorkPlanStatus(doctorModel, addNewWorkPlanModel);
+                                            } else {
+                                                targetViewModel.DeleteDoctor(doctorModel);
+                                                morningListAdapter.removeItem(doctorModel);
+                                                eveningListAdapter.removeItem(doctorModel);
+                                                rescheduleBinding.saveBtn.setEnabled(true);
+                                                progressDialog.dismiss();
+                                                alertDialog.dismiss();
+                                                uploadDataRepository.insertWorkPlan(addNewWorkPlanModel);
+                                                generateWorkRequest(CONSTANTS.WORK_REQUEST_RESCHEDULE_WORK_PLAN);
+                                            }
+
+                                        } else {
+                                            Toast.makeText(requireContext(), "Please select time", Toast.LENGTH_SHORT).show();
+                                            rescheduleBinding.textTime.setError("Please select time");
+                                            rescheduleBinding.textTime.requestFocus();
+                                            progressDialog.dismiss();
+                                            rescheduleBinding.saveBtn.setEnabled(true);
+
+                                        }
+
+                                    } else {
+                                        Toast.makeText(requireContext(), "Please select date", Toast.LENGTH_SHORT).show();
+                                        rescheduleBinding.textDate.setError("Please select date");
+                                        rescheduleBinding.textDate.requestFocus();
+                                        progressDialog.dismiss();
+                                        rescheduleBinding.saveBtn.setEnabled(true);
+
+                                    }
+
+                                } else {
+                                    Toast.makeText(requireContext(), "Please enter remarks", Toast.LENGTH_SHORT).show();
+                                    rescheduleBinding.remarksEdittext.setError("Please enter remarks");
+                                    rescheduleBinding.remarksEdittext.requestFocus();
+                                    progressDialog.dismiss();
+                                    rescheduleBinding.saveBtn.setEnabled(true);
+
+                                }
 
                             }
-
-                        } else {
-                            Toast.makeText(requireContext(), "Please select date", Toast.LENGTH_SHORT).show();
-                            rescheduleBinding.textDate.setError("Please select date");
-                            rescheduleBinding.textDate.requestFocus();
-                            progressDialog.dismiss();
-                            rescheduleBinding.saveBtn.setEnabled(true);
-
                         }
+                    };
+                    customLocation.getLastLocation(locationResults);
 
-                    } else {
-                        Toast.makeText(requireContext(), "Please enter remarks", Toast.LENGTH_SHORT).show();
-                        rescheduleBinding.remarksEdittext.setError("Please enter remarks");
-                        rescheduleBinding.remarksEdittext.requestFocus();
-                        progressDialog.dismiss();
-                        rescheduleBinding.saveBtn.setEnabled(true);
-
-                    }
 
                 }
             });
@@ -892,6 +936,11 @@ public class TargetFragment extends Fragment {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
+    public void calculateDistance()
+    {
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -949,13 +998,6 @@ public class TargetFragment extends Fragment {
                 .build();
         WorkManager.getInstance().enqueue(oneTimeWorkRequest);
 
-        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
-                .observe(this, new Observer<WorkInfo>() {
-                    @Override
-                    public void onChanged(WorkInfo workInfo) {
-                        Toast.makeText(requireContext(), "" + workInfo.getState().name(), Toast.LENGTH_SHORT).show();
-                    }
-                });
 
     }
 }

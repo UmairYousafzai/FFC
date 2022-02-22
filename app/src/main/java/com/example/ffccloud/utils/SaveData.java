@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Vibrator;
 
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.Observer;
 
 import com.example.ffccloud.DoctorModel;
 import com.example.ffccloud.model.AddNewWorkPlanModel;
@@ -23,6 +24,7 @@ import com.example.ffccloud.worker.utils.UploadDataRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +39,7 @@ public class SaveData {
     public SaveData(Context context) {
         this.mContext = context;
         uploadDataRepository= new UploadDataRepository(context);
-
+        getDataFromDB();
     }
 
     public static synchronized SaveData getInstance(Context context){
@@ -94,9 +96,27 @@ public class SaveData {
     public void SaveWorkPlanStatus()
     {
 
-        UpdateWorkPlanStatusRequest(uploadDataRepository.getAllWorkPlanStatus());
+        uploadDataRepository.getAllWorkPlanStatus();
 
 
+    }
+    public void getDataFromDB()
+    {
+        uploadDataRepository.setCallBackListener(new UploadDataRepository.CallBackListener() {
+            @Override
+            public void onDataReceived(Object object, int key) {
+                if (key == 1)
+                {
+                    UpdateWorkPlanStatusRequest((List<UpdateWorkPlanStatus>) object);
+
+                }
+                else
+                {
+                    UpdateWorkPlan((List<AddNewWorkPlanModel>) object);
+
+                }
+            }
+        });
     }
 
     public void UpdateWorkPlan(List<AddNewWorkPlanModel> list)
@@ -153,7 +173,7 @@ public class SaveData {
 
     public void saveWorkPlan()
     {
-        UpdateWorkPlan(uploadDataRepository.getAllWorkPlan());
+        uploadDataRepository.getAllWorkPlan();
     }
 
 

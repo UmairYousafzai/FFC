@@ -351,6 +351,7 @@ public class TargetFullInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                mBinding.btnCompelete.setEnabled(false);
 
                 completeAndDeleteWorkPlan(2, 2);
 
@@ -360,6 +361,8 @@ public class TargetFullInfoFragment extends Fragment {
         mBinding.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mBinding.btnDelete.setEnabled(false);
                 completeAndDeleteWorkPlan(4, 2);
             }
         });
@@ -433,6 +436,7 @@ public class TargetFullInfoFragment extends Fragment {
 
     // distance key for the user option , what type of distance filter he want to use
     private void completeAndDeleteWorkPlan(int key, int distanceKey) {
+        CustomLocation customLocation = new CustomLocation(requireContext());
 
 
 
@@ -450,11 +454,13 @@ public class TargetFullInfoFragment extends Fragment {
 
 
                     double distance = location.distanceTo(workPlanLocation);
+                    String distanceString= distance / 1000 +"Km";
+                    String visitAddress= customLocation.getCompleteAddressString(location1.getLatitude(),location1.getLongitude());
 
                     if (distanceKey == 1) {
 
                         if (distance <= 10) {
-                            saveWorkPlane(key);
+                            saveWorkPlane(key,distanceString,visitAddress);
                         } else {
                             CustomsDialog.getInstance().showDialog("You Are Out Of WorkPlan Location Radius", " ", requireActivity(), requireContext(),2);
                         }
@@ -462,7 +468,7 @@ public class TargetFullInfoFragment extends Fragment {
                     } else if (distanceKey == 2) {
                         if (distance <= 10) {
 
-                            saveWorkPlane(key);
+                            saveWorkPlane(key,distanceString,visitAddress);
                         } else {
 
                             CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
@@ -475,7 +481,7 @@ public class TargetFullInfoFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     alertDialog.dismiss();
-                                    saveWorkPlane(key);
+                                    saveWorkPlane(key,distanceString,visitAddress);
 
                                 }
                             });
@@ -483,12 +489,17 @@ public class TargetFullInfoFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     alertDialog.dismiss();
+                                    mBinding.btnDelete.setEnabled(true);
+                                    mBinding.btnCompelete.setEnabled(true);
 
                                 }
                             });
                             dialogBinding.btnCheckLocation.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    mBinding.btnDelete.setEnabled(true);
+                                    mBinding.btnCompelete.setEnabled(true);
+
                                     alertDialog.dismiss();
                                     TargetFullInfoFragmentDirections.ActionTargetFullInfoFragmentToMapFragment action =
                                             TargetFullInfoFragmentDirections.actionTargetFullInfoFragmentToMapFragment();
@@ -501,13 +512,12 @@ public class TargetFullInfoFragment extends Fragment {
 
                         }
                     } else if (distance == 3) {
-                        saveWorkPlane(key);
+                        saveWorkPlane(key,distanceString,visitAddress);
 
                     }
                 }
             };
 
-            CustomLocation customLocation = new CustomLocation(requireContext());
             customLocation.getLastLocation(locationResults);
 
         } catch (Exception e) {
@@ -517,7 +527,7 @@ public class TargetFullInfoFragment extends Fragment {
 
     }
 
-    public void saveWorkPlane(int key) {
+    public void saveWorkPlane(int key,String distance,String address) {
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Loading");
         CustomCompeleteDialogBinding dialogBinding = CustomCompeleteDialogBinding.inflate(getLayoutInflater());
@@ -549,6 +559,8 @@ public class TargetFullInfoFragment extends Fragment {
                         updateWorkPlanStatus.setStatus(String.valueOf(key));
                         updateWorkPlanStatus.setVisit_On(dateString);
                         updateWorkPlanStatus.setVisit_Cord(locationString);
+                        updateWorkPlanStatus.setVisitDistance(distance);
+                        updateWorkPlanStatus.setVisitAddress(address);
 
                         if (doctorModel.getWorkId() > 0) {
                             updateWorkPlanStatus.setWork_Id(String.valueOf(doctorModel.getWorkId()));
@@ -586,18 +598,25 @@ public class TargetFullInfoFragment extends Fragment {
                                         progressDialog.dismiss();
                                     }
 
+                                    mBinding.btnDelete.setEnabled(true);
+                                    mBinding.btnCompelete.setEnabled(true);
 
                                 }
 
                                 @Override
                                 public void onFailure(@NotNull Call<UpdateStatus> call, @NotNull Throwable t) {
 
+                                    mBinding.btnDelete.setEnabled(true);
+                                    mBinding.btnCompelete.setEnabled(true);
 
                                     Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                                     progressDialog.dismiss();
                                 }
                             });
                         } else {
+                            mBinding.btnDelete.setEnabled(true);
+                            mBinding.btnCompelete.setEnabled(true);
+
                             alertDialog.dismiss();
                             progressDialog.dismiss();
                             targetViewModel.DeleteDoctor(doctorModel);
@@ -607,9 +626,15 @@ public class TargetFullInfoFragment extends Fragment {
                         }
 
                     } else {
+                        mBinding.btnDelete.setEnabled(true);
+                        mBinding.btnCompelete.setEnabled(true);
+
                         Toast.makeText(getActivity(), "Please turn on location", Toast.LENGTH_LONG).show();
                     }
                 } else {
+                    mBinding.btnDelete.setEnabled(true);
+                    mBinding.btnCompelete.setEnabled(true);
+
                     dialogBinding.remarksEdittext.setError("Please Enter The Remarks");
                     progressDialog.dismiss();
                 }
@@ -619,6 +644,9 @@ public class TargetFullInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
+                mBinding.btnDelete.setEnabled(true);
+                mBinding.btnCompelete.setEnabled(true);
+
             }
         });
 
@@ -808,7 +836,7 @@ public class TargetFullInfoFragment extends Fragment {
     private void generateWorkRequest() {
 
         Data mainData = new Data.Builder()
-                .putString(CONSTANTS.WORK_REQUEST_TAG, CONSTANTS.WORK_REQUEST_COMPLETE_WORK_PLAN)
+                .putString(CONSTANTS.WORK_REQUEST_TAG, CONSTANTS.WORK_REQUEST_CANCEL_WORK_PLAN)
 
                 .build();
 
@@ -820,13 +848,7 @@ public class TargetFullInfoFragment extends Fragment {
                 .build();
         WorkManager.getInstance().enqueue(oneTimeWorkRequest);
 
-        WorkManager.getInstance().getWorkInfoByIdLiveData(oneTimeWorkRequest.getId())
-                .observe(this, new Observer<WorkInfo>() {
-                    @Override
-                    public void onChanged(WorkInfo workInfo) {
-                        Toast.makeText(requireContext(), "" + workInfo.getState().name(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+
 
     }
 }

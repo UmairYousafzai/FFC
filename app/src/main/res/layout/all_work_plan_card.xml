@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.example.ffccloud.utils.Converter"/>
+        <variable
+            name="workPlan"
+            type="com.example.ffccloud.model.LookUpWorkPlan" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="5dp"
+        android:layout_margin="5dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/date_time_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@drawable/theme_colour_rectangle_background"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/APP_Theme_Color"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="@{workPlan.workPlan,default=WorkPlan}"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:text="@{Converter.StringToFormatDateTarget(workPlan.date),default=jan2022}"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"
+                    android:padding="5dp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:text="@{workPlan.day,default=day}"
+                    android:textColor="@color/APP_Theme_Color"
+                    android:textStyle="bold"
+                    android:padding="5dp"
+                    android:layout_marginBottom="10dp"
+
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_customer_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@{workPlan.customerName,default=CustomerName}"
+                android:textColor="@color/APP_Theme_Color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btn_location"
+                app:layout_constraintStart_toEndOf="@+id/date_time_layout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btn_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_location"
+                android:background="@color/white"
+                android:minWidth="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_customer_name"
+                app:layout_constraintBottom_toBottomOf="@id/tv_customer_name" />
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintTop_toBottomOf="@id/tv_customer_name"
+                app:layout_constraintStart_toEndOf="@id/date_time_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="3dp" />
+
+            <TextView
+                android:id="@+id/tv_customer_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{@string/address+workPlan.customerAddress,default=WorkPlan}"
+                app:layout_constraintTop_toBottomOf="@id/view1"
+                app:layout_constraintStart_toEndOf="@id/date_time_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="5dp" />
+
+            <TextView
+                android:id="@+id/tv_area"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{@string/area+workPlan.regionName,default=region}"
+                app:layout_constraintTop_toBottomOf="@id/tv_customer_address"
+                app:layout_constraintStart_toEndOf="@id/date_time_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="5dp" />
+
+            <TextView
+                android:id="@+id/tv_customer_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{@string/customer_type,default=customerType}"
+
+                app:layout_constraintTop_toBottomOf="@id/tv_area"
+                app:layout_constraintStart_toEndOf="@id/date_time_layout"
+                app:layout_constraintEnd_toStartOf="@id/tv_status"
+                android:padding="5dp" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{@string/status+workPlan.status,default=status}"
+
+                app:layout_constraintTop_toBottomOf="@id/tv_area"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_customer_type"
+                android:padding="5dp" />
+
+            <TextView
+                android:id="@+id/tv_classification"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{@string/classification+workPlan.customerClassification,default=status}"
+                app:layout_constraintTop_toBottomOf="@id/tv_status"
+                app:layout_constraintStart_toEndOf="@id/date_time_layout"
+                app:layout_constraintEnd_toStartOf="@+id/tv_shift"
+                android:padding="5dp" />
+
+            <TextView
+                android:id="@+id/tv_shift"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{@string/shift+workPlan.customerClassification,default=status}"
+
+                app:layout_constraintTop_toBottomOf="@id/tv_status"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_classification"
+                android:padding="5dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.example.ffccloud.NetworkCalls.ApiClient;
 import com.example.ffccloud.interfaces.NetworkCallListener;
+import com.example.ffccloud.model.LookUpWorkPlan;
 import com.example.ffccloud.model.UpdateStatus;
 import com.example.ffccloud.model.WorkPlan;
 
@@ -85,11 +86,11 @@ public class WorkPlanRepository {
 
     public void getAllWorkPlan(String token,int workPlanID)
     {
-        Call<List<WorkPlan>> call = ApiClient.getInstance().getApi().getAllDashBoardWorkPlan(token,"","",0,0,workPlanID);
+        Call<List<LookUpWorkPlan>> call = ApiClient.getInstance().getApi().getAllDashBoardWorkPlan(token,"","",0,0,workPlanID);
 
-        call.enqueue(new Callback<List<WorkPlan>>() {
+        call.enqueue(new Callback<List<LookUpWorkPlan>>() {
             @Override
-            public void onResponse(@NonNull Call<List<WorkPlan>> call, @NonNull Response<List<WorkPlan>> response) {
+            public void onResponse(@NonNull Call<List<LookUpWorkPlan>> call, @NonNull Response<List<LookUpWorkPlan>> response) {
 
                 if (response.isSuccessful())
                 {
@@ -119,7 +120,7 @@ public class WorkPlanRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<WorkPlan>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<LookUpWorkPlan>> call, @NonNull Throwable t) {
 
                 listener.onCallResponse(t.getMessage(),SERVER_ERROR_RESPONSE);
             }

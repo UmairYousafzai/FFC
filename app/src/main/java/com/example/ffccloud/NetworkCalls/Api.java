@@ -28,6 +28,7 @@ import com.example.ffccloud.model.GetSaleOrderDetail;
 import com.example.ffccloud.model.GetSupplierDetailModel;
 import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.model.InsertSaleOrderModel;
+import com.example.ffccloud.model.LookUpWorkPlan;
 import com.example.ffccloud.model.QualificationModel;
 import com.example.ffccloud.model.RateListModel;
 import com.example.ffccloud.model.RegionModel;
@@ -256,13 +257,13 @@ public interface Api {
                                              @Query("Month_Id") String month,
                                              @Query("UserId") int userID);
 
-    @GET("api/WorkPlanApiController/GetAll")
-    Call<List<WorkPlan>>  getAllDashBoardWorkPlan(@Header("Authorization") String token,
-                                             @Query("From_Date") String From_Date,
-                                             @Query("To_Date") String To_Date,
-                                             @Query("Emp_Id") int Emp_Id,
-                                             @Query("TaskStatus") int TaskStatus,
-                                             @Query("Work_Plan_Mid") int Work_Plan_Mid);
+    @GET("api/WorkPlanApiController/FFC_App_Lockup_WorkPlans")
+    Call<List<LookUpWorkPlan>>  getAllDashBoardWorkPlan(@Header("Authorization") String token,
+                                                        @Query("From_Date") String From_Date,
+                                                        @Query("To_Date") String To_Date,
+                                                        @Query("Emp_Id") int Emp_Id,
+                                                        @Query("TaskStatus") int TaskStatus,
+                                                        @Query("Work_Plan_Mid") int Work_Plan_Mid);
 
 
     @GET("api/WorkPlanApiController/GetPostStatus")
