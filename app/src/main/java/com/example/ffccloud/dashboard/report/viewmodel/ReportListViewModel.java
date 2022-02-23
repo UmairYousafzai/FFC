@@ -10,7 +10,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ffccloud.dashboard.report.adapter.ReportRecyclerAdapter;
-import com.example.ffccloud.dashboard.report.repository.ReportFilterRepository;
 import com.example.ffccloud.dashboard.report.repository.ReportListRepository;
 import com.example.ffccloud.interfaces.NetworkCallListener;
 import com.example.ffccloud.model.LookUpWorkPlan;
@@ -36,17 +35,16 @@ public class ReportListViewModel extends AndroidViewModel {
         reportMutableLiveData= new MutableLiveData<>();
     }
 
-    public void onClick(String coordinates,int key,LookUpWorkPlan report)
+    public void onClick(String coordinates)
     {
-        if (key==1)
-        {
+
             this.coordinatesMutableLiveData.setValue(coordinates);
 
-        }
-        else if (key==2)
-        {
+    }
+    public void onClickPreView(LookUpWorkPlan report)
+    {
             reportMutableLiveData.setValue(report);
-        }
+
     }
 
     public MutableLiveData<LookUpWorkPlan> getReportMutableLiveData() {

@@ -19,7 +19,6 @@
         app:cardCornerRadius="5dp"
         app:cardElevation="5dp"
         android:layout_margin="5dp"
-        android:onClick="@{()->viewModel.onClick(report.customerLocCordAddress,3,report)}"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,7 +97,7 @@
                 android:src="@drawable/ic_location"
                 android:background="@color/white"
                 android:minWidth="48dp"
-                android:onClick="@{()->viewModel.onClick(report.customerLocCord,1)}"
+                android:onClick="@{()->viewModel.onClick(report.customerLocCord)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_customer_name"
                 app:layout_constraintBottom_toBottomOf="@id/tv_customer_name" />
@@ -109,7 +108,7 @@
                 android:src="@drawable/ic_baseline_preview_blue_24"
                 android:background="@color/white"
                 android:minWidth="48dp"
-                android:onClick="@{()->viewModel.onClick(report.customerLocCord,2)}"
+                android:onClick="@{()->viewModel.onClickPreView(report)}"
                 app:layout_constraintEnd_toStartOf="@id/btn_location"
                 app:layout_constraintTop_toTopOf="@id/tv_customer_name"
                 app:layout_constraintBottom_toBottomOf="@id/tv_customer_name" />

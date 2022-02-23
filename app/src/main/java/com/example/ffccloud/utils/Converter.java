@@ -75,19 +75,25 @@ public class Converter {
     }
     public static String StringToFormatTimeTarget(String date)
     {
+
         Date date1 = null;
         String time="";
-        try {
-             date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        if (date!=null)
+        {
+            try {
+                date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            DateFormat dateFormat= new SimpleDateFormat("h:mm a");
+
+            if (date1 != null) {
+                time= dateFormat.format(date1);
+            }
         }
 
-        DateFormat dateFormat= new SimpleDateFormat("h:mm a");
-
-        if (date1 != null) {
-            time= dateFormat.format(date1);
-        }
         return time;
 
     }

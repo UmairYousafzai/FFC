@@ -287,6 +287,11 @@
     <string name="shift">Shift</string>
     <string name="employee">Employee</string>
     <string name="view">View</string>
+    <string name="visit_remarks">Visit Remarks</string>
+    <string name="visit_time">Visit Time</string>
+    <string name="employee_name">Employee Name</string>
+    <string name="father_name">Father Name</string>
+    <string name="view_visit_location">View Visit Location</string>
 
 
 </resources>

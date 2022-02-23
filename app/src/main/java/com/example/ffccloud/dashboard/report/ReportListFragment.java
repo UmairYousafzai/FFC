@@ -3,21 +3,22 @@ package com.example.ffccloud.dashboard.report;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.example.ffccloud.R;
 import com.example.ffccloud.dashboard.report.viewmodel.ReportListViewModel;
 import com.example.ffccloud.databinding.FragmentReportListBinding;
+import com.example.ffccloud.model.LookUpWorkPlan;
 import com.example.ffccloud.model.ReportFilter;
 import com.example.ffccloud.utils.CustomLocation;
 
@@ -25,6 +26,7 @@ public class ReportListFragment extends Fragment {
 
     private FragmentReportListBinding mBinding;
     private ReportListViewModel viewModel;
+    private NavController navController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -39,6 +41,7 @@ public class ReportListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(ReportListViewModel.class);
+        navController = NavHostFragment.findNavController(this);
 
         mBinding.setViewModel(viewModel);
 
@@ -57,7 +60,8 @@ public class ReportListFragment extends Fragment {
     public void onStop() {
         super.onStop();
         viewModel.getCoordinatesMutableLiveData().setValue(null);
-
+        viewModel.getReportMutableLiveData().setValue(null);
+        viewModel.getToastMessage().setValue(null);
     }
 
     private void getLiveData() {
@@ -83,6 +87,20 @@ public class ReportListFragment extends Fragment {
                 else
                 {
                     Toast.makeText(requireContext(), "Coordinates are empty", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        viewModel.getReportMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LookUpWorkPlan>() {
+            @Override
+            public void onChanged(LookUpWorkPlan report) {
+                if (report!=null)
+                {
+                    ReportListFragmentDirections.ActionReportListFragmentToReportFragment action =
+                            ReportListFragmentDirections.actionReportListFragmentToReportFragment(report);
+
+                    navController.navigate(action);
+
                 }
             }
         });

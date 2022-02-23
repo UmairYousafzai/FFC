@@ -1,9 +1,12 @@
 package com.example.ffccloud.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LookUpWorkPlan {
+public class LookUpWorkPlan implements Parcelable {
 
     @SerializedName("Date")
     @Expose
@@ -76,13 +79,99 @@ public class LookUpWorkPlan {
     private String workPlanRemarks;
     @SerializedName("Work_Plan_Exe_Remarks")
     @Expose
-    private String workPlanExeRemarks;
+    private String visitRemarks;
     @SerializedName("Emp_Name")
     @Expose
     private String empName;
+
+    @SerializedName("emp_Father_Name")
+    @Expose
+    private String empFatherName;
     @SerializedName("Reg_Name")
     @Expose
     private String regionName;
+
+    public LookUpWorkPlan() {
+    }
+
+
+    protected LookUpWorkPlan(Parcel in) {
+        date = in.readString();
+        day = in.readString();
+        fromTime = in.readString();
+        toTime = in.readString();
+        customerId = in.readDouble();
+        customerName = in.readString();
+        customerEmail = in.readString();
+        customerPhone = in.readString();
+        customerQualification = in.readString();
+        customerClassification = in.readString();
+        customerGrade = in.readString();
+        customerAddress = in.readString();
+        customerTimings = in.readString();
+        customerType = in.readString();
+        customerLocCordAddress = in.readString();
+        customerLocCord = in.readString();
+        workPlan = in.readString();
+        status = in.readString();
+        visitOn = in.readString();
+        visitCord = in.readString();
+        visitAddress = in.readString();
+        visitDistanceVer = in.readString();
+        workPlanRemarks = in.readString();
+        visitRemarks = in.readString();
+        empName = in.readString();
+        empFatherName = in.readString();
+        regionName = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(date);
+        dest.writeString(day);
+        dest.writeString(fromTime);
+        dest.writeString(toTime);
+        dest.writeDouble(customerId);
+        dest.writeString(customerName);
+        dest.writeString(customerEmail);
+        dest.writeString(customerPhone);
+        dest.writeString(customerQualification);
+        dest.writeString(customerClassification);
+        dest.writeString(customerGrade);
+        dest.writeString(customerAddress);
+        dest.writeString(customerTimings);
+        dest.writeString(customerType);
+        dest.writeString(customerLocCordAddress);
+        dest.writeString(customerLocCord);
+        dest.writeString(workPlan);
+        dest.writeString(status);
+        dest.writeString(visitOn);
+        dest.writeString(visitCord);
+        dest.writeString(visitAddress);
+        dest.writeString(visitDistanceVer);
+        dest.writeString(workPlanRemarks);
+        dest.writeString(visitRemarks);
+        dest.writeString(empName);
+        dest.writeString(empFatherName);
+        dest.writeString(regionName);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<LookUpWorkPlan> CREATOR = new Creator<LookUpWorkPlan>() {
+        @Override
+        public LookUpWorkPlan createFromParcel(Parcel in) {
+            return new LookUpWorkPlan(in);
+        }
+
+        @Override
+        public LookUpWorkPlan[] newArray(int size) {
+            return new LookUpWorkPlan[size];
+        }
+    };
 
     public String getCustomerType() {
         return customerType;
@@ -220,6 +309,14 @@ public class LookUpWorkPlan {
         this.customerLocCord = customerLocCord;
     }
 
+    public String getEmpFatherName() {
+        return empFatherName;
+    }
+
+    public void setEmpFatherName(String empFatherName) {
+        this.empFatherName = empFatherName;
+    }
+
     public String getWorkPlan() {
         return workPlan;
     }
@@ -276,12 +373,12 @@ public class LookUpWorkPlan {
         this.workPlanRemarks = workPlanRemarks;
     }
 
-    public String getWorkPlanExeRemarks() {
-        return workPlanExeRemarks;
+    public String getVisitRemarks() {
+        return visitRemarks;
     }
 
-    public void setWorkPlanExeRemarks(String workPlanExeRemarks) {
-        this.workPlanExeRemarks = workPlanExeRemarks;
+    public void setVisitRemarks(String visitRemarks) {
+        this.visitRemarks = visitRemarks;
     }
 
     public String getEmpName() {
@@ -291,4 +388,6 @@ public class LookUpWorkPlan {
     public void setEmpName(String empName) {
         this.empName = empName;
     }
+
+
 }
