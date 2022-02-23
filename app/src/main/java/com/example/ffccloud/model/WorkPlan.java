@@ -61,6 +61,15 @@ public class WorkPlan {
     @SerializedName("Visit_Cord")
     @Expose
     private String visitCord;
+    private String action;
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 
     public String getWorkPlanNo() {
         return workPlanNo;

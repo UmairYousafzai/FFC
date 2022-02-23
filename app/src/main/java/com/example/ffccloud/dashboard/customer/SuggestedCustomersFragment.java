@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,6 +20,8 @@ import com.example.ffccloud.dashboard.customer.viewmodel.CustomerViewModel;
 import com.example.ffccloud.databinding.CustomAlertDialogBinding;
 import com.example.ffccloud.databinding.FragmentSuggestedCustomersBinding;
 import com.example.ffccloud.model.DashBoardCustomer;
+
+import java.util.Objects;
 
 public class SuggestedCustomersFragment extends Fragment {
 
@@ -57,6 +60,7 @@ public class SuggestedCustomersFragment extends Fragment {
         if (type != null) {
             if (type.equals("Cancel"))
             {
+                Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle("Cancel Customer");
                 viewModel.setType(type);
                 viewModel.fetchCancelCustomer();
             }
@@ -68,6 +72,15 @@ public class SuggestedCustomersFragment extends Fragment {
         }
 
 
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        viewModel.getCustomerMutableLiveData().setValue(null);
+        viewModel.getToastMessage().setValue(null);
     }
 
     private void getLiveData() {
@@ -97,7 +110,6 @@ public class SuggestedCustomersFragment extends Fragment {
                    else
                    {
                        checkUser(customer);
-                       viewModel.getCustomerMutableLiveData().setValue(null);
                    }
                 }
 

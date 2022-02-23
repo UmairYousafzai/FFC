@@ -5,11 +5,11 @@
     <data>
         <import type="com.example.ffccloud.utils.Converter"/>
         <variable
-            name="workPlan"
+            name="report"
             type="com.example.ffccloud.model.LookUpWorkPlan" />
         <variable
             name="viewModel"
-            type="com.example.ffccloud.dashboard.workplan.viewmodel.AllWorkPlanViewModel" />
+            type="com.example.ffccloud.dashboard.report.viewmodel.ReportListViewModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -18,7 +18,9 @@
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="5dp"
         app:cardElevation="5dp"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:onClick="@{()->viewModel.onClick(report.customerLocCordAddress,3,report)}"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -40,7 +42,7 @@
                     android:background="@color/APP_Theme_Color"
                     android:gravity="center_horizontal"
                     android:padding="10dp"
-                    android:text="@{workPlan.workPlan,default=WorkPlan}"
+                    android:text="@{report.workPlan,default=WorkPlan}"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
@@ -51,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:layout_gravity="center_vertical"
-                    android:text="@{Converter.StringToFormatDateTarget(workPlan.date),default=jan2022}"
+                    android:text="@{Converter.StringToFormatDateTarget(report.date),default=jan2022}"
                     android:textColor="@color/APP_Theme_Color"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -66,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:layout_gravity="center_vertical"
-                    android:text="@{workPlan.day,default=day}"
+                    android:text="@{report.day,default=day}"
                     android:textColor="@color/APP_Theme_Color"
                     android:textStyle="bold"
                     android:padding="5dp"
@@ -81,11 +83,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="@{workPlan.customerName,default=CustomerName}"
+                android:text="@{report.customerName,default=CustomerName}"
                 android:textColor="@color/APP_Theme_Color"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/btn_location"
+                app:layout_constraintEnd_toStartOf="@+id/btn_view"
                 app:layout_constraintStart_toEndOf="@+id/date_time_layout"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -96,8 +98,19 @@
                 android:src="@drawable/ic_location"
                 android:background="@color/white"
                 android:minWidth="48dp"
-                android:onClick="@{()->viewModel.onClick(workPlan.customerLocCord)}"
+                android:onClick="@{()->viewModel.onClick(report.customerLocCord,1)}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_customer_name"
+                app:layout_constraintBottom_toBottomOf="@id/tv_customer_name" />
+            <ImageButton
+                android:id="@+id/btn_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_preview_blue_24"
+                android:background="@color/white"
+                android:minWidth="48dp"
+                android:onClick="@{()->viewModel.onClick(report.customerLocCord,2)}"
+                app:layout_constraintEnd_toStartOf="@id/btn_location"
                 app:layout_constraintTop_toTopOf="@id/tv_customer_name"
                 app:layout_constraintBottom_toBottomOf="@id/tv_customer_name" />
 
@@ -115,7 +128,7 @@
                 android:id="@+id/tv_customer_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{workPlan.customerAddress,default=WorkPlan}"
+                android:text="@{report.customerAddress,default=WorkPlan}"
                 app:layout_constraintTop_toBottomOf="@id/view1"
                 app:layout_constraintStart_toEndOf="@id/date_time_layout"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -125,7 +138,7 @@
                 android:id="@+id/tv_area"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{workPlan.regionName,default=region}"
+                android:text="@{report.regionName,default=region}"
                 app:layout_constraintTop_toBottomOf="@id/tv_customer_address"
                 app:layout_constraintStart_toEndOf="@id/date_time_layout"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -135,7 +148,7 @@
                 android:id="@+id/tv_customer_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{workPlan.customerType,default=customerType}"
+                android:text="@{report.customerType,default=customerType}"
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/tv_area"
                 app:layout_constraintStart_toEndOf="@id/date_time_layout"
@@ -146,7 +159,7 @@
                 android:id="@+id/tv_status"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{workPlan.status,default=status}"
+                android:text="@{report.status,default=status}"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -160,7 +173,7 @@
                 android:id="@+id/tv_classification"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{workPlan.customerClassification,default=status}"
+                android:text="@{report.customerClassification,default=status}"
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/tv_status"
                 app:layout_constraintStart_toEndOf="@id/date_time_layout"
@@ -171,7 +184,7 @@
                 android:id="@+id/tv_shift"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{workPlan.customerTimings,default=status}"
+                android:text="@{report.customerTimings,default=status}"
                 android:textStyle="bold"
                 app:layout_constraintTop_toBottomOf="@id/tv_status"
                 app:layout_constraintEnd_toEndOf="parent"

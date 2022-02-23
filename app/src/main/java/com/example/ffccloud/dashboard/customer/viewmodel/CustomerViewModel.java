@@ -85,6 +85,7 @@ public class CustomerViewModel extends AndroidViewModel {
         String token = SharedPreferenceHelper.getInstance(getApplication()).getToken();
         int userID= SharedPreferenceHelper.getInstance(getApplication()).getUserID();
         CustomerRepository.getInstance().updateSuggestedCustomerStatus(token,String.valueOf(customer.getDoctorId()),customer.getAction(),userID);
+        getServerResponse();
     }
 
     public MutableLiveData<DashBoardCustomer> getCustomerMutableLiveData() {

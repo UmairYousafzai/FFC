@@ -64,5 +64,12 @@ public class DashBoardFragment extends Fragment {
                 navController.navigate(R.id.action_DashBoardFragment_to_customer_menu_Fragment);
             }
         });
+        mBinding.reportCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                navController.navigate(R.id.action_DashBoardFragment_to_report_filter_fragment);
+            }
+        });
     }
 }

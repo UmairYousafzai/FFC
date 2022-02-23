@@ -135,19 +135,22 @@ public class WorkPlanViewModel extends AndroidViewModel {
 
     public void onClick(WorkPlan workPlan,int action)
     {
-        if (action!=0)
-        {
+        workPlan.setAction(String.valueOf(action));
+
             this.workPlan= workPlan;
-            String  token= SharedPreferenceHelper.getInstance(getApplication()).getToken();
-            int userID = SharedPreferenceHelper.getInstance(getApplication()).getUserID();
-            WorkPlanRepository.getInstance().UpdateWorkPlanStatus(String.valueOf(action),userID,token,String.valueOf(workPlan.getWorkPlanMId()));
 
-        }
-        else
-        {
             selectedWorkPlan.setValue(workPlan);
-        }
 
+
+    }
+
+    public void updateWorkPlan(WorkPlan workPlan)
+    {
+        String  token= SharedPreferenceHelper.getInstance(getApplication()).getToken();
+        int userID = SharedPreferenceHelper.getInstance(getApplication()).getUserID();
+        WorkPlanRepository.getInstance().UpdateWorkPlanStatus(workPlan.getAction(), userID,token,String.valueOf(workPlan.getWorkPlanMId()));
+
+        getServerResponse();
     }
 
     public void setUpMonthSpinner()

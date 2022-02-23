@@ -14,21 +14,6 @@ public class UserModel {
     private String FatherName;
     private String CNIC;
     private boolean requestAccepted;
-    private Map<String,String> assignedUsers = new HashMap<>();
-    public UserModel() {
-    }
-
-    public UserModel(String id, String email, String password, String lastLocation, String userName, String fatherName, String CNIC, boolean requestAccepted, Map<String, String> assignedUsers) {
-        this.id = id;
-        Email = email;
-        this.password = password;
-        this.lastLocation = lastLocation;
-        UserName = userName;
-        FatherName = fatherName;
-        this.CNIC = CNIC;
-        this.requestAccepted = requestAccepted;
-        this.assignedUsers = assignedUsers;
-    }
 
 
 
@@ -54,14 +39,6 @@ public class UserModel {
 
     public void setRequestAccepted(boolean requestAccepted) {
         this.requestAccepted = requestAccepted;
-    }
-
-    public Map<String, String> getAssignedUsers() {
-        return assignedUsers;
-    }
-
-    public void setAssignedUsers(Map<String, String> assignedUsers) {
-        this.assignedUsers = assignedUsers;
     }
 
     public String getId() {

@@ -1,6 +1,7 @@
 package com.example.ffccloud.dashboard.workplan.viewmodel;
 
 import static com.example.ffccloud.utils.CONSTANTS.SERVER_ALL_WORK_PLAN_RESPONSE;
+import static com.example.ffccloud.utils.CONSTANTS.SERVER_ERROR_RESPONSE;
 
 import android.app.Application;
 
@@ -22,12 +23,17 @@ import java.util.List;
 public class AllWorkPlanViewModel extends AndroidViewModel {
     private final AllWorkPlanAdapter allWorkPlanAdapter;
     private final MutableLiveData<String> serverErrorLiveData;
+    private final MutableLiveData<String> coordinatesMutableLiveData;
+    private final MutableLiveData<String> toastMessage;
+
 
 
     public AllWorkPlanViewModel(@NonNull Application application) {
         super(application);
-        allWorkPlanAdapter= new AllWorkPlanAdapter(getApplication());
+        allWorkPlanAdapter= new AllWorkPlanAdapter(this);
         serverErrorLiveData = new MutableLiveData<>();
+        coordinatesMutableLiveData = new MutableLiveData<>();
+        toastMessage = new MutableLiveData<>();
 
     }
     public AllWorkPlanAdapter getAllWorkPlanAdapter() {
@@ -42,6 +48,18 @@ public class AllWorkPlanViewModel extends AndroidViewModel {
         getServerResponse();
     }
 
+    public void onClick(String coordinates)
+    {
+        this.coordinatesMutableLiveData.setValue(coordinates);
+    }
+
+    public MutableLiveData<String> getToastMessage() {
+        return toastMessage;
+    }
+
+    public MutableLiveData<String> getCoordinatesMutableLiveData() {
+        return coordinatesMutableLiveData;
+    }
 
     private void getServerResponse() {
 
@@ -57,6 +75,10 @@ public class AllWorkPlanViewModel extends AndroidViewModel {
                         allWorkPlanAdapter.setWorkPlanList(list);
 
                     }
+                   else if (key==SERVER_ERROR_RESPONSE)
+                   {
+                       toastMessage.setValue((String) response);
+                   }
 
                 }
             }

@@ -929,7 +929,30 @@
             app:nullable="true" />
 
     </fragment>
+    <fragment
+        android:id="@+id/report_filter_fragment"
+        android:name="com.example.ffccloud.dashboard.report.ReportFilterFragment"
+        android:label="Report Filter">
 
+        <action
+            android:id="@+id/action_report_filter_fragmentt_to_report_list_fragment"
+            app:destination="@id/report_list_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/report_list_fragment"
+        android:name="com.example.ffccloud.dashboard.report.ReportListFragment"
+        android:label="Reports">
+
+        <argument
+            android:name="reportFilter"
+            app:argType="com.example.ffccloud.model.ReportFilter"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/DashBoardFragment"
         android:name="com.example.ffccloud.dashboard.DashBoardFragment"
@@ -954,6 +977,14 @@
         <action
             android:id="@+id/action_DashBoardFragment_to_customer_menu_Fragment"
             app:destination="@id/customer_menu_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_DashBoardFragment_to_report_filter_fragment"
+            app:destination="@id/report_filter_fragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"

@@ -37,13 +37,16 @@ public class LookUpWorkPlan {
     private String customerClassification;
     @SerializedName("P_Grade")
     @Expose
-    private Object customerGrade;
+    private String customerGrade;
     @SerializedName("P_Address")
     @Expose
     private String customerAddress;
     @SerializedName("P_Timings")
     @Expose
     private String customerTimings;
+    @SerializedName("P_type")
+    @Expose
+    private String customerType;
     @SerializedName("P_Loc_Cord_Address")
     @Expose
     private String customerLocCordAddress;
@@ -58,28 +61,36 @@ public class LookUpWorkPlan {
     private String status;
     @SerializedName("Visit_On")
     @Expose
-    private Object visitOn;
+    private String visitOn;
     @SerializedName("Visit_Cord")
     @Expose
-    private Object visitCord;
+    private String visitCord;
     @SerializedName("Visit_Address")
     @Expose
-    private Object visitAddress;
+    private String visitAddress;
     @SerializedName("Visit_distance_Ver")
     @Expose
-    private Object visitDistanceVer;
+    private String visitDistanceVer;
     @SerializedName("Work_Plan_Remarks")
     @Expose
     private String workPlanRemarks;
     @SerializedName("Work_Plan_Exe_Remarks")
     @Expose
-    private Object workPlanExeRemarks;
+    private String workPlanExeRemarks;
     @SerializedName("Emp_Name")
     @Expose
     private String empName;
     @SerializedName("Reg_Name")
     @Expose
     private String regionName;
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
+    }
 
     public String getRegionName() {
         return regionName;
@@ -169,11 +180,11 @@ public class LookUpWorkPlan {
         this.customerClassification = customerClassification;
     }
 
-    public Object getCustomerGrade() {
+    public String getCustomerGrade() {
         return customerGrade;
     }
 
-    public void setCustomerGrade(Object customerGrade) {
+    public void setCustomerGrade(String customerGrade) {
         this.customerGrade = customerGrade;
     }
 
@@ -225,35 +236,35 @@ public class LookUpWorkPlan {
         this.status = status;
     }
 
-    public Object getVisitOn() {
+    public String getVisitOn() {
         return visitOn;
     }
 
-    public void setVisitOn(Object visitOn) {
+    public void setVisitOn(String visitOn) {
         this.visitOn = visitOn;
     }
 
-    public Object getVisitCord() {
+    public String getVisitCord() {
         return visitCord;
     }
 
-    public void setVisitCord(Object visitCord) {
+    public void setVisitCord(String visitCord) {
         this.visitCord = visitCord;
     }
 
-    public Object getVisitAddress() {
+    public String getVisitAddress() {
         return visitAddress;
     }
 
-    public void setVisitAddress(Object visitAddress) {
+    public void setVisitAddress(String visitAddress) {
         this.visitAddress = visitAddress;
     }
 
-    public Object getVisitDistanceVer() {
+    public String getVisitDistanceVer() {
         return visitDistanceVer;
     }
 
-    public void setVisitDistanceVer(Object visitDistanceVer) {
+    public void setVisitDistanceVer(String visitDistanceVer) {
         this.visitDistanceVer = visitDistanceVer;
     }
 
@@ -265,11 +276,11 @@ public class LookUpWorkPlan {
         this.workPlanRemarks = workPlanRemarks;
     }
 
-    public Object getWorkPlanExeRemarks() {
+    public String getWorkPlanExeRemarks() {
         return workPlanExeRemarks;
     }
 
-    public void setWorkPlanExeRemarks(Object workPlanExeRemarks) {
+    public void setWorkPlanExeRemarks(String workPlanExeRemarks) {
         this.workPlanExeRemarks = workPlanExeRemarks;
     }
 

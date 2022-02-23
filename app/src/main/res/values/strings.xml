@@ -285,6 +285,8 @@
     <string name="full_day">FullDay</string>
     <string name="customer_type">Customer Type</string>
     <string name="shift">Shift</string>
+    <string name="employee">Employee</string>
+    <string name="view">View</string>
 
 
 </resources>

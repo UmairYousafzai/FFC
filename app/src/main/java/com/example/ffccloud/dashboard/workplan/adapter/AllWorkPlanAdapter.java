@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ffccloud.dashboard.workplan.viewmodel.AllWorkPlanViewModel;
 import com.example.ffccloud.databinding.AllWorkPlanCardBinding;
 import com.example.ffccloud.model.LookUpWorkPlan;
 import com.example.ffccloud.utils.CustomLocation;
@@ -20,15 +21,15 @@ import java.util.List;
 public class AllWorkPlanAdapter extends RecyclerView.Adapter<AllWorkPlanAdapter.AllWorkPlanViewHolder>{
 
 
-    private final Context mContext;
     private final List<LookUpWorkPlan> workPlanList;
     private LayoutInflater layoutInflater;
+    private AllWorkPlanViewModel viewModel;
 
 
-    public AllWorkPlanAdapter(Context mContext) {
-        this.mContext = mContext;
+    public AllWorkPlanAdapter(AllWorkPlanViewModel viewModel) {
+
         workPlanList = new ArrayList<>();
-
+        this.viewModel= viewModel;
 
     }
 
@@ -49,6 +50,7 @@ public class AllWorkPlanAdapter extends RecyclerView.Adapter<AllWorkPlanAdapter.
 
 
         holder.mbinding.setWorkPlan(lookUpWorkPlan);
+        holder.mbinding.setViewModel(viewModel);
         holder.mbinding.executePendingBindings();
 
     }
@@ -95,28 +97,28 @@ public class AllWorkPlanAdapter extends RecyclerView.Adapter<AllWorkPlanAdapter.
 
 
 
-            mbinding.btnLocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    int position = getAdapterPosition();
-
-                    if (workPlanList.get(position).getCustomerLocCord()!=null && !workPlanList.get(position).getCustomerLocCord().isEmpty())
-                    {
-                        String[] coordinates = workPlanList.get(position).getCustomerLocCord().split(",");
-                        String address= new CustomLocation(mContext).getCompleteAddressString(Double.parseDouble(coordinates[0]),Double.parseDouble(coordinates[1]));
-                        String locationString= "geo:"+ workPlanList.get(position).getCustomerLocCord()+"?q="+ workPlanList.get(position).getCustomerLocCord()+(address);
-                        Uri mapIntentUri= Uri.parse(locationString);
-                        Intent mapIntent= new Intent(Intent.ACTION_VIEW,mapIntentUri);
-                        mapIntent.setPackage("com.google.android.apps.maps");
-
-                        if (mapIntent.resolveActivity(mContext.getPackageManager())!=null)
-                        {
-                            mContext.startActivity(mapIntent);
-                        }
-                    }
-                }
-            });
+//            mbinding.btnLocation.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    int position = getAdapterPosition();
+//
+//                    if (workPlanList.get(position).getCustomerLocCord()!=null && !workPlanList.get(position).getCustomerLocCord().isEmpty())
+//                    {
+//                        String[] coordinates = workPlanList.get(position).getCustomerLocCord().split(",");
+//                        String address= new CustomLocation(v.getContext()).getCompleteAddressString(Double.parseDouble(coordinates[0]),Double.parseDouble(coordinates[1]));
+//                        String locationString= "geo:"+ workPlanList.get(position).getCustomerLocCord()+"?q="+ workPlanList.get(position).getCustomerLocCord()+(address);
+//                        Uri mapIntentUri= Uri.parse(locationString);
+//                        Intent mapIntent= new Intent(Intent.ACTION_VIEW,mapIntentUri);
+//                        mapIntent.setPackage("com.google.android.apps.maps");
+//
+//                        if (mapIntent.resolveActivity(mContext.getPackageManager())!=null)
+//                        {
+//                            mContext.startActivity(mapIntent);
+//                        }
+//                    }
+//                }
+//            });
 
 
 

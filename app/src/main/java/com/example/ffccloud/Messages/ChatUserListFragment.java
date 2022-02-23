@@ -98,8 +98,6 @@ public class ChatUserListFragment extends Fragment {
                         adapter.setUserList(userModelList);
                     }
 
-
-
                 }
                 else
                 {
