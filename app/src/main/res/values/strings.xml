@@ -292,6 +292,8 @@
     <string name="employee_name">Employee Name</string>
     <string name="father_name">Father Name</string>
     <string name="view_visit_location">View Visit Location</string>
+    <string name="select">Select</string>
+    <string name="to_time">To Time</string>
 
 
 </resources>

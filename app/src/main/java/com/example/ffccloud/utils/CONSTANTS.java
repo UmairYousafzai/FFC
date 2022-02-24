@@ -50,6 +50,7 @@ public class CONSTANTS {
     public static final int SERVER_CUSTOMER_RESPONSE =  6;
     public static final int SERVER_USERS_RESPONSE =  8;
     public static final int SERVER_UNAUTHORIZED_RESPONSE =  9;
+    public static final int SERVER_Employee_RESPONSE =  10;
 
 
 }

@@ -19,6 +19,7 @@ import com.example.ffccloud.model.DeliveryModeModel;
 import com.example.ffccloud.model.DoctorsByAreaIdsModel;
 import com.example.ffccloud.FilteredDoctoredModel;
 import com.example.ffccloud.FilteredDoctorInfomationModel;
+import com.example.ffccloud.model.Employee;
 import com.example.ffccloud.model.EmployeeExpense;
 import com.example.ffccloud.model.ExpenseType;
 import com.example.ffccloud.model.GetCustomerResponse;
@@ -29,6 +30,7 @@ import com.example.ffccloud.model.GetSupplierDetailModel;
 import com.example.ffccloud.model.GradingModel;
 import com.example.ffccloud.model.InsertSaleOrderModel;
 import com.example.ffccloud.model.LookUpWorkPlan;
+import com.example.ffccloud.model.Meeting;
 import com.example.ffccloud.model.QualificationModel;
 import com.example.ffccloud.model.RateListModel;
 import com.example.ffccloud.model.RegionModel;
@@ -295,6 +297,10 @@ public interface Api {
     @GET("api/DashboardApi/GetAllPendingCancelDoctors")
     Call<List<DashBoardCustomer>> getCanceledCustomer(@Header("Authorization") String token,@Query("Company_Id") int Company_Id,@Query("Country_Id") int Country_Id,@Query("UserId") int UserId);
 
+    @GET("api/AppUser/GetAll")
+    Call<List<Employee>>  getEmployees(@Header("Authorization") String token);
 
+    @POST("api/FFCAppApi/SaveNewMeeting")
+    Call<UpdateStatus> saveMeeting(@Header("Authorization") String token, @Body Meeting meeting);
 }
 
