@@ -268,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:focusableInTouchMode="false"
                     android:inputType="none"
-                    android:text="@{Converter.StringToFormatTimeTarget(report.visitRemarks),default=xyz}"
+                    android:text="@{Converter.StringToFormatTimeTarget(report.visitOn),default=xyz}"
                     android:textColor="@color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -310,7 +310,7 @@
                 app:boxBackgroundColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_visit_time_layout"
+                app:layout_constraintTop_toBottomOf="@id/tv_visit_address_layout"
 
                 >
 

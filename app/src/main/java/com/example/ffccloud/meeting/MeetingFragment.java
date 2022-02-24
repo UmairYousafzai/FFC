@@ -1,15 +1,8 @@
-package com.example.ffccloud;
+package com.example.ffccloud.meeting;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +10,16 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.example.ffccloud.Database.FfcDatabase;
 import com.example.ffccloud.Login.GetUserInfoModel;
 import com.example.ffccloud.databinding.CustomDialogBinding;
 import com.example.ffccloud.databinding.FragmentMeetingBinding;
-
 
 import org.jetbrains.annotations.NotNull;
 

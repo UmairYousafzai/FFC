@@ -463,7 +463,7 @@
     </fragment>
     <fragment
         android:id="@+id/meetingFragment"
-        android:name="com.example.ffccloud.MeetingFragment"
+        android:name="com.example.ffccloud.meeting.MeetingFragment"
         android:label="Meeting"
         tools:layout="@layout/fragment_meeting" />
     <fragment

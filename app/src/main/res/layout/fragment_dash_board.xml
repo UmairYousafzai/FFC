@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="Expense"
-                    android:minWidth="100dp"
+                    android:minWidth="90dp"
                     android:minHeight="50dp"
                     android:src="@drawable/ic_expense" />
 
@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="Expense"
                     android:src="@drawable/ic_target"
-                    android:minWidth="100dp"
+                    android:minWidth="90dp"
                     android:minHeight="50dp"
                     android:tint="@color/APP_Theme_Color" />
 
@@ -150,7 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="Expense"
-                    android:minWidth="100dp"
+                    android:minWidth="90dp"
                     android:minHeight="50dp"
                     android:src="@drawable/ic_client_profile_svgrepo_com"
                     android:tint="@color/APP_Theme_Color" />
@@ -192,7 +192,7 @@
                     android:contentDescription="Expense"
                     android:src="@drawable/ic_reports"
                     android:tint="@color/APP_Theme_Color"
-                    android:minWidth="100dp"
+                    android:minWidth="90dp"
                     android:minHeight="50dp"
                     />
 
