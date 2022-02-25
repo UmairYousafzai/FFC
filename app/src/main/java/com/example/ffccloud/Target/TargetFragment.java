@@ -92,7 +92,8 @@ public class TargetFragment extends Fragment {
     private FragmentTargetBinding mbinding;
     private DoctorMorningRecyclerAdapter morningListAdapter;
     private DoctorEveningRecyclerAdapter eveningListAdapter;
-    private int morningFlag = 0, eveningFlag = 0;
+    private DoctorEveningRecyclerAdapter fullDayListAdapter;
+    private int morningFlag = 0, eveningFlag = 0,fullDayFlag=0;
     private Location location;
     private AlertDialog alertDialog;
     private int selectedDay, selectedMonth, selectedYear;
@@ -200,11 +201,31 @@ public class TargetFragment extends Fragment {
             }
         }, getActivity());
 
+        fullDayListAdapter = new DoctorEveningRecyclerAdapter(getContext(), new RecyclerOnItemClickListener() {
+            @Override
+            public void GetDoctorOnClick(DoctorModel doctorModel, int position, int check) {
+                if (check == 1) {
+                    setUpCancelWorkPlanAlertDialog(doctorModel, 3);
+
+                } else if (check == 2) {
+                    setUpRescheduleWorkPlanAlertDialog(doctorModel, 3);
+                } else if (check == 10) {
+
+                    TargetFragmentDirections.ActionTargetToTargetPostMenuFragment action = TargetFragmentDirections.
+                            actionTargetToTargetPostMenuFragment(doctorModel);
+                    navController.navigate(action);
+
+                }
+            }
+        }, getActivity());
+
         mbinding.targetRecycler.docListmorningRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mbinding.targetRecycler.docListRecyclerEvening.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mbinding.targetRecycler.fullDayDocListRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mbinding.targetRecycler.docListRecyclerEvening.setAdapter(eveningListAdapter);
         mbinding.targetRecycler.docListmorningRecycler.setAdapter(morningListAdapter);
+        mbinding.targetRecycler.fullDayDocListRecycler.setAdapter(fullDayListAdapter);
 
 //        eveningListAdapter.notifyDataSetChanged();
 //        morningListAdapter.notifyDataSetChanged();
@@ -394,6 +415,18 @@ public class TargetFragment extends Fragment {
 
             }
         });
+        targetViewModel.getAllFullDayDoctorsByDate(date).observe(getViewLifecycleOwner(), new Observer<List<DoctorModel>>() {
+            @Override
+            public void onChanged(List<DoctorModel> list) {
+                if (list != null && list.size() > 0) {
+                    fullDayListAdapter.setDoctorModelList(list);
+
+                } else {
+                    fullDayListAdapter.clearData();
+                }
+
+            }
+        });
 
 
     }
@@ -435,6 +468,27 @@ public class TargetFragment extends Fragment {
                     eveningFlag = 0;
                     float deg = (mbinding.targetRecycler.eveningDoctorShowlistBtn.getRotation() == 180F) ? 0F : 180F;
                     mbinding.targetRecycler.eveningDoctorShowlistBtn.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
+
+                }
+
+            }
+        });
+
+        mbinding.targetRecycler.fullDayDoctorShowlistBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (fullDayFlag == 0) {
+                    fullDayListAdapter.setFlag(1);
+                    fullDayFlag = 1;
+                    float deg = (mbinding.targetRecycler.fullDayDoctorShowlistBtn.getRotation() == 180F) ? 0F : 180F;
+                    mbinding.targetRecycler.fullDayDoctorShowlistBtn.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
+
+                } else {
+                    fullDayListAdapter.setFlag(0);
+                    fullDayFlag = 0;
+                    float deg = (mbinding.targetRecycler.fullDayDoctorShowlistBtn.getRotation() == 180F) ? 0F : 180F;
+                    mbinding.targetRecycler.fullDayDoctorShowlistBtn.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
 
                 }
 
@@ -553,7 +607,7 @@ public class TargetFragment extends Fragment {
                                         workPlanLocation.setLatitude(Double.parseDouble(locationArray[0]));
                                         workPlanLocation.setLongitude(Double.parseDouble(locationArray[1]));
                                         double distance = location.distanceTo(workPlanLocation);
-                                        String distanceString= distance / 1000 +"Km";
+                                        double distanceString= distance / 1000 ;
                                         String visitAddress= customLocation.getCompleteAddressString(location1.getLatitude(),location1.getLongitude());
                                         List<UpdateWorkPlanStatus> list = new ArrayList<>();
                                         int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
@@ -784,7 +838,7 @@ public class TargetFragment extends Fragment {
                                 workPlanLocation.setLatitude(Double.parseDouble(locationArray[0]));
                                 workPlanLocation.setLongitude(Double.parseDouble(locationArray[1]));
                                 double distance = location.distanceTo(workPlanLocation);
-                                String distanceString= distance / 1000 +"Km";
+                                double distanceString= distance / 1000 ;
                                 String visitAddress= customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
 
                                 String dateCheck = "", timeCheck = "";

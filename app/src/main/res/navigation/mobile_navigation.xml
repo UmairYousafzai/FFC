@@ -672,6 +672,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_addFarmFormFragment_to_location_pickerFragment"
+            app:destination="@id/locationPickerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="supplierId"
             android:defaultValue="0"
@@ -696,6 +703,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
     <fragment
         android:id="@+id/addMedicalStoreFragment"
@@ -706,6 +714,13 @@
             android:name="supplierId"
             android:defaultValue="0"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_addMedicalStoreFragment_to_location_pickerFragment"
+            app:destination="@id/locationPickerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/addHospitalFragment"
@@ -733,6 +748,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_addHospitalFragment_to_location_pickerFragment"
+            app:destination="@id/locationPickerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
             android:name="supplierId"
             android:defaultValue="0"
@@ -747,6 +769,13 @@
         <action
             android:id="@+id/action_addDoctorFragment_to_addProductFragment"
             app:destination="@id/addProductFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_addDoctorFragment_to_location_pickerFragment"
+            app:destination="@id/locationPickerFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -1035,5 +1064,11 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+    <fragment
+        android:id="@+id/locationPickerFragment"
+        android:name="com.example.ffccloud.map.LocationPickerFragment"
+        android:label="Location Picker"
+        tools:layout="@layout/fragment_location_picker">
 
+    </fragment>
 </navigation>

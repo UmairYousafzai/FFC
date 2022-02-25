@@ -210,6 +210,12 @@ public interface FFC_DAO {
     LiveData<List<DoctorModel>> getEveningDoctorByDate(String date);
 
     // + " and (shift = 'Evening')"
+    @Query("Select *From Doctor where (fromDate = :date) and " +
+            "(shift = 'FullDay') " +
+            "order by dotorId_pk desc")
+    LiveData<List<DoctorModel>> getFullDoctorByDate(String date);
+
+    // + " and (shift = 'Evening')"
 
     @Query("Select *From Doctor order by dotorId_pk desc")
     LiveData<List<DoctorModel>> getAllWorkPlanDoctors();

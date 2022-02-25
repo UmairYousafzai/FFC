@@ -30,6 +30,7 @@ import com.example.ffccloud.Customer.Adapter.ContactRecyclerAdapter;
 import com.example.ffccloud.GetSupplierModel;
 import com.example.ffccloud.InsertProductModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
+import com.example.ffccloud.R;
 import com.example.ffccloud.SupplierItemLinking;
 import com.example.ffccloud.adapter.SupplierRecyclerViewAdapter;
 import com.example.ffccloud.databinding.AddContactDialogBinding;
@@ -224,6 +225,28 @@ public class AddFarmFormFragment extends Fragment {
 
             }
         });
+
+        MutableLiveData<String> locationPickerLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.LOCATION);
+        locationPickerLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String addressCoordinates) {
+
+                if (addressCoordinates!=null&& !addressCoordinates.isEmpty())
+                {
+                    String[] location= addressCoordinates.split(":");
+
+                    locationAddress=location[0];
+                    locationString = location[1];
+                    mBinding.locationCheckbox.setText("Enable Location");
+                    mBinding.locationCheckbox.setChecked(false);
+                    mBinding.idCoordinates.setText(addressCoordinates);
+                    isLocationUpdate=true;
+
+                }
+            }
+        });
     }
 
     private void getSupplierByID(int supplierID) {
@@ -388,6 +411,14 @@ public class AddFarmFormFragment extends Fragment {
     }
 
     private void btnListener() {
+
+        mBinding.btnLocationPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callingAddBtn="locationPicker";
+                navController.navigate(R.id.action_addFarmFormFragment_to_location_pickerFragment);
+            }
+        });
         supplierRecyclerViewAdapter.SetOnClickListener(new SupplierRecyclerViewAdapter.SetOnClickListener() {
             @Override
             public void onClick(GetSupplierModel supplierModel) {

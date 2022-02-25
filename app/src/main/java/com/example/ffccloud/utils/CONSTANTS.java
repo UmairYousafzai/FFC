@@ -16,6 +16,7 @@ public class CONSTANTS {
     public final static String ACTIVITY_CALL="Call";
     public final static String ACTIVITY_MEETING="Meeting";
     public final static String ACTIVITY_FOLLOWUP="Follow Up";
+    public final static String LOCATION="location";
     public final static String ACTION_START_LOCATION_SERVICE="start_location_service";
     public final static String ACTION_STOP_LOCATION_SERVICE="stop_location_service";
     public final static String CUSTOMER_KEY="customer";

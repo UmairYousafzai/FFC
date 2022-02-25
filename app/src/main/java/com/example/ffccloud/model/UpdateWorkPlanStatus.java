@@ -37,13 +37,13 @@ public class UpdateWorkPlanStatus {
     @SerializedName("Visit_Address ")
     private String visitAddress;
     @SerializedName("Visit_distance_Ver  ")
-    private String visitDistance;
+    private double visitDistance;
 
     public void setVisitAddress(String visitAddress) {
         this.visitAddress = visitAddress;
     }
 
-    public void setVisitDistance(String visitDistance) {
+    public void setVisitDistance(double visitDistance) {
         this.visitDistance = visitDistance;
     }
 
@@ -51,7 +51,7 @@ public class UpdateWorkPlanStatus {
         return visitAddress;
     }
 
-    public String getVisitDistance() {
+    public double getVisitDistance() {
         return visitDistance;
     }
 

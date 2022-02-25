@@ -453,14 +453,14 @@ public class TargetFullInfoFragment extends Fragment {
                     location = location1;
 
 
-                    double distance = location.distanceTo(workPlanLocation);
+                    double distance = location.distanceTo(workPlanLocation)/1000;
                     String distanceString= distance / 1000 +"Km";
                     String visitAddress= customLocation.getCompleteAddressString(location1.getLatitude(),location1.getLongitude());
 
                     if (distanceKey == 1) {
 
                         if (distance <= 10) {
-                            saveWorkPlane(key,distanceString,visitAddress);
+                            saveWorkPlane(key,distance,visitAddress);
                         } else {
                             CustomsDialog.getInstance().showDialog("You Are Out Of WorkPlan Location Radius", " ", requireActivity(), requireContext(),2);
                         }
@@ -468,7 +468,7 @@ public class TargetFullInfoFragment extends Fragment {
                     } else if (distanceKey == 2) {
                         if (distance <= 10) {
 
-                            saveWorkPlane(key,distanceString,visitAddress);
+                            saveWorkPlane(key,distance,visitAddress);
                         } else {
 
                             CustomAlertDialogBinding dialogBinding = CustomAlertDialogBinding.inflate(requireActivity().getLayoutInflater());
@@ -481,7 +481,7 @@ public class TargetFullInfoFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     alertDialog.dismiss();
-                                    saveWorkPlane(key,distanceString,visitAddress);
+                                    saveWorkPlane(key,distance,visitAddress);
 
                                 }
                             });
@@ -512,7 +512,7 @@ public class TargetFullInfoFragment extends Fragment {
 
                         }
                     } else if (distance == 3) {
-                        saveWorkPlane(key,distanceString,visitAddress);
+                        saveWorkPlane(key,distance,visitAddress);
 
                     }
                 }
@@ -527,7 +527,7 @@ public class TargetFullInfoFragment extends Fragment {
 
     }
 
-    public void saveWorkPlane(int key,String distance,String address) {
+    public void saveWorkPlane(int key,double distance,String address) {
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Loading");
         CustomCompeleteDialogBinding dialogBinding = CustomCompeleteDialogBinding.inflate(getLayoutInflater());

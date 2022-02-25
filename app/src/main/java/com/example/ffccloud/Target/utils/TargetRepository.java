@@ -41,6 +41,9 @@ public class TargetRepository {
     public LiveData<List<DoctorModel>> getAllMorningDoctorsByDate(String date) {
         return mDao.getMorningDoctorByDate(date);
     }
+    public LiveData<List<DoctorModel>> getAllFullDayDoctorsByDate(String date) {
+        return mDao.getFullDoctorByDate(date);
+    }
 
     public void InsertDoctor(List<DoctorModel> list) {
         executor.execute(new Runnable() {

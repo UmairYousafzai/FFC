@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ffccloud.InsertProductModel;
 import com.example.ffccloud.NetworkCalls.ApiClient;
+import com.example.ffccloud.R;
 import com.example.ffccloud.SupplierItemLinking;
 import com.example.ffccloud.databinding.AddMedicineDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddDoctorBinding;
@@ -152,6 +153,28 @@ public class AddDoctorFragment extends Fragment {
 
             }
         });
+
+        MutableLiveData<String> locationPickerLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.LOCATION);
+        locationPickerLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String addressCoordinates) {
+
+                if (addressCoordinates!=null&& !addressCoordinates.isEmpty())
+                {
+                    String[] location= addressCoordinates.split(":");
+
+                    locationAddress=location[0];
+                    locationString = location[1];
+                    mBinding.location.setText("Enable Location");
+                    mBinding.location.setChecked(false);
+                    mBinding.idCoordinates.setText(addressCoordinates);
+                    isLocationUpdate=true;
+
+                }
+            }
+        });
     }
 
 
@@ -233,6 +256,14 @@ public class AddDoctorFragment extends Fragment {
     }
 
     private void btnListener() {
+        mBinding.btnLocationPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                callingAddBtn="locationPicker";
+                navController.navigate(R.id.action_addDoctorFragment_to_location_pickerFragment);
+            }
+        });
 
         mBinding.btnAddMedicine.setOnClickListener(new View.OnClickListener() {
             @Override

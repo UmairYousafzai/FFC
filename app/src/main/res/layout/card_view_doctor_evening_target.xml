@@ -108,20 +108,22 @@
                             android:id="@+id/doc_name_eveing_card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="85"
+                            android:layout_weight="80"
                             android:maxLines="2"
                             android:text="@{DoctorEvening.name}"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:paddingBottom="4dp"/>
+                            android:paddingBottom="4dp"
+                            />
 
-                        <Button
+                        <ImageButton
                             android:id="@+id/btn_map_evening_card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="15"
-                            android:background="@drawable/ic_location" />
+                            android:layout_weight="20"
+                            android:src="@drawable/ic_location"
+                            android:background="@color/white"/>
 
                     </LinearLayout>
 

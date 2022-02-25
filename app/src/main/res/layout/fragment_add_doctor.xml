@@ -147,31 +147,51 @@
 
                 />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_coordinates_layout"
-                app:startIconTint="@color/APP_Theme_Color"
-                android:background="@color/white"
-
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginBottom="5dp"
-                xmnls:boxBackgroundColor="@color/white"
-
-                android:hint="@string/coordinates_optional"
-                android:textColorHint="@color/black"
+                android:orientation="horizontal"
+                android:weightSum="10"
                 android:elevation="5dp"
-                app:startIconDrawable="@drawable/ic_location">
+                android:background="@color/white"
+                android:layout_marginHorizontal="5dp"
+                >
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/et_coordinates_layout"
+                    app:startIconTint="@color/APP_Theme_Color"
+                    android:background="@color/white"
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/id_coordinates"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:inputType="textMultiLine"
-                    />
+                    android:layout_marginBottom="5dp"
+                    xmnls:boxBackgroundColor="@color/white"
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="@string/coordinates_optional"
+                    android:textColorHint="@color/black"
+                    app:startIconDrawable="@drawable/ic_location"
+                    android:layout_weight="8.5">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/id_coordinates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:inputType="textMultiLine"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_location_picker"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_add_location_point_svgrepo_com"
+                    android:layout_weight="1.5"
+                    android:minHeight="48dp"
+                    android:background="@color/white"
+                    />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/region_spinner_layout"

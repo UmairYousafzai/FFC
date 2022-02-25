@@ -35,7 +35,7 @@ public class AddNewWorkPlanModel {
     @SerializedName("Visit_Address ")
     private String visitAddress;
     @SerializedName("Visit_distance_Ver  ")
-    private String visitDistance;
+    private double visitDistance;
     public AddNewWorkPlanModel()
     {
 
@@ -65,11 +65,11 @@ public class AddNewWorkPlanModel {
         this.visitAddress = visitAddress;
     }
 
-    public String getVisitDistance() {
+    public double getVisitDistance() {
         return visitDistance;
     }
 
-    public void setVisitDistance(String visitDistance) {
+    public void setVisitDistance(double visitDistance) {
         this.visitDistance = visitDistance;
     }
 

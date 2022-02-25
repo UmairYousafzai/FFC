@@ -35,6 +35,10 @@ public class TargetViewModel extends AndroidViewModel {
         return repository.getAllMorningDoctorsByDate(date);
     }
 
+    public LiveData<List<DoctorModel>> getAllFullDayDoctorsByDate(String date) {
+        return repository.getAllFullDayDoctorsByDate(date);
+    }
+
     public void DeleteDoctor(DoctorModel doctorModel)
     {
         repository.DeleteDoctor(doctorModel);

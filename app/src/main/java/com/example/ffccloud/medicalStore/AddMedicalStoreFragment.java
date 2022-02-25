@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -24,6 +25,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ffccloud.NetworkCalls.ApiClient;
+import com.example.ffccloud.R;
 import com.example.ffccloud.SupplierCompDetail;
 import com.example.ffccloud.databinding.CompaniesDialogBinding;
 import com.example.ffccloud.databinding.FragmentAddMedicalStoreBinding;
@@ -107,7 +109,34 @@ public class AddMedicalStoreFragment extends Fragment {
         }
         setUpCompanyRecyclerView();
         textListener();
+        getLiveData();
     }
+
+    private void getLiveData() {
+
+        MutableLiveData<String> locationPickerLiveData = Objects.requireNonNull(navController.getCurrentBackStackEntry())
+                .getSavedStateHandle()
+                .getLiveData(CONSTANTS.LOCATION);
+        locationPickerLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String addressCoordinates) {
+
+                if (addressCoordinates!=null&& !addressCoordinates.isEmpty())
+                {
+                    String[] location= addressCoordinates.split(":");
+
+                    locationAddress=location[0];
+                    locationString = location[1];
+                    mBinding.locationCheckBox.setText("Enable Location");
+                    mBinding.locationCheckBox.setChecked(false);
+                    mBinding.idCoordinates.setText(addressCoordinates);
+                    isLocationUpdate=true;
+
+                }
+            }
+        });
+    }
+
     private void textListener() {
 
         mBinding.idCoordinates.addTextChangedListener(new TextWatcher() {
@@ -170,7 +199,13 @@ public class AddMedicalStoreFragment extends Fragment {
     }
 
     private void btnListener() {
-
+        mBinding.btnLocationPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callingAddBtn="locationPicker";
+                navController.navigate(R.id.action_addMedicalStoreFragment_to_location_pickerFragment);
+            }
+        });
         mBinding.locationCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

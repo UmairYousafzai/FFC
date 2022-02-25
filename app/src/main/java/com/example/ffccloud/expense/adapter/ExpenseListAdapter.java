@@ -95,8 +95,9 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
                     int position= getAdapterPosition();
                     if (position!=RecyclerView.NO_POSITION)
                     {
-                        expenseModelClassList.remove(expenseModelClassList.get(position));
+
                         listener.setOnClickListener(expenseModelClassList.get(position),1);
+                        expenseModelClassList.remove(expenseModelClassList.get(position));
                     }
                 }
             });
