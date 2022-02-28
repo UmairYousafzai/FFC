@@ -426,9 +426,14 @@ public class MainActivity extends AppCompatActivity {
             headerBinding.profileName.setText(loginUser.getUserName());
             headerBinding.profileEmail.setText(loginUser.getEmail());
             headerBinding.profileDesignation.setVisibility(View.GONE);
-            byte[] data = Base64.decode(loginUser.getImage(), Base64.DEFAULT);
-            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-            headerBinding.profileImage.setImageBitmap(bmp);
+
+            if (loginUser.getImage()!=null&& ! loginUser.getImage().isEmpty())
+            {
+                byte[] data = Base64.decode(loginUser.getImage(), Base64.DEFAULT);
+                Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                headerBinding.profileImage.setImageBitmap(bmp);
+            }
+
 //            Glide.with(this)
 //                    .load(loginUser.getImage())
 //                    .centerCrop()

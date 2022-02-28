@@ -34,9 +34,9 @@ public class UpdateWorkPlanStatus {
     @SerializedName("Visit_Cord")
     private String Visit_Cord;
 
-    @SerializedName("Visit_Address ")
+    @SerializedName("Visit_Address")
     private String visitAddress;
-    @SerializedName("Visit_distance_Ver  ")
+    @SerializedName("Visit_distance_Ver")
     private double visitDistance;
 
     public void setVisitAddress(String visitAddress) {

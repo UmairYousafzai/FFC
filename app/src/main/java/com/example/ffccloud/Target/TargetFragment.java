@@ -602,12 +602,21 @@ public class TargetFragment extends Fragment {
 
                                 if (remarksForCancel != null && remarksForCancel.length() > 0) {
                                     if (locationString.length() > 0) {
-                                        String[] locationArray = doctorModel.getCoordinates().split(",");
-                                        Location workPlanLocation = new Location("");
-                                        workPlanLocation.setLatitude(Double.parseDouble(locationArray[0]));
-                                        workPlanLocation.setLongitude(Double.parseDouble(locationArray[1]));
-                                        double distance = location.distanceTo(workPlanLocation);
-                                        double distanceString= distance / 1000 ;
+                                        double distance=0;
+                                        double distanceString=0;
+                                        if ( !doctorModel.getCoordinates().isEmpty())
+                                        {
+                                            String[] locationArray = doctorModel.getCoordinates().split(",");
+                                            Location workPlanLocation = new Location("");
+                                            workPlanLocation.setLatitude(Double.parseDouble(locationArray[0]));
+                                            workPlanLocation.setLongitude(Double.parseDouble(locationArray[1]));
+                                            distance = location.distanceTo(workPlanLocation);
+                                            distanceString= distance / 1000 ;
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(requireContext(), "Location is empty", Toast.LENGTH_SHORT).show();
+                                        }
                                         String visitAddress= customLocation.getCompleteAddressString(location1.getLatitude(),location1.getLongitude());
                                         List<UpdateWorkPlanStatus> list = new ArrayList<>();
                                         int userId = SharedPreferenceHelper.getInstance(getActivity()).getEmpID();
@@ -758,7 +767,7 @@ public class TargetFragment extends Fragment {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                            if ((dayOfMonth - mday) >= 0 && (month - mmonth) >= 0) {
+                            if ((dayOfMonth - mday) >= 0 || (month - mmonth) >= 0) {
 
                                 int checkMonth = month % 10, checkday = (dayOfMonth % 10);
                                 ;
@@ -832,13 +841,21 @@ public class TargetFragment extends Fragment {
                                 SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a", Locale.getDefault());
                                 String dateString = df.format(date);
                                 String locationString = location.getLatitude() + "," + location.getLongitude();
-
-                                String[] locationArray = doctorModel.getCoordinates().split(",");
-                                Location workPlanLocation = new Location("");
-                                workPlanLocation.setLatitude(Double.parseDouble(locationArray[0]));
-                                workPlanLocation.setLongitude(Double.parseDouble(locationArray[1]));
-                                double distance = location.distanceTo(workPlanLocation);
-                                double distanceString= distance / 1000 ;
+                                double distance=0;
+                                double distanceString=0;
+                                if ( !doctorModel.getCoordinates().isEmpty())
+                                {
+                                    String[] locationArray = doctorModel.getCoordinates().split(",");
+                                    Location workPlanLocation = new Location("");
+                                    workPlanLocation.setLatitude(Double.parseDouble(locationArray[0]));
+                                    workPlanLocation.setLongitude(Double.parseDouble(locationArray[1]));
+                                     distance = location.distanceTo(workPlanLocation);
+                                     distanceString= distance / 1000 ;
+                                }
+                                else
+                                {
+                                    Toast.makeText(requireContext(), "Location is empty", Toast.LENGTH_SHORT).show();
+                                }
                                 String visitAddress= customLocation.getCompleteAddressString(location.getLatitude(),location.getLongitude());
 
                                 String dateCheck = "", timeCheck = "";

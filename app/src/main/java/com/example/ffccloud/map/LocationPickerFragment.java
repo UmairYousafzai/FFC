@@ -67,6 +67,7 @@ public class LocationPickerFragment extends Fragment {
     private NavController navController;
     private String locationString ,address;
 
+
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
 
 
@@ -266,4 +267,5 @@ public class LocationPickerFragment extends Fragment {
         }
         return strAdd;
     }
+
 }
